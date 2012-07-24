@@ -4,22 +4,54 @@
     android:layout_width="fill_parent"
     android:paddingTop="5dp"
     android:paddingBottom="5dp"
-    android:layout_height="wrap_content" >
+    android:layout_height="wrap_content" 
+    android:background="#62000000">
     <ImageView 
    		android:id="@+id/event_image"
-   		android:layout_width="90dp"
+   		android:layout_width="80dp"
    		android:layout_height="120dp"
    		android:scaleType="centerCrop"
-   		android:layout_marginLeft="10dp"
+   		android:layout_marginLeft="0dp"
    		android:padding="0dp"
    	/>
     <TextView android:id="@+id/event_text"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
-        android:paddingLeft="110dp"
+        android:paddingLeft="90dp"
         android:paddingBottom="3dp"
         android:textSize="16dp"
         android:textColor="#FFFFFF"
+        android:textStyle="bold"
     />
+    
+     <ImageView 
+		   		android:id="@+id/location_image"
+		   		android:layout_width="25dp"
+		   		android:layout_height="25dp"
+		   		android:layout_marginLeft="90dp"
+		    	android:background="@drawable/location_marker"
+		   		android:layout_marginTop="75dp"
+		   	/>
+		       
+    
+          
+          
+    <TextView android:id="@+id/event_list_size"
+      	android:layout_width="wrap_content" 
+      	android:layout_height="25dp" 
+      	android:textSize="16dp"
+      	android:textColor="#ffffff"
+      	android:text="11:00pm"
+      	android:layout_marginTop="40dp"
+      	android:layout_marginLeft="90dp"/>
+    
+     <TextView android:id="@+id/event_location"
+      	android:layout_width="wrap_content" 
+      	android:layout_height="25dp" 
+      	android:textSize="16dp"
+      	android:textColor="#ffffff"
+      	android:text="Club Avenue"
+      	android:layout_marginTop="75dp"
+      	android:layout_marginLeft="120dp"/>
 </RelativeLayout>

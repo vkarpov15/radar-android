@@ -1,14 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout android:orientation="vertical"
     android:layout_width="fill_parent" android:layout_height="fill_parent" xmlns:android="http://schemas.android.com/apk/res/android">
-    <TextView android:id="@+id/toptext" android:text="TABBIE" android:layout_height="16dp" android:layout_width="fill_parent"></TextView>
+   
+       <ImageView 
+		   		android:id="@+id/location_image"
+		   		android:layout_width="80dp"
+		   		android:layout_height="22dp"
+		   		android:layout_marginLeft="0dp"
+		    	android:background="@drawable/app_name"
+		   		android:layout_marginTop="7dp"
+		   		android:layout_marginBottom="7dp"
+		   	/>
 <TabHost xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@android:id/tabhost" android:layout_width="fill_parent"
-    android:layout_height="fill_parent">
+    android:layout_height="wrap_content">
     <LinearLayout android:orientation="vertical"
         android:layout_width="fill_parent" android:layout_height="fill_parent">
         <TabWidget android:id="@android:id/tabs"
-            android:layout_width="fill_parent" android:layout_height="wrap_content" />
+            android:layout_width="fill_parent" android:layout_height="30dp" android:text="text" />
         <FrameLayout android:id="@android:id/tabcontent"
             android:layout_width="fill_parent" android:layout_height="fill_parent">
             <LinearLayout android:orientation="vertical"
