@@ -6,6 +6,7 @@
     android:paddingBottom="5dp"
     android:layout_height="wrap_content" 
     android:background="#62000000">
+    
     <ImageView 
    		android:id="@+id/event_image"
    		android:layout_width="80dp"
@@ -35,6 +36,14 @@
 		   	/>
 		       
     
+      <ImageView 
+		   		android:id="@+id/add_to_radar_image"
+		   		android:layout_width="50dp"
+		   		android:layout_height="50dp"
+		   		android:layout_marginLeft="260dp"
+		    	android:background="@drawable/radar_button"
+		   		android:layout_marginTop="30dp"
+		   	/>   
           
           
     <TextView android:id="@+id/event_list_size"

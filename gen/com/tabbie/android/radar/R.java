@@ -11,29 +11,32 @@ public final class R {
     public static final class attr {
     }
     public static final class drawable {
-        public static final int app_name=0x7f020000;
-        public static final int balloon_disclosure=0x7f020001;
-        public static final int balloon_overlay_close=0x7f020002;
-        public static final int ic_launcher=0x7f020003;
-        public static final int location_marker=0x7f020004;
-        public static final int marker=0x7f020005;
+        public static final int app_header_background=0x7f020000;
+        public static final int app_name=0x7f020001;
+        public static final int balloon_disclosure=0x7f020002;
+        public static final int balloon_overlay_close=0x7f020003;
+        public static final int ic_launcher=0x7f020004;
+        public static final int location_marker=0x7f020005;
+        public static final int marker=0x7f020006;
+        public static final int radar_button=0x7f020007;
     }
     public static final class id {
-        public static final int all_event_list=0x7f060009;
-        public static final int all_events=0x7f060008;
+        public static final int add_to_radar_image=0x7f060004;
+        public static final int all_event_list=0x7f06000a;
+        public static final int all_events=0x7f060009;
         public static final int event_image=0x7f060001;
-        public static final int event_list_size=0x7f060004;
-        public static final int event_location=0x7f060005;
+        public static final int event_list_size=0x7f060005;
+        public static final int event_location=0x7f060006;
         public static final int event_text=0x7f060002;
-        public static final int featured_event_list=0x7f060007;
+        public static final int featured_event_list=0x7f060008;
         public static final int list_list_element_layout=0x7f060000;
         public static final int location_image=0x7f060003;
-        public static final int main=0x7f060006;
-        public static final int maplayout=0x7f06000c;
-        public static final int mapview=0x7f06000d;
-        public static final int radar=0x7f06000a;
-        public static final int radar_list=0x7f06000b;
-        public static final int zoom_to_me=0x7f06000e;
+        public static final int main=0x7f060007;
+        public static final int maplayout=0x7f06000d;
+        public static final int mapview=0x7f06000e;
+        public static final int radar=0x7f06000b;
+        public static final int radar_list=0x7f06000c;
+        public static final int zoom_to_me=0x7f06000f;
     }
     public static final class layout {
         public static final int event_list_element=0x7f030000;
