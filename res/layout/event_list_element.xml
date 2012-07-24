@@ -36,7 +36,7 @@
 		   	/>
 		       
     
-      <ImageView 
+      <Button 
 		   		android:id="@+id/add_to_radar_image"
 		   		android:layout_width="50dp"
 		   		android:layout_height="50dp"
@@ -45,6 +45,14 @@
 		   		android:layout_marginTop="30dp"
 		   	/>   
           
+   <TextView android:id="@+id/upvotes"
+      	android:layout_width="wrap_content" 
+      	android:layout_height="wrap_content" 
+      	android:textSize="16dp"
+      	android:textColor="#ffffff"
+      	android:text="100"
+      	android:layout_marginTop="9dp"
+      	android:layout_marginLeft="271dp"/>
           
     <TextView android:id="@+id/event_list_size"
       	android:layout_width="wrap_content" 
