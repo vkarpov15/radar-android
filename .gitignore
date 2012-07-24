@@ -1,3 +1,5 @@
 # Ignore compiled Java
 *.class
 *.dex
+# Ignore binaries
+*.apk
