@@ -22,9 +22,19 @@
 		   		android:layout_marginTop="7dp"
 		   		android:layout_marginBottom="7dp"
 		   	/>
+        <Button 
+		   		android:id="@+id/map_button"
+		   		android:layout_width="fill_parent"
+		   		android:layout_height="fill_parent"
+		   		android:paddingLeft="100dp"
+		   		android:layout_marginLeft="100dp"
+		    	
+		   		android:layout_marginTop="5dp"
+		   		android:layout_marginBottom="0dp"
+		   	/>
          
        <TextView android:id="@+id/event_text"
-        android:layout_width="fill_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:paddingLeft="230dp"
@@ -34,6 +44,7 @@
         android:textStyle="bold"
         android:text="Ashitosh"
    			 />
+       
        
        </FrameLayout>
        
