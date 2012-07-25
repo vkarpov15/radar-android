@@ -3,3 +3,5 @@
 *.dex
 # Ignore binaries
 *.apk
+# Ignore Apple's diseased mess
+.DS_Store
