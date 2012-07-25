@@ -22,30 +22,32 @@
 		   		android:layout_marginTop="7dp"
 		   		android:layout_marginBottom="7dp"
 		   	/>
-        <Button 
-		   		android:id="@+id/map_button"
-		   		android:layout_width="fill_parent"
-		   		android:layout_height="fill_parent"
-		   		android:paddingLeft="100dp"
-		   		android:layout_marginLeft="100dp"
-		    	
-		   		android:layout_marginTop="5dp"
-		   		android:layout_marginBottom="0dp"
-		   	/>
+       
          
        <TextView android:id="@+id/event_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:paddingLeft="230dp"
-        android:paddingBottom="3dp"
+        android:layout_marginTop="0dp"
+        android:paddingBottom="9dp"
         android:textSize="16dp"
         android:textColor="#FFFFFF"
         android:textStyle="bold"
         android:text="Ashitosh"
+        android:layout_gravity="right"
    			 />
        
-       
+        <Button 
+		   		android:id="@+id/map_button"
+		   		android:layout_width="22dp"
+		   		android:layout_height="22dp"
+		   		android:layout_marginRight="80dp"
+		   		android:layout_marginTop="2dp"
+		   		android:background="@drawable/map_icon"
+		   		android:layout_gravity="right"
+		   		android:layout_marginBottom="0dp"
+		   	/>
+        
+		       
        </FrameLayout>
        
     

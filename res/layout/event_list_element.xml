@@ -43,6 +43,7 @@
 		   		android:layout_marginLeft="260dp"
 		    	android:background="@drawable/radar_button"
 		   		android:layout_marginTop="30dp"
+		   		android:layout_gravity="right"
 		   	/>   
           
    <TextView android:id="@+id/upvotes"
