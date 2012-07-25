@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="130dp">
+        <ImageView
+            android:layout_width="90dp"
+   			android:layout_height="120dp"
+   			android:scaleType="centerCrop"
+            android:id="@+id/event_img"
+            />
+        <TextView
+            android:layout_toRightOf="@id/event_img"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:id="@+id/event_title" 
+            />
+        <TextView 
+            android:layout_below="@id/event_title"
+            android:id="@+id/event_time"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            />
+        <TextView
+            android:layout_below="@id/event_time"
+            android:id="@+id/event_location"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            />
+        <TextView
+            android:layout_below="@id/event_location"
+            android:id="@+id/event_num_radar"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            />
+        <TextView
+            android:layout_toRightOf="@id/event_num_radar"
+            android:id="@+id/event_num_radar_desc"
+            android:text=" people added this to their radar"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            />
+    </RelativeLayout>
+    
+</LinearLayout>
