@@ -10,7 +10,7 @@
         android:layout_width="fill_parent"
         android:layout_height="130dp">
         <ImageView
-            android:layout_width="90dp"
+            android:layout_width="92dp"
    			android:layout_height="120dp"
    			android:scaleType="centerCrop"
             android:id="@+id/event_img"
@@ -18,15 +18,26 @@
         <TextView
             android:layout_toRightOf="@id/event_img"
             android:layout_height="wrap_content"
-            android:layout_width="100dp"
+            android:layout_width="fill_parent"
             android:id="@+id/event_title" 
             android:scaleType="centerCrop"
+            android:text="500 startups happy hour rager party "
+             android:textColor="#FFFFFF"
+        android:textStyle="bold"
+        	android:layout_marginLeft="16dp"
+            
             />
         <TextView 
             android:layout_below="@id/event_title"
             android:id="@+id/event_time"
             android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
+            android:layout_width="fill_parent"
+            android:text="11:00pm"
+              android:layout_toRightOf="@id/event_img"
+             android:layout_marginLeft="15dp"
+            
+            
+            
             />
         <TextView
             android:layout_below="@id/event_time"
@@ -34,16 +45,31 @@
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
             android:text="Club Avenue"
-            android:layout_marginLeft="100dp"
+            android:layout_marginLeft="142dp"
+             android:layout_marginTop="5dp"
+            
             />
+        
+        <ImageView 
+		   		android:id="@+id/location_image"
+		   		android:layout_width="25dp"
+		   		android:layout_height="25dp"
+		   		android:layout_marginLeft="104dp"
+		    	android:background="@drawable/location_marker"
+		   		android:layout_marginTop="57dp"
+		   	/>
+		 
+        
+        
         <TextView
             android:layout_below="@id/event_location"
             android:id="@+id/event_num_radar"
             android:layout_height="wrap_content"
             android:layout_width="40dp"
             android:text="1001"
-            android:layout_marginLeft="101dp"
+            android:layout_marginLeft="102dp"
             android:textColor="#ea8e4c"
+            android:layout_marginTop="7dp"
             />
         <TextView
             android:layout_toRightOf="@id/event_num_radar"
@@ -51,8 +77,25 @@
             android:text="people added this to their radar"
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
-            android:layout_marginTop="58dp"
+            android:layout_marginTop="85dp"
             />
+       
     </RelativeLayout>
+    
+     <TextView
+            android:id="@+id/event_description"
+            android:layout_height="wrap_content"
+            android:layout_width="fill_parent"
+            android:text="IPhasellus consectetur mollis scelerisque. Pellentesque nunc nulla, scelerisque at pharetra adipiscing, bibendum nec sem. Donec vitae eros lectus, id consequat dolor. Sed cursus bibendum malesuada. Sed imperdiet, elit ut faucibus ultrices, sapien libero faucibus dolor, facilisis pellentesque justo eros eu nunc. Nam commodo mattis odio sit amet molestie. Aenean egestas sodales lorem eu blandit. Nulla diam tellus, ultrices et pretium sed, aliquet non nibh. Etiam ornare accumsan neque, eu blandit sapien mollis id. Proin pulvinar convallis facilisis. Mauris purus turpis, porta id auctor vel, volutpat elementum risus. Cras eu odio a augue tristique auctor ac bibendum nulla. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae;
+
+Aliquam erat volutpat. Aliquam ornare venenatis mattis. Nunc ut neque arcu, vitae aliquam odio. Sed lobortis magna quis neque blandit luctus. Nullam at libero eu dui tempus pulvinar id eget magna. Vestibulum nisl erat, malesuada sed varius sed, euismod nec diam. Proin suscipit, odio at sodales ullamcorper, sapien velit lacinia nunc, a blandit elit felis eu eros.
+
+Proin blandit, elit vel ornare hendrerit, magna dolor facilisis magna, ut rutrum eros velit et augue. Mauris malesuada mauris eu lorem porttitor in euismod nisi euismod. Quisque congue nunc vel leo laoreet non dapibus sapien fermentum. Nullam fringilla faucibus nunc, sit amet vulputate tellus pulvinar sed. Donec luctus tincidunt dictum. Maecenas eget odio purus. Ut varius pellentesque velit eu elementum. Cras sapien erat, accumsan quis lacinia eu, tincidunt a ante. Mauris ultricies, augue eget blandit fermentum, diam mauris ultrices diam, et tristique tortor massa eu lectus.
+
+"
+            
+            android:textColor="#ffffff"
+            android:layout_marginTop="10dp"
+            />
     
 </LinearLayout>
