@@ -46,11 +46,11 @@ public class Event implements Parcelable {
 	}
 
 	public void writeToParcel(Parcel dest, int flags) {
+	  dest.writeString(image.toString());
 		dest.writeString(id);
 		dest.writeString(name);
 		dest.writeString(description);
 		dest.writeString(venueName);
-		dest.writeString(image.toString());
 		dest.writeDouble(lat);
 		dest.writeDouble(lon);
 		dest.writeInt(radarCount);
@@ -59,26 +59,27 @@ public class Event implements Parcelable {
 	}
 	
 	public static final Parcelable.Creator<Event> CREATOR = new Parcelable.Creator<Event>() {
-        public Event createFromParcel(Parcel in) {
-            try {
+	  public Event createFromParcel(Parcel in) {
+	    String url = in.readString();
+	    try {
 				return new Event(	in.readString(),
-									in.readString(),
-									in.readString(),
-									in.readString(),
-									new URL(in.readString()),
-									in.readDouble(),
-									in.readDouble(),
-									in.readInt(),
-									in.readInt() == 1,
-									in.readString());
+									        in.readString(),
+									        in.readString(),
+									        in.readString(),
+									        new URL(url),
+									        in.readDouble(),
+									        in.readDouble(),
+									        in.readInt(),
+									        in.readInt() == 1,
+									        in.readString());
 			} catch (MalformedURLException e) {
-				e.printStackTrace();
-				return null;
+			  e.printStackTrace();
+			  return null;
 			}
-        }
+	  }
  
-        public Event[] newArray(int size) {
-            return new Event[size];
-        }
-    };
+	  public Event[] newArray(int size) {
+	    return new Event[size];
+	  }
+	};
 }

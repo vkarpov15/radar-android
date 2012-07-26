@@ -20,7 +20,10 @@ import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 
-public class RadarCommonController {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class RadarCommonController implements Parcelable {
 	public static final int MAX_RADAR_SELECTIONS = 3;
 	
 	private final LinkedHashMap<String, Event> events = new LinkedHashMap<String, Event>();
@@ -30,7 +33,7 @@ public class RadarCommonController {
 	public final List<Event> radar = new ArrayList<Event>();
 	
 	// Sort by # of people with event in radar, reversed
-	private final Comparator<Event> defaultOrdering = new Comparator<Event>() {
+	private static final Comparator<Event> defaultOrdering = new Comparator<Event>() {
 		public int compare(Event e1, Event e2) {
 			if (e1.radarCount > e2.radarCount) {
 				return -1;
@@ -111,4 +114,40 @@ public class RadarCommonController {
 	  e.setOnRadar(false);
 	  return true;
 	}
+
+  @Override
+  public int describeContents() {
+    return 0;
+  }
+
+  @Override
+  public void writeToParcel(Parcel dest, int flags) {
+    // Technically all we need to do is write eventsList, and then reconstruct on the other side
+    dest.writeTypedList(eventsList);
+  }
+  
+  public static final Parcelable.Creator<RadarCommonController> CREATOR = new Parcelable.Creator<RadarCommonController>() {
+    public RadarCommonController createFromParcel(Parcel in) {
+      List<Event> events = new ArrayList<Event>();
+      in.readTypedList(events, Event.CREATOR);
+      RadarCommonController c = new RadarCommonController();
+      c.eventsList.clear();
+      c.events.clear();
+      c.radar.clear();
+      c.radarIds.clear();
+      c.eventsList.addAll(events);
+      for (Event e : events) {
+        c.events.put(e.id, e);
+        if (e.isOnRadar()) {
+          c.radarIds.add(e.id);
+          c.radar.add(e);
+        }
+      }
+      return c;
+    }
+
+    public RadarCommonController[] newArray(int size) {
+      return new RadarCommonController[size];
+    }
+};
 }

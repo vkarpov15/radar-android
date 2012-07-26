@@ -4,14 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.graphics.drawable.Drawable;
-import android.view.View;
-import android.widget.TextView;
 
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.ItemizedOverlay;
 import com.google.android.maps.MapView;
-import com.google.android.maps.MyLocationOverlay;
-import com.google.android.maps.OverlayItem;
 
 public class RadarMapController {
 	private final RadarCommonController commonController;
@@ -19,15 +15,14 @@ public class RadarMapController {
 	private double lat;
 	private double lon;
 	private int zoom;
-	private Event selected = null;
 	
 	private final MapView mapView;
 	
 	private class TabbieEventMarkerCollection extends ItemizedOverlay<EventMarker> {
 	  private final List<EventMarker> markers = new ArrayList<EventMarker>();
     
-	  public TabbieEventMarkerCollection(Drawable defaultMarker) {
-	    super(boundCenterBottom(defaultMarker));
+	  public TabbieEventMarkerCollection() {
+	    super(null);
 	  }
     	
 	  public void addOverlay(EventMarker overlay) {
@@ -57,7 +52,7 @@ public class RadarMapController {
 	
 	private TabbieEventMarkerCollection markersCollection;
 	
-	public RadarMapController(RadarCommonController commonController, MapView mapView, Drawable defaultMarker) {
+	public RadarMapController(RadarCommonController commonController, MapView mapView) {
 		this.commonController = commonController;
 		this.lat = 0;
 		this.lon = 0;
@@ -65,7 +60,7 @@ public class RadarMapController {
 		this.mapView = mapView;
 		this.setLatLon(40.736968, -73.989183);
 		this.setZoom(14);
-		this.markersCollection = new TabbieEventMarkerCollection(defaultMarker);
+		this.markersCollection = new TabbieEventMarkerCollection();
 	}
 	
 	public void setZoom(int zoom) {
@@ -90,7 +85,9 @@ public class RadarMapController {
 	
 	public void addEventMarker(Event e, Drawable markerImg, EventMarker.OnClickListener listener) {
 		EventMarker marker = new EventMarker(e);
-		marker.setOnClickListener(listener);
+		if (null != listener) {
+		  marker.setOnClickListener(listener);
+		}
 		markerImg.setBounds(0, 0, markerImg.getIntrinsicWidth(), markerImg.getIntrinsicHeight());
 		marker.setMarker(markersCollection.boundDrawable(markerImg));
 		this.markersCollection.addOverlay(marker);

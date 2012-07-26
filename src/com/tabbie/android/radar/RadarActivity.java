@@ -3,6 +3,7 @@ package com.tabbie.android.radar;
 import java.io.IOException;
 import java.util.List;
 
+import android.app.TabActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
@@ -21,9 +22,7 @@ import android.widget.TabHost;
 import android.widget.TabHost.OnTabChangeListener;
 import android.widget.TextView;
 
-import com.google.android.maps.MapActivity;
-
-public class RadarActivity extends MapActivity implements OnTabChangeListener {
+public class RadarActivity extends TabActivity implements OnTabChangeListener {
 
   private static final String LIST_FEATURED_TAG = "Featured";
   private static final String EVENT_TAB_TAG = "Events";
@@ -34,10 +33,6 @@ public class RadarActivity extends MapActivity implements OnTabChangeListener {
   private ListView allListView;
   private ListView radarListView;
   private RadarCommonController commonController;
-  
-  //private MapView mapView;
-  //private RadarMapController mapController;
-  //private MyLocationOverlay myLocationOverlay;
 
   private Event selected = null;
 
@@ -103,6 +98,16 @@ public class RadarActivity extends MapActivity implements OnTabChangeListener {
           ((EventListAdapter) allListView.getAdapter()).notifyDataSetChanged();
         }
       });
+      
+      convertView.findViewById(R.id.location_image).setOnClickListener(new OnClickListener() {        
+        @Override
+        public void onClick(View v) {
+          Intent intent = new Intent(RadarActivity.this, RadarMapActivity.class);
+          intent.putExtra("controller", commonController);
+          intent.putExtra("event", e);
+          startActivity(intent);
+        }
+      });
       return convertView;
     }
 
@@ -119,7 +124,7 @@ public class RadarActivity extends MapActivity implements OnTabChangeListener {
 
     commonController = new RadarCommonController();
 
-    tabHost = (TabHost) findViewById(android.R.id.tabhost);
+    tabHost = getTabHost();
     tabHost.setup();
     tabHost.setOnTabChangedListener(this);
 
@@ -137,33 +142,16 @@ public class RadarActivity extends MapActivity implements OnTabChangeListener {
         R.layout.event_list_element, commonController.eventsList));
     radarListView.setAdapter(new EventListAdapter(this, R.id.radar_list,
         R.layout.event_list_element, commonController.radar));
-
-    //List<Overlay> overlays = mapView.getOverlays();
-    //overlays.clear();
-
-    //myLocationOverlay = new MyLocationOverlay(this, mapView);
-    //myLocationOverlay.enableMyLocation();
-
-    Drawable defaultMarker = getResources().getDrawable(R.drawable.marker);
-    Drawable featuredMarker = getResources()
-        .getDrawable(R.drawable.ic_launcher);
     
-    for (final Event e : commonController.eventsList) {
-      /*mapController.addEventMarker(e, e.featured ? featuredMarker
-          : defaultMarker, new EventMarker.OnClickListener() {
-        public void onClick() {
-          
-          //mapController.setLatLon(e.lat, e.lon); mapController.setZoom(16);
-          
-        }*/
-      //});
-    }
-
-    //overlays.add(myLocationOverlay);
-    //overlays.add(mapController.getItemizedOverlay());
-    //mapView.postInvalidate();
-
-    // add views to tab host
+    findViewById(R.id.map_button).setOnClickListener(new OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        Intent intent = new Intent(RadarActivity.this, RadarMapActivity.class);
+        intent.putExtra("controller", commonController);
+        startActivity(intent);
+      }
+    });
+    
     tabHost.addTab(tabHost.newTabSpec(LIST_FEATURED_TAG)
         .setIndicator(LIST_FEATURED_TAG)
         .setContent(new TabHost.TabContentFactory() {
@@ -189,11 +177,6 @@ public class RadarActivity extends MapActivity implements OnTabChangeListener {
     tabHost.setCurrentTab(2);
     tabHost.setCurrentTab(1);
     tabHost.setCurrentTab(0);
-  }
-
-  @Override
-  protected boolean isRouteDisplayed() {
-    return false;
   }
 
   public void onTabChanged(String tabName) {

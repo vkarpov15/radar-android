@@ -29,7 +29,6 @@ public class EventDetailsActivity extends Activity {
     
     eventImage = (ImageView) findViewById(R.id.details_event_img);
     
-    
     Bundle starter = getIntent().getExtras();
     if (null != starter && starter.containsKey("event")) {
       e = starter.getParcelable("event");
