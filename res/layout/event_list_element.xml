@@ -53,7 +53,7 @@
       	android:textColor="#ffffff"
       	android:text="100"
       	android:layout_marginTop="9dp"
-      	android:layout_marginLeft="271dp"/>
+      	android:layout_marginLeft="280dp"/>
           
     <TextView android:id="@+id/event_list_time"
       	android:layout_width="wrap_content" 

@@ -49,36 +49,33 @@
              android:layout_marginTop="5dp"
             
             />
-        
-        <ImageView 
-		   		android:id="@+id/location_image"
-		   		android:layout_width="25dp"
-		   		android:layout_height="25dp"
-		   		android:layout_marginLeft="104dp"
-		    	android:background="@drawable/location_marker"
-		   		android:layout_marginTop="57dp"
-		   	/>
-		 
-        
-        
+
+        <ImageView
+            android:id="@+id/location_image"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_alignLeft="@+id/details_event_title"
+            android:layout_alignTop="@+id/details_event_location"
+            android:background="@drawable/location_marker" />
+
         <TextView
-            android:layout_below="@id/details_event_location"
             android:id="@+id/details_event_num_radar"
+            android:layout_width="10dp"
             android:layout_height="wrap_content"
-            android:layout_width="40dp"
-            android:text="1001"
-            android:layout_marginLeft="102dp"
-            android:textColor="#ea8e4c"
-            android:layout_marginTop="7dp"
-            />
+            android:layout_alignRight="@+id/location_image"
+            android:layout_below="@+id/location_image"
+            android:text="6"
+            android:layout_marginRight="7dp"
+            android:textColor="#ea8e4c" />
+
         <TextView
-            android:layout_toRightOf="@id/details_event_num_radar"
             android:id="@+id/event_num_radar_desc"
-            android:text="people added this to their radar"
+            android:layout_width="140dp"
             android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:layout_marginTop="85dp"
-            />
+            android:layout_alignBaseline="@+id/details_event_num_radar"
+            android:layout_alignBottom="@+id/details_event_num_radar"
+            android:layout_alignLeft="@+id/details_event_location"
+            android:text="people added this to their radar" />
        
     </RelativeLayout>
     
