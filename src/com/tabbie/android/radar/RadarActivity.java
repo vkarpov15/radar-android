@@ -6,6 +6,7 @@ import java.util.List;
 import android.app.TabActivity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -37,7 +38,11 @@ public class RadarActivity extends TabActivity implements OnTabChangeListener {
   private ListView radarListView;
   private RadarCommonController commonController;
 
+  private ServerThread serverThread;
+  
+  // FB junk
   private Facebook facebook = new Facebook("217386331697217");
+  private SharedPreferences preferences;
   
   private class EventListAdapter extends ArrayAdapter<Event> {
 
@@ -123,19 +128,34 @@ public class RadarActivity extends TabActivity implements OnTabChangeListener {
     allListView = (ListView) findViewById(R.id.all_event_list);
     radarListView = (ListView) findViewById(R.id.radar_list);
 
-    facebook.authorize(this, new String[] { "email" }, new DialogListener() {
-      @Override
-      public void onComplete(Bundle values) {}
-  
-      @Override
-      public void onFacebookError(FacebookError error) {}
-  
-      @Override
-      public void onError(DialogError e) {}
-  
-      @Override
-      public void onCancel() {}
-    });
+    preferences = getPreferences(MODE_PRIVATE);
+    String accessToken = preferences.getString("access_token", null);
+    long expires = preferences.getLong("access_expires", 0);
+    if (accessToken != null) {
+        facebook.setAccessToken(accessToken);
+    }
+    if (expires != 0) {
+        facebook.setAccessExpires(expires);
+    }
+    
+    if(!facebook.isSessionValid()) {
+      facebook.authorize(this, new String[] { "email" }, new DialogListener() {
+        @Override
+        public void onComplete(Bundle values) {
+          
+          
+        }
+    
+        @Override
+        public void onFacebookError(FacebookError error) {}
+    
+        @Override
+        public void onError(DialogError e) {}
+    
+        @Override
+        public void onCancel() {}
+      });
+    }
     
     commonController = new RadarCommonController();
 
@@ -208,5 +228,11 @@ public class RadarActivity extends TabActivity implements OnTabChangeListener {
   public void onActivityResult(int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
     facebook.authorizeCallback(requestCode, resultCode, data);
+  }
+  
+  @Override
+  public void onResume() {    
+    super.onResume();
+    facebook.extendAccessTokenIfNeeded(this, null);
   }
 }
