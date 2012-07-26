@@ -24,10 +24,10 @@ public class RadarCommonController {
 	public static final int MAX_RADAR_SELECTIONS = 3;
 	
 	private final LinkedHashMap<String, Event> events = new LinkedHashMap<String, Event>();
-	private final List<Event> eventsList = new ArrayList<Event>();
+	public final List<Event> eventsList = new ArrayList<Event>();
 	
 	private final LinkedHashSet<String> radarIds = new LinkedHashSet<String>();
-	private final List<Event> radar = new ArrayList<Event>();
+	public final List<Event> radar = new ArrayList<Event>();
 	
 	// Sort by # of people with event in radar, reversed
 	private final Comparator<Event> defaultOrdering = new Comparator<Event>() {
@@ -81,16 +81,8 @@ public class RadarCommonController {
 		Collections.sort(eventsList, defaultOrdering);
 	}
 	
-	public List<Event> getEvents() {
-		return eventsList;
-	}
-	
 	public Event getEvent(String id) {
 		return events.get(id);
-	}
-	
-	public List<Event> getRadarEvents() {
-		return radar;
 	}
 	
 	public boolean isOnRadar(Event e) {
@@ -103,6 +95,20 @@ public class RadarCommonController {
 		}
 		radarIds.add(e.id);
 		radar.add(e);
+		++e.radarCount;
+		e.setOnRadar(true);
 		return true;
+	}
+	
+	public boolean removeFromRadar(Event e) {
+	  if (!radarIds.contains(e.id)) {
+	    return false;
+	  }
+	  radarIds.remove(e.id);
+	  // TODO: this is slow, improve
+	  radar.remove(e);
+	  --e.radarCount;
+	  e.setOnRadar(false);
+	  return true;
 	}
 }

@@ -14,10 +14,10 @@ public class Event implements Parcelable {
 	public final URL image;
 	public final double lat;
 	public final double lon;
-	public final int radarCount;
 	public final boolean featured;
-	private final String time;
+	public final String time;
 	
+	public int radarCount;
 	private boolean onRadar;
 	
 	public Event(String id, String name, String description, String venueName, URL image, double lat, double lon, int radarCount, boolean featured, String time) {
