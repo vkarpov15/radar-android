@@ -3,7 +3,6 @@ package com.tabbie.android.radar;
 import java.io.IOException;
 import java.util.List;
 
-import android.app.TabActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -26,7 +25,7 @@ import com.facebook.android.Facebook;
 import com.facebook.android.Facebook.DialogListener;
 import com.facebook.android.FacebookError;
 
-public class RadarActivity extends TabActivity implements OnTabChangeListener {
+public class RadarActivity extends ServerThreadActivity implements OnTabChangeListener {
 
   private static final String LIST_FEATURED_TAG = "Featured";
   private static final String EVENT_TAB_TAG = "Events";
@@ -99,9 +98,15 @@ public class RadarActivity extends TabActivity implements OnTabChangeListener {
             radarButton.setBackgroundResource(R.drawable.radar_button_on);
           }
           upVotes.setText(Integer.toString(e.radarCount));
-          ((EventListAdapter) radarListView.getAdapter()).notifyDataSetChanged();
-          ((EventListAdapter) featuredListView.getAdapter()).notifyDataSetChanged();
-          ((EventListAdapter) allListView.getAdapter()).notifyDataSetChanged();
+          if (tabHost.getCurrentTab() != 2) {
+            ((EventListAdapter) radarListView.getAdapter()).notifyDataSetChanged();
+          }
+          if (tabHost.getCurrentTab() != 0) {
+            ((EventListAdapter) featuredListView.getAdapter()).notifyDataSetChanged();
+          }
+          if (tabHost.getCurrentTab() != 1) {
+            ((EventListAdapter) allListView.getAdapter()).notifyDataSetChanged();
+          }
         }
       });
       
@@ -159,7 +164,7 @@ public class RadarActivity extends TabActivity implements OnTabChangeListener {
     
     commonController = new RadarCommonController();
 
-    tabHost = getTabHost();
+    tabHost = (TabHost) findViewById(android.R.id.tabhost);
     tabHost.setup();
     tabHost.setOnTabChangedListener(this);
 
@@ -234,5 +239,11 @@ public class RadarActivity extends TabActivity implements OnTabChangeListener {
   public void onResume() {    
     super.onResume();
     facebook.extendAccessTokenIfNeeded(this, null);
+  }
+
+  @Override
+  protected boolean handleServerResponse(ServerResponse resp) {
+    // TODO Auto-generated method stub
+    return false;
   }
 }
