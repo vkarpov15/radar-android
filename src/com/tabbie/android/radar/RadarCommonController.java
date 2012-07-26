@@ -29,15 +29,10 @@ public class RadarCommonController {
 	private final LinkedHashSet<String> radarIds = new LinkedHashSet<String>();
 	private final List<Event> radar = new ArrayList<Event>();
 	
-	// Segmented by featured status - featured events always come before non-featured.
-	// Within featured / unfeatured, ordered by # of people who have this on radar
+	// Sort by # of people with event in radar, reversed
 	private final Comparator<Event> defaultOrdering = new Comparator<Event>() {
 		public int compare(Event e1, Event e2) {
-			if (e1.featured && !e2.featured) {
-				return -1;
-			} else if (e2.featured && !e1.featured) {
-				return 1;
-			} else if (e1.radarCount > e2.radarCount) {
+			if (e1.radarCount > e2.radarCount) {
 				return -1;
 			} else if (e1.radarCount < e2.radarCount) {
 				return 1;
@@ -56,7 +51,8 @@ public class RadarCommonController {
 									40.709208,
 									-74.005864,
 									4,
-									false);
+									false,
+									"11:00pm");
 			Event e2 = new Event(	"2",
 									"Ginyu Force Party",
 									"Dress up as Ginyu Force and show off your Recoome Boom!",
@@ -65,7 +61,8 @@ public class RadarCommonController {
 									40.744253,
 									-73.987991,
 									6,
-									true);
+									true,
+									"8:00pm");
 			addEvent(e1);
 			addEvent(e2);
 			order();

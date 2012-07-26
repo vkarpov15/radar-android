@@ -4,13 +4,16 @@ import java.io.IOException;
 import java.util.List;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -35,11 +38,11 @@ public class RadarActivity extends MapActivity implements OnTabChangeListener {
   private TabHost tabHost;
   private ListView featuredListView;
   private ListView allListView;
-  private MapView mapView;
+  //private MapView mapView;
   private ListView radarListView;
   private RadarCommonController commonController;
-  private RadarMapController mapController;
-  private MyLocationOverlay myLocationOverlay;
+  //private RadarMapController mapController;
+  //private MyLocationOverlay myLocationOverlay;
 
   private Event selected = null;
 
@@ -58,7 +61,7 @@ public class RadarActivity extends MapActivity implements OnTabChangeListener {
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         convertView = inflater.inflate(R.layout.event_list_element, null);
       }
-      Event e = getItem(position);
+      final Event e = getItem(position);
       TextView title = (TextView) convertView.findViewById(R.id.event_text);
       title.setText(e.name);
       ImageView img = (ImageView) convertView.findViewById(R.id.event_image);
@@ -68,6 +71,17 @@ public class RadarActivity extends MapActivity implements OnTabChangeListener {
       } catch (IOException exception) {
         exception.printStackTrace();
       }
+      final View v = convertView.findViewById(R.id.list_list_element_layout);
+      v.setOnClickListener(new OnClickListener() {
+		
+		public void onClick(View v) {
+	        if (null != e) {
+	          Intent intent = new Intent(RadarActivity.this, EventDetailsActivity.class);
+	          intent.putExtra("event", e);
+	          startActivity(intent);
+	        }
+		}
+      });
       return convertView;
     }
 
@@ -83,7 +97,7 @@ public class RadarActivity extends MapActivity implements OnTabChangeListener {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
       if (null == convertView) {
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         convertView = inflater.inflate(R.layout.event_list_element, null);
@@ -107,16 +121,16 @@ public class RadarActivity extends MapActivity implements OnTabChangeListener {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.main);
 
-    mapView = (MapView) findViewById(R.id.mapview);
-    mapView.setBuiltInZoomControls(true);
+    //mapView = (MapView) findViewById(R.id.mapview);
+    //mapView.setBuiltInZoomControls(true);
 
     featuredListView = (ListView) findViewById(R.id.featured_event_list);
     allListView = (ListView) findViewById(R.id.all_event_list);
     radarListView = (ListView) findViewById(R.id.radar_list);
 
     commonController = new RadarCommonController();
-    mapController = new RadarMapController(commonController, mapView,
-        getResources().getDrawable(R.drawable.marker));
+    //mapController = new RadarMapController(commonController, mapView,
+    //    getResources().getDrawable(R.drawable.marker));
 
     tabHost = (TabHost) findViewById(android.R.id.tabhost);
     // setup must be called if you are not inflating the tabhost from XML
@@ -135,30 +149,14 @@ public class RadarActivity extends MapActivity implements OnTabChangeListener {
             .applyToList(commonController.getEvents())));
     allListView.setAdapter(new EventListAdapter(this, R.id.all_event_list,
         R.layout.event_list_element, commonController.getEvents()));
-
-    featuredListView.setOnItemClickListener(new OnItemClickListener() {
-      public void onItemClick(AdapterView parent, View view, int position,
-          long id) {
-        Event e = (Event) featuredListView.getAdapter().getItem(position);
-        if (null != e) {
-          // have map view moved to this point
-          /*
-           * mapController.setLatLon(e.lat, e.lon); mapController.setZoom(16);
-           * tabHost.setCurrentTab(1);
-           */
-        }
-      }
-    });
-    // setup map view
-
     radarListView.setAdapter(new RadarListAdapter(this, R.id.radar_list,
         R.layout.radar_list_element, commonController.getRadarEvents()));
 
-    List<Overlay> overlays = mapView.getOverlays();
-    overlays.clear();
+    //List<Overlay> overlays = mapView.getOverlays();
+    //overlays.clear();
 
-    myLocationOverlay = new MyLocationOverlay(this, mapView);
-    myLocationOverlay.enableMyLocation();
+    //myLocationOverlay = new MyLocationOverlay(this, mapView);
+    //myLocationOverlay.enableMyLocation();
 
     List<Event> events = commonController.getEvents();
 
@@ -166,19 +164,19 @@ public class RadarActivity extends MapActivity implements OnTabChangeListener {
     Drawable featuredMarker = getResources()
         .getDrawable(R.drawable.ic_launcher);
     for (final Event e : events) {
-      mapController.addEventMarker(e, e.featured ? featuredMarker
+      /*mapController.addEventMarker(e, e.featured ? featuredMarker
           : defaultMarker, new EventMarker.OnClickListener() {
         public void onClick() {
-          /*
-           * mapController.setLatLon(e.lat, e.lon); mapController.setZoom(16);
-           */
-        }
-      });
+          
+          //mapController.setLatLon(e.lat, e.lon); mapController.setZoom(16);
+          
+        }*/
+      //});
     }
 
-    overlays.add(myLocationOverlay);
-    overlays.add(mapController.getItemizedOverlay());
-    mapView.postInvalidate();
+    //overlays.add(myLocationOverlay);
+    //overlays.add(mapController.getItemizedOverlay());
+    //mapView.postInvalidate();
 
     // add views to tab host
     tabHost.addTab(tabHost.newTabSpec(LIST_FEATURED_TAG)
@@ -235,8 +233,8 @@ public class RadarActivity extends MapActivity implements OnTabChangeListener {
     // Handle item selection
     switch (item.getItemId()) {
     case R.id.zoom_to_me:
-      mapController.setLatLon(myLocationOverlay.getMyLocation());
-      mapController.setZoom(16);
+      //mapController.setLatLon(myLocationOverlay.getMyLocation());
+      //mapController.setZoom(16);
       return true;
     default:
       return super.onOptionsItemSelected(item);
