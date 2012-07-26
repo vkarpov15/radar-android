@@ -15,15 +15,17 @@ public final class R {
         public static final int app_name=0x7f020001;
         public static final int balloon_disclosure=0x7f020002;
         public static final int balloon_overlay_close=0x7f020003;
-        public static final int ic_launcher=0x7f020004;
-        public static final int location_marker=0x7f020005;
-        public static final int map_icon=0x7f020006;
-        public static final int marker=0x7f020007;
-        public static final int marker_highlight=0x7f020008;
-        public static final int radar_button=0x7f020009;
-        public static final int radar_button_on=0x7f02000a;
-        public static final int velvet_rope_background=0x7f02000b;
-        public static final int velvet_rope_header=0x7f02000c;
+        public static final int close=0x7f020004;
+        public static final int facebook_icon=0x7f020005;
+        public static final int ic_launcher=0x7f020006;
+        public static final int location_marker=0x7f020007;
+        public static final int map_icon=0x7f020008;
+        public static final int marker=0x7f020009;
+        public static final int marker_highlight=0x7f02000a;
+        public static final int radar_button=0x7f02000b;
+        public static final int radar_button_on=0x7f02000c;
+        public static final int velvet_rope_background=0x7f02000d;
+        public static final int velvet_rope_header=0x7f02000e;
     }
     public static final class id {
         public static final int add_to_radar_image=0x7f06000c;

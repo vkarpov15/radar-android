@@ -9,8 +9,6 @@ import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -21,6 +19,11 @@ import android.widget.ListView;
 import android.widget.TabHost;
 import android.widget.TabHost.OnTabChangeListener;
 import android.widget.TextView;
+
+import com.facebook.android.DialogError;
+import com.facebook.android.Facebook;
+import com.facebook.android.Facebook.DialogListener;
+import com.facebook.android.FacebookError;
 
 public class RadarActivity extends TabActivity implements OnTabChangeListener {
 
@@ -34,15 +37,13 @@ public class RadarActivity extends TabActivity implements OnTabChangeListener {
   private ListView radarListView;
   private RadarCommonController commonController;
 
-  private Event selected = null;
-
+  private Facebook facebook = new Facebook("217386331697217");
+  
   private class EventListAdapter extends ArrayAdapter<Event> {
-    private List<Event> events;
 
     public EventListAdapter(Context context, int resource,
         int textViewResourceId, List<Event> events) {
       super(context, resource, textViewResourceId, events);
-      this.events = events;
     }
 
     @Override
@@ -122,6 +123,20 @@ public class RadarActivity extends TabActivity implements OnTabChangeListener {
     allListView = (ListView) findViewById(R.id.all_event_list);
     radarListView = (ListView) findViewById(R.id.radar_list);
 
+    facebook.authorize(this, new String[] { "email" }, new DialogListener() {
+      @Override
+      public void onComplete(Bundle values) {}
+  
+      @Override
+      public void onFacebookError(FacebookError error) {}
+  
+      @Override
+      public void onError(DialogError e) {}
+  
+      @Override
+      public void onCancel() {}
+    });
+    
     commonController = new RadarCommonController();
 
     tabHost = getTabHost();
@@ -190,22 +205,8 @@ public class RadarActivity extends TabActivity implements OnTabChangeListener {
   }
 
   @Override
-  public boolean onCreateOptionsMenu(Menu menu) {
-    /*MenuInflater inflater = getMenuInflater();
-    inflater.inflate(R.menu.map_menu, menu);*/
-    return true;
-  }
-
-  @Override
-  public boolean onOptionsItemSelected(MenuItem item) {
-    // Handle item selection
-    switch (item.getItemId()) {
-    case R.id.zoom_to_me:
-      //mapController.setLatLon(myLocationOverlay.getMyLocation());
-      //mapController.setZoom(16);
-      return true;
-    default:
-      return super.onOptionsItemSelected(item);
-    }
+  public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    super.onActivityResult(requestCode, resultCode, data);
+    facebook.authorizeCallback(requestCode, resultCode, data);
   }
 }
