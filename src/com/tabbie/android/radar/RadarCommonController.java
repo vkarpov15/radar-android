@@ -11,8 +11,6 @@ package com.tabbie.android.radar;
  */
 
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -25,6 +23,9 @@ import android.os.Parcelable;
 
 public class RadarCommonController implements Parcelable {
 	public static final int MAX_RADAR_SELECTIONS = 3;
+	
+	private final LinkedHashMap<String, Event> featured = new LinkedHashMap<String, Event>();
+  public final List<Event> featuredList = new ArrayList<Event>();
 	
 	private final LinkedHashMap<String, Event> events = new LinkedHashMap<String, Event>();
 	public final List<Event> eventsList = new ArrayList<Event>();
@@ -45,7 +46,7 @@ public class RadarCommonController implements Parcelable {
 	};
 	
 	public RadarCommonController() {
-		try {
+		/*try {
 			Event e1 = new Event(	"1",
 									"DJ Enuff",
 									"DJ Enuff plays a rare live show at Skyroom NYC. Known primarily for his production work, Enuff is eager to return to the his first home, the club. ",
@@ -71,13 +72,17 @@ public class RadarCommonController implements Parcelable {
 			order();
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
-		}
+		}*/
 		
 	}
 	
 	public void addEvent(Event e) {
 		events.put(e.id, e);
 		eventsList.add(e);
+		if (e.featured) {
+		  featured.put(e.id, e);
+		  featuredList.add(e);
+		}
 	}
 	
 	public void order() {

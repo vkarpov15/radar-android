@@ -9,6 +9,7 @@ package com.tabbie.android.radar;
  * Interface for what we care about from server responses.
  */
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -31,5 +32,14 @@ public class ServerResponse {
 			return new JSONObject();
 		}
 	}
+	
+	public JSONArray parseJsonArray() {
+    try {
+      return new JSONArray(this.content);
+    } catch (JSONException e) {
+      e.printStackTrace();
+      return null;
+    }
+  }
 	
 }

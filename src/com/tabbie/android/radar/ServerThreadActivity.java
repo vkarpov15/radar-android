@@ -56,13 +56,13 @@ public abstract class ServerThreadActivity extends Activity {
     super.onDestroy();
   }
   
-  @Override
+  /*@Override
   public Object onRetainNonConfigurationInstance() {
     if (serverThread != null) {
       serverThread.setUpstreamHandler(null);
     }
     return serverThread;
-  }
+  }*/
   
   @Override
   public void onSaveInstanceState(Bundle outState) {

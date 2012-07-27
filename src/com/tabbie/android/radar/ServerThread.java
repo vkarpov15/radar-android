@@ -26,13 +26,13 @@ import android.os.Message;
 import android.util.Log;
 
 public class ServerThread extends Thread {
-  public static final String TABBIE_SERVER = "http://radar.tabbie.co";
+  public static final String TABBIE_SERVER = "http://tabb.ie";
   public static final int    NO_INTERNET   = -2;
   
 	private Handler upstreamHandler;
 	private HttpURLConnection conn;
 	private boolean active = true;
-	private int numOutstanding = 0;
+	private boolean waiting = false;
 	private final Queue<ServerResponse> responses = new LinkedList<ServerResponse>();
 	private final Queue<ServerRequest> requests = new LinkedList<ServerRequest>();
 	
@@ -64,6 +64,12 @@ public class ServerThread extends Thread {
 	public void setInactive() {
 		this.active = false;
 		this.setPriority(MIN_PRIORITY);
+	}
+	
+	public void parley() {
+	  while (!waiting) {
+	  }
+	  this.stop();
 	}
 	// end methods exposed to clients
 	
@@ -115,12 +121,12 @@ public class ServerThread extends Thread {
   			Log.v(this.getClass().getName(), "Dispatching message '" + response.content + "'");
   			upstreamHandler.dispatchMessage(msg);
   		}
-  		--numOutstanding;
+  		waiting = false;
 	  }
 	}
 
 	private boolean handleRequest(ServerRequest req) {
-	  ++numOutstanding;
+	  waiting = true;
 	  Log.v(this.getClass().getName(), "Got request for URL " + req.url);
 		try {
 			conn = (HttpURLConnection) new URL(req.url).openConnection();
