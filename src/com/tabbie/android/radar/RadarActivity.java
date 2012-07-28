@@ -12,6 +12,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -273,7 +274,8 @@ public class RadarActivity extends ServerThreadActivity implements OnTabChangeLi
     return view;
   }
 
-  @Override
+  @SuppressLint({ "ParserError", "ParserError" })
+@Override
   protected boolean handleServerResponse(ServerResponse resp) {
     if (MessageType.FACEBOOK_LOGIN == resp.responseTo) {
       JSONObject json = resp.parseJsonContent();
@@ -351,7 +353,7 @@ public class RadarActivity extends ServerThreadActivity implements OnTabChangeLi
                                 title,
                                 obj.getString("description"),
                                 obj.getString("street_address"),
-                                new URL("http://designcrown.com/uploads/posts/2012-03/1333108415_designcrown.com_flyer-templates.jpg"),
+                                new URL("http://tabb.ie" + obj.getString("image_url")),
                                 obj.getDouble("latitude"),
                                 obj.getDouble("longitude"),
                                 radarCount,
