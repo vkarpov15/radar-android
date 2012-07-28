@@ -1,58 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout android:orientation="vertical"
     android:layout_width="fill_parent" android:layout_height="fill_parent" xmlns:android="http://schemas.android.com/apk/res/android">
-     <FrameLayout
-      xmlns:android="http://schemas.android.com/apk/res/android"  
-   	  android:layout_width="fill_parent"  
-      android:layout_height="43dp"
-      android:padding="7dp"
-	  android:background="@drawable/app_header_background"
-	  android:layout_marginBottom="7dp"
-     
-      >
-      
-       
-      
-       <ImageView 
-		   		android:id="@+id/location_image"
-		   		android:layout_width="80dp"
-		   		android:layout_height="22dp"
-		   		android:layout_marginLeft="0dp"
-		    	android:background="@drawable/app_name"
-		   		android:layout_marginTop="7dp"
-		   		android:layout_marginBottom="7dp"
-		   	/>
-       
-         
-       <TextView android:id="@+id/user_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="0dp"
-        android:layout_marginLeft="5dp"
-        android:paddingBottom="9dp"
-        android:textSize="16dp"
-        android:textColor="#FFFFFF"
-        android:textStyle="bold"
-        android:text=""
-        android:layout_gravity="right"
-   			 />
-       
-       
-       
-        <Button 
-		   		android:id="@+id/map_button"
-		   		android:layout_width="22dp"
-		   		android:layout_height="22dp"
-		   		android:layout_marginRight="100dp"
-		   		android:layout_marginTop="2dp"
-		   		android:background="@drawable/map_icon"
-		   		android:layout_gravity="right"
-		   		android:layout_marginBottom="0dp"
-		   	/>
+    
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
+        android:layout_height="43dp"
+        android:background="@drawable/app_header_background"
+        android:layout_marginBottom="7dp">
         
-		       
-       </FrameLayout>
-       
+        <ImageView
+            android:id="@+id/location_image"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:padding="10dp"
+            android:layout_width="100dp"
+            android:layout_height="fill_parent"
+            android:scaleType="centerInside"
+            android:src="@drawable/app_name" />
+        
+        <ImageView
+            android:id="@+id/map_button"
+            android:padding="10dp"
+            android:layout_toRightOf="@id/location_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/map_icon" />
+        
+        <TextView
+            android:id="@+id/user_name"
+            android:padding="10dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:gravity="center"
+            android:textSize="16dp"
+            android:textColor="@color/WHITE"
+            android:textStyle="bold"
+            android:text=""/>
+        
+    </RelativeLayout>
     
 <TabHost xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@android:id/tabhost" android:layout_width="fill_parent"
