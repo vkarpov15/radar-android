@@ -27,13 +27,16 @@
    	<TextView
    	    android:id="@+id/upvotes"
       	android:layout_width="wrap_content" 
-      	android:layout_height="wrap_content" 
+      	android:layout_height="wrap_content"
+      	android:gravity="center" 
       	android:textSize="16dp"
       	android:textColor="@color/WHITE"
       	android:text="100"
       	android:layout_alignLeft="@id/add_to_radar_image"
       	android:layout_alignRight="@id/add_to_radar_image"
-      	android:layout_alignParentTop="true" />
+      	android:layout_alignParentTop="true"
+      	android:layout_margin="10dp"
+      	android:layout_above="@id/add_to_radar_image" />
     
     <TextView
         android:id="@+id/event_text"
@@ -41,34 +44,47 @@
         android:layout_toLeftOf="@id/add_to_radar_image"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:padding="5dp"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
         android:textSize="16dp"
-        android:textColor="#FFFFFF"
+        android:textColor="@color/WHITE"
         android:textStyle="bold" />
+    
+    <TextView
+        android:id="@+id/event_list_time"
+      	android:layout_width="wrap_content" 
+      	android:layout_height="wrap_content" 
+      	android:textSize="16dp"
+      	android:textColor="@color/WHITE"
+      	android:text="11:00pm"
+      	android:paddingLeft="5dp"
+      	android:paddingRight="5dp"
+      	android:layout_below="@id/event_text"
+      	android:layout_toRightOf="@id/event_image"
+      	android:layout_toLeftOf="@id/add_to_radar_image" />
     
      <ImageView 
    		android:id="@+id/location_image"
-   		android:layout_width="25dp"
-   		android:layout_height="25dp"
-   		android:layout_marginLeft="90dp"
-    	android:background="@drawable/location_marker"
-   		android:layout_marginTop="75dp" />
-          
-    <TextView android:id="@+id/event_list_time"
-      	android:layout_width="wrap_content" 
-      	android:layout_height="25dp" 
-      	android:textSize="16dp"
-      	android:textColor="#ffffff"
-      	android:text="11:00pm"
-      	android:layout_marginTop="40dp"
-      	android:layout_marginLeft="90dp"/>
+   		android:layout_width="30dp"
+   		android:layout_height="30dp"
+    	android:src="@drawable/location_marker"
+    	android:layout_marginTop="10dp"
+    	android:paddingLeft="5dp"
+    	android:paddingRight="5dp"
+    	android:layout_below="@id/event_list_time"
+    	android:layout_toRightOf="@id/event_image" />
     
-     <TextView android:id="@+id/event_location"
-      	android:layout_width="wrap_content" 
-      	android:layout_height="25dp" 
+     <TextView
+        android:id="@+id/event_location"
+      	android:layout_width="fill_parent" 
+      	android:layout_height="fill_parent"
+      	android:layout_toRightOf="@id/location_image"
+      	android:layout_toLeftOf="@id/add_to_radar_image"
+      	android:layout_alignBottom="@id/location_image"
+      	android:layout_alignTop="@id/location_image"
+      	android:gravity="center_vertical" 
       	android:textSize="16dp"
-      	android:textColor="#ffffff"
-      	android:text="Club Avenue"
-      	android:layout_marginTop="75dp"
-      	android:layout_marginLeft="120dp"/>
+      	android:textColor="@color/WHITE"
+      	android:text="Club Avenue"/>
+     
 </RelativeLayout>
