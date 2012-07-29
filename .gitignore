@@ -3,5 +3,18 @@
 *.dex
 # Ignore binaries
 *.apk
+*.ap_
+
 # Ignore Apple's diseased mess
 .DS_Store
+
+#generated files
+bin/
+gen/
+
+# Local configs
+local.properties
+
+# Eclipse project files
+.classpath
+.project
