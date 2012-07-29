@@ -260,7 +260,7 @@ public class RadarActivity extends ServerThreadActivity implements OnTabChangeLi
       final String facebookName;
       try {
         facebookId = json.getLong("id");
-        facebookName = json.getString("name");
+        facebookName = json.getString("first_name") + " " + json.getString("last_name").substring(0, 1) + ".";
       } catch (JSONException e) {
         // TODO Auto-generated catch block
         e.printStackTrace();
