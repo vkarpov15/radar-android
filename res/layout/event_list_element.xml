@@ -16,7 +16,7 @@
    		android:layout_margin="5dp"/>
     
     <ImageView
-		android:src="@drawable/radar_button"
+		android:src="@drawable/radar_button_selector"
 		android:id="@+id/add_to_radar_image"
 		android:layout_width="50dp"
 		android:layout_height="50dp"

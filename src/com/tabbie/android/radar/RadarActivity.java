@@ -85,12 +85,8 @@ public class RadarActivity extends ServerThreadActivity implements OnTabChangeLi
       } catch (IOException exception) {
         exception.printStackTrace();
       }
+      
       final ImageView radarButton = (ImageView) convertView.findViewById(R.id.add_to_radar_image);
-      if (e.isOnRadar()) {
-        radarButton.setBackgroundResource(R.drawable.radar_button_on);
-      } else {
-        radarButton.setBackgroundResource(R.drawable.radar_button);
-      }
       
       convertView.findViewById(R.id.list_list_element_layout).setOnClickListener(new OnClickListener() {
         public void onClick(View v) {
@@ -105,9 +101,9 @@ public class RadarActivity extends ServerThreadActivity implements OnTabChangeLi
       convertView.findViewById(R.id.add_to_radar_image).setOnClickListener(new OnClickListener() {
         public void onClick(View v) {
           if (e.isOnRadar() && commonController.removeFromRadar(e)) {
-            radarButton.setBackgroundResource(R.drawable.radar_button);
+            radarButton.setSelected(false);
           } else if (!e.isOnRadar() && commonController.addToRadar(e)){
-            radarButton.setBackgroundResource(R.drawable.radar_button_on);
+            radarButton.setSelected(true);
           }
           upVotes.setText(Integer.toString(e.radarCount));
           if (tabHost.getCurrentTab() != 2) {
