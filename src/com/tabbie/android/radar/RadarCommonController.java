@@ -120,12 +120,10 @@ public class RadarCommonController implements Parcelable {
 	  return true;
 	}
 
-  @Override
   public int describeContents() {
     return 0;
   }
 
-  @Override
   public void writeToParcel(Parcel dest, int flags) {
     // Technically all we need to do is write eventsList, and then reconstruct on the other side
     dest.writeTypedList(eventsList);

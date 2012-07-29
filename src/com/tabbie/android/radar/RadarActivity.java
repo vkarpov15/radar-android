@@ -103,7 +103,6 @@ public class RadarActivity extends ServerThreadActivity implements OnTabChangeLi
       });
       
       convertView.findViewById(R.id.add_to_radar_image).setOnClickListener(new OnClickListener() {
-        @Override
         public void onClick(View v) {
           if (e.isOnRadar() && commonController.removeFromRadar(e)) {
             radarButton.setBackgroundResource(R.drawable.radar_button);
@@ -124,7 +123,6 @@ public class RadarActivity extends ServerThreadActivity implements OnTabChangeLi
       });
       
       convertView.findViewById(R.id.location_image).setOnClickListener(new OnClickListener() {        
-        @Override
         public void onClick(View v) {
           Intent intent = new Intent(RadarActivity.this, RadarMapActivity.class);
           intent.putExtra("controller", commonController);
@@ -141,7 +139,8 @@ public class RadarActivity extends ServerThreadActivity implements OnTabChangeLi
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.main);
-
+    Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
+    
     featuredListView = (ListView) findViewById(R.id.featured_event_list);
     allListView = (ListView) findViewById(R.id.all_event_list);
     radarListView = (ListView) findViewById(R.id.radar_list);
@@ -159,19 +158,15 @@ public class RadarActivity extends ServerThreadActivity implements OnTabChangeLi
     
     if(!facebook.isSessionValid()) {
       facebook.authorize(this, new String[] { "email" }, new DialogListener() {
-        @Override
         public void onComplete(Bundle values) {
           sendServerRequest(new ServerGetRequest( "https://graph.facebook.com/me/?access_token=" + facebook.getAccessToken(),
                                                   MessageType.FACEBOOK_LOGIN));
         }
     
-        @Override
         public void onFacebookError(FacebookError error) {}
     
-        @Override
         public void onError(DialogError e) {}
     
-        @Override
         public void onCancel() {}
       });
     }
@@ -197,7 +192,6 @@ public class RadarActivity extends ServerThreadActivity implements OnTabChangeLi
         R.layout.event_list_element, commonController.radar));
     
     findViewById(R.id.map_button).setOnClickListener(new OnClickListener() {
-      @Override
       public void onClick(View v) {
         Intent intent = new Intent(RadarActivity.this, RadarMapActivity.class);
         intent.putExtra("controller", commonController);
@@ -205,26 +199,6 @@ public class RadarActivity extends ServerThreadActivity implements OnTabChangeLi
       }
     });
     
-    /*tabHost.addTab(tabHost.newTabSpec(LIST_FEATURED_TAG)
-        .setIndicator(LIST_FEATURED_TAG)
-        .setContent(new TabHost.TabContentFactory() {
-          public View createTabContent(String arg0) {
-            return featuredListView;
-          }
-        }));
-    tabHost.addTab(tabHost.newTabSpec(EVENT_TAB_TAG)
-        .setIndicator(EVENT_TAB_TAG)
-        .setContent(new TabHost.TabContentFactory() {
-          public View createTabContent(String arg0) {
-            return allListView;
-          }
-        }));
-    tabHost.addTab(tabHost.newTabSpec(RADAR_TAB_TAG).setIndicator("Radar")
-        .setContent(new TabHost.TabContentFactory() {
-          public View createTabContent(String arg0) {
-            return radarListView;
-          }
-        }));*/
     setupTab(featuredListView, LIST_FEATURED_TAG);
     setupTab(allListView, EVENT_TAB_TAG);
     setupTab(radarListView, RADAR_TAB_TAG);
@@ -377,7 +351,6 @@ public class RadarActivity extends ServerThreadActivity implements OnTabChangeLi
       }
       commonController.order();
       this.runOnUiThread(new Runnable() {
-        @Override
         public void run() {
           ((EventListAdapter) featuredListView.getAdapter()).notifyDataSetChanged();
           ((EventListAdapter) allListView.getAdapter()).notifyDataSetChanged();
