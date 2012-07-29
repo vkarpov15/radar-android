@@ -23,6 +23,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -172,7 +173,7 @@ public class RadarActivity extends ServerThreadActivity implements OnTabChangeLi
     tabHost = (TabHost) findViewById(android.R.id.tabhost);
     tabHost.setup();
     tabHost.setOnTabChangedListener(this);
-    tabHost.getTabWidget().setDividerDrawable(android.R.drawable.divider_horizontal_bright);
+    tabHost.getTabWidget().setDividerDrawable(R.drawable.divider_vertical_dark);
 
     Filter<Event> featuredOnly = new Filter<Event>() {
       @Override
