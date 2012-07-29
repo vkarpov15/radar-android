@@ -176,6 +176,7 @@ public class RadarActivity extends ServerThreadActivity implements OnTabChangeLi
     tabHost = (TabHost) findViewById(android.R.id.tabhost);
     tabHost.setup();
     tabHost.setOnTabChangedListener(this);
+    tabHost.getTabWidget().setDividerDrawable(android.R.drawable.divider_horizontal_bright);
 
     Filter<Event> featuredOnly = new Filter<Event>() {
       @Override
