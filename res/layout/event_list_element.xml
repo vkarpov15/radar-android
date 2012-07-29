@@ -29,10 +29,11 @@
       	android:layout_width="wrap_content" 
       	android:layout_height="wrap_content" 
       	android:textSize="16dp"
-      	android:textColor="#ffffff"
+      	android:textColor="@color/WHITE"
       	android:text="100"
-      	android:layout_marginTop="9dp"
-      	android:layout_marginLeft="280dp"/>
+      	android:layout_alignLeft="@id/add_to_radar_image"
+      	android:layout_alignRight="@id/add_to_radar_image"
+      	android:layout_alignParentTop="true" />
     
     <TextView
         android:id="@+id/event_text"
