@@ -85,7 +85,7 @@ public class RadarActivity extends ServerThreadActivity implements OnTabChangeLi
       } catch (IOException exception) {
         exception.printStackTrace();
       }
-      final Button radarButton = (Button) convertView.findViewById(R.id.add_to_radar_image);
+      final ImageView radarButton = (ImageView) convertView.findViewById(R.id.add_to_radar_image);
       if (e.isOnRadar()) {
         radarButton.setBackgroundResource(R.drawable.radar_button_on);
       } else {

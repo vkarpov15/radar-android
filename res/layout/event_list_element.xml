@@ -7,45 +7,40 @@
     android:layout_height="wrap_content" 
     android:background="#62000000">
     
-    <ImageView 
+    <ImageView
    		android:id="@+id/event_image"
    		android:layout_width="80dp"
    		android:layout_height="120dp"
    		android:scaleType="centerCrop"
-   		android:layout_marginLeft="0dp"
-   		android:padding="0dp"
-   	/>
-    <TextView android:id="@+id/event_text"
+   		android:layout_margin="5dp"/>
+    
+    <ImageView
+		android:id="@+id/add_to_radar_image"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_alignParentRight="true"
+		android:background="@drawable/radar_button" />
+    
+    <TextView
+        android:id="@+id/event_text"
+        android:layout_toRightOf="@id/event_image"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:paddingLeft="90dp"
-        android:paddingBottom="3dp"
-        android:paddingRight="55dp"
+        android:padding="5dp"
         android:textSize="16dp"
         android:textColor="#FFFFFF"
-        android:textStyle="bold"
-    />
+        android:textStyle="bold" />
     
      <ImageView 
-		   		android:id="@+id/location_image"
-		   		android:layout_width="25dp"
-		   		android:layout_height="25dp"
-		   		android:layout_marginLeft="90dp"
-		    	android:background="@drawable/location_marker"
-		   		android:layout_marginTop="75dp"
-		   	/>
+   		android:id="@+id/location_image"
+   		android:layout_width="25dp"
+   		android:layout_height="25dp"
+   		android:layout_marginLeft="90dp"
+    	android:background="@drawable/location_marker"
+   		android:layout_marginTop="75dp" />
 		       
     
-      <Button 
-		   		android:id="@+id/add_to_radar_image"
-		   		android:layout_width="50dp"
-		   		android:layout_height="50dp"
-		   		android:layout_marginLeft="260dp"
-		    	android:background="@drawable/radar_button"
-		   		android:layout_marginTop="30dp"
-		   		android:layout_gravity="right"
-		   	/>   
+
           
    <TextView android:id="@+id/upvotes"
       	android:layout_width="wrap_content" 
