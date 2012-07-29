@@ -42,34 +42,70 @@
     </RelativeLayout>
     
 <TabHost xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@android:id/tabhost" android:layout_width="fill_parent"
+    android:id="@android:id/tabhost"
+    android:layout_width="fill_parent"
     android:layout_height="wrap_content">
-    <LinearLayout android:orientation="vertical"
-        android:layout_width="fill_parent" android:layout_height="fill_parent" android:padding="0dp">
-        <TabWidget android:id="@android:id/tabs"
-            android:layout_width="fill_parent" android:layout_height="40dp" android:color="#62000000"/>
-        <FrameLayout android:id="@android:id/tabcontent"
-            android:layout_width="fill_parent" android:layout_height="fill_parent">
-            <LinearLayout android:orientation="vertical"
-                android:layout_width="fill_parent" android:layout_height="fill_parent"
-                android:id="@+id/main_tab_content" android:background="@drawable/velvet_rope_background">
-                <ListView android:id="@+id/featured_event_list" android:layout_width="fill_parent"
-                    android:layout_height="0dip" android:layout_weight="1" />
+        
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+		android:padding="0dp">
+		
+        <TabWidget
+            android:id="@android:id/tabs"
+            android:layout_width="fill_parent"
+            android:layout_height="40dp"
+			android:color="#62000000"/>
+        
+        <FrameLayout
+            android:id="@android:id/tabcontent"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
+            
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:id="@+id/main_tab_content"
+                android:background="@drawable/velvet_rope_background">
+                
+                <ListView
+                    android:id="@+id/featured_event_list"
+                    android:layout_width="fill_parent"
+                    android:layout_height="0dip"
+                    android:layout_weight="1" />
+                
             </LinearLayout>
-            <LinearLayout android:orientation="vertical"
-                android:layout_width="fill_parent" android:layout_height="fill_parent"
+            
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
                 android:id="@+id/all_events_tab_content">
-                <ListView android:id="@+id/all_event_list" android:layout_width="fill_parent"
-                    android:layout_height="0dip" android:layout_weight="1" />
+                
+                <ListView
+                    android:id="@+id/all_event_list"
+                    android:layout_width="fill_parent"
+                    android:layout_height="0dip"
+                    android:layout_weight="1" />
+                
             </LinearLayout>
-            <LinearLayout android:orientation="vertical"
-                android:layout_width="fill_parent" android:layout_height="fill_parent"
+            
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
                 android:id="@+id/radar_tab_content">
-                <ListView android:id="@+id/radar_list" android:layout_width="fill_parent"
-                    android:layout_height="0dip" android:layout_weight="1" />
+                
+                <ListView android:id="@+id/radar_list"
+                    android:layout_width="fill_parent"
+                    android:layout_height="0dip"
+                    android:layout_weight="1" />
+                
             </LinearLayout>
         </FrameLayout>
     </LinearLayout>
 </TabHost>
-	
+
 </LinearLayout>
