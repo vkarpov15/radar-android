@@ -47,6 +47,7 @@ public class EventDetailsActivity extends Activity {
     ((TextView) findViewById(R.id.details_event_title)).setText(e.name);
     ((TextView) findViewById(R.id.details_event_time)).setText(e.time);
     ((TextView) findViewById(R.id.details_event_location)).setText(e.venueName);
+    ((TextView) findViewById(R.id.details_event_address)).setText(e.address);
     ((TextView) findViewById(R.id.details_event_num_radar)).setText(Integer.toString(e.radarCount));
     ((TextView) findViewById(R.id.details_event_description)).setText(e.description);
   }

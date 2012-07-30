@@ -7,10 +7,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class Event implements Parcelable {
-	public final String id;
-	public final String name;
-	public final String description;
-	public final String venueName;
+	public final String id, name, description, venueName, address;
 	public final URL image;
 	public final double lat;
 	public final double lon;
@@ -20,11 +17,12 @@ public class Event implements Parcelable {
 	public int radarCount;
 	private boolean onRadar;
 	
-	public Event(String id, String name, String description, String venueName, URL image, double lat, double lon, int radarCount, boolean featured, String time) {
+	public Event(String id, String name, String description, String venueName, String address, URL image, double lat, double lon, int radarCount, boolean featured, String time) {
 		this.id = id;
 		this.name = name;
 		this.description = description;
 		this.venueName = venueName;
+		this.address = address;
 		this.image = image;
 		this.lat = lat;
 		this.lon = lon;
@@ -51,6 +49,7 @@ public class Event implements Parcelable {
 		dest.writeString(name);
 		dest.writeString(description);
 		dest.writeString(venueName);
+		dest.writeString(address);
 		dest.writeDouble(lat);
 		dest.writeDouble(lon);
 		dest.writeInt(radarCount);
@@ -63,6 +62,7 @@ public class Event implements Parcelable {
 	    String url = in.readString();
 	    try {
 				return new Event(	in.readString(),
+									        in.readString(),
 									        in.readString(),
 									        in.readString(),
 									        in.readString(),
