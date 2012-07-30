@@ -234,6 +234,7 @@ public class RadarActivity extends ServerThreadActivity implements
     setupTab(allListView, EVENT_TAB_TAG);
     setupTab(radarListView, RADAR_TAB_TAG);
 
+    // TODO I don't think this should be here
     // IMPERATIVE to keep this hack here, otherwise app fubars
     tabHost.setCurrentTab(2);
     tabHost.setCurrentTab(1);
