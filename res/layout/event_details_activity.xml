@@ -1,98 +1,110 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:id="@+id/layout_event_info"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    >
+    android:id="@+id/layout_event_info">
+    
     <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="130dp">
+        
         <ImageView
-            android:layout_width="92dp"
-   			android:layout_height="120dp"
-   			android:scaleType="centerCrop"
             android:id="@+id/details_event_img"
-            />
-        <TextView
+            android:layout_margin="10dp"
+            android:layout_width="80dp"
+   			android:layout_height="120dp"
+   			android:adjustViewBounds="true" />
+        
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:orientation="horizontal"
+            android:id="@+id/details_event_title_layout"
+            android:layout_height="wrap_content"
+            android:layout_width="fill_parent"
             android:layout_toRightOf="@id/details_event_img"
-            android:layout_height="wrap_content"
-            android:layout_width="fill_parent"
-            android:id="@+id/details_event_title" 
-            android:scaleType="centerCrop"
-            android:text=""
-             android:textColor="#FFFFFF"
-        android:textStyle="bold"
-        	android:layout_marginLeft="16dp"
-            
-            />
-        <TextView 
-            android:layout_below="@id/details_event_title"
-            android:id="@+id/details_event_time"
-            android:layout_height="wrap_content"
-            android:layout_width="fill_parent"
-            android:text="11:00pm"
-              android:layout_toRightOf="@id/details_event_img"
-             android:layout_marginLeft="15dp"
-            
-            
-            
-            />
-        <TextView
-            android:layout_below="@id/details_event_time"
-            android:id="@+id/details_event_location"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:text="Club Avenue"
-            android:layout_marginLeft="142dp"
-             android:layout_marginTop="5dp"
-            
-            />
+            android:layout_marginTop="10dp">
+        
+	        <TextView
+	            android:id="@+id/details_event_title"
+	            android:layout_height="wrap_content"
+	            android:layout_width="0dp"
+	            android:text=""
+	            android:textColor="@color/WHITE"
+	        	android:textStyle="bold"
+	        	android:layout_weight="3" />
+	        
+	        <TextView 
+	            android:id="@+id/details_event_time"
+	            android:layout_height="wrap_content"
+	            android:layout_width="0dp"
+	            android:text="11:00pm"
+	            android:layout_gravity="right|bottom"
+	            android:layout_marginRight="10dp"
+	            android:layout_weight="1" />
+	        
+	    </LinearLayout>
 
         <ImageView
             android:id="@+id/location_image"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:layout_alignLeft="@+id/details_event_title"
-            android:layout_alignTop="@+id/details_event_location"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_margin="5dp"
+            android:layout_toRightOf="@id/details_event_img"
+            android:layout_below="@id/details_event_title_layout"
             android:background="@drawable/location_marker" />
+        
+        <TextView
+            android:id="@+id/details_event_location"
+            android:layout_toRightOf="@id/location_image"
+            android:layout_alignTop="@id/location_image"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:gravity="top"
+            android:textSize="12dp"
+            android:text="Club Avenue" />
+        
+        <TextView
+            android:id="@+id/details_event_address"
+            android:layout_below="@id/details_event_location"
+            android:layout_toRightOf="@id/location_image"
+            android:layout_alignBottom="@id/location_image"
+            android:layout_height="wrap_content"
+            android:layout_width="fill_parent"
+            android:textSize="12dp"
+            android:text="8675 Test Address, New York" />
 
         <TextView
             android:id="@+id/details_event_num_radar"
-            android:layout_width="10dp"
+            android:gravity="right"
+            android:layout_alignRight="@id/location_image"
+            android:layout_alignLeft="@id/location_image"
+            android:layout_below="@id/location_image"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_alignRight="@+id/location_image"
-            android:layout_below="@+id/location_image"
             android:text="6"
-            android:layout_marginRight="7dp"
-            android:textColor="#ea8e4c" />
+            android:textSize="10dp"
+            android:textColor="@color/ORANGE" />
 
         <TextView
             android:id="@+id/event_num_radar_desc"
-            android:layout_width="140dp"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/details_event_num_radar"
-            android:layout_alignBottom="@+id/details_event_num_radar"
-            android:layout_alignLeft="@+id/details_event_location"
+            android:layout_alignTop="@id/details_event_num_radar"
+            android:layout_alignBottom="@id/details_event_num_radar"
+            android:layout_alignLeft="@id/details_event_address"
+            android:gravity="bottom"
+            android:textSize="10dp"
             android:text="people added this to their radar" />
        
     </RelativeLayout>
     
-     <TextView
+    <TextView
             android:id="@+id/details_event_description"
+            android:lineSpacingExtra="5dp"
             android:layout_height="wrap_content"
             android:layout_width="fill_parent"
-            android:text="IPhasellus consectetur mollis scelerisque. Pellentesque nunc nulla, scelerisque at pharetra adipiscing, bibendum nec sem. Donec vitae eros lectus, id consequat dolor. Sed cursus bibendum malesuada. Sed imperdiet, elit ut faucibus ultrices, sapien libero faucibus dolor, facilisis pellentesque justo eros eu nunc. Nam commodo mattis odio sit amet molestie. Aenean egestas sodales lorem eu blandit. Nulla diam tellus, ultrices et pretium sed, aliquet non nibh. Etiam ornare accumsan neque, eu blandit sapien mollis id. Proin pulvinar convallis facilisis. Mauris purus turpis, porta id auctor vel, volutpat elementum risus. Cras eu odio a augue tristique auctor ac bibendum nulla. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae;
-
-Aliquam erat volutpat. Aliquam ornare venenatis mattis. Nunc ut neque arcu, vitae aliquam odio. Sed lobortis magna quis neque blandit luctus. Nullam at libero eu dui tempus pulvinar id eget magna. Vestibulum nisl erat, malesuada sed varius sed, euismod nec diam. Proin suscipit, odio at sodales ullamcorper, sapien velit lacinia nunc, a blandit elit felis eu eros.
-
-Proin blandit, elit vel ornare hendrerit, magna dolor facilisis magna, ut rutrum eros velit et augue. Mauris malesuada mauris eu lorem porttitor in euismod nisi euismod. Quisque congue nunc vel leo laoreet non dapibus sapien fermentum. Nullam fringilla faucibus nunc, sit amet vulputate tellus pulvinar sed. Donec luctus tincidunt dictum. Maecenas eget odio purus. Ut varius pellentesque velit eu elementum. Cras sapien erat, accumsan quis lacinia eu, tincidunt a ante. Mauris ultricies, augue eget blandit fermentum, diam mauris ultrices diam, et tristique tortor massa eu lectus.
-
-"
-            
-            android:textColor="#ffffff"
-            android:layout_marginTop="10dp"
-            />
+            android:text="@string/test_paragraph"
+            android:textColor="@color/WHITE"
+            android:layout_margin="10dp" />
     
 </LinearLayout>
