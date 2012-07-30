@@ -1,6 +1,6 @@
 package com.tabbie.android.radar;
 
-/*
+/**
  *  Filter.java
  *
  *  Created on: July 23, 2012

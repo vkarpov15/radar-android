@@ -163,6 +163,7 @@ public class RadarActivity extends ServerThreadActivity implements
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.main);
+    
     Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
 
     featuredListView = (ListView) findViewById(R.id.featured_event_list);
@@ -171,8 +172,10 @@ public class RadarActivity extends ServerThreadActivity implements
     myNameView = (TextView) findViewById(R.id.user_name);
 
     preferences = getPreferences(MODE_PRIVATE);
+    // Facebook Access Token
     String accessToken = preferences.getString("access_token", null);
     long expires = preferences.getLong("access_expires", 0);
+    // Check and see if the facebook access is still valid
     if (accessToken != null) {
       facebook.setAccessToken(accessToken);
     }
@@ -202,11 +205,14 @@ public class RadarActivity extends ServerThreadActivity implements
     commonController = new RadarCommonController();
     remoteDrawableController = new RemoteDrawableController();
 
+    
+    // Set up the Tab Host
     tabHost = (TabHost) findViewById(android.R.id.tabhost);
     tabHost.setup();
     tabHost.setOnTabChangedListener(this);
     tabHost.getTabWidget().setDividerDrawable(R.drawable.divider_vertical_dark);
-
+    
+    // Filter for featured events
     Filter<Event> featuredOnly = new Filter<Event>() {
       @Override
       public boolean apply(Event o) {
@@ -217,10 +223,18 @@ public class RadarActivity extends ServerThreadActivity implements
     featuredListView.setAdapter(new EventListAdapter(this,
         R.id.featured_event_list, R.layout.event_list_element,
         commonController.featuredList));
+    
+    featuredListView.setVisibility(View.GONE);
+    
     allListView.setAdapter(new EventListAdapter(this, R.id.all_event_list,
         R.layout.event_list_element, commonController.eventsList));
+
+    allListView.setVisibility(View.GONE);
+    
     radarListView.setAdapter(new EventListAdapter(this, R.id.radar_list,
         R.layout.event_list_element, commonController.radar));
+    
+    radarListView.setVisibility(View.GONE);
 
     findViewById(R.id.map_button).setOnClickListener(new OnClickListener() {
       public void onClick(View v) {
@@ -233,14 +247,8 @@ public class RadarActivity extends ServerThreadActivity implements
     setupTab(featuredListView, LIST_FEATURED_TAG);
     setupTab(allListView, EVENT_TAB_TAG);
     setupTab(radarListView, RADAR_TAB_TAG);
-
-    // TODO I don't think this should be here
-    // IMPERATIVE to keep this hack here, otherwise app fubars
     
-    tabHost.setCurrentTab(2);
-    tabHost.setCurrentTab(1);
     tabHost.setCurrentTab(0);
-    
   }
 
   public void onTabChanged(String tabName) {

@@ -1,6 +1,6 @@
 package com.tabbie.android.radar;
 
-/*
+/**
  *  RemoteDrawableController.java
  *
  *  Created on: July 29, 2012
@@ -14,7 +14,7 @@ import java.net.URL;
 import java.util.LinkedHashMap;
 
 import android.graphics.drawable.Drawable;
-import android.os.AsyncTask;
+import android.widget.ImageView;
 
 public class RemoteDrawableController {
   private final LinkedHashMap<String, Drawable> myDrawables = new LinkedHashMap<String, Drawable>();
@@ -22,30 +22,21 @@ public class RemoteDrawableController {
   public RemoteDrawableController() {
   }
 
-  public static abstract class OnImageLoadedCallback {
-    public abstract void onDone(Drawable d);
-  }
-
-  public void drawImage(URL u, final OnImageLoadedCallback callback) {
+  public void drawImage(URL u, final ImageView view) {
     if (myDrawables.containsKey(u.toString())) {
-      callback.onDone(myDrawables.get(u.toString()));
-      return;
-    }
-
-    new AsyncTask<URL, Integer, Long>() {
-      @Override
-      protected Long doInBackground(URL... params) {
-        for (URL url : params) {
-          try {
-            Drawable d = Drawable.createFromStream(url.openStream(), "src");
-            callback.onDone(d);
-            myDrawables.put(url.toString(), d);
-          } catch (IOException e) {
-            e.printStackTrace();
-          }
-        }
-        return null;
+      view.setImageDrawable(myDrawables.get(u.toString()));
+    } else {
+      Drawable d;
+      try {
+        d = Drawable.createFromStream(u.openStream(), "src");
+        myDrawables.put(u.toString(), d);
+        view.setImageDrawable(d);
+        view.setTag(u);
+      } catch (IOException e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
       }
-    }.execute(u);
+    }
   }
+
 }
