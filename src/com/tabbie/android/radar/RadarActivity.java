@@ -114,6 +114,7 @@ public class RadarActivity extends ServerThreadActivity implements
             }
           });
 
+
       convertView.findViewById(R.id.add_to_radar_image).setOnClickListener(
           new OnClickListener() {
             public void onClick(View v) {
@@ -150,6 +151,7 @@ public class RadarActivity extends ServerThreadActivity implements
               }
             }
           });
+      
 
       convertView.findViewById(R.id.location_image).setOnClickListener(
           new OnClickListener() {
@@ -399,12 +401,12 @@ public class RadarActivity extends ServerThreadActivity implements
         }
       });
     } else if (MessageType.ADD_TO_RADAR == resp.responseTo){
+    	Log.d("HI", "FUCK YOUR COUCH");
 	    this.runOnUiThread(new Runnable() {
 	        public void run() {
 	          ServerPostRequest req = new ServerPostRequest(
 	              ServerThread.TABBIE_SERVER + "/mobile/radar/" + "?auth_token="
                     + token, MessageType.ADD_TO_RADAR);
-	          req.params.put("fb_token", facebook.getAccessToken());
 	
 	          sendServerRequest(req);
 	        }
