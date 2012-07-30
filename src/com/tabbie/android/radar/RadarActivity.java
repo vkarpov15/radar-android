@@ -399,6 +399,7 @@ public class RadarActivity extends ServerThreadActivity implements
         }
       });
     } else if (MessageType.ADD_TO_RADAR == resp.responseTo){
+    	Log.d("HI", "FUCK YOUR COUCH");
 	    this.runOnUiThread(new Runnable() {
 	        public void run() {
 	          ServerPostRequest req = new ServerPostRequest(
