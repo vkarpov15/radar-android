@@ -4,12 +4,14 @@
 	android:orientation="vertical"
 	android:layout_width="fill_parent"
 	android:layout_height="fill_parent">
+	
 	<com.google.android.maps.MapView
 		android:id="@+id/my_map_view"
 		android:layout_width="fill_parent"
 		android:layout_height="fill_parent"
 		android:clickable="true"
-		android:apiKey="0FOxyEfcQ0KWKXNk-I3ubpC2yVnsVdHjByLdI6Q" />
+		android:apiKey="0H7FbiQifcrFVq9y6eed5pveUmUbedkjXK1i_IQ" />
+	
 	<LinearLayout android:id="@+id/layout_zoom" 
     	android:layout_width="wrap_content" 
     	android:layout_height="wrap_content" 

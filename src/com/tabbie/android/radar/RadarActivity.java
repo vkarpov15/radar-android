@@ -236,11 +236,11 @@ public class RadarActivity extends ServerThreadActivity implements
 
     // TODO I don't think this should be here
     // IMPERATIVE to keep this hack here, otherwise app fubars
-    /*
+    
     tabHost.setCurrentTab(2);
     tabHost.setCurrentTab(1);
     tabHost.setCurrentTab(0);
-    */
+    
   }
 
   public void onTabChanged(String tabName) {
