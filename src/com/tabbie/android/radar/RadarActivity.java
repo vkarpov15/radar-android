@@ -5,7 +5,9 @@ import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -15,7 +17,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -29,7 +30,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TabHost;
-import android.widget.Toast;
 import android.widget.TabHost.OnTabChangeListener;
 import android.widget.TabHost.TabSpec;
 import android.widget.TextView;
@@ -53,6 +53,8 @@ public class RadarActivity extends ServerThreadActivity implements
   private TextView myNameView;
 
   private String token;
+
+  private Thread drawThread;
 
   private RadarCommonController commonController;
   private RemoteDrawableController remoteDrawableController;
@@ -88,18 +90,12 @@ public class RadarActivity extends ServerThreadActivity implements
 
       final ImageView img = (ImageView) convertView
           .findViewById(R.id.event_image);
-      remoteDrawableController.drawImage(e.image,
-          new RemoteDrawableController.OnImageLoadedCallback() {
-            @Override
-            public void onDone(final Drawable d) {
-              runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                  img.setImageDrawable(d);
-                }
-              });
-            }
-          });
+      if (img.getTag() == null
+          || 0 != ((URL) img.getTag()).toString().compareTo(e.image.toString())) {
+        remoteDrawableController.drawImage(e.image, img);
+      } else {
+        Log.d("No redraw required!", "hi");
+      }
 
       final ImageView radarButton = (ImageView) convertView
           .findViewById(R.id.add_to_radar_image);
@@ -118,14 +114,25 @@ public class RadarActivity extends ServerThreadActivity implements
             }
           });
 
-
       convertView.findViewById(R.id.add_to_radar_image).setOnClickListener(
           new OnClickListener() {
             public void onClick(View v) {
               if (e.isOnRadar() && commonController.removeFromRadar(e)) {
                 radarButton.setSelected(false);
+
+                ServerDeleteRequest req = new ServerDeleteRequest(
+                    ServerThread.TABBIE_SERVER + "/mobile/radar/" + e.id
+                        + ".json?auth_token=" + token, MessageType.ADD_TO_RADAR);
+
+                serverThread.sendRequest(req);
               } else if (!e.isOnRadar() && commonController.addToRadar(e)) {
                 radarButton.setSelected(true);
+
+                ServerPostRequest req = new ServerPostRequest(
+                    ServerThread.TABBIE_SERVER + "/mobile/radar/" + e.id
+                        + ".json", MessageType.ADD_TO_RADAR);
+                req.params.put("auth_token", token);
+                serverThread.sendRequest(req);
               }
               upVotes.setText(Integer.toString(e.radarCount));
               if (tabHost.getCurrentTab() != 2) {
@@ -142,7 +149,6 @@ public class RadarActivity extends ServerThreadActivity implements
               }
             }
           });
-      
 
       convertView.findViewById(R.id.location_image).setOnClickListener(
           new OnClickListener() {
@@ -211,14 +217,6 @@ public class RadarActivity extends ServerThreadActivity implements
     tabHost.setup();
     tabHost.setOnTabChangedListener(this);
     tabHost.getTabWidget().setDividerDrawable(R.drawable.divider_vertical_dark);
-    
-    // Filter for featured events
-    Filter<Event> featuredOnly = new Filter<Event>() {
-      @Override
-      public boolean apply(Event o) {
-        return o.featured;
-      }
-    };
 
     featuredListView.setAdapter(new EventListAdapter(this,
         R.id.featured_event_list, R.layout.event_list_element,
@@ -232,7 +230,7 @@ public class RadarActivity extends ServerThreadActivity implements
     allListView.setVisibility(View.GONE);
     
     radarListView.setAdapter(new EventListAdapter(this, R.id.radar_list,
-        R.layout.event_list_element, commonController.radar));
+    R.layout.event_list_element, commonController.radarList));
     
     radarListView.setVisibility(View.GONE);
 
@@ -247,8 +245,9 @@ public class RadarActivity extends ServerThreadActivity implements
     setupTab(featuredListView, LIST_FEATURED_TAG);
     setupTab(allListView, EVENT_TAB_TAG);
     setupTab(radarListView, RADAR_TAB_TAG);
-    
+
     tabHost.setCurrentTab(0);
+
   }
 
   public void onTabChanged(String tabName) {
@@ -257,7 +256,7 @@ public class RadarActivity extends ServerThreadActivity implements
     } else if (tabName.equals(LIST_FEATURED_TAG)) {
 
     } else if (tabName.equals(RADAR_TAB_TAG)) {
-    	Toast.makeText(RadarActivity.this, "Radar coming soon!", Toast.LENGTH_SHORT).show();
+
     }
   }
 
@@ -335,7 +334,7 @@ public class RadarActivity extends ServerThreadActivity implements
         this.runOnUiThread(new Runnable() {
           public void run() {
             ServerGetRequest req = new ServerGetRequest(
-                ServerThread.TABBIE_SERVER + "/mobile/events.json?auth_token="
+                ServerThread.TABBIE_SERVER + "/mobile/all.json?auth_token="
                     + token, MessageType.LOAD_EVENTS);
             sendServerRequest(req);
           }
@@ -347,14 +346,23 @@ public class RadarActivity extends ServerThreadActivity implements
     } else if (MessageType.LOAD_EVENTS == resp.responseTo) {
       JSONArray list = resp.parseJsonArray();
       if (null == list) {
-        Log.d("Hi", "In here2");
         return false;
       }
-      Log.d("Hi", "In here");
-      for (int i = 0; i < list.length(); ++i) {
+      Set<String> serverRadarIds = new LinkedHashSet<String>();
+      try {
+        JSONObject radarObj = list.getJSONObject(list.length() - 1);
+        JSONArray tmpRadarList = radarObj.getJSONArray("radar");
+        for (int i = 0; i < tmpRadarList.length(); ++i) {
+          serverRadarIds.add(tmpRadarList.getString(i));
+          Log.d("Here is id", tmpRadarList.getString(i));
+        }
+      } catch (JSONException e1) {
+        e1.printStackTrace();
+      }
+
+      for (int i = 0; i < list.length() - 1; ++i) {
         try {
           JSONObject obj = list.getJSONObject(i);
-          Log.d("Hi", "::" + i + " " + obj.getBoolean("featured"));
           String radarCountStr = obj.getString("user_count");
           int radarCount = 0;
           if (null != radarCountStr && 0 != radarCountStr.compareTo("null")) {
@@ -364,6 +372,7 @@ public class RadarActivity extends ServerThreadActivity implements
           Date d = parseRFC3339Date(time);
           String dd = (d.getHours() > 12 ? d.getHours() - 12 : d.getHours())
               + "";
+
           if (d.getMinutes() > 0) {
             dd += ":" + d.getMinutes();
           }
@@ -374,10 +383,11 @@ public class RadarActivity extends ServerThreadActivity implements
           }
           Event e = new Event(obj.getString("id"), title,
               obj.getString("description"), obj.getString("location"),
-              obj.getString("street_address"),
-              new URL("http://tonight-life.com" + obj.getString("image_url")),
+              obj.getString("street_address"), new URL(
+                  "http://tonight-life.com" + obj.getString("image_url")),
               obj.getDouble("latitude"), obj.getDouble("longitude"),
-              radarCount, obj.getBoolean("featured"), dd);
+              radarCount, obj.getBoolean("featured"), dd,
+              serverRadarIds.contains(obj.getString("id")));
           commonController.addEvent(e);
         } catch (JSONException e) {
           e.printStackTrace();
@@ -404,6 +414,7 @@ public class RadarActivity extends ServerThreadActivity implements
         }
       });
     }
+    // Assume that ADD_TO_RADAR and REMOVE_FROM_RADAR always succeed
     return false;
   }
 
@@ -451,22 +462,21 @@ public class RadarActivity extends ServerThreadActivity implements
     }
     return d;
   }
-  
+
   @Override
   public boolean onCreateOptionsMenu(final Menu menu) {
     final MenuInflater inflater = getMenuInflater();
     inflater.inflate(R.menu.main_menu, menu);
     return true;
   }
-  
+
   @Override
   public boolean onOptionsItemSelected(final MenuItem item) {
     // Handle item selection
     switch (item.getItemId()) {
     case R.id.refresh_me:
-        final Intent intent = new Intent(RadarActivity.this,
-                RadarActivity.class);
-            startActivity(intent);
+      final Intent intent = new Intent(RadarActivity.this, RadarActivity.class);
+      startActivity(intent);
       return true;
     default:
       return super.onOptionsItemSelected(item);
