@@ -22,7 +22,7 @@
             android:layout_height="wrap_content"
             android:layout_width="fill_parent"
             android:layout_toRightOf="@id/details_event_img"
-            android:layout_marginTop="30dp"> <!-- This should be 10 dp with the radar description VISIBLE -->
+            android:layout_marginTop="10dp">
         
 	        <TextView
 	            android:id="@+id/details_event_title"
@@ -74,7 +74,6 @@
             android:text="8675 Test Address, New York" />
 
         <TextView
-            android:visibility="gone"
             android:id="@+id/details_event_num_radar"
             android:gravity="right"
             android:layout_alignRight="@id/location_image"
@@ -87,7 +86,6 @@
             android:textColor="@color/ORANGE" />
 
         <TextView
-            android:visibility="gone"
             android:id="@+id/event_num_radar_desc"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
