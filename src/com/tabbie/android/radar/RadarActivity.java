@@ -405,7 +405,6 @@ public class RadarActivity extends ServerThreadActivity implements
 	          ServerPostRequest req = new ServerPostRequest(
 	              ServerThread.TABBIE_SERVER + "/mobile/radar/" + "?auth_token="
                     + token, MessageType.ADD_TO_RADAR);
-	          req.params.put("fb_token", facebook.getAccessToken());
 	
 	          sendServerRequest(req);
 	        }
