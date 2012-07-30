@@ -89,6 +89,8 @@ public class RadarActivity extends ServerThreadActivity implements OnTabChangeLi
       
       final ImageView radarButton = (ImageView) convertView.findViewById(R.id.add_to_radar_image);
       
+      radarButton.setSelected(e.isOnRadar());
+      
       convertView.findViewById(R.id.list_list_element_layout).setOnClickListener(new OnClickListener() {
         public void onClick(View v) {
 	        if (null != e) {
@@ -98,6 +100,7 @@ public class RadarActivity extends ServerThreadActivity implements OnTabChangeLi
 	        }
         }
       });
+      
       
       convertView.findViewById(R.id.add_to_radar_image).setOnClickListener(new OnClickListener() {
         public void onClick(View v) {
