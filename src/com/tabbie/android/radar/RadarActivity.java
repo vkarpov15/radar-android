@@ -121,6 +121,19 @@ public class RadarActivity extends ServerThreadActivity implements
                 radarButton.setSelected(false);
               } else if (!e.isOnRadar() && commonController.addToRadar(e)) {
                 radarButton.setSelected(true);
+                // Now that we have our Facebook user info, we can send this to Tabbie to
+                // get our Tabbie id
+                runOnUiThread(new Runnable() {
+                  public void run() {
+                    ServerPostRequest req = new ServerPostRequest(
+                        ServerThread.TABBIE_SERVER + "/mobile/auth.json",
+                        MessageType.ADD_TO_RADAR,
+                        e.id);
+                    req.params.put("fb_token", facebook.getAccessToken());
+
+                    sendServerRequest(req);
+                  }
+                });
               }
               upVotes.setText(Integer.toString(e.radarCount));
               if (tabHost.getCurrentTab() != 2) {
@@ -356,7 +369,7 @@ public class RadarActivity extends ServerThreadActivity implements
             title = title.substring(0, 31) + "...";
           }
           Event e = new Event(obj.getString("id"), title,
-              obj.getString("description"), obj.getString("street_address"),
+              obj.getString("description"), obj.getString("location"),
               new URL("http://tabb.ie" + obj.getString("image_url")),
               obj.getDouble("latitude"), obj.getDouble("longitude"),
               radarCount, obj.getBoolean("featured"), dd);

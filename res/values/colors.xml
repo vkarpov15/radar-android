@@ -2,4 +2,5 @@
 <resources>
 	<color name="transparent">#00000000</color>
 	<color name="WHITE">#FFFFFF</color>
+	<color name="ORANGE">#ea8e4c</color>
 </resources>
