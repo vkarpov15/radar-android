@@ -365,7 +365,7 @@ public class RadarActivity extends ServerThreadActivity implements
           Event e = new Event(obj.getString("id"), title,
               obj.getString("description"), obj.getString("location"),
               obj.getString("street_address"),
-              new URL("http://tabb.ie" + obj.getString("image_url")),
+              new URL("http://tonight-life.com" + obj.getString("image_url")),
               obj.getDouble("latitude"), obj.getDouble("longitude"),
               radarCount, obj.getBoolean("featured"), dd);
           commonController.addEvent(e);
