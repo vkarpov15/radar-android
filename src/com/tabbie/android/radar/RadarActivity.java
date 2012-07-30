@@ -247,7 +247,7 @@ public class RadarActivity extends ServerThreadActivity implements
     } else if (tabName.equals(LIST_FEATURED_TAG)) {
 
     } else if (tabName.equals(RADAR_TAB_TAG)) {
-
+    	Toast.makeText(RadarActivity.this, "Radar coming soon!", Toast.LENGTH_SHORT).show();
     }
   }
 
