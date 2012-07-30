@@ -121,6 +121,19 @@ public class RadarActivity extends ServerThreadActivity implements
                 radarButton.setSelected(false);
               } else if (!e.isOnRadar() && commonController.addToRadar(e)) {
                 radarButton.setSelected(true);
+                // Now that we have our Facebook user info, we can send this to Tabbie to
+                // get our Tabbie id
+                runOnUiThread(new Runnable() {
+                  public void run() {
+                    ServerPostRequest req = new ServerPostRequest(
+                        ServerThread.TABBIE_SERVER + "/mobile/auth.json",
+                        MessageType.ADD_TO_RADAR,
+                        e.id);
+                    req.params.put("fb_token", facebook.getAccessToken());
+
+                    sendServerRequest(req);
+                  }
+                });
               }
               upVotes.setText(Integer.toString(e.radarCount));
               if (tabHost.getCurrentTab() != 2) {

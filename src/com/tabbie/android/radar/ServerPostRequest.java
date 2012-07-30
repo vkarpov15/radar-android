@@ -17,6 +17,11 @@ public class ServerPostRequest extends ServerRequest {
   public ServerPostRequest(String url, MessageType type) {
     super(url, "POST", type);
   }
+  
+  public ServerPostRequest(final String url, final MessageType type, final String eventId)
+  {
+	  super(url, "POST", type);
+  }
 
   @Override
   public boolean hasOutput() {
