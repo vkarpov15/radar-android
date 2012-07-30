@@ -452,7 +452,9 @@ public class RadarActivity extends ServerThreadActivity implements
     // Handle item selection
     switch (item.getItemId()) {
     case R.id.refresh_me:
-    	Toast.makeText(this, "OPEN THE DOOR GET ON THE FLOOR EVERYBODY WALK THE DINOSAUR", Toast.LENGTH_LONG).show();
+        final Intent intent = new Intent(RadarActivity.this,
+                RadarActivity.class);
+            startActivity(intent);
       return true;
     default:
       return super.onOptionsItemSelected(item);
