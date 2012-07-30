@@ -26,7 +26,7 @@ import android.os.Message;
 import android.util.Log;
 
 public class ServerThread extends Thread {
-  public static final String TABBIE_SERVER = "http://tonight-lifec.com";
+  public static final String TABBIE_SERVER = "http://tonight-life.com";
   public static final int    NO_INTERNET   = -2;
   
 	private Handler upstreamHandler;
