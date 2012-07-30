@@ -9,22 +9,22 @@
         android:layout_marginBottom="7dp">
         
         <ImageView
-            android:id="@+id/location_image"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:padding="10dp"
-            android:layout_width="100dp"
-            android:layout_height="fill_parent"
-            android:scaleType="centerInside"
-            android:src="@drawable/app_name" />
-        
-        <ImageView
             android:id="@+id/map_button"
             android:padding="10dp"
             android:layout_centerInParent="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/map_icon" />
+        
+        <ImageView
+            android:id="@+id/location_image"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:padding="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:adjustViewBounds="true"
+            android:src="@drawable/tonightlife_logo" />
         
         <TextView
             android:id="@+id/user_name"
