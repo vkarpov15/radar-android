@@ -17,7 +17,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -55,6 +54,8 @@ public class RadarActivity extends ServerThreadActivity implements
 
   private String token;
 
+  private Thread drawThread;
+
   private RadarCommonController commonController;
   private RemoteDrawableController remoteDrawableController;
 
@@ -89,18 +90,12 @@ public class RadarActivity extends ServerThreadActivity implements
 
       final ImageView img = (ImageView) convertView
           .findViewById(R.id.event_image);
-      remoteDrawableController.drawImage(e.image,
-          new RemoteDrawableController.OnImageLoadedCallback() {
-            @Override
-            public void onDone(final Drawable d) {
-              runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                  img.setImageDrawable(d);
-                }
-              });
-            }
-          });
+      if (img.getTag() == null
+          || 0 != ((URL) img.getTag()).toString().compareTo(e.image.toString())) {
+        remoteDrawableController.drawImage(e.image, img);
+      } else {
+        Log.d("No redraw required!", "hi");
+      }
 
       final ImageView radarButton = (ImageView) convertView
           .findViewById(R.id.add_to_radar_image);
@@ -217,13 +212,6 @@ public class RadarActivity extends ServerThreadActivity implements
     tabHost.setup();
     tabHost.setOnTabChangedListener(this);
     tabHost.getTabWidget().setDividerDrawable(R.drawable.divider_vertical_dark);
-
-    Filter<Event> featuredOnly = new Filter<Event>() {
-      @Override
-      public boolean apply(Event o) {
-        return o.featured;
-      }
-    };
 
     featuredListView.setAdapter(new EventListAdapter(this,
         R.id.featured_event_list, R.layout.event_list_element,
