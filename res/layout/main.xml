@@ -11,7 +11,8 @@
         <ImageView
             android:id="@+id/map_button"
             android:padding="10dp"
-            android:layout_centerInParent="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/map_icon" />
@@ -28,12 +29,12 @@
         
         <TextView
             android:id="@+id/user_name"
-            android:padding="10dp"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
+            android:layout_toRightOf="@id/location_image"
+            android:layout_toLeftOf="@id/map_button"
+            android:gravity="left"
             android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
-            android:gravity="center"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
             android:textSize="16dp"
             android:textStyle="bold"
             android:textColor="@color/WHITE"
