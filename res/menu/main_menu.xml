@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/zoom_to_me"
-          android:icon="@android:drawable/ic_menu_compass"
-          android:title="My Location"
+    <item android:id="@+id/refresh_me"
+          android:icon="@android:drawable/ic_menu_rotate"
+          android:title="Refresh"
           />
 </menu>

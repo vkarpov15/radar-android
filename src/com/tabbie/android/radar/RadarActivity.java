@@ -19,6 +19,9 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -435,5 +438,24 @@ public class RadarActivity extends ServerThreadActivity implements
       d = s.parse(datestring);
     }
     return d;
+  }
+  
+  @Override
+  public boolean onCreateOptionsMenu(final Menu menu) {
+    final MenuInflater inflater = getMenuInflater();
+    inflater.inflate(R.menu.main_menu, menu);
+    return true;
+  }
+  
+  @Override
+  public boolean onOptionsItemSelected(final MenuItem item) {
+    // Handle item selection
+    switch (item.getItemId()) {
+    case R.id.refresh_me:
+    	Toast.makeText(this, "OPEN THE DOOR GET ON THE FLOOR EVERYBODY WALK THE DINOSAUR", Toast.LENGTH_LONG).show();
+      return true;
+    default:
+      return super.onOptionsItemSelected(item);
+    }
   }
 }
