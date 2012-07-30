@@ -41,7 +41,7 @@ public class RadarMapController {
 		}
 		
 		protected boolean onTap(int index) {
-			markers.get(index).onClick();
+			// markers.get(index).onClick();
 			return true;
 		}
 		
