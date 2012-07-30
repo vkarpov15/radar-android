@@ -385,6 +385,17 @@ public class RadarActivity extends ServerThreadActivity implements
               .notifyDataSetChanged();
         }
       });
+    } else if (MessageType.ADD_TO_RADAR == resp.responseTo){
+	    this.runOnUiThread(new Runnable() {
+	        public void run() {
+	          ServerPostRequest req = new ServerPostRequest(
+	              ServerThread.TABBIE_SERVER + "/mobile/radar/" + "?auth_token="
+                    + token, MessageType.ADD_TO_RADAR);
+	          req.params.put("fb_token", facebook.getAccessToken());
+	
+	          sendServerRequest(req);
+	        }
+	      });    	
     }
     return false;
   }
