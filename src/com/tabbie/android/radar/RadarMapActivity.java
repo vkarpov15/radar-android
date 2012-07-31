@@ -91,7 +91,6 @@ public class RadarMapActivity extends MapActivity {
 
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
-    // Handle item selection
     switch (item.getItemId()) {
     case R.id.zoom_to_me:
       mapController.setLatLon(myLocationOverlay.getMyLocation());
