@@ -11,9 +11,24 @@
    		android:id="@+id/event_image"
    		android:layout_width="80dp"
    		android:layout_height="120dp"
-   		android:layout_centerVertical="true"
+		android:layout_alignParentLeft="true"
    		android:adjustViewBounds="true"
-   		android:layout_margin="5dp"/>
+   		android:layout_margin="5dp"
+   		android:background="@color/WHITE"/>
+    
+    <TextView
+        android:id="@+id/event_text"
+        android:maxLines="1"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@id/event_image"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="left"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:textSize="16dp"
+        android:textColor="@color/WHITE"
+        android:textStyle="bold" />
     
     <ImageView
 		android:src="@drawable/radar_button_selector"
@@ -34,21 +49,9 @@
       	android:text="100"
       	android:layout_alignLeft="@id/add_to_radar_image"
       	android:layout_alignRight="@id/add_to_radar_image"
-      	android:layout_alignParentTop="true"
+      	android:layout_below="@id/event_text"
       	android:layout_margin="10dp"
       	android:layout_above="@id/add_to_radar_image" />
-    
-    <TextView
-        android:id="@+id/event_text"
-        android:layout_toRightOf="@id/event_image"
-        android:layout_toLeftOf="@id/add_to_radar_image"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:paddingLeft="5dp"
-        android:paddingRight="5dp"
-        android:textSize="16dp"
-        android:textColor="@color/WHITE"
-        android:textStyle="bold" />
     
     <TextView
         android:id="@+id/event_list_time"
@@ -69,7 +72,8 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_toRightOf="@id/event_image">
+        android:layout_toRightOf="@id/event_image"
+        android:background="@color/ORANGE">
         
 		<ImageView 
 			android:id="@+id/location_image"
