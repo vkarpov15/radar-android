@@ -63,28 +63,32 @@
       	android:layout_toRightOf="@id/event_image"
       	android:layout_toLeftOf="@id/add_to_radar_image" />
     
-     <ImageView 
-   		android:id="@+id/location_image"
-   		android:layout_width="30dp"
-   		android:layout_height="30dp"
-    	android:src="@drawable/location_marker"
-    	android:layout_marginTop="10dp"
-    	android:paddingLeft="5dp"
-    	android:paddingRight="5dp"
-    	android:layout_below="@id/event_list_time"
-    	android:layout_toRightOf="@id/event_image" />
-    
-     <TextView
-        android:id="@+id/event_location"
-      	android:layout_width="fill_parent" 
-      	android:layout_height="fill_parent"
-      	android:layout_toRightOf="@id/location_image"
-      	android:layout_toLeftOf="@id/add_to_radar_image"
-      	android:layout_alignBottom="@id/location_image"
-      	android:layout_alignTop="@id/location_image"
-      	android:gravity="center_vertical" 
-      	android:textSize="16dp"
-      	android:textColor="@color/WHITE"
-      	android:text="Club Avenue"/>
-     
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="horizontal"
+        android:id="@+id/location_image_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_toRightOf="@id/event_image">
+        
+		<ImageView 
+			android:id="@+id/location_image"
+			android:layout_width="30dp"
+			android:layout_height="30dp"
+			android:src="@drawable/location_marker"
+			android:paddingLeft="5dp"
+			android:paddingRight="5dp" />
+
+		<TextView
+			android:id="@+id/event_location"
+			android:layout_width="wrap_content" 
+			android:layout_height="fill_parent"
+			android:gravity="center_vertical"
+			android:maxLines="1"
+			android:textSize="16dp"
+			android:textColor="@color/WHITE"
+			android:text="Club Avenue" />
+		
+	</LinearLayout>
+   
 </RelativeLayout>
