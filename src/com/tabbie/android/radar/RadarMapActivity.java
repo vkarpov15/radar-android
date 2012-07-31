@@ -77,7 +77,8 @@ public class RadarMapActivity extends MapActivity {
   }
 
   @Override
-  protected boolean isRouteDisplayed() {
+  protected boolean isRouteDisplayed()
+  {
     // TODO Auto-generated method stub
     return false;
   }
