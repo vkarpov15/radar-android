@@ -192,6 +192,10 @@ public class RadarActivity extends ServerThreadActivity implements
     if (!facebook.isSessionValid()) {
       facebook.authorize(this, new String[] { "email" }, new DialogListener() {
         public void onComplete(Bundle values) {
+          SharedPreferences.Editor editor = preferences.edit();
+          editor.putString("access_token", facebook.getAccessToken());
+          editor.putLong("access_expires", facebook.getAccessExpires());
+          editor.commit();
           sendServerRequest(new ServerGetRequest(
               "https://graph.facebook.com/me/?access_token="
                   + facebook.getAccessToken(), MessageType.FACEBOOK_LOGIN));
@@ -206,6 +210,11 @@ public class RadarActivity extends ServerThreadActivity implements
         public void onCancel() {
         }
       });
+    } else {
+      // Already have fb session
+      sendServerRequest(new ServerGetRequest(
+          "https://graph.facebook.com/me/?access_token="
+              + facebook.getAccessToken(), MessageType.FACEBOOK_LOGIN));
     }
 
     commonController = new RadarCommonController();
@@ -359,6 +368,7 @@ public class RadarActivity extends ServerThreadActivity implements
         e1.printStackTrace();
       }
 
+      commonController.clear();
       for (int i = 0; i < list.length() - 1; ++i) {
         try {
           JSONObject obj = list.getJSONObject(i);
@@ -477,8 +487,14 @@ public class RadarActivity extends ServerThreadActivity implements
     // Handle item selection
     switch (item.getItemId()) {
     case R.id.refresh_me:
-      final Intent intent = new Intent(RadarActivity.this, RadarActivity.class);
-      startActivity(intent);
+      this.runOnUiThread(new Runnable() {
+        public void run() {
+          ServerGetRequest req = new ServerGetRequest(
+              ServerThread.TABBIE_SERVER + "/mobile/all.json?auth_token="
+                  + token, MessageType.LOAD_EVENTS);
+          sendServerRequest(req);
+        }
+      });
       return true;
     default:
       return super.onOptionsItemSelected(item);

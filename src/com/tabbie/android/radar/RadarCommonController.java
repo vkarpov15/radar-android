@@ -80,6 +80,15 @@ public class RadarCommonController implements Parcelable {
     Collections.sort(radarList, defaultOrdering);
   }
 
+  public void clear() {
+    eventsList.clear();
+    featuredList.clear();
+    radarList.clear();
+    featured.clear();
+    events.clear();
+    radarIds.clear();
+  }
+
   public Event getEvent(String id) {
     return events.get(id);
   }
