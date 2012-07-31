@@ -10,7 +10,7 @@ package com.tabbie.android.radar;
 
 public class ServerDeleteRequest extends ServerRequest {
   public ServerDeleteRequest(String url, MessageType type) {
-    super(url, "GET", type);
+    super(url, "DELETE", type);
   }
 
   @Override
