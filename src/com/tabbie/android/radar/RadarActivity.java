@@ -169,7 +169,7 @@ public class RadarActivity extends ServerThreadActivity implements
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.main);
-    
+
     Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
 
     featuredListView = (ListView) findViewById(R.id.featured_event_list);
@@ -211,7 +211,6 @@ public class RadarActivity extends ServerThreadActivity implements
     commonController = new RadarCommonController();
     remoteDrawableController = new RemoteDrawableController();
 
-    
     // Set up the Tab Host
     tabHost = (TabHost) findViewById(android.R.id.tabhost);
     tabHost.setup();
@@ -221,17 +220,17 @@ public class RadarActivity extends ServerThreadActivity implements
     featuredListView.setAdapter(new EventListAdapter(this,
         R.id.featured_event_list, R.layout.event_list_element,
         commonController.featuredList));
-    
+
     featuredListView.setVisibility(View.GONE);
-    
+
     allListView.setAdapter(new EventListAdapter(this, R.id.all_event_list,
         R.layout.event_list_element, commonController.eventsList));
 
     allListView.setVisibility(View.GONE);
-    
+
     radarListView.setAdapter(new EventListAdapter(this, R.id.radar_list,
-    R.layout.event_list_element, commonController.radarList));
-    
+        R.layout.event_list_element, commonController.radarList));
+
     radarListView.setVisibility(View.GONE);
 
     findViewById(R.id.map_button).setOnClickListener(new OnClickListener() {
@@ -389,6 +388,7 @@ public class RadarActivity extends ServerThreadActivity implements
               radarCount, obj.getBoolean("featured"), dd,
               serverRadarIds.contains(obj.getString("id")));
           commonController.addEvent(e);
+          remoteDrawableController.preload(e.image);
         } catch (JSONException e) {
           e.printStackTrace();
           return false;
@@ -411,6 +411,8 @@ public class RadarActivity extends ServerThreadActivity implements
           ((EventListAdapter) allListView.getAdapter()).notifyDataSetChanged();
           ((EventListAdapter) radarListView.getAdapter())
               .notifyDataSetChanged();
+          findViewById(R.id.loading_screen).setVisibility(View.GONE);
+          findViewById(R.id.tonightlife_layout).setVisibility(View.VISIBLE);
         }
       });
     }

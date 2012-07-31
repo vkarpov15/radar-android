@@ -2,9 +2,18 @@
 <LinearLayout android:orientation="vertical"
     android:layout_width="fill_parent" android:layout_height="fill_parent" xmlns:android="http://schemas.android.com/apk/res/android">
     
+    <ImageView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:id="@+id/loading_screen"
+        android:src="@drawable/launch_screen"
+        />
+    
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="fill_parent"
         android:layout_height="43dp"
+        android:id="@+id/tonightlife_layout"
+        android:visibility="gone"
         android:background="@drawable/app_header_background"
         android:layout_marginBottom="7dp">
         

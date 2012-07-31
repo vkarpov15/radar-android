@@ -6,7 +6,7 @@ package com.tabbie.android.radar;
  *  Created on: July 29, 2012
  *      Author: Valeri Karpov
  *      
- *  Data structure for asynchronously loading images from URLs with basic caching
+ *  Data structure for loading and caching images
  */
 
 import java.io.IOException;
@@ -20,6 +20,20 @@ public class RemoteDrawableController {
   private final LinkedHashMap<String, Drawable> myDrawables = new LinkedHashMap<String, Drawable>();
 
   public RemoteDrawableController() {
+  }
+
+  public void preload(URL u) {
+    if (myDrawables.containsKey(u.toString())) {
+      return;
+    } else {
+      Drawable d;
+      try {
+        d = Drawable.createFromStream(u.openStream(), "src");
+        myDrawables.put(u.toString(), d);
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+    }
   }
 
   public void drawImage(URL u, final ImageView view) {
