@@ -13,8 +13,7 @@
    		android:layout_height="120dp"
 		android:layout_alignParentLeft="true"
    		android:adjustViewBounds="true"
-   		android:layout_margin="5dp"
-   		android:background="@color/WHITE"/>
+   		android:layout_margin="5dp" />
     
     <TextView
         android:id="@+id/event_text"
@@ -30,29 +29,6 @@
         android:textColor="@color/WHITE"
         android:textStyle="bold" />
     
-    <ImageView
-		android:src="@drawable/radar_button_selector"
-		android:id="@+id/add_to_radar_image"
-		android:layout_width="50dp"
-		android:layout_height="50dp"
-		android:layout_margin="10dp"
-		android:layout_alignParentRight="true"
-		android:layout_centerVertical="true" />
-    
-   	<TextView
-   	    android:id="@+id/upvotes"
-      	android:layout_width="wrap_content" 
-      	android:layout_height="wrap_content"
-      	android:gravity="center" 
-      	android:textSize="16dp"
-      	android:textColor="@color/WHITE"
-      	android:text="100"
-      	android:layout_alignLeft="@id/add_to_radar_image"
-      	android:layout_alignRight="@id/add_to_radar_image"
-      	android:layout_below="@id/event_text"
-      	android:layout_margin="10dp"
-      	android:layout_above="@id/add_to_radar_image" />
-    
     <TextView
         android:id="@+id/event_list_time"
       	android:layout_width="wrap_content" 
@@ -63,8 +39,29 @@
       	android:paddingLeft="5dp"
       	android:paddingRight="5dp"
       	android:layout_below="@id/event_text"
-      	android:layout_toRightOf="@id/event_image"
-      	android:layout_toLeftOf="@id/add_to_radar_image" />
+      	android:layout_toRightOf="@id/event_image" />
+    
+    <ImageView
+		android:src="@drawable/radar_button_selector"
+		android:id="@+id/add_to_radar_image"
+		android:layout_width="50dp"
+		android:layout_height="50dp"
+		android:layout_margin="5dp"
+		android:layout_alignParentRight="true"
+		android:layout_below="@id/event_list_time" />
+    
+   	<TextView
+   	    android:id="@+id/upvotes"
+      	android:layout_width="50dp"
+      	android:layout_height="wrap_content"
+      	android:layout_marginRight="5dp"
+      	android:layout_marginLeft="5dp"
+      	android:gravity="center_horizontal"
+      	android:textSize="16dp"
+      	android:textColor="@color/WHITE"
+      	android:text="100"
+      	android:layout_alignParentRight="true"
+      	android:layout_below="@id/event_text" />
     
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:orientation="horizontal"
@@ -73,7 +70,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_toRightOf="@id/event_image"
-        android:background="@color/ORANGE">
+        android:layout_below="@id/add_to_radar_image">
         
 		<ImageView 
 			android:id="@+id/location_image"
@@ -94,5 +91,19 @@
 			android:text="Club Avenue" />
 		
 	</LinearLayout>
+	
+    <TextView 
+        android:id="@+id/event_description_splash"
+        android:layout_toRightOf="@id/event_image"
+        android:layout_toLeftOf="@id/add_to_radar_image"
+        android:layout_below="@id/event_list_time"
+        android:layout_above="@id/location_image_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:text="TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST "
+        android:textSize="10dp"
+        android:maxLines="5"
+        android:paddingLeft="5dp" />
+  
    
 </RelativeLayout>
