@@ -26,6 +26,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -33,6 +34,7 @@ import android.widget.TabHost;
 import android.widget.TabHost.OnTabChangeListener;
 import android.widget.TabHost.TabSpec;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.facebook.android.DialogError;
 import com.facebook.android.Facebook;
@@ -125,14 +127,20 @@ public class RadarActivity extends ServerThreadActivity implements
                         + ".json?auth_token=" + token, MessageType.ADD_TO_RADAR);
 
                 serverThread.sendRequest(req);
-              } else if (!e.isOnRadar() && commonController.addToRadar(e)) {
-                radarButton.setSelected(true);
+              } else if (!e.isOnRadar()) {
+                if (commonController.addToRadar(e)) {
+                  radarButton.setSelected(true);
 
-                ServerPostRequest req = new ServerPostRequest(
-                    ServerThread.TABBIE_SERVER + "/mobile/radar/" + e.id
-                        + ".json", MessageType.ADD_TO_RADAR);
-                req.params.put("auth_token", token);
-                serverThread.sendRequest(req);
+                  ServerPostRequest req = new ServerPostRequest(
+                      ServerThread.TABBIE_SERVER + "/mobile/radar/" + e.id
+                          + ".json", MessageType.ADD_TO_RADAR);
+                  req.params.put("auth_token", token);
+                  serverThread.sendRequest(req);
+                } else {
+                  Toast.makeText(RadarActivity.this,
+                      "You can only add 3 events to your radar!", 5000).show();
+                  return;
+                }
               }
               upVotes.setText(Integer.toString(e.radarCount));
               if (tabHost.getCurrentTab() != 2) {
@@ -176,6 +184,8 @@ public class RadarActivity extends ServerThreadActivity implements
     allListView = (ListView) findViewById(R.id.all_event_list);
     radarListView = (ListView) findViewById(R.id.radar_list);
     myNameView = (TextView) findViewById(R.id.user_name);
+    
+    ((ImageView) findViewById(R.id.loading_spin)).startAnimation(AnimationUtils.loadAnimation(this, R.anim.rotate));
 
     preferences = getPreferences(MODE_PRIVATE);
     // Facebook Access Token
@@ -390,13 +400,20 @@ public class RadarActivity extends ServerThreadActivity implements
           if (title.length() > 31) {
             title = title.substring(0, 31) + "...";
           }
-          Event e = new Event(obj.getString("id"), title,
-              obj.getString("description"), obj.getString("location"),
-              obj.getString("street_address"), new URL(
-                  "http://tonight-life.com" + obj.getString("image_url")),
-              obj.getDouble("latitude"), obj.getDouble("longitude"),
-              radarCount, obj.getBoolean("featured"), dd,
-              serverRadarIds.contains(obj.getString("id")));
+          
+          Event e = new Event(  obj.getString("id"),
+                                title,
+                                obj.getString("description"),
+                                obj.getString("location"),
+                                obj.getString("street_address"),
+                                new URL("http://tonight-life.com" + obj.getString("image_url")),
+                                obj.getDouble("latitude"),
+                                obj.getDouble("longitude"),
+                                radarCount,
+                                obj.getBoolean("featured"),
+                                dd,
+                                serverRadarIds.contains(obj.getString("id")));
+          
           commonController.addEvent(e);
           remoteDrawableController.preload(e.image);
         } catch (JSONException e) {
@@ -422,6 +439,8 @@ public class RadarActivity extends ServerThreadActivity implements
           ((EventListAdapter) radarListView.getAdapter())
               .notifyDataSetChanged();
           findViewById(R.id.loading_screen).setVisibility(View.GONE);
+          findViewById(R.id.loading_screen_image).setVisibility(View.GONE);
+          findViewById(R.id.loading_spin).setVisibility(View.GONE);
           findViewById(R.id.tonightlife_layout).setVisibility(View.VISIBLE);
         }
       });
