@@ -2,12 +2,25 @@
 <LinearLayout android:orientation="vertical"
     android:layout_width="fill_parent" android:layout_height="fill_parent" xmlns:android="http://schemas.android.com/apk/res/android">
     
-    <ImageView
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+    <RelativeLayout
         android:id="@+id/loading_screen"
-        android:src="@drawable/launch_screen"
-        />
+        android:layout_height="fill_parent"
+        android:layout_width="fill_parent">
+	    <ImageView
+	        android:layout_width="fill_parent"
+	        android:layout_height="fill_parent"
+	        android:id="@+id/loading_screen_image"
+	        android:src="@drawable/launch_screen"
+	        />
+	    <ImageView  
+        	android:id="@+id/loading_spin"  
+        	android:layout_width="80dp"  
+        	android:layout_height="80dp"
+        	android:layout_centerHorizontal="true"
+        	android:layout_alignParentBottom="true"
+        	android:layout_marginBottom="15dp"  
+        	android:src="@drawable/refresh"/> 
+    </RelativeLayout>
     
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="fill_parent"

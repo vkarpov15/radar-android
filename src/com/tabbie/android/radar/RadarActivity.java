@@ -26,6 +26,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -183,6 +184,8 @@ public class RadarActivity extends ServerThreadActivity implements
     allListView = (ListView) findViewById(R.id.all_event_list);
     radarListView = (ListView) findViewById(R.id.radar_list);
     myNameView = (TextView) findViewById(R.id.user_name);
+    
+    ((ImageView) findViewById(R.id.loading_spin)).startAnimation(AnimationUtils.loadAnimation(this, R.anim.rotate));
 
     preferences = getPreferences(MODE_PRIVATE);
     // Facebook Access Token
@@ -436,6 +439,8 @@ public class RadarActivity extends ServerThreadActivity implements
           ((EventListAdapter) radarListView.getAdapter())
               .notifyDataSetChanged();
           findViewById(R.id.loading_screen).setVisibility(View.GONE);
+          findViewById(R.id.loading_screen_image).setVisibility(View.GONE);
+          findViewById(R.id.loading_spin).setVisibility(View.GONE);
           findViewById(R.id.tonightlife_layout).setVisibility(View.VISIBLE);
         }
       });
