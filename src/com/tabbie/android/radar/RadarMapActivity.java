@@ -16,15 +16,15 @@ public class RadarMapActivity extends MapActivity {
   private RadarCommonController commonController;
   private RadarMapController mapController;
   private Event selected = null;
-  
+
   private MapView mapView;
   private MyLocationOverlay myLocationOverlay;
-  
+
   @Override
   public void onCreate(Bundle saved) {
     super.onCreate(saved);
     setContentView(R.layout.map_activity);
-    
+
     Bundle starter = getIntent().getExtras();
     if (null != starter && starter.containsKey("controller")) {
       commonController = starter.getParcelable("controller");
@@ -33,41 +33,49 @@ public class RadarMapActivity extends MapActivity {
       this.finish();
       return;
     }
-    
+
     mapView = (MapView) findViewById(R.id.my_map_view);
     mapView.setBuiltInZoomControls(true);
-    
+
     mapController = new RadarMapController(commonController, mapView);
-    
+
     if (starter.containsKey("event")) {
       selected = starter.getParcelable("event");
     }
-    
+
     List<Overlay> overlays = mapView.getOverlays();
     overlays.clear();
 
     myLocationOverlay = new MyLocationOverlay(this, mapView);
     myLocationOverlay.enableMyLocation();
-    
-    for (Event e : commonController.eventsList) {
+
+    for (final Event e : commonController.eventsList) {
+      EventMarker.OnClickListener listener = new EventMarker.OnClickListener() {
+        @Override
+        public void onClick() {
+          mapController.setLatLon(e.lat, e.lon);
+        }
+      };
       if (null != selected && 0 == e.id.compareTo(selected.id)) {
-        mapController.addEventMarker(e, getResources().getDrawable(R.drawable.marker_highlight), null);
+        mapController.addEventMarker(e,
+            getResources().getDrawable(R.drawable.marker_highlight), listener);
       } else {
-        mapController.addEventMarker(e, getResources().getDrawable(R.drawable.marker), null);
+        mapController.addEventMarker(e,
+            getResources().getDrawable(R.drawable.marker), listener);
       }
     }
-    
+
     overlays.add(myLocationOverlay);
     overlays.add(mapController.getItemizedOverlay());
     mapView.postInvalidate();
-    
+
     if (null != selected) {
       mapController.setLatLon(selected.lat, selected.lon);
       mapController.setZoom(16);
     }
-    
+
   }
-  
+
   @Override
   protected boolean isRouteDisplayed() {
     // TODO Auto-generated method stub
@@ -93,5 +101,5 @@ public class RadarMapActivity extends MapActivity {
       return super.onOptionsItemSelected(item);
     }
   }
-  
+
 }
