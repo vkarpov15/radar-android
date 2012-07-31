@@ -21,9 +21,18 @@ public class Event implements Parcelable {
   public int radarCount;
   private boolean onRadar;
 
-  public Event(String id, String name, String description, String venueName,
-      String address, URL image, double lat, double lon, int radarCount,
-      boolean featured, String time, boolean onRadar) {
+  public Event( String id,
+                String name,
+                String description,
+                String venueName,
+                String address,
+                URL image,
+                double lat,
+                double lon,
+                int radarCount,
+                boolean featured,
+                String time,
+                boolean onRadar) {
     this.id = id;
     this.name = name;
     this.description = description;
@@ -69,10 +78,18 @@ public class Event implements Parcelable {
     public Event createFromParcel(Parcel in) {
       String url = in.readString();
       try {
-        return new Event(in.readString(), in.readString(), in.readString(),
-            in.readString(), in.readString(), new URL(url), in.readDouble(),
-            in.readDouble(), in.readInt(), in.readInt() == 1, in.readString(),
-            in.readInt() == 1);
+        return new Event( in.readString(),
+                          in.readString(),
+                          in.readString(),
+                          in.readString(),
+                          in.readString(),
+                          new URL(url),
+                          in.readDouble(),
+                          in.readDouble(),
+                          in.readInt(),
+                          in.readInt() == 1,
+                          in.readString(),
+                          in.readInt() == 1);
       } catch (MalformedURLException e) {
         e.printStackTrace();
         return null;

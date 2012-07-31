@@ -397,13 +397,20 @@ public class RadarActivity extends ServerThreadActivity implements
           if (title.length() > 31) {
             title = title.substring(0, 31) + "...";
           }
-          Event e = new Event(obj.getString("id"), title,
-              obj.getString("description"), obj.getString("location"),
-              obj.getString("street_address"), new URL(
-                  "http://tonight-life.com" + obj.getString("image_url")),
-              obj.getDouble("latitude"), obj.getDouble("longitude"),
-              radarCount, obj.getBoolean("featured"), dd,
-              serverRadarIds.contains(obj.getString("id")));
+          
+          Event e = new Event(  obj.getString("id"),
+                                title,
+                                obj.getString("description"),
+                                obj.getString("location"),
+                                obj.getString("street_address"),
+                                new URL("http://tonight-life.com" + obj.getString("image_url")),
+                                obj.getDouble("latitude"),
+                                obj.getDouble("longitude"),
+                                radarCount,
+                                obj.getBoolean("featured"),
+                                dd,
+                                serverRadarIds.contains(obj.getString("id")));
+          
           commonController.addEvent(e);
           remoteDrawableController.preload(e.image);
         } catch (JSONException e) {
