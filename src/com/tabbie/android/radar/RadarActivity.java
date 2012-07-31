@@ -33,6 +33,7 @@ import android.widget.TabHost;
 import android.widget.TabHost.OnTabChangeListener;
 import android.widget.TabHost.TabSpec;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.facebook.android.DialogError;
 import com.facebook.android.Facebook;
@@ -125,14 +126,20 @@ public class RadarActivity extends ServerThreadActivity implements
                         + ".json?auth_token=" + token, MessageType.ADD_TO_RADAR);
 
                 serverThread.sendRequest(req);
-              } else if (!e.isOnRadar() && commonController.addToRadar(e)) {
-                radarButton.setSelected(true);
+              } else if (!e.isOnRadar()) {
+                if (commonController.addToRadar(e)) {
+                  radarButton.setSelected(true);
 
-                ServerPostRequest req = new ServerPostRequest(
-                    ServerThread.TABBIE_SERVER + "/mobile/radar/" + e.id
-                        + ".json", MessageType.ADD_TO_RADAR);
-                req.params.put("auth_token", token);
-                serverThread.sendRequest(req);
+                  ServerPostRequest req = new ServerPostRequest(
+                      ServerThread.TABBIE_SERVER + "/mobile/radar/" + e.id
+                          + ".json", MessageType.ADD_TO_RADAR);
+                  req.params.put("auth_token", token);
+                  serverThread.sendRequest(req);
+                } else {
+                  Toast.makeText(RadarActivity.this,
+                      "You can only add 3 events to your radar!", 5000).show();
+                  return;
+                }
               }
               upVotes.setText(Integer.toString(e.radarCount));
               if (tabHost.getCurrentTab() != 2) {
