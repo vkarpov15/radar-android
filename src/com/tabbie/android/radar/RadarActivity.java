@@ -57,8 +57,6 @@ public class RadarActivity extends ServerThreadActivity implements
 
   private String token;
 
-  private Thread drawThread;
-
   private RadarCommonController commonController;
   private RemoteDrawableController remoteDrawableController;
 
