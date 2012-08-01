@@ -406,20 +406,17 @@ public class RadarActivity extends ServerThreadActivity implements
           
 	          commonController.addEvent(e);
 	          Log.v("RadarActivity", "Benchmark 2, right before preloading image e");
+	          
+	          // TODO Preload Asynchronously
 	          remoteDrawableController.preload(e.image);
 	        } catch (JSONException e) {
 	        	Toast.makeText(this, "Fatal Error: Failed to Parse JSON", Toast.LENGTH_SHORT).show();
 	          e.printStackTrace();
 	          return false;
-	        } catch (IndexOutOfBoundsException e) {
-	          // TODO Auto-generated catch block
-	          e.printStackTrace();
-	        } catch (ParseException e) {
-	          // TODO Auto-generated catch block
-	          e.printStackTrace();
-	        } catch (MalformedURLException e) {
-	          // TODO Auto-generated catch block
-	          e.printStackTrace();
+	        } catch(final Exception e)
+	        {
+	        	Log.e("RadarActivity", "Fatal Error: Non JSON-Exception during event creation");
+	        	throw new RuntimeException();
 	        }
 	      }
       commonController.order();
