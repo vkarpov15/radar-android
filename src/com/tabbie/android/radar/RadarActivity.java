@@ -89,10 +89,19 @@ public class RadarActivity extends ServerThreadActivity implements
           .setText(e.venueName);
       Log.v("RadarActivity", "Setting RadarCount " + e.radarCount);
       ((TextView) convertView.findViewById(R.id.upvotes)).setText(Integer.toString(e.radarCount));
+      
+      /*
+       * Check and see if there is an image that has been loaded
+       * If there is an image that has been loaded and it has been drawn, then do nothing
+       * If there is an image that has been loaded, but it hasn't been drawn, draw it
+       * If there is no image that has been loaded, display the loader and LOAD THAT SH*T
+       */
 
       final ImageView img = (ImageView) convertView
-          .findViewById(R.id.event_image);
-      img.setImageResource(R.drawable.velvet_rope_header);
+          .findViewById(R.id.element_loader);
+      // img.setImageResource(R.drawable.refresh);
+
+      img.startAnimation(AnimationUtils.loadAnimation(RadarActivity.this, R.anim.rotate));
       
       // TODO Make this asynchronous
       /*

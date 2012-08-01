@@ -6,12 +6,29 @@
     android:padding="10dp"
     android:orientation="vertical">
     
-    <ImageView 
-        android:background="@color/ORANGE"
-        android:scaleType="centerCrop"
-        android:id="@+id/event_image"
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/image_holder"
         android:layout_width="fill_parent"
-        android:layout_height="120dp" />
+        android:layout_height="120dp">
+        
+        <ImageView 
+            android:id="@+id/element_loader"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_gravity="center"
+            android:src="@drawable/refresh"/>
+        
+	    <ImageView
+	        android:visibility="gone"
+	        android:scaleType="centerCrop"
+	        android:id="@+id/event_image"
+	        android:layout_width="fill_parent"
+	        android:layout_height="120dp" />
+        
+    </FrameLayout>
+        
+    
+
     
 	<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	    android:id="@+id/event_description_layout"
