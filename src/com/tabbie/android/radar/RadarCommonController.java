@@ -19,6 +19,7 @@ import java.util.List;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 public class RadarCommonController implements Parcelable {
   public static final int MAX_RADAR_SELECTIONS = 3;
@@ -99,6 +100,7 @@ public class RadarCommonController implements Parcelable {
 
   public boolean addToRadar(Event e) {
     if (radarIds.contains(e.id) || radarList.size() >= MAX_RADAR_SELECTIONS) {
+    	Log.v("RadarCommonController", "Add to Radar Failed");
       return false;
     }
     radarIds.add(e.id);

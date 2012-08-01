@@ -88,6 +88,7 @@ public class RadarActivity extends ServerThreadActivity implements
           .setText(e.venueName);
       final TextView upVotes = ((TextView) convertView
           .findViewById(R.id.upvotes));
+      Log.v("RadarActivity", "Setting RadarCount " + e.radarCount);
       upVotes.setText(Integer.toString(e.radarCount));
 
       final ImageView img = (ImageView) convertView
@@ -99,11 +100,6 @@ public class RadarActivity extends ServerThreadActivity implements
         Log.d("No redraw required!", "hi");
       }
 
-      final ImageView radarButton = (ImageView) convertView
-          .findViewById(R.id.add_to_radar_image);
-
-      radarButton.setSelected(e.isOnRadar());
-
       convertView.findViewById(R.id.list_list_element_layout)
           .setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
@@ -111,11 +107,15 @@ public class RadarActivity extends ServerThreadActivity implements
                 Intent intent = new Intent(RadarActivity.this,
                     EventDetailsActivity.class);
                 intent.putExtra("event", e);
+                intent.putExtra("controller", commonController);
+                intent.putExtra("token", token);
                 startActivity(intent);
               }
             }
           });
-
+      
+      // TODO Remove me
+/*
       convertView.findViewById(R.id.add_to_radar_image).setOnClickListener(
           new OnClickListener() {
             public void onClick(View v) {
@@ -157,7 +157,7 @@ public class RadarActivity extends ServerThreadActivity implements
               }
             }
           });
-
+*/
       convertView.findViewById(R.id.location_image_layout).setOnClickListener(
           new OnClickListener() {
             public void onClick(View v) {

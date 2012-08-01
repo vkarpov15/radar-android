@@ -11,15 +11,21 @@ package com.tabbie.android.radar;
  */
 
 import java.io.IOException;
-
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
-public class EventDetailsActivity extends Activity {
+public class EventDetailsActivity extends ServerThreadActivity {
   private Event e;
+  private RadarCommonController commonController;
+  private String token;
   private ImageView eventImage;
   
   @Override
@@ -32,6 +38,8 @@ public class EventDetailsActivity extends Activity {
     Bundle starter = getIntent().getExtras();
     if (null != starter && starter.containsKey("event")) {
       e = starter.getParcelable("event");
+      commonController = starter.getParcelable("controller");
+      token = starter.getString("token");
     } else {
       // No event, nothing to display
       this.finish();
@@ -50,5 +58,55 @@ public class EventDetailsActivity extends Activity {
     ((TextView) findViewById(R.id.details_event_address)).setText(e.address);
     ((TextView) findViewById(R.id.details_event_num_radar)).setText(Integer.toString(e.radarCount));
     ((TextView) findViewById(R.id.details_event_description)).setText(e.description);
+    
+    final ImageView radarButton = (ImageView) findViewById(R.id.add_to_radar_image);
+    radarButton.setSelected(e.isOnRadar());
+    radarButton.setOnClickListener(
+            new OnClickListener() {
+              public void onClick(View v) {
+                if (e.isOnRadar() && commonController.removeFromRadar(e)) {
+                	Log.v("EventDetailsActivity", "Removing event from radar");
+                  radarButton.setSelected(false);
+
+                  ServerDeleteRequest req = new ServerDeleteRequest(
+                      ServerThread.TABBIE_SERVER + "/mobile/radar/" + e.id
+                          + ".json?auth_token=" + token, MessageType.ADD_TO_RADAR);
+
+                  serverThread.sendRequest(req);
+                } else if (!e.isOnRadar()) {
+                	Log.v("EventDetailsActivity", "Adding event to radar");
+                  if (commonController.addToRadar(e)) {
+                    radarButton.setSelected(true);
+
+                    ServerPostRequest req = new ServerPostRequest(
+                        ServerThread.TABBIE_SERVER + "/mobile/radar/" + e.id
+                            + ".json", MessageType.ADD_TO_RADAR);
+                    req.params.put("auth_token", token);
+                    serverThread.sendRequest(req);
+                  } else {
+                    Toast.makeText(EventDetailsActivity.this,
+                        "You can only add 3 events to your radar!", 5000).show();
+                    return;
+                  }
+                }
+              }
+            });
   }
+  
+  @Override
+  public void onBackPressed()
+  {
+	  // TODO Fix this methodology by removing a lot of code from RadarActivity's onCreate method
+	  /*
+	   * Val, please be careful modifying this as I have a mental note to go through it on August 1
+	   */
+	  final Intent backIntent = new Intent(this, RadarActivity.class);
+	  startActivity(backIntent);
+  }
+
+@Override
+protected boolean handleServerResponse(ServerResponse resp) {
+    // Assume that ADD_TO_RADAR and REMOVE_FROM_RADAR always succeed
+	return false;
+}
 }
