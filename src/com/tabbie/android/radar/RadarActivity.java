@@ -42,7 +42,7 @@ import com.facebook.android.Facebook.DialogListener;
 import com.facebook.android.FacebookError;
 
 public class RadarActivity extends ServerThreadActivity implements
-    OnTabChangeListener {
+    OnTabChangeListener, RemoteDrawableController.PreLoadFinishedListener {
 
   private static final String LIST_FEATURED_TAG = "Featured";
   private static final String EVENT_TAB_TAG = "Events";
@@ -95,11 +95,21 @@ public class RadarActivity extends ServerThreadActivity implements
        * If there is no image that has been loaded, display the loader and LOAD THAT SH*T
        */
       
+      final ImageView loader = (ImageView) convertView.findViewById(R.id.element_loader);
       final ImageView img = (ImageView) convertView.findViewById(R.id.event_image);
+      
       if(!remoteDrawableController.hasImage(e.image))
-    	  convertView.findViewById(R.id.element_loader).startAnimation(AnimationUtils.loadAnimation(RadarActivity.this, R.anim.rotate));
+      {
+    	  Log.d("RadarActivity", "Image still being retrieved, displaying loader");
+    	  loader.startAnimation(AnimationUtils.loadAnimation(RadarActivity.this, R.anim.rotate));
+      }
       else if (img.getTag() == null || 0 != ((URL) img.getTag()).toString().compareTo(e.image.toString()))
+      {
+    	  Log.d("RadarActivity", "RDC has image");
+    	  loader.setVisibility(View.GONE);
+    	  img.setVisibility(View.VISIBLE);
     	  remoteDrawableController.drawImage(e.image, img);
+      }
       else Log.d("No redraw required!", "hi");
 
       convertView.findViewById(R.id.list_list_element_layout)
@@ -232,7 +242,7 @@ public class RadarActivity extends ServerThreadActivity implements
     }
 
     commonController = new RadarCommonController();
-    remoteDrawableController = new RemoteDrawableController();
+    remoteDrawableController = new RemoteDrawableController(this);
 
     // Set up the Tab Host
     tabHost = (TabHost) findViewById(android.R.id.tabhost);
@@ -413,7 +423,6 @@ public class RadarActivity extends ServerThreadActivity implements
 	          commonController.addEvent(e);
 	          Log.v("RadarActivity", "Benchmark 2, right before preloading image e");
 	          
-	          // TODO Preload Asynchronously
 	          remoteDrawableController.preload(e.image);
 	          
 	        } catch (JSONException e) {
@@ -427,6 +436,7 @@ public class RadarActivity extends ServerThreadActivity implements
 	        	throw new RuntimeException();
 	        }
 	      }
+      Log.d("RadarActivity", "Loading Benchmark 3, all events instantiated");
       commonController.order();
       this.runOnUiThread(new Runnable() {
         public void run() {
@@ -512,4 +522,21 @@ public class RadarActivity extends ServerThreadActivity implements
       return super.onOptionsItemSelected(item);
     }
   }
+
+@Override
+public void onPreLoadFinished()
+{
+	synchronized(this)
+	{
+		this.runOnUiThread(new Runnable() {
+	    public void run() {
+	        ((EventListAdapter) featuredListView.getAdapter())
+	            .notifyDataSetChanged();
+	        ((EventListAdapter) allListView.getAdapter()).notifyDataSetChanged();
+	        ((EventListAdapter) radarListView.getAdapter())
+	            .notifyDataSetChanged();
+	      }
+	    });
+	}
+}
 }

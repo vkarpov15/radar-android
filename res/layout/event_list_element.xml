@@ -19,6 +19,7 @@
             android:src="@drawable/refresh"/>
         
 	    <ImageView
+	        android:background="@color/ORANGE"
 	        android:visibility="gone"
 	        android:scaleType="centerCrop"
 	        android:id="@+id/event_image"

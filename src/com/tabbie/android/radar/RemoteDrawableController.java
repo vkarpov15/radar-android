@@ -15,16 +15,17 @@ import java.util.LinkedHashMap;
 
 import android.graphics.drawable.Drawable;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.widget.ImageView;
 import android.widget.ListView;
 
 public class RemoteDrawableController {
   private final LinkedHashMap<String, Drawable> myDrawables = new LinkedHashMap<String, Drawable>();
-  private final ListView[] listViews;
+  private final PreLoadFinishedListener listener;
 
-  public RemoteDrawableController(final ListView... listViews)
+  public RemoteDrawableController(final PreLoadFinishedListener mListener)
   {
-	  this.listViews = listViews;
+	  this.listener = mListener;
   }
 
   public void preload(final URL u)
@@ -54,16 +55,12 @@ public class RemoteDrawableController {
 						}
 						finally
 						{
-							onPreloadFinished();
+							// This is synchronized in the RadarActivity
+							listener.onPreLoadFinished();
 						}
 					}
 				}).start();
       }
-  }
-  
-  private void onPreloadFinished()
-  {
-	  Log.v("RemoteDrawableController", "Preload Finished");
   }
   
   protected boolean hasImage(final URL u)
@@ -87,5 +84,9 @@ public class RemoteDrawableController {
       }
     }
   }
-
+  
+  public interface PreLoadFinishedListener
+  {
+	  public void onPreLoadFinished();
+  }
 }
