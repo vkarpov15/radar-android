@@ -3,7 +3,6 @@
     android:layout_width="fill_parent" android:layout_height="fill_parent" xmlns:android="http://schemas.android.com/apk/res/android">
     
     <RelativeLayout
-        android:visibility="gone"
         android:id="@+id/loading_screen"
         android:layout_height="fill_parent"
         android:layout_width="fill_parent">
@@ -36,6 +35,7 @@
     </RelativeLayout>
     
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:visibility="gone"
         android:layout_width="fill_parent"
         android:layout_height="43dp"
         android:id="@+id/tonightlife_layout"

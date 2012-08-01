@@ -28,16 +28,6 @@ public class RemoteDrawableController {
 		  return;
       else
       {
-    	  /*
-    	  try
-    	  {
-    		  final Drawable d = Drawable.createFromStream(u.openStream(), "src");
-    		  myDrawables.put(u.toString(), d);
-    	  }
-    	  catch (IOException e) 
-    	  {
-    		  e.printStackTrace();
-    	  }*/
     	  new Thread(
     			  new Runnable() {
 					
