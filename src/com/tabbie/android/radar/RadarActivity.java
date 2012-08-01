@@ -158,7 +158,7 @@ public class RadarActivity extends ServerThreadActivity implements
             }
           });
 
-      convertView.findViewById(R.id.event_location).setOnClickListener(
+      convertView.findViewById(R.id.location_image_layout).setOnClickListener(
           new OnClickListener() {
             public void onClick(View v) {
               Intent intent = new Intent(RadarActivity.this,

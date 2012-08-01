@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/list_element_layout"
+    android:id="@+id/list_list_element_layout"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:padding="5dp"
+    android:padding="10dp"
     android:orientation="vertical">
     
     <ImageView 
@@ -14,7 +14,7 @@
         android:layout_height="120dp" />
     
 	<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	    android:id="@+id/list_list_element_layout"
+	    android:id="@+id/event_description_layout"
 	    android:layout_width="fill_parent"
 	    android:layout_height="wrap_content">
 	    
@@ -42,6 +42,12 @@
 	      	android:paddingLeft="10dp"
 	      	android:layout_below="@id/event_text" />
 	    
+	    
+	    
+	    
+	    
+	    
+	    
 	    <ImageView
 	        android:visibility="gone"
 			android:src="@drawable/radar_button_selector"
@@ -65,33 +71,38 @@
 	      	android:text="100"
 	      	android:layout_alignParentRight="true"
 	      	android:layout_below="@id/event_text" />
+	   	
+	   	
+	   	
+	   	
 	    
 	    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	        android:visibility="gone"
 	        android:orientation="horizontal"
 	        android:id="@+id/location_image_layout"
-	        android:layout_width="fill_parent"
-	        android:layout_height="wrap_content"
-	        android:layout_alignParentBottom="true"
-	        android:layout_below="@id/add_to_radar_image">
-	        
-			<ImageView 
-				android:id="@+id/location_image"
-				android:layout_width="30dp"
-				android:layout_height="30dp"
-				android:src="@drawable/location_marker"
-				android:paddingLeft="5dp"
-				android:paddingRight="5dp" />
+	        android:gravity="right"
+	        android:layout_width="wrap_content"
+	        android:layout_height="fill_parent"
+	        android:layout_alignParentRight="true"
+	        android:layout_alignBottom="@id/event_list_time"
+	        android:layout_alignTop="@id/event_list_time">
 	
 			<TextView
 				android:id="@+id/event_location"
 				android:layout_width="wrap_content" 
 				android:layout_height="fill_parent"
-				android:gravity="center_vertical"
+				android:paddingRight="5dp"
+				android:gravity="right"
 				android:maxLines="1"
-				android:textSize="16dp"
+				android:textSize="12dp"
 				android:textColor="@color/WHITE"
 				android:text="Club Avenue" />
+	        
+			<ImageView 
+				android:id="@+id/location_image"
+				android:adjustViewBounds="true"
+				android:layout_width="wrap_content"
+				android:layout_height="fill_parent"
+				android:src="@drawable/location_marker" />
 			
 		</LinearLayout>
 		
