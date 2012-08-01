@@ -50,9 +50,9 @@ public class RadarActivity extends ServerThreadActivity implements
   private static final int MAX_TITLE_LENGTH = 36;
 
   private TabHost tabHost;
-  protected ListView featuredListView;
-  protected ListView allListView;
-  protected ListView radarListView;
+  private ListView featuredListView;
+  private ListView allListView;
+  private ListView radarListView;
   private TextView myNameView;
 
   private String token;
