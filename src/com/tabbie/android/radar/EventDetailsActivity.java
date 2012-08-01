@@ -92,17 +92,6 @@ public class EventDetailsActivity extends ServerThreadActivity {
               }
             });
   }
-  
-  @Override
-  public void onBackPressed()
-  {
-	  // TODO Fix this methodology by removing a lot of code from RadarActivity's onCreate method
-	  /*
-	   * Val, please be careful modifying this as I have a mental note to go through it on August 1
-	   */
-	  final Intent backIntent = new Intent(this, RadarActivity.class);
-	  startActivity(backIntent);
-  }
 
 @Override
 protected boolean handleServerResponse(ServerResponse resp) {

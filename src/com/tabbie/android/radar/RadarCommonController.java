@@ -106,6 +106,7 @@ public class RadarCommonController implements Parcelable {
     radarIds.add(e.id);
     radarList.add(e);
     ++e.radarCount;
+    Log.d("Radar Count", "" + e.radarCount);
     e.setOnRadar(true);
     return true;
   }

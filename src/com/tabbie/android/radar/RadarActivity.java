@@ -358,10 +358,13 @@ public class RadarActivity extends ServerThreadActivity implements
         return false;
       }
     } else if (MessageType.LOAD_EVENTS == resp.responseTo) {
+    	// TODO We need to offload this to take place asynchronously
       JSONArray list = resp.parseJsonArray();
       if (null == list) {
         return false;
       }
+      Log.d("RadarActivity", "Loading Benchmark 1");
+      // TODO This benchmark should be where the app starts to display
       Set<String> serverRadarIds = new LinkedHashSet<String>();
       try {
         JSONObject radarObj = list.getJSONObject(list.length() - 1);
@@ -373,7 +376,8 @@ public class RadarActivity extends ServerThreadActivity implements
       } catch (JSONException e1) {
         e1.printStackTrace();
       }
-
+      
+      // TODO Code to offload
       commonController.clear();
       for (int i = 0; i < list.length() - 1; ++i) {
         try {
@@ -416,6 +420,7 @@ public class RadarActivity extends ServerThreadActivity implements
                                 serverRadarIds.contains(obj.getString("id")));
           
           commonController.addEvent(e);
+          Log.v("RadarActivity", "Benchmark 2, right before preloading image e");
           remoteDrawableController.preload(e.image);
         } catch (JSONException e) {
           e.printStackTrace();
@@ -430,21 +435,24 @@ public class RadarActivity extends ServerThreadActivity implements
           // TODO Auto-generated catch block
           e.printStackTrace();
         }
+        this.runOnUiThread(new Runnable() {
+        	public void run()
+        	{
+                ((EventListAdapter) featuredListView.getAdapter())
+                .notifyDataSetChanged();
+            ((EventListAdapter) allListView.getAdapter()).notifyDataSetChanged();
+            ((EventListAdapter) radarListView.getAdapter())
+                .notifyDataSetChanged();          
+            // TODO Come up with a better solution to this
+            /*
+            findViewById(R.id.loading_screen).setVisibility(View.GONE);
+            findViewById(R.id.loading_screen_image).setVisibility(View.GONE);
+            findViewById(R.id.loading_spin).setVisibility(View.GONE);
+            findViewById(R.id.tonightlife_layout).setVisibility(View.VISIBLE);
+            */
+        	}
+        });
       }
-      commonController.order();
-      this.runOnUiThread(new Runnable() {
-        public void run() {
-          ((EventListAdapter) featuredListView.getAdapter())
-              .notifyDataSetChanged();
-          ((EventListAdapter) allListView.getAdapter()).notifyDataSetChanged();
-          ((EventListAdapter) radarListView.getAdapter())
-              .notifyDataSetChanged();
-          findViewById(R.id.loading_screen).setVisibility(View.GONE);
-          findViewById(R.id.loading_screen_image).setVisibility(View.GONE);
-          findViewById(R.id.loading_spin).setVisibility(View.GONE);
-          findViewById(R.id.tonightlife_layout).setVisibility(View.VISIBLE);
-        }
-      });
     }
     // Assume that ADD_TO_RADAR and REMOVE_FROM_RADAR always succeed
     return false;
