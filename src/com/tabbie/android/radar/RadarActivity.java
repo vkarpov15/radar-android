@@ -388,22 +388,9 @@ public class RadarActivity extends ServerThreadActivity implements
             radarCount = Integer.parseInt(radarCountStr);
           }
           String time = obj.getString("start_time");
-          Date d = parseRFC3339Date(time);
-          String dd = (d.getHours() > 12 ? d.getHours() - 12 : d.getHours())
-              + "";
-
-          if (d.getMinutes() > 9)
-          {
-            dd += ":" + d.getMinutes();
-          }
-          else
-          {
-        	  dd += ":0" + d.getMinutes();
-          }
-          dd += "pm";
           String title = obj.getString("name");
-          if (title.length() > 31) {
-            title = title.substring(0, 31) + "...";
+          if (title.length() > 36) {
+            title = title.substring(0, 34) + "...";
           }
           
           Event e = new Event(  obj.getString("id"),
@@ -416,7 +403,7 @@ public class RadarActivity extends ServerThreadActivity implements
                                 obj.getDouble("longitude"),
                                 radarCount,
                                 obj.getBoolean("featured"),
-                                dd,
+                                Parsify.makeYourTime(parseRFC3339Date(time)),
                                 serverRadarIds.contains(obj.getString("id")));
           
           commonController.addEvent(e);
@@ -435,24 +422,25 @@ public class RadarActivity extends ServerThreadActivity implements
           // TODO Auto-generated catch block
           e.printStackTrace();
         }
-        this.runOnUiThread(new Runnable() {
-        	public void run()
-        	{
-                ((EventListAdapter) featuredListView.getAdapter())
-                .notifyDataSetChanged();
-            ((EventListAdapter) allListView.getAdapter()).notifyDataSetChanged();
-            ((EventListAdapter) radarListView.getAdapter())
-                .notifyDataSetChanged();          
-            // TODO Come up with a better solution to this
-            /*
-            findViewById(R.id.loading_screen).setVisibility(View.GONE);
-            findViewById(R.id.loading_screen_image).setVisibility(View.GONE);
-            findViewById(R.id.loading_spin).setVisibility(View.GONE);
-            findViewById(R.id.tonightlife_layout).setVisibility(View.VISIBLE);
-            */
-        	}
-        });
       }
+      commonController.order();
+      this.runOnUiThread(new Runnable() {
+        public void run() {
+          ((EventListAdapter) featuredListView.getAdapter())
+              .notifyDataSetChanged();
+          ((EventListAdapter) allListView.getAdapter()).notifyDataSetChanged();
+          ((EventListAdapter) radarListView.getAdapter())
+              .notifyDataSetChanged();
+          
+          // TODO Come up with a better solution to this
+          /*
+          findViewById(R.id.loading_screen).setVisibility(View.GONE);
+          findViewById(R.id.loading_screen_image).setVisibility(View.GONE);
+          findViewById(R.id.loading_spin).setVisibility(View.GONE);
+          findViewById(R.id.tonightlife_layout).setVisibility(View.VISIBLE);
+          */
+        }
+      });
     }
     // Assume that ADD_TO_RADAR and REMOVE_FROM_RADAR always succeed
     return false;
