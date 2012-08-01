@@ -263,6 +263,7 @@ public class RadarActivity extends ServerThreadActivity implements
 
   }
 
+  // TODO What is this for?
   public void onTabChanged(String tabName) {
     if (tabName.equals(EVENT_TAB_TAG)) {
 
@@ -387,8 +388,13 @@ public class RadarActivity extends ServerThreadActivity implements
           String dd = (d.getHours() > 12 ? d.getHours() - 12 : d.getHours())
               + "";
 
-          if (d.getMinutes() > 0) {
+          if (d.getMinutes() > 9)
+          {
             dd += ":" + d.getMinutes();
+          }
+          else
+          {
+        	  dd += ":0" + d.getMinutes();
           }
           dd += "pm";
           String title = obj.getString("name");
