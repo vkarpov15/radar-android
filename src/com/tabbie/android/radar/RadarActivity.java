@@ -174,7 +174,7 @@ public class RadarActivity extends ServerThreadActivity implements
   }
 
   @Override
-  public void onCreate(Bundle savedInstanceState) {
+  public void onCreate(final Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.main);
 
@@ -184,6 +184,8 @@ public class RadarActivity extends ServerThreadActivity implements
     allListView = (ListView) findViewById(R.id.all_event_list);
     radarListView = (ListView) findViewById(R.id.radar_list);
     myNameView = (TextView) findViewById(R.id.user_name);
+    
+    // Spinning loading dialog
     
     ((ImageView) findViewById(R.id.loading_spin)).startAnimation(AnimationUtils.loadAnimation(this, R.anim.rotate));
 
@@ -239,17 +241,11 @@ public class RadarActivity extends ServerThreadActivity implements
         R.id.featured_event_list, R.layout.event_list_element,
         commonController.featuredList));
 
-    featuredListView.setVisibility(View.GONE);
-
     allListView.setAdapter(new EventListAdapter(this, R.id.all_event_list,
         R.layout.event_list_element, commonController.eventsList));
 
-    allListView.setVisibility(View.GONE);
-
     radarListView.setAdapter(new EventListAdapter(this, R.id.radar_list,
         R.layout.event_list_element, commonController.radarList));
-
-    radarListView.setVisibility(View.GONE);
 
     findViewById(R.id.map_button).setOnClickListener(new OnClickListener() {
       public void onClick(View v) {
