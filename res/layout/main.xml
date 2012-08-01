@@ -101,8 +101,7 @@
                 android:orientation="vertical"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
-                android:id="@+id/main_tab_content"
-                android:background="@drawable/velvet_rope_background">
+                android:id="@+id/main_tab_content">
                 
                 <ListView
                     android:id="@+id/featured_event_list"
