@@ -48,7 +48,7 @@
             android:layout_centerVertical="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/map_icon" />
+            android:src="@drawable/map_button_selector" />
         
         <ImageView
             android:id="@+id/location_image"
