@@ -22,18 +22,42 @@ public class RemoteDrawableController {
   public RemoteDrawableController() {
   }
 
-  public void preload(URL u) {
-    if (myDrawables.containsKey(u.toString())) {
-      return;
-    } else {
-      Drawable d;
-      try {
-        d = Drawable.createFromStream(u.openStream(), "src");
-        myDrawables.put(u.toString(), d);
-      } catch (IOException e) {
-        e.printStackTrace();
+  public void preload(final URL u)
+  {
+	  if (myDrawables.containsKey(u.toString()))
+		  return;
+      else
+      {
+    	  /*
+    	  try
+    	  {
+    		  final Drawable d = Drawable.createFromStream(u.openStream(), "src");
+    		  myDrawables.put(u.toString(), d);
+    	  }
+    	  catch (IOException e) 
+    	  {
+    		  e.printStackTrace();
+    	  }*/
+    	  new Thread(
+    			  new Runnable() {
+					
+					@Override
+					public void run() {
+						try
+						{
+							final Drawable d = Drawable.createFromStream(u.openStream(), "src");
+							synchronized(RemoteDrawableController.this)
+							{
+								myDrawables.put(u.toString(), d);
+							}
+						}
+						catch(final IOException e)
+						{
+							e.printStackTrace();
+						}
+					}
+				}).start();
       }
-    }
   }
 
   public void drawImage(URL u, final ImageView view) {

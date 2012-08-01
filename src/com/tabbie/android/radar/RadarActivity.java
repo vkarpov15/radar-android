@@ -87,19 +87,22 @@ public class RadarActivity extends ServerThreadActivity implements
           .setText(e.time);
       ((TextView) convertView.findViewById(R.id.event_location))
           .setText(e.venueName);
-      final TextView upVotes = ((TextView) convertView
-          .findViewById(R.id.upvotes));
       Log.v("RadarActivity", "Setting RadarCount " + e.radarCount);
-      upVotes.setText(Integer.toString(e.radarCount));
+      ((TextView) convertView.findViewById(R.id.upvotes)).setText(Integer.toString(e.radarCount));
 
       final ImageView img = (ImageView) convertView
           .findViewById(R.id.event_image);
+      img.setImageResource(R.drawable.velvet_rope_header);
+      
+      // TODO Make this asynchronous
+      /*
       if (img.getTag() == null
           || 0 != ((URL) img.getTag()).toString().compareTo(e.image.toString())) {
         remoteDrawableController.drawImage(e.image, img);
       } else {
         Log.d("No redraw required!", "hi");
-      }
+      }*/
+      
 
       convertView.findViewById(R.id.list_list_element_layout)
           .setOnClickListener(new OnClickListener() {
@@ -359,7 +362,6 @@ public class RadarActivity extends ServerThreadActivity implements
         return false;
       }
     } else if (MessageType.LOAD_EVENTS == resp.responseTo) {
-    	// TODO We need to offload this to take place asynchronously
       JSONArray list = resp.parseJsonArray();
       if (null == list) {
         return false;
@@ -378,7 +380,6 @@ public class RadarActivity extends ServerThreadActivity implements
         e1.printStackTrace();
       }
       
-      // TODO Code to offload
       commonController.clear();
       for (int i = 0; i < list.length() - 1; ++i)
       {
@@ -409,11 +410,13 @@ public class RadarActivity extends ServerThreadActivity implements
 	          
 	          // TODO Preload Asynchronously
 	          remoteDrawableController.preload(e.image);
+	          
 	        } catch (JSONException e) {
 	        	Toast.makeText(this, "Fatal Error: Failed to Parse JSON", Toast.LENGTH_SHORT).show();
 	          e.printStackTrace();
 	          return false;
-	        } catch(final Exception e)
+	        }
+	        catch(final Exception e)
 	        {
 	        	Log.e("RadarActivity", "Fatal Error: Non JSON-Exception during event creation");
 	        	throw new RuntimeException();
