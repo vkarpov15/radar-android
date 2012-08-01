@@ -39,8 +39,7 @@
         android:layout_height="43dp"
         android:id="@+id/tonightlife_layout"
         android:visibility="gone"
-        android:background="@drawable/app_header_background"
-        android:layout_marginBottom="7dp">
+        android:background="@drawable/app_header_background">
         
         <ImageView
             android:id="@+id/map_button"
