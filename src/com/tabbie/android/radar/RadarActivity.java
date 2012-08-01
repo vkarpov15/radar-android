@@ -234,7 +234,6 @@ public class RadarActivity extends ServerThreadActivity implements
     tabHost = (TabHost) findViewById(android.R.id.tabhost);
     tabHost.setup();
     tabHost.setOnTabChangedListener(this);
-    tabHost.getTabWidget().setDividerDrawable(R.drawable.divider_vertical_dark);
 
     featuredListView.setAdapter(new EventListAdapter(this,
         R.id.featured_event_list, R.layout.event_list_element,

@@ -95,7 +95,8 @@
         <FrameLayout
             android:id="@android:id/tabcontent"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent">
+            android:layout_height="fill_parent"
+           	android:background="@drawable/velvet_rope_background">
             
             <LinearLayout
                 android:orientation="vertical"
@@ -107,7 +108,8 @@
                     android:id="@+id/featured_event_list"
                     android:layout_width="fill_parent"
                     android:layout_height="0dip"
-                    android:layout_weight="1" />
+                    android:layout_weight="1"
+                    android:cacheColorHint="@color/transparent" />
                 
             </LinearLayout>
             
@@ -121,7 +123,8 @@
                     android:id="@+id/all_event_list"
                     android:layout_width="fill_parent"
                     android:layout_height="0dip"
-                    android:layout_weight="1" />
+                    android:layout_weight="1"
+                    android:cacheColorHint="@color/transparent" />
                 
             </LinearLayout>
             
@@ -134,14 +137,8 @@
                 <ListView android:id="@+id/radar_list"
                     android:layout_width="fill_parent"
                     android:layout_height="0dip"
-                    android:layout_weight="1" />
-                
-                <TextView android:id="@+id/radar_coming_soon"
-                    android:layout_width="wrap_content"
-                    android:gravity="center"
-                    android:layout_height="wrap_content"
-                    android:visibility="gone"
-                    android:text="Coming soon!" />
+                    android:layout_weight="1"
+                    android:cacheColorHint="@color/transparent" />
                 
             </LinearLayout>
         </FrameLayout>
