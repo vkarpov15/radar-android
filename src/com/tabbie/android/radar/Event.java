@@ -58,6 +58,14 @@ public class Event implements Parcelable {
   public int describeContents() {
     return 0;
   }
+  
+  protected String getAbbreviatedName(int maxLength)
+  {
+      if (name.length() > maxLength) {
+          return name.substring(0, 34) + "...";
+        }
+      else return name;
+  }
 
   public void writeToParcel(Parcel dest, int flags) {
     dest.writeString(image.toString());

@@ -47,6 +47,7 @@ public class RadarActivity extends ServerThreadActivity implements
   private static final String LIST_FEATURED_TAG = "Featured";
   private static final String EVENT_TAB_TAG = "Events";
   private static final String RADAR_TAB_TAG = "Radar";
+  private static final int MAX_TITLE_LENGTH = 36;
 
   private TabHost tabHost;
   private ListView featuredListView;
@@ -80,7 +81,7 @@ public class RadarActivity extends ServerThreadActivity implements
       }
       final Event e = getItem(position);
       TextView title = (TextView) convertView.findViewById(R.id.event_text);
-      title.setText(e.name);
+      title.setText(e.getAbbreviatedName(MAX_TITLE_LENGTH));
 
       ((TextView) convertView.findViewById(R.id.event_list_time))
           .setText(e.time);
@@ -379,50 +380,48 @@ public class RadarActivity extends ServerThreadActivity implements
       
       // TODO Code to offload
       commonController.clear();
-      for (int i = 0; i < list.length() - 1; ++i) {
-        try {
-          JSONObject obj = list.getJSONObject(i);
-          String radarCountStr = obj.getString("user_count");
-          int radarCount = 0;
-          if (null != radarCountStr && 0 != radarCountStr.compareTo("null")) {
-            radarCount = Integer.parseInt(radarCountStr);
-          }
-          String time = obj.getString("start_time");
-          String title = obj.getString("name");
-          if (title.length() > 36) {
-            title = title.substring(0, 34) + "...";
-          }
+      for (int i = 0; i < list.length() - 1; ++i)
+      {
+    	  try
+    	  {
+    		  JSONObject obj = list.getJSONObject(i);
+	          String radarCountStr = obj.getString("user_count");
+	          int radarCount = 0;
+	          
+	          if(null != radarCountStr && 0 != radarCountStr.compareTo("null"))
+	        	  radarCount = Integer.parseInt(radarCountStr);
           
-          Event e = new Event(  obj.getString("id"),
-                                title,
-                                obj.getString("description"),
-                                obj.getString("location"),
-                                obj.getString("street_address"),
-                                new URL("http://tonight-life.com" + obj.getString("image_url")),
-                                obj.getDouble("latitude"),
-                                obj.getDouble("longitude"),
-                                radarCount,
-                                obj.getBoolean("featured"),
-                                Parsify.makeYourTime(parseRFC3339Date(time)),
-                                serverRadarIds.contains(obj.getString("id")));
+	          final Event e = new Event(obj.getString("id"),
+	        		  				obj.getString("name"),
+	                                obj.getString("description"),
+	                                obj.getString("location"),
+	                                obj.getString("street_address"),
+	                                new URL("http://tonight-life.com" + obj.getString("image_url")),
+	                                obj.getDouble("latitude"),
+	                                obj.getDouble("longitude"),
+	                                radarCount,
+	                                obj.getBoolean("featured"),
+	                                Parsify.makeYourTime(parseRFC3339Date(obj.getString("start_time"))),
+	                                serverRadarIds.contains(obj.getString("id")));
           
-          commonController.addEvent(e);
-          Log.v("RadarActivity", "Benchmark 2, right before preloading image e");
-          remoteDrawableController.preload(e.image);
-        } catch (JSONException e) {
-          e.printStackTrace();
-          return false;
-        } catch (IndexOutOfBoundsException e) {
-          // TODO Auto-generated catch block
-          e.printStackTrace();
-        } catch (ParseException e) {
-          // TODO Auto-generated catch block
-          e.printStackTrace();
-        } catch (MalformedURLException e) {
-          // TODO Auto-generated catch block
-          e.printStackTrace();
-        }
-      }
+	          commonController.addEvent(e);
+	          Log.v("RadarActivity", "Benchmark 2, right before preloading image e");
+	          remoteDrawableController.preload(e.image);
+	        } catch (JSONException e) {
+	        	Toast.makeText(this, "Fatal Error: Failed to Parse JSON", Toast.LENGTH_SHORT).show();
+	          e.printStackTrace();
+	          return false;
+	        } catch (IndexOutOfBoundsException e) {
+	          // TODO Auto-generated catch block
+	          e.printStackTrace();
+	        } catch (ParseException e) {
+	          // TODO Auto-generated catch block
+	          e.printStackTrace();
+	        } catch (MalformedURLException e) {
+	          // TODO Auto-generated catch block
+	          e.printStackTrace();
+	        }
+	      }
       commonController.order();
       this.runOnUiThread(new Runnable() {
         public void run() {
