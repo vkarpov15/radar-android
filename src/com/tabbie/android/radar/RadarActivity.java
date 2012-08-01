@@ -94,21 +94,19 @@ public class RadarActivity extends ServerThreadActivity implements
        * If there is an image that has been loaded, but it hasn't been drawn, draw it
        * If there is no image that has been loaded, display the loader and LOAD THAT SH*T
        */
+      
+      final ImageView img = (ImageView) convertView.findViewById(R.id.event_image);
+      if (img.getTag() == null || 0 != ((URL) img.getTag()).toString().compareTo(e.image.toString()))
+      {
+    	  remoteDrawableController.drawImage(e.image, img);      
+      }
+      else Log.d("No redraw required!", "hi");
 
-      final ImageView img = (ImageView) convertView
+      final ImageView loader = (ImageView) convertView
           .findViewById(R.id.element_loader);
       // img.setImageResource(R.drawable.refresh);
 
-      img.startAnimation(AnimationUtils.loadAnimation(RadarActivity.this, R.anim.rotate));
-      
-      // TODO Make this asynchronous
-      /*
-      if (img.getTag() == null
-          || 0 != ((URL) img.getTag()).toString().compareTo(e.image.toString())) {
-        remoteDrawableController.drawImage(e.image, img);
-      } else {
-        Log.d("No redraw required!", "hi");
-      }*/
+      loader.startAnimation(AnimationUtils.loadAnimation(RadarActivity.this, R.anim.rotate));
       
 
       convertView.findViewById(R.id.list_list_element_layout)
