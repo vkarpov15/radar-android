@@ -19,7 +19,6 @@
             android:src="@drawable/refresh"/>
         
 	    <ImageView
-	        android:background="@color/ORANGE"
 	        android:visibility="gone"
 	        android:scaleType="centerCrop"
 	        android:id="@+id/event_image"
@@ -27,9 +26,6 @@
 	        android:layout_height="120dp" />
         
     </FrameLayout>
-        
-    
-
     
 	<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	    android:id="@+id/event_description_layout"
@@ -108,24 +104,6 @@
 	   	    android:layout_toRightOf="@id/upvotes"
 	   	    android:text=" people added this to their radar"
 	   	    android:textSize="10dp" />
-		
-	   	
-	   	
-	   	
-	   	<!-- Get rid of this code and move it to details -->
-	    <TextView 
-	        android:visibility="gone"
-	        android:id="@+id/event_description_splash"
-	        android:layout_toLeftOf="@id/add_to_radar_image"
-	        android:layout_below="@id/event_list_time"
-	        android:layout_above="@id/location_image_layout"
-	        android:layout_width="fill_parent"
-	        android:layout_height="fill_parent"
-	        android:text="This is a twitter-style description of the event that must be less than 140 characters. This is a strong paradigm for us to use"
-	        android:textSize="10dp"
-	        android:maxLines="5"
-	        android:paddingLeft="5dp"
-	        android:paddingTop="5dp" />
 	  
 	   
 	</RelativeLayout>
