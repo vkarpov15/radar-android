@@ -46,19 +46,6 @@ public class RadarCommonController implements Parcelable {
   };
 
   public RadarCommonController() {
-    /*
-     * try { Event e1 = new Event( "1", "DJ Enuff",
-     * "DJ Enuff plays a rare live show at Skyroom NYC. Known primarily for his production work, Enuff is eager to return to the his first home, the club. "
-     * , "Skyroom NYC", new URL(
-     * "http://th02.deviantart.net/fs51/PRE/f/2009/277/3/0/Reload_Flyer_by_vektorscksprojekt.jpg"
-     * ), 40.709208, -74.005864, 4, false, "11:00pm"); Event e2 = new Event(
-     * "2", "Ok Go",
-     * "Ok Go plays Williamsburg Park for a free show! No strangers to the Brooklyn music scene, OK Go returns with special guests to deliver an electrifying show."
-     * , "Williamsburg Park", new
-     * URL("http://www.examiner.com/images/blog/EXID27067/images/ok_go(1).jpg"),
-     * 40.744253, -73.987991, 6, true, "8:00pm"); addEvent(e1); addEvent(e2);
-     * order(); } catch (MalformedURLException e) { e.printStackTrace(); }
-     */
 
   }
 

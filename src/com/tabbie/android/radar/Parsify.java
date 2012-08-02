@@ -15,5 +15,4 @@ public class Parsify
 		else
 			return Integer.toString(hours - 12) + minutes + "pm";
 	}
-
 }
