@@ -1,8 +1,6 @@
 package com.tabbie.android.radar;
 
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedHashSet;
@@ -86,31 +84,34 @@ public class RadarActivity extends ServerThreadActivity implements
       ((TextView) convertView.findViewById(R.id.event_location))
           .setText(e.venueName);
       Log.v("RadarActivity", "Setting RadarCount " + e.radarCount);
-      ((TextView) convertView.findViewById(R.id.upvotes)).setText(Integer.toString(e.radarCount));
-      
+      ((TextView) convertView.findViewById(R.id.upvotes)).setText(Integer
+          .toString(e.radarCount));
+
       /*
-       * Check and see if there is an image that has been loaded
-       * If there is an image that has been loaded and it has been drawn, then do nothing
-       * If there is an image that has been loaded, but it hasn't been drawn, draw it
-       * If there is no image that has been loaded, display the loader and LOAD THAT SH*T
+       * Check and see if there is an image that has been loaded If there is an
+       * image that has been loaded and it has been drawn, then do nothing If
+       * there is an image that has been loaded, but it hasn't been drawn, draw
+       * it If there is no image that has been loaded, display the loader and
+       * LOAD THAT SH*T
        */
-      
-      final ImageView loader = (ImageView) convertView.findViewById(R.id.element_loader);
-      final ImageView img = (ImageView) convertView.findViewById(R.id.event_image);
-      
-      if(!remoteDrawableController.hasImage(e.image))
-      {
-    	  Log.d("RadarActivity", "Image still being retrieved, displaying loader");
-    	  loader.startAnimation(AnimationUtils.loadAnimation(RadarActivity.this, R.anim.rotate));
-      }
-      else if (img.getTag() == null || 0 != ((URL) img.getTag()).toString().compareTo(e.image.toString()))
-      {
-    	  Log.d("RadarActivity", "RDC has image");
-    	  loader.setVisibility(View.GONE);
-    	  img.setVisibility(View.VISIBLE);
-    	  remoteDrawableController.drawImage(e.image, img);
-      }
-      else Log.d("No redraw required!", "hi");
+
+      final ImageView loader = (ImageView) convertView
+          .findViewById(R.id.element_loader);
+      final ImageView img = (ImageView) convertView
+          .findViewById(R.id.event_image);
+
+      if (!remoteDrawableController.hasImage(e.image)) {
+        Log.d("RadarActivity", "Image still being retrieved, displaying loader");
+        loader.startAnimation(AnimationUtils.loadAnimation(RadarActivity.this,
+            R.anim.rotate));
+      } else if (img.getTag() == null
+          || 0 != ((URL) img.getTag()).toString().compareTo(e.image.toString())) {
+        Log.d("RadarActivity", "RDC has image");
+        loader.setVisibility(View.GONE);
+        img.setVisibility(View.VISIBLE);
+        remoteDrawableController.drawImage(e.image, img);
+      } else
+        Log.d("No redraw required!", "hi");
 
       convertView.findViewById(R.id.list_list_element_layout)
           .setOnClickListener(new OnClickListener() {
@@ -125,51 +126,35 @@ public class RadarActivity extends ServerThreadActivity implements
               }
             }
           });
-      
+
       // TODO Remove me
-/*
-      convertView.findViewById(R.id.add_to_radar_image).setOnClickListener(
-          new OnClickListener() {
-            public void onClick(View v) {
-              if (e.isOnRadar() && commonController.removeFromRadar(e)) {
-                radarButton.setSelected(false);
-
-                ServerDeleteRequest req = new ServerDeleteRequest(
-                    ServerThread.TABBIE_SERVER + "/mobile/radar/" + e.id
-                        + ".json?auth_token=" + token, MessageType.ADD_TO_RADAR);
-
-                serverThread.sendRequest(req);
-              } else if (!e.isOnRadar()) {
-                if (commonController.addToRadar(e)) {
-                  radarButton.setSelected(true);
-
-                  ServerPostRequest req = new ServerPostRequest(
-                      ServerThread.TABBIE_SERVER + "/mobile/radar/" + e.id
-                          + ".json", MessageType.ADD_TO_RADAR);
-                  req.params.put("auth_token", token);
-                  serverThread.sendRequest(req);
-                } else {
-                  Toast.makeText(RadarActivity.this,
-                      "You can only add 3 events to your radar!", 5000).show();
-                  return;
-                }
-              }
-              upVotes.setText(Integer.toString(e.radarCount));
-              if (tabHost.getCurrentTab() != 2) {
-                ((EventListAdapter) radarListView.getAdapter())
-                    .notifyDataSetChanged();
-              }
-              if (tabHost.getCurrentTab() != 0) {
-                ((EventListAdapter) featuredListView.getAdapter())
-                    .notifyDataSetChanged();
-              }
-              if (tabHost.getCurrentTab() != 1) {
-                ((EventListAdapter) allListView.getAdapter())
-                    .notifyDataSetChanged();
-              }
-            }
-          });
-*/
+      /*
+       * convertView.findViewById(R.id.add_to_radar_image).setOnClickListener(
+       * new OnClickListener() { public void onClick(View v) { if (e.isOnRadar()
+       * && commonController.removeFromRadar(e)) {
+       * radarButton.setSelected(false);
+       * 
+       * ServerDeleteRequest req = new ServerDeleteRequest(
+       * ServerThread.TABBIE_SERVER + "/mobile/radar/" + e.id +
+       * ".json?auth_token=" + token, MessageType.ADD_TO_RADAR);
+       * 
+       * serverThread.sendRequest(req); } else if (!e.isOnRadar()) { if
+       * (commonController.addToRadar(e)) { radarButton.setSelected(true);
+       * 
+       * ServerPostRequest req = new ServerPostRequest(
+       * ServerThread.TABBIE_SERVER + "/mobile/radar/" + e.id + ".json",
+       * MessageType.ADD_TO_RADAR); req.params.put("auth_token", token);
+       * serverThread.sendRequest(req); } else {
+       * Toast.makeText(RadarActivity.this,
+       * "You can only add 3 events to your radar!", 5000).show(); return; } }
+       * upVotes.setText(Integer.toString(e.radarCount)); if
+       * (tabHost.getCurrentTab() != 2) { ((EventListAdapter)
+       * radarListView.getAdapter()) .notifyDataSetChanged(); } if
+       * (tabHost.getCurrentTab() != 0) { ((EventListAdapter)
+       * featuredListView.getAdapter()) .notifyDataSetChanged(); } if
+       * (tabHost.getCurrentTab() != 1) { ((EventListAdapter)
+       * allListView.getAdapter()) .notifyDataSetChanged(); } } });
+       */
       convertView.findViewById(R.id.location_image_layout).setOnClickListener(
           new OnClickListener() {
             public void onClick(View v) {
@@ -196,10 +181,11 @@ public class RadarActivity extends ServerThreadActivity implements
     allListView = (ListView) findViewById(R.id.all_event_list);
     radarListView = (ListView) findViewById(R.id.radar_list);
     myNameView = (TextView) findViewById(R.id.user_name);
-    
+
     // Spinning loading dialog
-    
-    ((ImageView) findViewById(R.id.loading_spin)).startAnimation(AnimationUtils.loadAnimation(this, R.anim.rotate));
+
+    ((ImageView) findViewById(R.id.loading_spin)).startAnimation(AnimationUtils
+        .loadAnimation(this, R.anim.rotate));
 
     preferences = getPreferences(MODE_PRIVATE);
     // Facebook Access Token
@@ -364,7 +350,6 @@ public class RadarActivity extends ServerThreadActivity implements
                     + token, MessageType.LOAD_EVENTS);
             sendServerRequest(req);
 
-            
             // TODO Come up with a better solution to this
             findViewById(R.id.loading_screen).setVisibility(View.GONE);
             findViewById(R.id.loading_screen_image).setVisibility(View.GONE);
@@ -394,59 +379,57 @@ public class RadarActivity extends ServerThreadActivity implements
       } catch (JSONException e1) {
         e1.printStackTrace();
       }
-      
+
       commonController.clear();
-      for (int i = 0; i < list.length() - 1; ++i)
-      {
-    	  try
-    	  {
-    		  JSONObject obj = list.getJSONObject(i);
-	          String radarCountStr = obj.getString("user_count");
-	          int radarCount = 0;
-	          
-	          if(null != radarCountStr && 0 != radarCountStr.compareTo("null"))
-	        	  radarCount = Integer.parseInt(radarCountStr);
-          
-	          final Event e = new Event(obj.getString("id"),
-	        		  				obj.getString("name"),
-	                                obj.getString("description"),
-	                                obj.getString("location"),
-	                                obj.getString("street_address"),
-	                                new URL("http://tonight-life.com" + obj.getString("image_url")),
-	                                obj.getDouble("latitude"),
-	                                obj.getDouble("longitude"),
-	                                radarCount,
-	                                obj.getBoolean("featured"),
-	                                Parsify.makeYourTime(parseRFC3339Date(obj.getString("start_time"))),
-	                                serverRadarIds.contains(obj.getString("id")));
-          
-	          commonController.addEvent(e);
-	          Log.v("RadarActivity", "Benchmark 2, right before preloading image e");
-	          
-	          remoteDrawableController.preload(e.image);
-	          
-	        } catch (JSONException e) {
-	        	Toast.makeText(this, "Fatal Error: Failed to Parse JSON", Toast.LENGTH_SHORT).show();
-	          e.printStackTrace();
-	          return false;
-	        }
-	        catch(final Exception e)
-	        {
-	        	Log.e("RadarActivity", "Fatal Error: Non JSON-Exception during event creation");
-	        	throw new RuntimeException();
-	        }
-	      }
+      for (int i = 0; i < list.length() - 1; ++i) {
+        try {
+          JSONObject obj = list.getJSONObject(i);
+          String radarCountStr = obj.getString("user_count");
+          int radarCount = 0;
+
+          if (null != radarCountStr && 0 != radarCountStr.compareTo("null"))
+            radarCount = Integer.parseInt(radarCountStr);
+
+          final Event e = new Event(
+              obj.getString("id"),
+              obj.getString("name"),
+              obj.getString("description"),
+              obj.getString("location"),
+              obj.getString("street_address"),
+              new URL("http://tonight-life.com" + obj.getString("image_url")),
+              obj.getDouble("latitude"),
+              obj.getDouble("longitude"),
+              radarCount,
+              obj.getBoolean("featured"),
+              Parsify.makeYourTime(parseRFC3339Date(obj.getString("start_time"))),
+              serverRadarIds.contains(obj.getString("id")));
+
+          commonController.addEvent(e);
+          Log.v("RadarActivity", "Benchmark 2, right before preloading image e");
+
+          remoteDrawableController.preload(e.image);
+        } catch (JSONException e) {
+          Toast.makeText(this, "Fatal Error: Failed to Parse JSON",
+              Toast.LENGTH_SHORT).show();
+          e.printStackTrace();
+          return false;
+        } catch (final Exception e) {
+          Log.e("RadarActivity",
+              "Fatal Error: Non JSON-Exception during event creation");
+          throw new RuntimeException();
+        }
+      }
       Log.d("RadarActivity", "Loading Benchmark 3, all events instantiated");
       commonController.order();
-	      this.runOnUiThread(new Runnable() {
-	        public void run() {
-	          ((EventListAdapter) featuredListView.getAdapter())
-	              .notifyDataSetChanged();
-	          ((EventListAdapter) allListView.getAdapter()).notifyDataSetChanged();
-	          ((EventListAdapter) radarListView.getAdapter())
-	              .notifyDataSetChanged();
-	        }
-	      });
+      this.runOnUiThread(new Runnable() {
+        public void run() {
+          ((EventListAdapter) featuredListView.getAdapter())
+              .notifyDataSetChanged();
+          ((EventListAdapter) allListView.getAdapter()).notifyDataSetChanged();
+          ((EventListAdapter) radarListView.getAdapter())
+              .notifyDataSetChanged();
+        }
+      });
     }
     // Assume that ADD_TO_RADAR and REMOVE_FROM_RADAR always succeed
     return false;
@@ -523,20 +506,18 @@ public class RadarActivity extends ServerThreadActivity implements
     }
   }
 
-@Override
-public void onPreLoadFinished()
-{
-	synchronized(this)
-	{
-		this.runOnUiThread(new Runnable() {
-	    public void run() {
-	        ((EventListAdapter) featuredListView.getAdapter())
-	            .notifyDataSetChanged();
-	        ((EventListAdapter) allListView.getAdapter()).notifyDataSetChanged();
-	        ((EventListAdapter) radarListView.getAdapter())
-	            .notifyDataSetChanged();
-	      }
-	    });
-	}
-}
+  @Override
+  public void onPreLoadFinished() {
+    synchronized (this) {
+      this.runOnUiThread(new Runnable() {
+        public void run() {
+          ((EventListAdapter) featuredListView.getAdapter())
+              .notifyDataSetChanged();
+          ((EventListAdapter) allListView.getAdapter()).notifyDataSetChanged();
+          ((EventListAdapter) radarListView.getAdapter())
+              .notifyDataSetChanged();
+        }
+      });
+    }
+  }
 }
