@@ -1,16 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <!-- LEEEEEERRRRROOOOYYYYYYY JEEEENNNNNKKKIIINNNNSSSSSS -->
-
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:id="@+id/layout_event_info">
-    
-
-    
-    <RelativeLayout
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent">
         
@@ -79,7 +70,7 @@
 
         <TextView
             android:id="@+id/details_event_num_radar"
-			android:layout_alignBottom="@id/location_image"
+			android:layout_alignBottom="@id/add_to_radar_image"
 			android:layout_toRightOf="@id/location_image"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -92,25 +83,25 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@id/add_to_radar_image"
-            android:layout_alignLeft="@id/details_event_num_radar"
+            android:layout_toRightOf="@id/details_event_num_radar"
             android:textSize="10dp"
-            android:text="people added this to their radar" />
+            android:text=" people added this to their radar" />
+    
+	    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+	        android:id="@+id/details_scroll_container"
+	        android:layout_width="fill_parent"
+	        android:layout_height="fill_parent"
+	        android:layout_margin="10dp"
+	        android:layout_below="@id/event_num_radar_desc">
+		        
+		    <TextView
+		            android:id="@+id/details_event_description"
+		            android:lineSpacingExtra="5dp"
+		            android:layout_height="wrap_content"
+		            android:layout_width="fill_parent"
+		            android:text="@string/test_paragraph"
+		            android:textColor="@color/WHITE"
+		            android:layout_margin="10dp" />
+		</ScrollView>
        
     </RelativeLayout>
-    
-    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/details_scroll_container"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent">
-	        
-	    <TextView
-	            android:id="@+id/details_event_description"
-	            android:lineSpacingExtra="5dp"
-	            android:layout_height="wrap_content"
-	            android:layout_width="fill_parent"
-	            android:text="@string/test_paragraph"
-	            android:textColor="@color/WHITE"
-	            android:layout_margin="10dp" />
-	</ScrollView>
-    
-</LinearLayout>
