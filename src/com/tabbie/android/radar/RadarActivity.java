@@ -320,7 +320,7 @@ public class RadarActivity extends ServerThreadActivity implements
 
   @SuppressLint({ "ParserError", "ParserError" })
   @Override
-  protected boolean handleServerResponse(ServerResponse resp) {
+  protected synchronized boolean handleServerResponse(ServerResponse resp) {
     if (MessageType.FACEBOOK_LOGIN == resp.responseTo) {
       JSONObject json = resp.parseJsonContent();
       if (json == null || !json.has("id")) {
@@ -438,8 +438,6 @@ public class RadarActivity extends ServerThreadActivity implements
 	      }
       Log.d("RadarActivity", "Loading Benchmark 3, all events instantiated");
       commonController.order();
-      synchronized(this)
-      {
 	      this.runOnUiThread(new Runnable() {
 	        public void run() {
 	          ((EventListAdapter) featuredListView.getAdapter())
@@ -449,7 +447,6 @@ public class RadarActivity extends ServerThreadActivity implements
 	              .notifyDataSetChanged();
 	        }
 	      });
-      }
     }
     // Assume that ADD_TO_RADAR and REMOVE_FROM_RADAR always succeed
     return false;
