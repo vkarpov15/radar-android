@@ -438,15 +438,18 @@ public class RadarActivity extends ServerThreadActivity implements
 	      }
       Log.d("RadarActivity", "Loading Benchmark 3, all events instantiated");
       commonController.order();
-      this.runOnUiThread(new Runnable() {
-        public void run() {
-          ((EventListAdapter) featuredListView.getAdapter())
-              .notifyDataSetChanged();
-          ((EventListAdapter) allListView.getAdapter()).notifyDataSetChanged();
-          ((EventListAdapter) radarListView.getAdapter())
-              .notifyDataSetChanged();
-        }
-      });
+      synchronized(this)
+      {
+	      this.runOnUiThread(new Runnable() {
+	        public void run() {
+	          ((EventListAdapter) featuredListView.getAdapter())
+	              .notifyDataSetChanged();
+	          ((EventListAdapter) allListView.getAdapter()).notifyDataSetChanged();
+	          ((EventListAdapter) radarListView.getAdapter())
+	              .notifyDataSetChanged();
+	        }
+	      });
+      }
     }
     // Assume that ADD_TO_RADAR and REMOVE_FROM_RADAR always succeed
     return false;

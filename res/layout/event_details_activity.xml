@@ -1,10 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <!-- LEEEEEERRRRROOOOYYYYYYY JEEEENNNNNKKKIIINNNNSSSSSS -->
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:id="@+id/layout_event_info">
+    
+    <TextView
+        android:id="@+id/details_event_title"
+        android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:text="Test Event Title"
+        android:textColor="@color/WHITE"
+    	android:textStyle="bold" />
     
     <RelativeLayout
         android:layout_width="fill_parent"
@@ -21,9 +31,10 @@
         <ImageView
 			android:src="@drawable/radar_button_selector"
 			android:id="@+id/add_to_radar_image"
+			android:layout_below="@id/details_event_img"
 			android:layout_width="50dp"
 			android:layout_height="50dp"
-			android:layout_margin="5dp"
+			android:layout_margin="10dp"
 			android:layout_alignParentRight="true"/>
         
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -34,14 +45,7 @@
             android:layout_below="@id/details_event_img"
             android:layout_marginTop="10dp">
         
-	        <TextView
-	            android:id="@+id/details_event_title"
-	            android:layout_height="wrap_content"
-	            android:layout_width="0dp"
-	            android:text=""
-	            android:textColor="@color/WHITE"
-	        	android:textStyle="bold"
-	        	android:layout_weight="3" />
+
 	        
 	        <TextView 
 	            android:id="@+id/details_event_time"
