@@ -101,7 +101,7 @@
 		            android:layout_width="fill_parent"
 		            android:text="@string/test_paragraph"
 		            android:textColor="@color/WHITE"
-		            android:layout_margin="10dp" />
+		            android:gravity="center_horizontal" />
 		</ScrollView>
        
     </RelativeLayout>
