@@ -32,6 +32,8 @@ public class RadarCommonController implements Parcelable {
 
   private final LinkedHashSet<String> radarIds = new LinkedHashSet<String>();
   public final List<Event> radarList = new ArrayList<Event>();
+  
+  public static final int RETRIEVE_INSTANCE = 1;
 
   // Sort by # of people with event in radar, reversed
   private static final Comparator<Event> defaultOrdering = new Comparator<Event>() {

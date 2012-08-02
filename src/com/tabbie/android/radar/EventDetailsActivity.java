@@ -11,8 +11,7 @@ package com.tabbie.android.radar;
  */
 
 import java.io.IOException;
-import android.app.Activity;
-import android.content.Intent;
+
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
@@ -38,6 +37,7 @@ public class EventDetailsActivity extends ServerThreadActivity {
     Bundle starter = getIntent().getExtras();
     if (null != starter && starter.containsKey("event")) {
       e = starter.getParcelable("event");
+      Log.d("EventDetailsActivity", "Event e on radar? " + e.isOnRadar());
       commonController = starter.getParcelable("controller");
       token = starter.getString("token");
     } else {
@@ -93,9 +93,9 @@ public class EventDetailsActivity extends ServerThreadActivity {
             });
   }
 
-@Override
-protected boolean handleServerResponse(ServerResponse resp) {
-    // Assume that ADD_TO_RADAR and REMOVE_FROM_RADAR always succeed
-	return false;
-}
+	@Override
+	protected boolean handleServerResponse(ServerResponse resp) {
+	    // Assume that ADD_TO_RADAR and REMOVE_FROM_RADAR always succeed
+		return false;
+	}
 }
