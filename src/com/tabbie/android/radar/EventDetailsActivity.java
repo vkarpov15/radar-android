@@ -59,14 +59,16 @@ public class EventDetailsActivity extends ServerThreadActivity {
     ((TextView) findViewById(R.id.details_event_num_radar)).setText(Integer.toString(e.radarCount));
     ((TextView) findViewById(R.id.details_event_description)).setText(e.description);
     
+    final TextView radarCount = (TextView) findViewById(R.id.details_event_num_radar);
     final ImageView radarButton = (ImageView) findViewById(R.id.add_to_radar_image);
     radarButton.setSelected(e.isOnRadar());
     radarButton.setOnClickListener(
             new OnClickListener() {
-              public void onClick(View v) { // TODO Re-write this code to be event specific
+              public void onClick(View v) {
                 if (e.isOnRadar() && commonController.removeFromRadar(e)) {
                 	Log.v("EventDetailsActivity", "Removing event from radar");
                   radarButton.setSelected(false);
+                  radarCount.setText(Integer.toString(e.radarCount));
 
                   ServerDeleteRequest req = new ServerDeleteRequest(
                       ServerThread.TABBIE_SERVER + "/mobile/radar/" + e.id
@@ -77,6 +79,7 @@ public class EventDetailsActivity extends ServerThreadActivity {
                 	Log.v("EventDetailsActivity", "Adding event to radar");
                   if (commonController.addToRadar(e)) {
                     radarButton.setSelected(true);
+                    radarCount.setText(Integer.toString(e.radarCount));
 
                     ServerPostRequest req = new ServerPostRequest(
                         ServerThread.TABBIE_SERVER + "/mobile/radar/" + e.id
@@ -97,6 +100,8 @@ public class EventDetailsActivity extends ServerThreadActivity {
   public void onBackPressed() {
 	  Intent intent = new Intent();
 	  intent.putExtra("controller", commonController);
+	  intent.putExtra("event", e);
+	  Log.d("EventDetailsActivity", "Event: " + commonController.isOnRadar(e));
 	  setResult(RESULT_OK, intent);
 	  super.onBackPressed();
   }

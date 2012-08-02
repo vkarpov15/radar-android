@@ -85,7 +85,7 @@ public class RadarCommonController implements Parcelable {
     return radarIds.contains(e.id);
   }
 
-  public boolean addToRadar(Event e) {
+  public boolean addToRadar(final Event e) {
     if (radarIds.contains(e.id) || radarList.size() >= MAX_RADAR_SELECTIONS) {
     	Log.v("RadarCommonController", "Add to Radar Failed");
       return false;
@@ -97,6 +97,7 @@ public class RadarCommonController implements Parcelable {
     e.setOnRadar(true);
     return true;
   }
+  
 
   public boolean removeFromRadar(Event e) {
     if (!radarIds.contains(e.id)) {

@@ -72,7 +72,7 @@ public class RadarActivity extends ServerThreadActivity implements
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
       if (null == convertView) {
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         convertView = inflater.inflate(R.layout.event_list_element, null);
@@ -220,6 +220,7 @@ public class RadarActivity extends ServerThreadActivity implements
 
   @Override
   public void onCreate(final Bundle savedInstanceState) {
+	  Log.d("RadarActivity", "OnCreate Method");
     super.onCreate(savedInstanceState);
     setContentView(R.layout.main);
 
@@ -327,7 +328,10 @@ public class RadarActivity extends ServerThreadActivity implements
     Log.d("RadarActivity", "OnActivityResult");
     
     final Bundle controller = data.getExtras();
+    // TODO This is not working for some reason
     commonController = controller.getParcelable("controller");
+    final Event e = controller.getParcelable("event");
+    Log.d("RadarActivity", "Event: " + commonController.isOnRadar(e));
     ((EventListAdapter) featuredListView.getAdapter())
     	.notifyDataSetChanged();
 	((EventListAdapter) allListView.getAdapter())
@@ -365,6 +369,7 @@ public class RadarActivity extends ServerThreadActivity implements
   @SuppressLint({ "ParserError", "ParserError" })
   @Override
   protected synchronized boolean handleServerResponse(ServerResponse resp) {
+	  Log.d("RadarActivity", "Handling a server response");
     if (MessageType.FACEBOOK_LOGIN == resp.responseTo) {
       JSONObject json = resp.parseJsonContent();
       if (json == null || !json.has("id")) {
@@ -549,6 +554,8 @@ public class RadarActivity extends ServerThreadActivity implements
   @Override
   public boolean onOptionsItemSelected(final MenuItem item) {
     // Handle item selection
+	  
+	  // TODO This doesn't work right now, don't know why
     switch (item.getItemId()) {
     case R.id.refresh_me:
       this.runOnUiThread(new Runnable() {
@@ -559,6 +566,7 @@ public class RadarActivity extends ServerThreadActivity implements
           sendServerRequest(req);
         }
       });
+      
       return true;
     default:
       return super.onOptionsItemSelected(item);
