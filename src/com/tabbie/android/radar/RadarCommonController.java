@@ -27,7 +27,7 @@ public class RadarCommonController implements Parcelable {
   private final LinkedHashMap<String, Event> featured = new LinkedHashMap<String, Event>();
   public final List<Event> featuredList = new ArrayList<Event>();
 
-  private final LinkedHashMap<String, Event> events = new LinkedHashMap<String, Event>();
+  protected final LinkedHashMap<String, Event> events = new LinkedHashMap<String, Event>();
   public final List<Event> eventsList = new ArrayList<Event>();
 
   private final LinkedHashSet<String> radarIds = new LinkedHashSet<String>();
@@ -131,11 +131,15 @@ public class RadarCommonController implements Parcelable {
       c.radarList.clear();
       c.radarIds.clear();
       c.eventsList.addAll(events);
+      Log.d("RadarCommonController", "Events List Size: " + c.eventsList.size());
       for (Event e : events) {
         c.events.put(e.id, e);
         if (e.isOnRadar()) {
           c.radarIds.add(e.id);
           c.radarList.add(e);
+        }
+        if (e.featured) {
+        	c.featuredList.add(e);
         }
       }
       return c;

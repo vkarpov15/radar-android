@@ -332,6 +332,18 @@ public class RadarActivity extends ServerThreadActivity implements
     commonController = controller.getParcelable("controller");
     final Event e = controller.getParcelable("event");
     Log.d("RadarActivity", "Event: " + commonController.isOnRadar(e));
+    
+    featuredListView.setAdapter(new EventListAdapter(this,
+            R.id.featured_event_list, R.layout.event_list_element,
+            commonController.featuredList));
+
+        allListView.setAdapter(new EventListAdapter(this, R.id.all_event_list,
+            R.layout.event_list_element, commonController.eventsList));
+
+        radarListView.setAdapter(new EventListAdapter(this, R.id.radar_list,
+            R.layout.event_list_element, commonController.radarList));
+        
+        
     ((EventListAdapter) featuredListView.getAdapter())
     	.notifyDataSetChanged();
 	((EventListAdapter) allListView.getAdapter())

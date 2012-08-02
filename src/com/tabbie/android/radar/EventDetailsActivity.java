@@ -37,8 +37,9 @@ public class EventDetailsActivity extends ServerThreadActivity {
     
     Bundle starter = getIntent().getExtras();
     if (null != starter && starter.containsKey("event")) {
-      e = starter.getParcelable("event");
+      final Event eventIdent = starter.getParcelable("event");
       commonController = starter.getParcelable("controller");
+      e = commonController.events.get(eventIdent.id);
       token = starter.getString("token");
     } else {
       // No event, nothing to display
