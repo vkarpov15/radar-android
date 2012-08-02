@@ -18,6 +18,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -116,6 +117,7 @@ public class RadarActivity extends ServerThreadActivity implements
           .setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
               if (null != e) {
+            	  ((Vibrator) getSystemService(Context.VIBRATOR_SERVICE)).vibrate(30);
                 Intent intent = new Intent(RadarActivity.this,
                     EventDetailsActivity.class);
                 intent.putExtra("event", e);
