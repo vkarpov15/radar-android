@@ -349,12 +349,6 @@ public class RadarActivity extends ServerThreadActivity implements
                 ServerThread.TABBIE_SERVER + "/mobile/all.json?auth_token="
                     + token, MessageType.LOAD_EVENTS);
             sendServerRequest(req);
-
-            // TODO Come up with a better solution to this
-            findViewById(R.id.loading_screen).setVisibility(View.GONE);
-            findViewById(R.id.loading_screen_image).setVisibility(View.GONE);
-            findViewById(R.id.loading_spin).setVisibility(View.GONE);
-            findViewById(R.id.tonightlife_layout).setVisibility(View.VISIBLE);
           }
         });
       } catch (JSONException e) {
@@ -405,9 +399,7 @@ public class RadarActivity extends ServerThreadActivity implements
               serverRadarIds.contains(obj.getString("id")));
 
           commonController.addEvent(e);
-          Log.v("RadarActivity", "Benchmark 2, right before preloading image e");
 
-          remoteDrawableController.preload(e.image);
         } catch (JSONException e) {
           Toast.makeText(this, "Fatal Error: Failed to Parse JSON",
               Toast.LENGTH_SHORT).show();
@@ -428,8 +420,17 @@ public class RadarActivity extends ServerThreadActivity implements
           ((EventListAdapter) allListView.getAdapter()).notifyDataSetChanged();
           ((EventListAdapter) radarListView.getAdapter())
               .notifyDataSetChanged();
+
+          findViewById(R.id.loading_screen).setVisibility(View.GONE);
+          findViewById(R.id.loading_screen_image).setVisibility(View.GONE);
+          findViewById(R.id.loading_spin).setVisibility(View.GONE);
+          findViewById(R.id.tonightlife_layout).setVisibility(View.VISIBLE);
         }
       });
+
+      for (Event e : commonController.eventsList) {
+        remoteDrawableController.preload(e.image);
+      }
     }
     // Assume that ADD_TO_RADAR and REMOVE_FROM_RADAR always succeed
     return false;
