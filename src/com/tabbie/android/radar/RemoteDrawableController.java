@@ -15,57 +15,45 @@ import java.util.LinkedHashMap;
 
 import android.graphics.drawable.Drawable;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.widget.ImageView;
-import android.widget.ListView;
 
 public class RemoteDrawableController {
   private final LinkedHashMap<String, Drawable> myDrawables = new LinkedHashMap<String, Drawable>();
   private final PreLoadFinishedListener listener;
 
-  public RemoteDrawableController(final PreLoadFinishedListener mListener)
-  {
-	  this.listener = mListener;
+  public RemoteDrawableController(final PreLoadFinishedListener listener) {
+    this.listener = listener;
   }
 
-  public void preload(final URL u)
-  {
-	  if (myDrawables.containsKey(u.toString()))
-		  return;
-      else
-      {
-    	  new Thread(
-    			  new Runnable() {
-					
-					@Override
-					public void run() {
-						try
-						{
-							Log.v("RemoteDrawableController", "Starting image retrieval thread");
-							final Drawable d = Drawable.createFromStream(u.openStream(), "src");
-							synchronized(RemoteDrawableController.this)
-							{
-								Log.v("RemoteDrawableController", "Lock on RDC, putting drawable");
-								myDrawables.put(u.toString(), d);
-							}
-						}
-						catch(final IOException e)
-						{
-							e.printStackTrace();
-						}
-						finally
-						{
-							// This is synchronized in the RadarActivity
-							listener.onPreLoadFinished();
-						}
-					}
-				}).start();
-      }
+  public void preload(final URL u) {
+    if (myDrawables.containsKey(u.toString())) {
+      return;
+    } else {
+      Thread t = new Thread(new Runnable() {
+        @Override
+        public void run() {
+          try {
+            Log.v("RemoteDrawableController", "Starting image retrieval thread");
+            final Drawable d = Drawable.createFromStream(u.openStream(), "src");
+            synchronized (RemoteDrawableController.this) {
+              Log.v("RemoteDrawableController", "Lock on RDC, putting drawable");
+              myDrawables.put(u.toString(), d);
+            }
+          } catch (final IOException e) {
+            e.printStackTrace();
+          } finally {
+            // This is synchronized in the RadarActivity
+            listener.onPreLoadFinished();
+          }
+        }
+      });
+      // t.setPriority(Thread.MAX_PRIORITY);
+      t.start();
+    }
   }
-  
-  protected boolean hasImage(final URL u)
-  {
-	  return myDrawables.containsKey(u.toString()) ? true : false;
+
+  protected boolean hasImage(final URL u) {
+    return myDrawables.containsKey(u.toString()) ? true : false;
   }
 
   public void drawImage(URL u, final ImageView view) {
@@ -84,9 +72,8 @@ public class RemoteDrawableController {
       }
     }
   }
-  
-  public interface PreLoadFinishedListener
-  {
-	  public void onPreLoadFinished();
+
+  public interface PreLoadFinishedListener {
+    public void onPreLoadFinished();
   }
 }
