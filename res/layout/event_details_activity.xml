@@ -8,13 +8,7 @@
     android:layout_height="fill_parent"
     android:id="@+id/layout_event_info">
     
-    <TextView
-        android:id="@+id/details_event_title"
-        android:layout_height="wrap_content"
-        android:layout_width="fill_parent"
-        android:text="Test Event Title"
-        android:textColor="@color/WHITE"
-    	android:textStyle="bold" />
+
     
     <RelativeLayout
         android:layout_width="fill_parent"
@@ -28,44 +22,34 @@
             android:layout_width="fill_parent"
    			android:layout_height="120dp" />
         
+        <TextView
+	        android:id="@+id/details_event_title"
+	        android:padding="10dp"
+	        android:gravity="center"
+	        android:layout_below="@id/details_event_img"
+	        android:layout_height="wrap_content"
+	        android:layout_width="fill_parent"
+	        android:text="Test Event Title"
+	        android:textColor="@color/WHITE"
+	    	android:textStyle="bold" />
+        
         <ImageView
 			android:src="@drawable/radar_button_selector"
 			android:id="@+id/add_to_radar_image"
-			android:layout_below="@id/details_event_img"
+			android:layout_below="@id/details_event_title"
 			android:layout_width="50dp"
 			android:layout_height="50dp"
 			android:layout_margin="10dp"
 			android:layout_alignParentRight="true"/>
         
-        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-            android:orientation="horizontal"
-            android:id="@+id/details_event_title_layout"
-            android:layout_height="wrap_content"
-            android:layout_width="fill_parent"
-            android:layout_below="@id/details_event_img"
-            android:layout_marginTop="10dp">
-        
-
-	        
-	        <TextView 
-	            android:id="@+id/details_event_time"
-	            android:layout_height="wrap_content"
-	            android:layout_width="0dp"
-	            android:text="11:00pm"
-	            android:layout_gravity="right|bottom"
-	            android:layout_marginRight="10dp"
-	            android:layout_weight="1" />
-	        
-	    </LinearLayout>
-
         <ImageView
             android:id="@+id/location_image"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
             android:layout_margin="5dp"
-            android:layout_toRightOf="@id/details_event_img"
-            android:layout_below="@id/details_event_title_layout"
-            android:background="@drawable/location_marker" />
+            android:layout_alignParentLeft="true"
+            android:layout_below="@id/details_event_title"
+            android:src="@drawable/location_marker" />
         
         <TextView
             android:id="@+id/details_event_location"
@@ -73,7 +57,6 @@
             android:layout_alignTop="@id/location_image"
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
-            android:gravity="top"
             android:textSize="12dp"
             android:text="Club Avenue" />
         
@@ -81,19 +64,24 @@
             android:id="@+id/details_event_address"
             android:layout_below="@id/details_event_location"
             android:layout_toRightOf="@id/location_image"
-            android:layout_alignBottom="@id/location_image"
             android:layout_height="wrap_content"
-            android:layout_width="fill_parent"
+            android:layout_width="wrap_content"
             android:textSize="12dp"
-            android:text="8675 Test Address, New York" />
+            android:text="8675 Test Address" />
+       
+        <TextView 
+            android:id="@+id/details_event_time"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:text="11:00pm"
+            android:layout_alignBottom="@id/details_event_address"
+            android:layout_toLeftOf="@id/add_to_radar_image" />
 
         <TextView
             android:id="@+id/details_event_num_radar"
-            android:gravity="right"
-            android:layout_alignRight="@id/location_image"
-            android:layout_alignLeft="@id/location_image"
-            android:layout_below="@id/location_image"
-            android:layout_width="fill_parent"
+			android:layout_alignBottom="@id/location_image"
+			android:layout_toRightOf="@id/location_image"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="6"
             android:textSize="10dp"
@@ -101,12 +89,10 @@
 
         <TextView
             android:id="@+id/event_num_radar_desc"
-            android:layout_width="fill_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignTop="@id/details_event_num_radar"
-            android:layout_alignBottom="@id/details_event_num_radar"
-            android:layout_alignLeft="@id/details_event_address"
-            android:gravity="bottom"
+            android:layout_alignBottom="@id/add_to_radar_image"
+            android:layout_alignLeft="@id/details_event_num_radar"
             android:textSize="10dp"
             android:text="people added this to their radar" />
        
