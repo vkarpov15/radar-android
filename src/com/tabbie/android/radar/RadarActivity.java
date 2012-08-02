@@ -172,6 +172,7 @@ public class RadarActivity extends ServerThreadActivity implements
             }
           });
 */
+      
       convertView.findViewById(R.id.location_image_layout).setOnClickListener(
           new OnClickListener() {
             public void onClick(View v) {
