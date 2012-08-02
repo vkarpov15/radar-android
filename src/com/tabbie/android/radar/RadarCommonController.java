@@ -46,10 +46,8 @@ public class RadarCommonController implements Parcelable {
       return 0;
     }
   };
-
-  public RadarCommonController() {
-
-  }
+  
+  
 
   public void addEvent(Event e) {
     events.put(e.id, e);

@@ -125,7 +125,7 @@ public class RadarActivity extends ServerThreadActivity implements
                 intent.putExtra("event", e);
                 intent.putExtra("controller", commonController);
                 intent.putExtra("token", token);
-                startActivity(intent);
+                startActivityForResult(intent, RadarCommonController.RETRIEVE_INSTANCE);
               }
             }
           });
@@ -324,6 +324,16 @@ public class RadarActivity extends ServerThreadActivity implements
   public void onActivityResult(int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
     facebook.authorizeCallback(requestCode, resultCode, data);
+    Log.d("RadarActivity", "OnActivityResult");
+    
+    final Bundle controller = data.getExtras();
+    commonController = controller.getParcelable("controller");
+    ((EventListAdapter) featuredListView.getAdapter())
+    	.notifyDataSetChanged();
+	((EventListAdapter) allListView.getAdapter())
+		.notifyDataSetChanged();
+	((EventListAdapter) radarListView.getAdapter())
+    	.notifyDataSetChanged();
   }
 
   @Override

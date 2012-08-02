@@ -12,6 +12,7 @@ package com.tabbie.android.radar;
 
 import java.io.IOException;
 
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
@@ -37,7 +38,6 @@ public class EventDetailsActivity extends ServerThreadActivity {
     Bundle starter = getIntent().getExtras();
     if (null != starter && starter.containsKey("event")) {
       e = starter.getParcelable("event");
-      Log.d("EventDetailsActivity", "Event e on radar? " + e.isOnRadar());
       commonController = starter.getParcelable("controller");
       token = starter.getString("token");
     } else {
@@ -63,7 +63,7 @@ public class EventDetailsActivity extends ServerThreadActivity {
     radarButton.setSelected(e.isOnRadar());
     radarButton.setOnClickListener(
             new OnClickListener() {
-              public void onClick(View v) {
+              public void onClick(View v) { // TODO Re-write this code to be event specific
                 if (e.isOnRadar() && commonController.removeFromRadar(e)) {
                 	Log.v("EventDetailsActivity", "Removing event from radar");
                   radarButton.setSelected(false);
@@ -91,6 +91,14 @@ public class EventDetailsActivity extends ServerThreadActivity {
                 }
               }
             });
+  }
+  
+  @Override
+  public void onBackPressed() {
+	  Intent intent = new Intent();
+	  intent.putExtra("controller", commonController);
+	  setResult(RESULT_OK, intent);
+	  super.onBackPressed();
   }
 
 	@Override
