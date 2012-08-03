@@ -4,10 +4,12 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.text.format.DateFormat;
 
 public class Event implements Parcelable {
   public final String id;
@@ -47,7 +49,7 @@ public class Event implements Parcelable {
     this.lon = lon;
     this.radarCount = radarCount;
     this.featured = featured;
-    this.date = parseRFC3339Date(date);
+    this.date = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy").parse(date);
     this.onRadar = onRadar;
     this.time = makeYourTime(this.date);
   }

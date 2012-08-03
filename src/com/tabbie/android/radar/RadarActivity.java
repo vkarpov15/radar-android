@@ -255,6 +255,11 @@ public class RadarActivity extends ServerThreadActivity implements
     	{
     		findViewById(R.id.radar_list_empty_text).setVisibility(View.VISIBLE);
     	}
+    	else
+    	{
+    		commonController.order();
+    		((EventListAdapter) radarListView.getAdapter()).notifyDataSetChanged();
+    	}
     	currentListView = radarListView;
     }
   }
@@ -406,7 +411,7 @@ public class RadarActivity extends ServerThreadActivity implements
               obj.getDouble("longitude"),
               radarCount,
               obj.getBoolean("featured"),
-              obj.getString("start_time"),
+              Event.parseRFC3339Date(obj.getString("start_time")).toString(), // Fuck this bullshit
               serverRadarIds.contains(obj.getString("id")));
 
           commonController.addEvent(e);
