@@ -1,8 +1,6 @@
 package com.tabbie.android.radar;
 
 import java.net.URL;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -83,7 +81,7 @@ public class RadarActivity extends ServerThreadActivity implements
       title.setText(e.getAbbreviatedName(MAX_TITLE_LENGTH));
 
       ((TextView) convertView.findViewById(R.id.event_list_time))
-          .setText(e.time);
+          .setText(e.time.makeYourTime());
       ((TextView) convertView.findViewById(R.id.event_location))
           .setText(e.venueName);
       Log.v("RadarActivity", "Setting RadarCount " + e.radarCount);
@@ -416,7 +414,7 @@ public class RadarActivity extends ServerThreadActivity implements
               obj.getDouble("longitude"),
               radarCount,
               obj.getBoolean("featured"),
-              Event.parseRFC3339Date(obj.getString("start_time")).toString(), // Fuck this bullshit
+              obj.getString("start_time"),
               serverRadarIds.contains(obj.getString("id")));
 
           commonController.addEvent(e);

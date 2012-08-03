@@ -51,16 +51,7 @@ public class RadarCommonController implements Parcelable {
   
   private static final Comparator<Event> chronoOrdering = new Comparator<Event>() {
 	  public int compare(final Event e1, final Event e2) {
-		  if(e1.date.getHours() > e2.date.getHours())
-			  return 1;
-		  else if(e1.date.getHours() < e2.date.getHours())
-			  return -1;
-		  else if(e1.date.getMinutes() > e2.date.getMinutes())
-			  return 1;
-		  else if(e1.date.getMinutes() < e2.date.getMinutes())
-			  return -1;
-		  else
-			  return 0;
+		  return e1.time.compareTo(e2.time);
 	  }
   };
   
