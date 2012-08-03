@@ -44,6 +44,7 @@ public class Event implements Parcelable {
     this.radarCount = radarCount;
     this.featured = featured;
     this.time = new TonightlifeDatetime(time);
+    this.onRadar = onRadar;
   }
 
   public boolean isOnRadar() {

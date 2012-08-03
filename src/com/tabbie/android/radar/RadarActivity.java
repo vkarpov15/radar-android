@@ -264,6 +264,7 @@ public class RadarActivity extends ServerThreadActivity implements
   @Override
   public void onActivityResult(int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
+    Log.v("Request Code", "This: " + requestCode);
     switch (requestCode) {
      case RadarCommonController.RETRIEVE_INSTANCE:
       final Bundle controller = data.getExtras();
