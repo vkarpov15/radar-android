@@ -60,7 +60,7 @@ public class Event implements Parcelable {
 
   protected String getAbbreviatedName(int maxLength) {
     if (name.length() > maxLength) {
-      return name.substring(0, 34) + "...";
+      return name.substring(0, maxLength - 2) + "...";
     } else
       return name;
   }

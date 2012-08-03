@@ -118,15 +118,17 @@ public class RadarActivity extends ServerThreadActivity implements
           .setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
               if (null != e) {
-            	  currentViewPosition = position;
-            	  ((Vibrator) getSystemService(Context.VIBRATOR_SERVICE)).vibrate(30);
-            	  
+                currentViewPosition = position;
+                ((Vibrator) getSystemService(Context.VIBRATOR_SERVICE))
+                    .vibrate(30);
+
                 Intent intent = new Intent(RadarActivity.this,
                     EventDetailsActivity.class);
                 intent.putExtra("eventId", e.id);
                 intent.putExtra("controller", commonController);
                 intent.putExtra("token", token);
-                startActivityForResult(intent, RadarCommonController.RETRIEVE_INSTANCE);
+                startActivityForResult(intent,
+                    RadarCommonController.RETRIEVE_INSTANCE);
               }
             }
           });
@@ -147,7 +149,7 @@ public class RadarActivity extends ServerThreadActivity implements
 
   @Override
   public void onCreate(final Bundle savedInstanceState) {
-	  Log.d("RadarActivity", "OnCreate Method");
+    Log.d("RadarActivity", "OnCreate Method");
     super.onCreate(savedInstanceState);
     setContentView(R.layout.main);
 
@@ -234,65 +236,57 @@ public class RadarActivity extends ServerThreadActivity implements
     setupTab(radarListView, RADAR_TAB_TAG);
 
     tabHost.setCurrentTab(0);
-    
+
     featuredListView.setFastScrollEnabled(true);
     allListView.setFastScrollEnabled(true);
     radarListView.setFastScrollEnabled(true);
   }
 
   public void onTabChanged(String tabName) {
-	  findViewById(R.id.radar_list_empty_text).setVisibility(View.GONE);
+    findViewById(R.id.radar_list_empty_text).setVisibility(View.GONE);
     if (tabName.equals(EVENT_TAB_TAG)) {
-    	
-    	currentListView = allListView;
+
+      currentListView = allListView;
     } else if (tabName.equals(LIST_FEATURED_TAG)) {
-    	currentListView = featuredListView;
+      currentListView = featuredListView;
 
     } else if (tabName.equals(RADAR_TAB_TAG)) {
-    	if(radarListView.getAdapter().getCount()==0)
-    	{
-    		findViewById(R.id.radar_list_empty_text).setVisibility(View.VISIBLE);
-    	}
-    	else
-    	{
-    		commonController.order();
-    		((EventListAdapter) radarListView.getAdapter()).notifyDataSetChanged();
-    	}
-    	currentListView = radarListView;
+      if (radarListView.getAdapter().getCount() == 0) {
+        findViewById(R.id.radar_list_empty_text).setVisibility(View.VISIBLE);
+      } else {
+        commonController.order();
+        ((EventListAdapter) radarListView.getAdapter()).notifyDataSetChanged();
+      }
+      currentListView = radarListView;
     }
   }
 
   @Override
   public void onActivityResult(int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
-    switch(requestCode)
-    {
-    case RadarCommonController.RETRIEVE_INSTANCE:
-        final Bundle controller = data.getExtras();
-        commonController = controller.getParcelable("controller");
-        
-        featuredListView.setAdapter(new EventListAdapter(this,
-            R.id.featured_event_list, R.layout.event_list_element,
-            commonController.featuredList));
+    switch (requestCode) {
+     case RadarCommonController.RETRIEVE_INSTANCE:
+      final Bundle controller = data.getExtras();
+      commonController = controller.getParcelable("controller");
 
-        allListView.setAdapter(new EventListAdapter(this, R.id.all_event_list,
-            R.layout.event_list_element, commonController.eventsList));
+      featuredListView.setAdapter(new EventListAdapter(this,
+          R.id.featured_event_list, R.layout.event_list_element,
+          commonController.featuredList));
 
-        radarListView.setAdapter(new EventListAdapter(this, R.id.radar_list,
-            R.layout.event_list_element, commonController.radarList));
-            
-            
-        ((EventListAdapter) featuredListView.getAdapter())
-        	.notifyDataSetChanged();
-    	((EventListAdapter) allListView.getAdapter())
-    		.notifyDataSetChanged();
-    	((EventListAdapter) radarListView.getAdapter())
-        	.notifyDataSetChanged();
-    	
-    	currentListView.setSelection(currentViewPosition);
-    	break;
-    	default:
-    	    facebook.authorizeCallback(requestCode, resultCode, data);
+      allListView.setAdapter(new EventListAdapter(this, R.id.all_event_list,
+          R.layout.event_list_element, commonController.eventsList));
+
+      radarListView.setAdapter(new EventListAdapter(this, R.id.radar_list,
+          R.layout.event_list_element, commonController.radarList));
+
+      ((EventListAdapter) featuredListView.getAdapter()).notifyDataSetChanged();
+      ((EventListAdapter) allListView.getAdapter()).notifyDataSetChanged();
+      ((EventListAdapter) radarListView.getAdapter()).notifyDataSetChanged();
+
+      currentListView.setSelection(currentViewPosition);
+      break;
+     default:
+      break;
     }
   }
 
@@ -325,7 +319,7 @@ public class RadarActivity extends ServerThreadActivity implements
   @SuppressLint({ "ParserError", "ParserError" })
   @Override
   protected synchronized boolean handleServerResponse(ServerResponse resp) {
-	  Log.d("RadarActivity", "Handling a server response");
+    Log.d("RadarActivity", "Handling a server response");
     if (MessageType.FACEBOOK_LOGIN == resp.responseTo) {
       JSONObject json = resp.parseJsonContent();
       if (json == null || !json.has("id")) {
@@ -403,19 +397,14 @@ public class RadarActivity extends ServerThreadActivity implements
           if (null != radarCountStr && 0 != radarCountStr.compareTo("null"))
             radarCount = Integer.parseInt(radarCountStr);
 
-          final Event e = new Event(
-              obj.getString("id"),
-              obj.getString("name"),
-              obj.getString("description"),
-              obj.getString("location"),
-              obj.getString("street_address"),
-              new URL("http://tonight-life.com" + obj.getString("image_url")),
-              obj.getDouble("latitude"),
-              obj.getDouble("longitude"),
-              radarCount,
-              obj.getBoolean("featured"),
-              obj.getString("start_time"),
-              serverRadarIds.contains(obj.getString("id")));
+          final Event e = new Event(obj.getString("id"), obj.getString("name"),
+              obj.getString("description"), obj.getString("location"),
+              obj.getString("street_address"), new URL(
+                  "http://tonight-life.com" + obj.getString("image_url")),
+              obj.getDouble("latitude"), obj.getDouble("longitude"),
+              radarCount, obj.getBoolean("featured"),
+              obj.getString("start_time"), serverRadarIds.contains(obj
+                  .getString("id")));
 
           commonController.addEvent(e);
 
@@ -465,8 +454,8 @@ public class RadarActivity extends ServerThreadActivity implements
   @Override
   public boolean onOptionsItemSelected(final MenuItem item) {
     // Handle item selection
-	  
-	  // TODO This doesn't work right now, don't know why
+
+    // TODO This doesn't work right now, don't know why
     switch (item.getItemId()) {
     case R.id.refresh_me:
       this.runOnUiThread(new Runnable() {
@@ -477,7 +466,7 @@ public class RadarActivity extends ServerThreadActivity implements
           sendServerRequest(req);
         }
       });
-      
+
       return true;
     default:
       return super.onOptionsItemSelected(item);
