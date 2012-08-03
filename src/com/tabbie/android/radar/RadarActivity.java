@@ -46,7 +46,7 @@ public class RadarActivity extends ServerThreadActivity implements
   private static final String RADAR_TAB_TAG = "Radar";
   private static final int MAX_TITLE_LENGTH = 36;
 
-  private FlingableTabHost tabHost;
+  private TabHost tabHost;
   private ListView currentListView;
   private ListView featuredListView;
   private ListView allListView;
