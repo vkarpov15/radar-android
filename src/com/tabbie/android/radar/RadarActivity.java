@@ -322,12 +322,18 @@ public class RadarActivity extends ServerThreadActivity implements
     tv.setText(text);
     return view;
   }
+  
 
   @SuppressLint({ "ParserError", "ParserError" })
   @Override
   protected synchronized boolean handleServerResponse(ServerResponse resp) {
     Log.d("RadarActivity", "Handling a server response");
     if (MessageType.FACEBOOK_LOGIN == resp.responseTo) {
+        this.runOnUiThread(new Runnable() {
+            public void run() {
+              Toast.makeText(RadarActivity.this, "FACEBOOK_LOGIN", Toast.LENGTH_SHORT).show(); // TODO
+            }
+          });
       JSONObject json = resp.parseJsonContent();
       if (json == null || !json.has("id")) {
         return false;
@@ -357,6 +363,11 @@ public class RadarActivity extends ServerThreadActivity implements
         }
       });
     } else if (MessageType.TABBIE_LOGIN == resp.responseTo) {
+        this.runOnUiThread(new Runnable() {
+            public void run() {
+              Toast.makeText(RadarActivity.this, "TABBIE_LOGIN", Toast.LENGTH_SHORT).show(); // TODO
+            }
+          });
       JSONObject json = resp.parseJsonContent();
       if (null == json || !json.has("token")) {
         return false;
@@ -376,6 +387,11 @@ public class RadarActivity extends ServerThreadActivity implements
         return false;
       }
     } else if (MessageType.LOAD_EVENTS == resp.responseTo) {
+        this.runOnUiThread(new Runnable() {
+            public void run() {
+              Toast.makeText(RadarActivity.this, "LOAD_EVENTS", Toast.LENGTH_SHORT).show(); // TODO
+            }
+          });
       JSONArray list = resp.parseJsonArray();
       if (null == list) {
         return false;
