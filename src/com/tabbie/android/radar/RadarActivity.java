@@ -12,7 +12,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -130,79 +129,6 @@ public class RadarActivity extends ServerThreadActivity implements
               }
             }
           });
-
-      // TODO Remove me
-/*
-      convertView.findViewById(R.id.add_to_radar_image).setOnClickListener(
-          new OnClickListener() {
-            public void onClick(View v) {
-              if (e.isOnRadar() && commonController.removeFromRadar(e)) {
-                radarButton.setSelected(false);
-
-                ServerDeleteRequest req = new ServerDeleteRequest(
-                    ServerThread.TABBIE_SERVER + "/mobile/radar/" + e.id
-                        + ".json?auth_token=" + token, MessageType.ADD_TO_RADAR);
-
-                serverThread.sendRequest(req);
-              } else if (!e.isOnRadar()) {
-                if (commonController.addToRadar(e)) {
-                  radarButton.setSelected(true);
-
-                  ServerPostRequest req = new ServerPostRequest(
-                      ServerThread.TABBIE_SERVER + "/mobile/radar/" + e.id
-                          + ".json", MessageType.ADD_TO_RADAR);
-                  req.params.put("auth_token", token);
-                  serverThread.sendRequest(req);
-                } else {
-                  Toast.makeText(RadarActivity.this,
-                      "You can only add 3 events to your radar!", 5000).show();
-                  return;
-                }
-              }
-              upVotes.setText(Integer.toString(e.radarCount));
-              if (tabHost.getCurrentTab() != 2) {
-                ((EventListAdapter) radarListView.getAdapter())
-                    .notifyDataSetChanged();
-              }
-              if (tabHost.getCurrentTab() != 0) {
-                ((EventListAdapter) featuredListView.getAdapter())
-                    .notifyDataSetChanged();
-              }
-              if (tabHost.getCurrentTab() != 1) {
-                ((EventListAdapter) allListView.getAdapter())
-                    .notifyDataSetChanged();
-              }
-            }
-          });
-*/
-      
-      /*
-       * convertView.findViewById(R.id.add_to_radar_image).setOnClickListener(
-       * new OnClickListener() { public void onClick(View v) { if (e.isOnRadar()
-       * && commonController.removeFromRadar(e)) {
-       * radarButton.setSelected(false);
-       * 
-       * ServerDeleteRequest req = new ServerDeleteRequest(
-       * ServerThread.TABBIE_SERVER + "/mobile/radar/" + e.id +
-       * ".json?auth_token=" + token, MessageType.ADD_TO_RADAR);
-       * 
-       * serverThread.sendRequest(req); } else if (!e.isOnRadar()) { if
-       * (commonController.addToRadar(e)) { radarButton.setSelected(true);
-       * 
-       * ServerPostRequest req = new ServerPostRequest(
-       * ServerThread.TABBIE_SERVER + "/mobile/radar/" + e.id + ".json",
-       * MessageType.ADD_TO_RADAR); req.params.put("auth_token", token);
-       * serverThread.sendRequest(req); } else {
-       * Toast.makeText(RadarActivity.this,
-       * "You can only add 3 events to your radar!", 5000).show(); return; } }
-       * upVotes.setText(Integer.toString(e.radarCount)); if
-       * (tabHost.getCurrentTab() != 2) { ((EventListAdapter)
-       * radarListView.getAdapter()) .notifyDataSetChanged(); } if
-       * (tabHost.getCurrentTab() != 0) { ((EventListAdapter)
-       * featuredListView.getAdapter()) .notifyDataSetChanged(); } if
-       * (tabHost.getCurrentTab() != 1) { ((EventListAdapter)
-       * allListView.getAdapter()) .notifyDataSetChanged(); } } });
-       */
 
       convertView.findViewById(R.id.location_image_layout).setOnClickListener(
           new OnClickListener() {

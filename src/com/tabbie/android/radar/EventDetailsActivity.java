@@ -43,6 +43,7 @@ public class EventDetailsActivity extends ServerThreadActivity {
       token = starter.getString("token");
     } else {
       // No event, nothing to display
+    	// Also, fatal error currently
       this.finish();
       return;
     }
