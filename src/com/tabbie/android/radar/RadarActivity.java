@@ -142,7 +142,6 @@ public class RadarActivity extends ServerThreadActivity implements
           });
       return convertView;
     }
-
   }
 
   @Override
@@ -234,7 +233,10 @@ public class RadarActivity extends ServerThreadActivity implements
     setupTab(radarListView, RADAR_TAB_TAG);
 
     tabHost.setCurrentTab(0);
-
+    
+    featuredListView.setFastScrollEnabled(true);
+    allListView.setFastScrollEnabled(true);
+    radarListView.setFastScrollEnabled(true);
   }
 
   // TODO What is this for?
