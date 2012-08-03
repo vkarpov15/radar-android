@@ -242,9 +242,10 @@ public class RadarActivity extends ServerThreadActivity implements
   }
 
   public void onTabChanged(String tabName) {
-    findViewById(R.id.radar_list_empty_text).setVisibility(View.GONE);
+	  
+    findViewById(R.id.radar_list_empty_text).setVisibility(View.GONE); // Is this the most efficient implementation?
+    
     if (tabName.equals(EVENT_TAB_TAG)) {
-
       currentListView = allListView;
     } else if (tabName.equals(LIST_FEATURED_TAG)) {
       currentListView = featuredListView;

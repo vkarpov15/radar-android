@@ -75,7 +75,7 @@
         
     </RelativeLayout>
     
-<TabHost xmlns:android="http://schemas.android.com/apk/res/android"
+<com.tabbie.android.radar.FlingableTabHost xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@android:id/tabhost"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content">
@@ -159,6 +159,6 @@
             
         </FrameLayout>
     </LinearLayout>
-</TabHost>
+</com.tabbie.android.radar.FlingableTabHost>
 
 </LinearLayout>
