@@ -11,29 +11,29 @@ import android.view.animation.AnimationUtils;
 import android.widget.TabHost;
 
 public class FlingableTabHost extends TabHost {
-  GestureDetector mGestureDetector;
+  GestureDetector gestureDetector;
 
-  Animation mRightInAnimation;
-  Animation mRightOutAnimation;
-  Animation mLeftInAnimation;
-  Animation mLeftOutAnimation;
+  Animation rightInAnimation;
+  Animation rightOutAnimation;
+  Animation leftInAnimation;
+  Animation leftOutAnimation;
 
   public FlingableTabHost(Context context, AttributeSet attrs) {
     super(context, attrs);
 
-    mRightInAnimation = AnimationUtils.loadAnimation(context,
+    rightInAnimation = AnimationUtils.loadAnimation(context,
         R.anim.slide_in_right);
-    mRightOutAnimation = AnimationUtils.loadAnimation(context,
+    rightOutAnimation = AnimationUtils.loadAnimation(context,
         android.R.anim.slide_out_right);
-    mLeftInAnimation = AnimationUtils.loadAnimation(context,
+    leftInAnimation = AnimationUtils.loadAnimation(context,
         android.R.anim.slide_in_left);
-    mLeftOutAnimation = AnimationUtils.loadAnimation(context,
+    leftOutAnimation = AnimationUtils.loadAnimation(context,
         R.anim.slide_out_left);
 
     final int minScaledFlingVelocity = ViewConfiguration.get(context)
         .getScaledMinimumFlingVelocity() * 10; // 10 = fudge by experimentation
 
-    mGestureDetector = new GestureDetector(
+    gestureDetector = new GestureDetector(
         new GestureDetector.SimpleOnGestureListener() {
           @Override
           public boolean onFling(MotionEvent e1, MotionEvent e2,
@@ -54,10 +54,10 @@ public class FlingableTabHost extends TabHost {
                 setCurrentTab(newTab);
                 View newView = getCurrentView();
 
-                newView.startAnimation(right ? mRightInAnimation
-                    : mLeftInAnimation);
-                currentView.startAnimation(right ? mRightOutAnimation
-                    : mLeftOutAnimation);
+                newView.startAnimation(right ? rightInAnimation
+                    : leftInAnimation);
+                currentView.startAnimation(right ? rightOutAnimation
+                    : leftOutAnimation);
               }
             }
             return super.onFling(e1, e2, velocityX, velocityY);
@@ -67,7 +67,7 @@ public class FlingableTabHost extends TabHost {
 
   @Override
   public boolean onInterceptTouchEvent(MotionEvent ev) {
-    if (mGestureDetector.onTouchEvent(ev)) {
+    if (gestureDetector.onTouchEvent(ev)) {
       return true;
     }
     return super.onInterceptTouchEvent(ev);
