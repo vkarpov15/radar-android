@@ -48,7 +48,6 @@ public class RadarCommonController implements Parcelable {
   };
   
   // Sort by time
-  
   private static final Comparator<Event> chronoOrdering = new Comparator<Event>() {
 	  public int compare(final Event e1, final Event e2) {
 		  return e1.time.compareTo(e2.time);

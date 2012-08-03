@@ -65,6 +65,10 @@ public class Event implements Parcelable {
     } else
       return name;
   }
+  
+  public String toString() {
+    return "'" + this.name + "' radarCount=" + radarCount + " onRadar=" + onRadar;
+  }
 
   public void writeToParcel(Parcel dest, int flags) {
     dest.writeString(image.toString());
