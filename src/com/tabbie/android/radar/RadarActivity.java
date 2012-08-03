@@ -46,7 +46,7 @@ public class RadarActivity extends ServerThreadActivity implements
   private static final String RADAR_TAB_TAG = "Radar";
   private static final int MAX_TITLE_LENGTH = 36;
 
-  private TabHost tabHost;
+  private FlingableTabHost tabHost;
   private ListView currentListView;
   private ListView featuredListView;
   private ListView allListView;
@@ -208,7 +208,7 @@ public class RadarActivity extends ServerThreadActivity implements
     remoteDrawableController = new RemoteDrawableController(this);
 
     // Set up the Tab Host
-    tabHost = (TabHost) findViewById(android.R.id.tabhost);
+    tabHost = (FlingableTabHost) findViewById(android.R.id.tabhost);
     tabHost.setup();
     tabHost.setOnTabChangedListener(this);
 
