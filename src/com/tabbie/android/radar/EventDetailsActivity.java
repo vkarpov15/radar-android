@@ -36,10 +36,10 @@ public class EventDetailsActivity extends ServerThreadActivity {
     eventImage = (ImageView) findViewById(R.id.details_event_img);
     
     Bundle starter = getIntent().getExtras();
-    if (null != starter && starter.containsKey("event")) {
-      final Event eventIdent = starter.getParcelable("event");
+    if (null != starter && starter.containsKey("eventId")) {
+      final String eventId = starter.getString("eventId");
       commonController = starter.getParcelable("controller");
-      e = commonController.events.get(eventIdent.id);
+      e = commonController.events.get(eventId);
       token = starter.getString("token");
     } else {
       // No event, nothing to display
@@ -101,8 +101,6 @@ public class EventDetailsActivity extends ServerThreadActivity {
   public void onBackPressed() {
 	  Intent intent = new Intent();
 	  intent.putExtra("controller", commonController);
-	  intent.putExtra("event", e);
-	  Log.d("EventDetailsActivity", "Event: " + commonController.isOnRadar(e));
 	  setResult(RESULT_OK, intent);
 	  super.onBackPressed();
   }

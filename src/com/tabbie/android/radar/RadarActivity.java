@@ -120,9 +120,10 @@ public class RadarActivity extends ServerThreadActivity implements
             public void onClick(View v) {
               if (null != e) {
             	  ((Vibrator) getSystemService(Context.VIBRATOR_SERVICE)).vibrate(30);
+            	  
                 Intent intent = new Intent(RadarActivity.this,
                     EventDetailsActivity.class);
-                intent.putExtra("event", e);
+                intent.putExtra("eventId", e.id);
                 intent.putExtra("controller", commonController);
                 intent.putExtra("token", token);
                 startActivityForResult(intent, RadarCommonController.RETRIEVE_INSTANCE);
@@ -325,13 +326,9 @@ public class RadarActivity extends ServerThreadActivity implements
   public void onActivityResult(int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
     facebook.authorizeCallback(requestCode, resultCode, data);
-    Log.d("RadarActivity", "OnActivityResult");
     
     final Bundle controller = data.getExtras();
-    // TODO This is not working for some reason
     commonController = controller.getParcelable("controller");
-    final Event e = controller.getParcelable("event");
-    Log.d("RadarActivity", "Event: " + commonController.isOnRadar(e));
     
     featuredListView.setAdapter(new EventListAdapter(this,
             R.id.featured_event_list, R.layout.event_list_element,
