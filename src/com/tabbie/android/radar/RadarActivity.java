@@ -49,12 +49,14 @@ public class RadarActivity extends ServerThreadActivity implements
   private static final int MAX_TITLE_LENGTH = 36;
 
   private TabHost tabHost;
+  private ListView currentListView;
   private ListView featuredListView;
   private ListView allListView;
   private ListView radarListView;
   private TextView myNameView;
 
   private String token;
+  private int currentViewPosition = 0;
 
   private RadarCommonController commonController;
   private RemoteDrawableController remoteDrawableController;
@@ -118,6 +120,7 @@ public class RadarActivity extends ServerThreadActivity implements
           .setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
               if (null != e) {
+            	  currentViewPosition = position;
             	  ((Vibrator) getSystemService(Context.VIBRATOR_SERVICE)).vibrate(30);
             	  
                 Intent intent = new Intent(RadarActivity.this,
@@ -242,11 +245,12 @@ public class RadarActivity extends ServerThreadActivity implements
   // TODO What is this for?
   public void onTabChanged(String tabName) {
     if (tabName.equals(EVENT_TAB_TAG)) {
-
+    	currentListView = allListView;
     } else if (tabName.equals(LIST_FEATURED_TAG)) {
+    	currentListView = featuredListView;
 
     } else if (tabName.equals(RADAR_TAB_TAG)) {
-
+    	currentListView = radarListView;
     }
   }
 
@@ -259,14 +263,14 @@ public class RadarActivity extends ServerThreadActivity implements
     commonController = controller.getParcelable("controller");
     
     featuredListView.setAdapter(new EventListAdapter(this,
-            R.id.featured_event_list, R.layout.event_list_element,
-            commonController.featuredList));
+        R.id.featured_event_list, R.layout.event_list_element,
+        commonController.featuredList));
 
-        allListView.setAdapter(new EventListAdapter(this, R.id.all_event_list,
-            R.layout.event_list_element, commonController.eventsList));
+    allListView.setAdapter(new EventListAdapter(this, R.id.all_event_list,
+        R.layout.event_list_element, commonController.eventsList));
 
-        radarListView.setAdapter(new EventListAdapter(this, R.id.radar_list,
-            R.layout.event_list_element, commonController.radarList));
+    radarListView.setAdapter(new EventListAdapter(this, R.id.radar_list,
+        R.layout.event_list_element, commonController.radarList));
         
         
     ((EventListAdapter) featuredListView.getAdapter())
@@ -275,6 +279,8 @@ public class RadarActivity extends ServerThreadActivity implements
 		.notifyDataSetChanged();
 	((EventListAdapter) radarListView.getAdapter())
     	.notifyDataSetChanged();
+	
+	currentListView.setSelection(currentViewPosition);
   }
 
   @Override
