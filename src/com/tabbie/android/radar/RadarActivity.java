@@ -111,8 +111,7 @@ public class RadarActivity extends ServerThreadActivity implements
         loader.setVisibility(View.GONE);
         img.setVisibility(View.VISIBLE);
         remoteDrawableController.drawImage(e.image, img);
-      } else
-        Log.d("No redraw required!", "hi");
+      }
 
       convertView.findViewById(R.id.list_list_element_layout)
           .setOnClickListener(new OnClickListener() {
