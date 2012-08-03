@@ -375,7 +375,6 @@ public class RadarActivity extends ServerThreadActivity implements
         return false;
       }
       Log.d("RadarActivity", "Loading Benchmark 1");
-      // TODO This benchmark should be where the app starts to display
       Set<String> serverRadarIds = new LinkedHashSet<String>();
       try {
         JSONObject radarObj = list.getJSONObject(list.length() - 1);
