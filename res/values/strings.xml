@@ -5,4 +5,5 @@
 		Proin blandit, elit vel ornare hendrerit, magna dolor facilisis magna, ut rutrum eros velit et augue. Mauris malesuada mauris eu lorem porttitor in euismod nisi euismod. Quisque congue nunc vel leo laoreet non dapibus sapien fermentum. Nullam fringilla faucibus nunc, sit amet vulputate tellus pulvinar sed. Donec luctus tincidunt dictum. Maecenas eget odio purus. Ut varius pellentesque velit eu elementum. Cras sapien erat, accumsan quis lacinia eu, tincidunt a ante. Mauris ultricies, augue eget blandit fermentum, diam mauris ultrices diam, et tristique tortor massa eu lectus.</string>
 	<string name="debugMapsApiKey">0FOxyEfcQ0KWKXNk-I3ubpC2yVnsVdHjByLdI6Q</string>
 	<string name="productionMapsApiKey">0H7FbiQifcrFnTuix-KVDP8-54E7nG6h38bR4yw</string>
+	<string name="radar_empty_message">This is your Radar. Check off your favorite events and they\'ll show up here - think of it as your game plan for tonight</string>
 </resources>

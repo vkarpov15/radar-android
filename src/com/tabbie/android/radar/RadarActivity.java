@@ -242,14 +242,19 @@ public class RadarActivity extends ServerThreadActivity implements
     radarListView.setFastScrollEnabled(true);
   }
 
-  // TODO What is this for?
   public void onTabChanged(String tabName) {
+	  findViewById(R.id.radar_list_empty_text).setVisibility(View.GONE);
     if (tabName.equals(EVENT_TAB_TAG)) {
+    	
     	currentListView = allListView;
     } else if (tabName.equals(LIST_FEATURED_TAG)) {
     	currentListView = featuredListView;
 
     } else if (tabName.equals(RADAR_TAB_TAG)) {
+    	if(radarListView.getAdapter().getCount()==0)
+    	{
+    		findViewById(R.id.radar_list_empty_text).setVisibility(View.VISIBLE);
+    	}
     	currentListView = radarListView;
     }
   }
