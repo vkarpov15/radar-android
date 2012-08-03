@@ -44,6 +44,7 @@ public class Event implements Parcelable {
     this.radarCount = radarCount;
     this.featured = featured;
     this.time = new TonightlifeDatetime(time);
+    this.onRadar = onRadar;
   }
 
   public boolean isOnRadar() {
@@ -63,6 +64,10 @@ public class Event implements Parcelable {
       return name.substring(0, maxLength - 2) + "...";
     } else
       return name;
+  }
+  
+  public String toString() {
+    return "'" + this.name + "' radarCount=" + radarCount + " onRadar=" + onRadar;
   }
 
   public void writeToParcel(Parcel dest, int flags) {

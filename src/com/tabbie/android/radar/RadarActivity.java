@@ -242,9 +242,14 @@ public class RadarActivity extends ServerThreadActivity implements
   }
 
   public void onTabChanged(String tabName) {
-	  
-    findViewById(R.id.radar_list_empty_text).setVisibility(View.GONE); // Is this the most efficient implementation?
-    
+
+    findViewById(R.id.radar_list_empty_text).setVisibility(View.GONE); // Is
+                                                                       // this
+                                                                       // the
+                                                                       // most
+                                                                       // efficient
+                                                                       // implementation?
+
     if (tabName.equals(EVENT_TAB_TAG)) {
       currentListView = allListView;
     } else if (tabName.equals(LIST_FEATURED_TAG)) {
@@ -265,7 +270,7 @@ public class RadarActivity extends ServerThreadActivity implements
   public void onActivityResult(int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
     switch (requestCode) {
-     case RadarCommonController.RETRIEVE_INSTANCE:
+    case RadarCommonController.RETRIEVE_INSTANCE:
       final Bundle controller = data.getExtras();
       commonController = controller.getParcelable("controller");
 
@@ -285,8 +290,8 @@ public class RadarActivity extends ServerThreadActivity implements
 
       currentListView.setSelection(currentViewPosition);
       break;
-     default:
-    	 // TODO This should probably handle exceptions at some point
+    default:
+      // TODO This should probably handle exceptions at some point
       break;
     }
   }
