@@ -267,30 +267,35 @@ public class RadarActivity extends ServerThreadActivity implements
   @Override
   public void onActivityResult(int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
-    facebook.authorizeCallback(requestCode, resultCode, data);
-    
-    final Bundle controller = data.getExtras();
-    commonController = controller.getParcelable("controller");
-    
-    featuredListView.setAdapter(new EventListAdapter(this,
-        R.id.featured_event_list, R.layout.event_list_element,
-        commonController.featuredList));
-
-    allListView.setAdapter(new EventListAdapter(this, R.id.all_event_list,
-        R.layout.event_list_element, commonController.eventsList));
-
-    radarListView.setAdapter(new EventListAdapter(this, R.id.radar_list,
-        R.layout.event_list_element, commonController.radarList));
+    switch(requestCode)
+    {
+    case RadarCommonController.RETRIEVE_INSTANCE:
+        final Bundle controller = data.getExtras();
+        commonController = controller.getParcelable("controller");
         
-        
-    ((EventListAdapter) featuredListView.getAdapter())
-    	.notifyDataSetChanged();
-	((EventListAdapter) allListView.getAdapter())
-		.notifyDataSetChanged();
-	((EventListAdapter) radarListView.getAdapter())
-    	.notifyDataSetChanged();
-	
-	currentListView.setSelection(currentViewPosition);
+        featuredListView.setAdapter(new EventListAdapter(this,
+            R.id.featured_event_list, R.layout.event_list_element,
+            commonController.featuredList));
+
+        allListView.setAdapter(new EventListAdapter(this, R.id.all_event_list,
+            R.layout.event_list_element, commonController.eventsList));
+
+        radarListView.setAdapter(new EventListAdapter(this, R.id.radar_list,
+            R.layout.event_list_element, commonController.radarList));
+            
+            
+        ((EventListAdapter) featuredListView.getAdapter())
+        	.notifyDataSetChanged();
+    	((EventListAdapter) allListView.getAdapter())
+    		.notifyDataSetChanged();
+    	((EventListAdapter) radarListView.getAdapter())
+        	.notifyDataSetChanged();
+    	
+    	currentListView.setSelection(currentViewPosition);
+    	break;
+    	default:
+    	    facebook.authorizeCallback(requestCode, resultCode, data);
+    }
   }
 
   @Override
