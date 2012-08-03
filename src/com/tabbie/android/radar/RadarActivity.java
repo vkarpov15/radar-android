@@ -285,6 +285,7 @@ public class RadarActivity extends ServerThreadActivity implements
       currentListView.setSelection(currentViewPosition);
       break;
      default:
+    	 // TODO This should probably handle exceptions at some point
       break;
     }
   }
