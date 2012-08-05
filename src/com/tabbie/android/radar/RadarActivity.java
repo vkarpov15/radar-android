@@ -23,6 +23,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
@@ -249,21 +250,47 @@ public class RadarActivity extends ServerThreadActivity implements
                                                                        // most
                                                                        // efficient
                                                                        // implementation?
-
+    
+    final View v;
     if (tabName.equals(EVENT_TAB_TAG)) {
-      currentListView = allListView;
+    	v = findViewById(R.id.all_event_list);
+    	
+        currentListView = allListView;
+        
+
     } else if (tabName.equals(LIST_FEATURED_TAG)) {
-      currentListView = featuredListView;
+    	v = findViewById(R.id.featured_event_list);
+      currentListView = featuredListView;  
 
     } else if (tabName.equals(RADAR_TAB_TAG)) {
       if (radarListView.getAdapter().getCount() == 0) {
-        findViewById(R.id.radar_list_empty_text).setVisibility(View.VISIBLE);
+    	  v = findViewById(R.id.radar_list_empty_text);
+        v.setVisibility(View.VISIBLE);
       } else {
+    	  v = findViewById(R.id.radar_list);
         commonController.order();
         ((EventListAdapter) radarListView.getAdapter()).notifyDataSetChanged();
       }
       currentListView = radarListView;
-    }
+    } else throw new RuntimeException();
+    
+	PlayAnim(v,
+			getBaseContext(),
+			android.R.anim.fade_in,
+			500);
+  }
+  
+  public Animation PlayAnim(View v, Context con, int animationId, int StartOffset)
+  {
+	  if(v!=null)
+	  {
+		  Animation animation = AnimationUtils.loadAnimation(con, animationId);
+		  animation.setStartOffset(StartOffset);
+		  v.startAnimation(animation);
+		  
+		  return animation;
+	  }
+	  return null;
   }
 
   @Override
