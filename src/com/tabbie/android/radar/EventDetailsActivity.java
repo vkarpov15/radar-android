@@ -15,6 +15,8 @@ import java.io.IOException;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.text.Spannable;
+import android.text.util.Linkify;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -64,6 +66,7 @@ public class EventDetailsActivity extends ServerThreadActivity {
         .toString(e.radarCount));
     ((TextView) findViewById(R.id.details_event_description))
         .setText(e.description);
+    Linkify.addLinks((TextView) findViewById(R.id.details_event_description), Linkify.WEB_URLS);
 
     final TextView radarCount = (TextView) findViewById(R.id.details_event_num_radar);
     final ImageView radarButton = (ImageView) findViewById(R.id.add_to_radar_image);
