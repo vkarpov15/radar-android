@@ -22,7 +22,7 @@ import android.os.Parcelable;
 import android.util.Log;
 
 public class RadarCommonController implements Parcelable {
-  public static final int MAX_RADAR_SELECTIONS = 3;
+  public static final int MAX_RADAR_SELECTIONS = 100;
 
   private final LinkedHashMap<String, Event> featured = new LinkedHashMap<String, Event>();
   public final List<Event> featuredList = new ArrayList<Event>();
