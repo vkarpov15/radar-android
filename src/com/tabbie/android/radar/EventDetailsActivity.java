@@ -15,7 +15,6 @@ import java.io.IOException;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.text.Spannable;
 import android.text.util.Linkify;
 import android.util.Log;
 import android.view.View;
