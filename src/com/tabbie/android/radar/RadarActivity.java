@@ -58,6 +58,7 @@ public class RadarActivity extends ServerThreadActivity implements
 
   private String token;
   private int currentViewPosition = 0;
+  private boolean tabbieVirgin = true; // SharedPref variable to determine if the tutorial should run
 
   private RadarCommonController commonController;
   private RemoteDrawableController remoteDrawableController;
@@ -168,6 +169,7 @@ public class RadarActivity extends ServerThreadActivity implements
         .loadAnimation(this, R.anim.rotate));
 
     preferences = getPreferences(MODE_PRIVATE);
+    tabbieVirgin = preferences.getBoolean("virgin", true);
     // Facebook Access Token
     String accessToken = preferences.getString("access_token", null);
     long expires = preferences.getLong("access_expires", 0);
@@ -469,6 +471,7 @@ public class RadarActivity extends ServerThreadActivity implements
           findViewById(R.id.loading_spin).setVisibility(View.GONE);
           findViewById(R.id.tonightlife_layout).setVisibility(View.VISIBLE);
           
+          if(tabbieVirgin) {
 	          new AlertDialog.Builder(RadarActivity.this)
 	          .setMessage("Is this your first time using TonightLife?")
 	          .setCancelable(false)
@@ -499,19 +502,20 @@ public class RadarActivity extends ServerThreadActivity implements
 					})
 					.create().show();
 	      		}
-	      	})
-	      	.setNegativeButton("No", new DialogInterface.OnClickListener() {
-	      		
-	      		@Override
-	      		public void onClick(DialogInterface dialog, int which) {
-	      			// TODO Auto-generated method stub
-	      			
-	      		}
-	      	})
-	      	.create().show();
+		      	})
+		      	.setNegativeButton("No", new DialogInterface.OnClickListener() {
+		      		
+		      		@Override
+		      		public void onClick(DialogInterface dialog, int which) {
+		                SharedPreferences.Editor editor = getPreferences(MODE_PRIVATE).edit();
+		                editor.putBoolean("virgin", tabbieVirgin);
+		                editor.commit();
+		      		}
+		      	})
+		      	.create().show();
+          }
         }
       });
-      
 
       for (Event e : commonController.eventsList) {
         remoteDrawableController.preload(e.image);
