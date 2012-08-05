@@ -10,7 +10,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -240,6 +242,28 @@ public class RadarActivity extends ServerThreadActivity implements
     featuredListView.setFastScrollEnabled(true);
     allListView.setFastScrollEnabled(true);
     radarListView.setFastScrollEnabled(true);
+    
+    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+    builder.setMessage("Is this your first time using TonightLife?")
+    .setCancelable(false)
+    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+		
+		@Override
+		public void onClick(DialogInterface dialog, int which) {
+			// TODO Auto-generated method stub
+			
+		}
+	})
+	.setNegativeButton("No", new DialogInterface.OnClickListener() {
+		
+		@Override
+		public void onClick(DialogInterface dialog, int which) {
+			// TODO Auto-generated method stub
+			
+		}
+	});
+    AlertDialog alert = builder.create();
+    alert.show();
   }
 
   public void onTabChanged(String tabName) {
@@ -274,10 +298,9 @@ public class RadarActivity extends ServerThreadActivity implements
       currentListView = radarListView;
     } else throw new RuntimeException();
     
-	PlayAnim(v,
-			getBaseContext(),
+	PlayAnim(v,	getBaseContext(),
 			android.R.anim.fade_in,
-			500);
+			100);
   }
   
   public Animation PlayAnim(View v, Context con, int animationId, int StartOffset)
