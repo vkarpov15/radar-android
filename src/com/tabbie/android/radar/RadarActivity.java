@@ -242,28 +242,6 @@ public class RadarActivity extends ServerThreadActivity implements
     featuredListView.setFastScrollEnabled(true);
     allListView.setFastScrollEnabled(true);
     radarListView.setFastScrollEnabled(true);
-    
-    AlertDialog.Builder builder = new AlertDialog.Builder(this);
-    builder.setMessage("Is this your first time using TonightLife?")
-    .setCancelable(false)
-    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-		
-		@Override
-		public void onClick(DialogInterface dialog, int which) {
-			// TODO Auto-generated method stub
-			
-		}
-	})
-	.setNegativeButton("No", new DialogInterface.OnClickListener() {
-		
-		@Override
-		public void onClick(DialogInterface dialog, int which) {
-			// TODO Auto-generated method stub
-			
-		}
-	});
-    AlertDialog alert = builder.create();
-    alert.show();
   }
 
   public void onTabChanged(String tabName) {
@@ -490,8 +468,50 @@ public class RadarActivity extends ServerThreadActivity implements
           findViewById(R.id.loading_screen_image).setVisibility(View.GONE);
           findViewById(R.id.loading_spin).setVisibility(View.GONE);
           findViewById(R.id.tonightlife_layout).setVisibility(View.VISIBLE);
+          
+	          new AlertDialog.Builder(RadarActivity.this)
+	          .setMessage("Is this your first time using TonightLife?")
+	          .setCancelable(false)
+	          .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+	      		
+	      		@Override
+	      		public void onClick(DialogInterface dialog, int which) {
+	      			// TODO Auto-generated method stub
+	      			new AlertDialog.Builder(RadarActivity.this)
+	      			.setMessage("Awesome! TonightLife lets you discover all the best events going on in your area tonight. " +
+	      					"It's quick and easy to use; how about a quick tour?")
+	      			.setCancelable(false)
+	      			.setPositiveButton("Sounds good", new DialogInterface.OnClickListener() {
+						
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							// TODO Auto-generated method stub
+							
+						}
+					})
+					.setNegativeButton("No, thanks", new DialogInterface.OnClickListener() {
+						
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							// TODO Auto-generated method stub
+							
+						}
+					})
+					.create().show();
+	      		}
+	      	})
+	      	.setNegativeButton("No", new DialogInterface.OnClickListener() {
+	      		
+	      		@Override
+	      		public void onClick(DialogInterface dialog, int which) {
+	      			// TODO Auto-generated method stub
+	      			
+	      		}
+	      	})
+	      	.create().show();
         }
       });
+      
 
       for (Event e : commonController.eventsList) {
         remoteDrawableController.preload(e.image);
