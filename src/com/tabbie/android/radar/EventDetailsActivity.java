@@ -108,10 +108,9 @@ public class EventDetailsActivity extends ServerThreadActivity {
     
     if(tutorialMode) {
     	new AlertDialog.Builder(this)
-    	.setMessage("The event details page allows you to see more information about a specific event. You can also add it to your radar by clicking the radar button on the right. That's all for now, don't do anything we wouldn't do!")
+    	.setMessage("The event details page allows you to see more information about a specific event. You can also add it to your radar by clicking the radar button on the right. That's all for now!")
     	.setCancelable(true)
-    	.setPositiveButton("I will", null)
-    	.setNegativeButton("I won't", null)
+    	.setPositiveButton("Go forth", null)
     	.create().show();
     	tutorialMode = false;
     }

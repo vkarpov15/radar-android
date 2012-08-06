@@ -164,7 +164,7 @@ public class RadarActivity extends ServerThreadActivity implements
 
     Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
 
-    featuredListView = (ListView) findViewById(R.id.featured_event_list);
+    currentListView = featuredListView = (ListView) findViewById(R.id.featured_event_list);
     allListView = (ListView) findViewById(R.id.all_event_list);
     radarListView = (ListView) findViewById(R.id.radar_list);
     myNameView = (TextView) findViewById(R.id.user_name);
@@ -333,6 +333,8 @@ public class RadarActivity extends ServerThreadActivity implements
       ((EventListAdapter) radarListView.getAdapter()).notifyDataSetChanged();
 
       currentListView.setSelection(currentViewPosition);
+      if(forceFeatureTab)
+    	  forceFeatureTab = false;
       break;
     default:
     	facebook.authorizeCallback(requestCode, resultCode, data);
