@@ -169,7 +169,6 @@ public class RadarActivity extends ServerThreadActivity implements
         .loadAnimation(this, R.anim.rotate));
 
     preferences = getPreferences(MODE_PRIVATE);
-    tabbieVirgin = preferences.getBoolean("virgin", true);
     // Facebook Access Token
     String accessToken = preferences.getString("access_token", null);
     long expires = preferences.getLong("access_expires", 0);
@@ -471,6 +470,8 @@ public class RadarActivity extends ServerThreadActivity implements
           findViewById(R.id.loading_spin).setVisibility(View.GONE);
           findViewById(R.id.tonightlife_layout).setVisibility(View.VISIBLE);
           
+          tabbieVirgin = getPreferences(MODE_PRIVATE).getBoolean("virgin", true);
+          
           if(tabbieVirgin) {
 	          new AlertDialog.Builder(RadarActivity.this)
 	          .setMessage("Is this your first time using TonightLife?")
@@ -496,8 +497,7 @@ public class RadarActivity extends ServerThreadActivity implements
 						
 						@Override
 						public void onClick(DialogInterface dialog, int which) {
-							// TODO Auto-generated method stub
-							
+							// TODO Auto-generated method stub							
 						}
 					})
 					.create().show();
@@ -508,7 +508,7 @@ public class RadarActivity extends ServerThreadActivity implements
 		      		@Override
 		      		public void onClick(DialogInterface dialog, int which) {
 		                SharedPreferences.Editor editor = getPreferences(MODE_PRIVATE).edit();
-		                editor.putBoolean("virgin", tabbieVirgin);
+		                editor.putBoolean("virgin", false);
 		                editor.commit();
 		      		}
 		      	})
