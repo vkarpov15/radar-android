@@ -44,23 +44,27 @@ import com.facebook.android.FacebookError;
 public class RadarActivity extends ServerThreadActivity implements
     OnTabChangeListener, RemoteDrawableController.PreLoadFinishedListener {
 
-  private static final String LIST_FEATURED_TAG = "Featured";
-  private static final String EVENT_TAB_TAG = "Events";
-  private static final String RADAR_TAB_TAG = "Radar";
-  private static final int MAX_TITLE_LENGTH = 36;
+  // Tab properties
+  private static final String LIST_FEATURED_TAG   = "Featured";
+  private static final String EVENT_TAB_TAG       = "Events";
+  private static final String RADAR_TAB_TAG       = "Radar";
+  private static final int    MAX_TITLE_LENGTH    = 36;
 
-  private TabHost tabHost;
-  private ListView currentListView;
-  private ListView featuredListView;
-  private ListView allListView;
-  private ListView radarListView;
-  private TextView myNameView;
+  // Often-used views
+  private TabHost   tabHost;
+  private ListView  currentListView;
+  private ListView  featuredListView;
+  private ListView  allListView;
+  private ListView  radarListView;
+  private TextView  myNameView;
 
-  private String token;
-  private int currentViewPosition = 0;
-  private boolean tabbieVirgin = true; // SharedPref variable to determine if the tutorial should run
-  private boolean forceFeatureTab = false; // Used to make sure the user can't escape the tutorial
+  // Internal state for views
+  private String    token;
+  private int       currentViewPosition   = 0;
+  private boolean   tabbieVirgin          = true; // SharedPref variable to determine if the tutorial should run
+  private boolean   forceFeatureTab       = false; // Used to make sure the user can't escape the tutorial
 
+  // Controllers
   private RadarCommonController commonController;
   private RemoteDrawableController remoteDrawableController;
 
@@ -131,7 +135,7 @@ public class RadarActivity extends ServerThreadActivity implements
                 intent.putExtra("eventId", e.id);
                 intent.putExtra("controller", commonController);
                 intent.putExtra("token", token);
-                if(tabbieVirgin) {
+                if (tabbieVirgin) {
                 	intent.putExtra("virgin", true); // Make sure this activity knows it's in tutorial mode
                 	tabbieVirgin = false; // User is no longer a prepubescent pussy
                 	getPreferences(MODE_PRIVATE).edit().putBoolean("virgin", false)
@@ -180,10 +184,10 @@ public class RadarActivity extends ServerThreadActivity implements
     String accessToken = preferences.getString("access_token", null);
     long expires = preferences.getLong("access_expires", 0);
     // Check and see if the facebook access is still valid
-    if (accessToken != null) {
+    if (null != accessToken) {
       facebook.setAccessToken(accessToken);
     }
-    if (expires != 0) {
+    if (0 != expires) {
       facebook.setAccessExpires(expires);
     }
 
