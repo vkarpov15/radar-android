@@ -133,6 +133,7 @@ public class RadarActivity extends ServerThreadActivity implements
                 intent.putExtra("token", token);
                 if(tabbieVirgin) {
                 	intent.putExtra("virgin", true); // Make sure this activity knows it's in tutorial mode
+                	tabbieVirgin = false; // User is no longer a prepubescent pussy
                 	getPreferences(MODE_PRIVATE).edit().putBoolean("virgin", false)
                 	.commit();
                 }
