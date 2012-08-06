@@ -155,7 +155,7 @@
                 android:layout_height="fill_parent"
                 android:text="@string/radar_empty_message"
                 android:textColor="@color/WHITE"
-                android:padding="10dp"
+                android:padding="30dp"
                 android:lineSpacingExtra="5dp" />
             
         </FrameLayout>

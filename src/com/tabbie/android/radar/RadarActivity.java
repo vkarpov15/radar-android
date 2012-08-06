@@ -495,8 +495,19 @@ public class RadarActivity extends ServerThreadActivity implements
 						
 						@Override
 						public void onClick(DialogInterface dialog, int which) {
-							// TODO Auto-generated method stub
-							
+							tabHost.setCurrentTab(2); // TODO This probably shouldn't be hardcoded
+							new AlertDialog.Builder(RadarActivity.this)
+							.setMessage("This is your radar - events will show up here in chronological order when you add them. We'll do that in a second - for now, think of this as your own personal planner")
+							.setCancelable(false)
+							.setPositiveButton("Got it", new DialogInterface.OnClickListener() {
+								
+								@Override
+								public void onClick(DialogInterface dialog, int which) {
+									tabHost.setCurrentTab(1); // TODO This probably shouldn't be hardcoded
+									
+								}
+							})
+							.create().show();
 						}
 					})
 					.setNegativeButton("No, thanks", new DialogInterface.OnClickListener() {
