@@ -131,6 +131,11 @@ public class RadarActivity extends ServerThreadActivity implements
                 intent.putExtra("eventId", e.id);
                 intent.putExtra("controller", commonController);
                 intent.putExtra("token", token);
+                if(tabbieVirgin) {
+                	intent.putExtra("virgin", true); // Make sure this activity knows it's in tutorial mode
+                	getPreferences(MODE_PRIVATE).edit().putBoolean("virgin", false)
+                	.commit();
+                }
                 startActivityForResult(intent,
                     RadarCommonController.RETRIEVE_INSTANCE);
               }

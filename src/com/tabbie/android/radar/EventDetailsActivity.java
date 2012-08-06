@@ -12,6 +12,7 @@ package com.tabbie.android.radar;
 
 import java.io.IOException;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -28,6 +29,7 @@ public class EventDetailsActivity extends ServerThreadActivity {
   private RadarCommonController commonController;
   private String token;
   private ImageView eventImage;
+  private boolean tutorialMode = false;
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
@@ -42,6 +44,7 @@ public class EventDetailsActivity extends ServerThreadActivity {
       commonController = starter.getParcelable("controller");
       e = commonController.events.get(eventId);
       token = starter.getString("token");
+      tutorialMode = starter.getBoolean("virgin", false);
     } else {
       // No event, nothing to display
       // Also, fatal error currently
@@ -102,6 +105,17 @@ public class EventDetailsActivity extends ServerThreadActivity {
         }
       }
     });
+    
+    if(tutorialMode) {
+    	new AlertDialog.Builder(this)
+    	.setMessage("The event details page allows you to see more information about a specific event. You can also add it to your radar by clicking the radar button on the right. That's all for now, don't do anything we wouldn't do!")
+    	.setCancelable(true)
+    	.setPositiveButton("I will", null)
+    	.setNegativeButton("I won't", null)
+    	.create().show();
+    	tutorialMode = false;
+    }
+    	
   }
 
   @Override
