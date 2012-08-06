@@ -59,6 +59,7 @@ public class RadarActivity extends ServerThreadActivity implements
   private String token;
   private int currentViewPosition = 0;
   private boolean tabbieVirgin = true; // SharedPref variable to determine if the tutorial should run
+  private boolean forceFeatureTab = false; // Used to make sure the user can't escape the tutorial
 
   private RadarCommonController commonController;
   private RemoteDrawableController remoteDrawableController;
@@ -228,9 +229,13 @@ public class RadarActivity extends ServerThreadActivity implements
 
     findViewById(R.id.map_button).setOnClickListener(new OnClickListener() {
       public void onClick(View v) {
-        Intent intent = new Intent(RadarActivity.this, RadarMapActivity.class);
-        intent.putExtra("controller", commonController);
-        startActivity(intent);
+    	  if(!forceFeatureTab) {
+	        Intent intent = new Intent(RadarActivity.this, RadarMapActivity.class);
+	        intent.putExtra("controller", commonController);
+	        startActivity(intent);
+    	  } else {
+    		  Toast.makeText(RadarActivity.this, "Please select an event to continue", Toast.LENGTH_SHORT).show();
+    	  }
       }
     });
 
@@ -246,40 +251,44 @@ public class RadarActivity extends ServerThreadActivity implements
   }
 
   public void onTabChanged(String tabName) {
-
-    findViewById(R.id.radar_list_empty_text).setVisibility(View.GONE); // Is
-                                                                       // this
-                                                                       // the
-                                                                       // most
-                                                                       // efficient
-                                                                       // implementation?
-    
-    final View v;
-    if (tabName.equals(EVENT_TAB_TAG)) {
-    	v = findViewById(R.id.all_event_list);
-    	
-        currentListView = allListView;
-        
-
-    } else if (tabName.equals(LIST_FEATURED_TAG)) {
-    	v = findViewById(R.id.featured_event_list);
-      currentListView = featuredListView;  
-
-    } else if (tabName.equals(RADAR_TAB_TAG)) {
-      if (radarListView.getAdapter().getCount() == 0) {
-    	  v = findViewById(R.id.radar_list_empty_text);
-        v.setVisibility(View.VISIBLE);
-      } else {
-    	  v = findViewById(R.id.radar_list);
-        commonController.order();
-        ((EventListAdapter) radarListView.getAdapter()).notifyDataSetChanged();
-      }
-      currentListView = radarListView;
-    } else throw new RuntimeException();
-    
-	PlayAnim(v,	getBaseContext(),
-			android.R.anim.fade_in,
-			100);
+	  if(!tabbieVirgin) {
+	    findViewById(R.id.radar_list_empty_text).setVisibility(View.GONE); // Is
+	                                                                       // this
+	                                                                       // the
+	                                                                       // most
+	                                                                       // efficient
+	                                                                       // implementation?
+	    
+	    final View v;
+	    if (tabName.equals(EVENT_TAB_TAG)) {
+	    	v = findViewById(R.id.all_event_list);
+	    	
+	        currentListView = allListView;
+	        
+	
+	    } else if (tabName.equals(LIST_FEATURED_TAG)) {
+	    	v = findViewById(R.id.featured_event_list);
+	      currentListView = featuredListView;  
+	
+	    } else if (tabName.equals(RADAR_TAB_TAG)) {
+	      if (radarListView.getAdapter().getCount() == 0) {
+	    	  v = findViewById(R.id.radar_list_empty_text);
+	        v.setVisibility(View.VISIBLE);
+	      } else {
+	    	  v = findViewById(R.id.radar_list);
+	        commonController.order();
+	        ((EventListAdapter) radarListView.getAdapter()).notifyDataSetChanged();
+	      }
+	      currentListView = radarListView;
+	    } else throw new RuntimeException();
+	    
+		PlayAnim(v,	getBaseContext(),
+				android.R.anim.fade_in,
+				100);
+	  } else if(forceFeatureTab) {
+		  tabHost.setCurrentTab(0); // TODO This probably shouldn't be hardcoded
+		  Toast.makeText(this, "Please select an event to continue", Toast.LENGTH_SHORT).show();
+	  }
   }
   
   public Animation PlayAnim(View v, Context con, int animationId, int StartOffset)
@@ -486,7 +495,6 @@ public class RadarActivity extends ServerThreadActivity implements
 	      		
 	      		@Override
 	      		public void onClick(DialogInterface dialog, int which) {
-	      			// TODO Auto-generated method stub
 	      			new AlertDialog.Builder(RadarActivity.this)
 	      			.setMessage("Awesome! TonightLife lets you discover all the best events going on in your area tonight. " +
 	      					"It's quick and easy to use; how about a quick tour?")
@@ -505,6 +513,28 @@ public class RadarActivity extends ServerThreadActivity implements
 								public void onClick(DialogInterface dialog, int which) {
 									tabHost.setCurrentTab(1); // TODO This probably shouldn't be hardcoded
 									
+									// WE MUST GO DEEPER
+									
+									new AlertDialog.Builder(RadarActivity.this)
+									.setMessage("This is a list of everything going on after 5:00 PM today. We update it daily with new content.")
+									.setCancelable(false)
+									.setPositiveButton("Sweet!", new DialogInterface.OnClickListener() {
+										
+										@Override
+										public void onClick(DialogInterface dialog, int which) {
+											tabHost.setCurrentTab(0);
+											forceFeatureTab = true;
+											/*
+											 * EVEN DEEPER
+											 */
+											new AlertDialog.Builder(RadarActivity.this)
+											.setMessage("Featured events are curated by the TonightLife team every day for your enjoyment. Go ahead and select one now...")
+											.setCancelable(true)
+											.setPositiveButton("Alright", null)
+											.create().show();
+										}
+									})
+									.create().show();
 								}
 							})
 							.create().show();
