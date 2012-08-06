@@ -262,12 +262,7 @@ public class RadarActivity extends ServerThreadActivity implements
 
   public void onTabChanged(String tabName) {
 	  if(!tabbieVirgin) {
-	    findViewById(R.id.radar_list_empty_text).setVisibility(View.GONE); // Is
-	                                                                       // this
-	                                                                       // the
-	                                                                       // most
-	                                                                       // efficient
-	                                                                       // implementation?
+	    findViewById(R.id.radar_list_empty_text).setVisibility(View.GONE);
 	    
 	    final View v;
 	    if (tabName.equals(EVENT_TAB_TAG)) {
@@ -292,7 +287,7 @@ public class RadarActivity extends ServerThreadActivity implements
 	      currentListView = radarListView;
 	    } else throw new RuntimeException();
 	    
-		PlayAnim(v,	getBaseContext(),
+	    PlayAnim(v,	getBaseContext(),
 				android.R.anim.fade_in,
 				100);
 	  } else if(forceFeatureTab) {
@@ -301,10 +296,8 @@ public class RadarActivity extends ServerThreadActivity implements
 	  }
   }
   
-  public Animation PlayAnim(View v, Context con, int animationId, int StartOffset)
-  {
-	  if(v!=null)
-	  {
+  public Animation PlayAnim(View v, Context con, int animationId, int StartOffset) {
+	  if (null != v) {
 		  Animation animation = AnimationUtils.loadAnimation(con, animationId);
 		  animation.setStartOffset(StartOffset);
 		  v.startAnimation(animation);
