@@ -471,6 +471,12 @@ public class RadarActivity extends ServerThreadActivity implements
           findViewById(R.id.tonightlife_layout).setVisibility(View.VISIBLE);
           
           tabbieVirgin = getPreferences(MODE_PRIVATE).getBoolean("virgin", true);
+          tabbieVirgin = true; // TODO Delete this code after debugging
+          							/*
+          							 * SUPER
+          							 * IMPORTANT
+          							 * SHIT
+          							 */
           
           if(tabbieVirgin) {
 	          new AlertDialog.Builder(RadarActivity.this)
