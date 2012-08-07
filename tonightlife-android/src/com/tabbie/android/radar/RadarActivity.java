@@ -265,7 +265,7 @@ public class RadarActivity extends ServerThreadActivity implements
   }
 
   public void onTabChanged(String tabName) {
-	  if(!tabbieVirgin) {
+	  if (!tabbieVirgin) {
 	    findViewById(R.id.radar_list_empty_text).setVisibility(View.GONE);
 	    
 	    final View v;
@@ -294,7 +294,7 @@ public class RadarActivity extends ServerThreadActivity implements
 	    PlayAnim(v,	getBaseContext(),
 				android.R.anim.fade_in,
 				100);
-	  } else if(forceFeatureTab) {
+	  } else if (forceFeatureTab) {
 		  tabHost.setCurrentTab(0); // TODO This probably shouldn't be hardcoded
 		  Toast.makeText(this, "Please select an event to continue", Toast.LENGTH_SHORT).show();
 	  }
