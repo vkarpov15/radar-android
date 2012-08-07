@@ -28,7 +28,9 @@ public class EventDetailsActivity extends ServerThreadActivity {
   private Event e;
   private RadarCommonController commonController;
   private String token;
+  
   private ImageView eventImage;
+
   private boolean tutorialMode = false;
 
   @Override

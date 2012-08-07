@@ -280,7 +280,7 @@ public class RadarActivity extends ServerThreadActivity implements
 	      currentListView = featuredListView;  
 	
 	    } else if (tabName.equals(RADAR_TAB_TAG)) {
-	      if (radarListView.getAdapter().getCount() == 0) {
+	      if (0 == commonController.radarList.size()) {
 	    	  v = findViewById(R.id.radar_list_empty_text);
 	        v.setVisibility(View.VISIBLE);
 	      } else {
