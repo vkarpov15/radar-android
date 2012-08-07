@@ -57,6 +57,8 @@ public class RadarActivity extends ServerThreadActivity implements
   private ListView  allListView;
   private ListView  radarListView;
   private TextView  myNameView;
+  private TextViewConstrainLength eventTitleText;
+  private TextViewConstrainLength eventLocationText;
 
   // Internal state for views
   private String    token;
@@ -86,13 +88,15 @@ public class RadarActivity extends ServerThreadActivity implements
         convertView = inflater.inflate(R.layout.event_list_element, null);
       }
       final Event e = getItem(position);
-      TextView title = (TextView) convertView.findViewById(R.id.event_text);
-      title.setText(e.getAbbreviatedName(MAX_TITLE_LENGTH));
+      eventTitleText = new TextViewConstrainLength((TextView) convertView.findViewById(R.id.event_text), MAX_TITLE_LENGTH);
+      eventTitleText.setText(e.name);
 
       ((TextView) convertView.findViewById(R.id.event_list_time))
           .setText(e.time.makeYourTime());
-      ((TextView) convertView.findViewById(R.id.event_location))
-          .setText(e.venueName);
+      
+      eventLocationText = new TextViewConstrainLength(((TextView) convertView.findViewById(R.id.event_location)), 30);
+      eventLocationText.setText(e.venueName);
+      
       Log.v("RadarActivity", "Setting RadarCount " + e.radarCount);
       ((TextView) convertView.findViewById(R.id.upvotes)).setText(Integer
           .toString(e.radarCount));
@@ -331,8 +335,9 @@ public class RadarActivity extends ServerThreadActivity implements
       ((EventListAdapter) radarListView.getAdapter()).notifyDataSetChanged();
 
       currentListView.setSelection(currentViewPosition);
-      if(forceFeatureTab)
+      if (forceFeatureTab) {
     	  forceFeatureTab = false;
+      }
       break;
     default:
     	facebook.authorizeCallback(requestCode, resultCode, data);

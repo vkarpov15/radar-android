@@ -58,13 +58,6 @@ public class Event implements Parcelable {
   public int describeContents() {
     return 0;
   }
-
-  protected String getAbbreviatedName(int maxLength) {
-    if (name.length() > maxLength) {
-      return name.substring(0, maxLength - 2) + "...";
-    } else
-      return name;
-  }
   
   public String toString() {
     return "'" + this.name + "' radarCount=" + radarCount + " onRadar=" + onRadar;
