@@ -13,7 +13,6 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -73,6 +72,7 @@ public class RadarActivity extends ServerThreadActivity implements
   // Controllers
   private RadarCommonController commonController;
   private RemoteDrawableController remoteDrawableController;
+  private UnicornSlayerController tutorialController;
 
   // FB junk
   private Facebook facebook = new Facebook("217386331697217");
@@ -252,6 +252,23 @@ public class RadarActivity extends ServerThreadActivity implements
 
     commonController = new RadarCommonController();
     remoteDrawableController = new RemoteDrawableController(this);
+    tutorialController = new UnicornSlayerController(new AlertDialog.Builder(this), new UnicornSlayerController.TabsCallback() {
+      @Override
+      public void openRadarTab() {
+        tabHost.setCurrentTab(2);
+      }
+      
+      @Override
+      public void openFeaturedTab() {
+        tabHost.setCurrentTab(0);
+        forceFeatureTab = true;
+      }
+      
+      @Override
+      public void openEventsTab() {
+        tabHost.setCurrentTab(1);
+      }
+    }, preferences.edit());
 
     // Set up the Tab Host
     tabHost = (FlingableTabHost) findViewById(android.R.id.tabhost);
@@ -520,81 +537,10 @@ public class RadarActivity extends ServerThreadActivity implements
           findViewById(R.id.loading_spin).setVisibility(View.GONE);
           findViewById(R.id.tonightlife_layout).setVisibility(View.VISIBLE);
           
-          tabbieVirgin = getPreferences(MODE_PRIVATE).getBoolean("virgin", true);
+          tabbieVirgin = true; //getPreferences(MODE_PRIVATE).getBoolean("virgin", true);
           
-          if(tabbieVirgin) {
-	          new AlertDialog.Builder(RadarActivity.this)
-	          .setMessage("Is this your first time using TonightLife?")
-	          .setCancelable(false)
-	          .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-	      		
-	      		@Override
-	      		public void onClick(DialogInterface dialog, int which) {
-	      			new AlertDialog.Builder(RadarActivity.this)
-	      			.setMessage("Awesome! TonightLife lets you discover all the best events going on in your area tonight. " +
-	      					"It's quick and easy to use; how about a quick tour?")
-	      			.setCancelable(false)
-	      			.setPositiveButton("Sounds good", new DialogInterface.OnClickListener() {
-						
-						@Override
-						public void onClick(DialogInterface dialog, int which) {
-							tabHost.setCurrentTab(2); // TODO This probably shouldn't be hardcoded
-							new AlertDialog.Builder(RadarActivity.this)
-							.setMessage("This is your radar - events will show up here in chronological order when you add them. We'll do that in a second - for now, think of this as your own personal planner")
-							.setCancelable(false)
-							.setPositiveButton("Got it", new DialogInterface.OnClickListener() {
-								
-								@Override
-								public void onClick(DialogInterface dialog, int which) {
-									tabHost.setCurrentTab(1); // TODO This probably shouldn't be hardcoded
-									
-									// WE MUST GO DEEPER
-									
-									new AlertDialog.Builder(RadarActivity.this)
-									.setMessage("This is a list of everything going on after 5:00 PM today. We update it daily with new content.")
-									.setCancelable(false)
-									.setPositiveButton("Sweet!", new DialogInterface.OnClickListener() {
-										
-										@Override
-										public void onClick(DialogInterface dialog, int which) {
-											tabHost.setCurrentTab(0);
-											forceFeatureTab = true;
-											/*
-											 * EVEN DEEPER
-											 */
-											new AlertDialog.Builder(RadarActivity.this)
-											.setMessage("Featured events are curated by the TonightLife team every day for your enjoyment. Go ahead and select one now...")
-											.setCancelable(true)
-											.setPositiveButton("Alright", null)
-											.create().show();
-										}
-									})
-									.create().show();
-								}
-							})
-							.create().show();
-						}
-					})
-					.setNegativeButton("No, thanks", new DialogInterface.OnClickListener() {
-						
-						@Override
-						public void onClick(DialogInterface dialog, int which) {
-							// TODO Auto-generated method stub							
-						}
-					})
-					.create().show();
-	      		}
-		      	})
-		      	.setNegativeButton("No", new DialogInterface.OnClickListener() {
-		      		
-		      		@Override
-		      		public void onClick(DialogInterface dialog, int which) {
-		                SharedPreferences.Editor editor = getPreferences(MODE_PRIVATE).edit();
-		                editor.putBoolean("virgin", false);
-		                editor.commit();
-		      		}
-		      	})
-		      	.create().show();
+          if (tabbieVirgin) {
+	          tutorialController.showTabsTutorial();
           }
         }
       });
@@ -603,7 +549,6 @@ public class RadarActivity extends ServerThreadActivity implements
         remoteDrawableController.preload(e.image);
       }
     }
-    // Assume that ADD_TO_RADAR and REMOVE_FROM_RADAR always succeed
     return false;
   }
 
