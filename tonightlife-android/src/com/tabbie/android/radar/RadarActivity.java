@@ -11,10 +11,12 @@ import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.util.Log;
@@ -132,20 +134,43 @@ public class RadarActivity extends ServerThreadActivity implements
                 currentViewPosition = position;
                 ((Vibrator) getSystemService(Context.VIBRATOR_SERVICE))
                     .vibrate(30);
+                
+                new AsyncTask<Void, Void, Intent>() {
+                	
+                	private ProgressDialog dialog;
+                	
+                	@Override
+                	protected void onPreExecute() {
+                		dialog = ProgressDialog.show(RadarActivity.this, "", "Loading, please wait...");
+                		super.onPreExecute();
+                	}
 
-                Intent intent = new Intent(RadarActivity.this,
-                    EventDetailsActivity.class);
-                intent.putExtra("eventId", e.id);
-                intent.putExtra("controller", commonController);
-                intent.putExtra("token", token);
-                if (tabbieVirgin) {
-                	intent.putExtra("virgin", true); // Make sure this activity knows it's in tutorial mode
-                	tabbieVirgin = false; // User is no longer a prepubescent pussy
-                	getPreferences(MODE_PRIVATE).edit().putBoolean("virgin", false)
-                	.commit();
-                }
-                startActivityForResult(intent,
-                    RadarCommonController.RETRIEVE_INSTANCE);
+					@Override
+					protected Intent doInBackground(Void... params) {
+		                Intent intent = new Intent(RadarActivity.this,
+		                        EventDetailsActivity.class);
+	                    intent.putExtra("eventId", e.id);
+	                    intent.putExtra("controller", commonController);
+	                    intent.putExtra("token", token);
+	                    if (tabbieVirgin) {
+	                    	intent.putExtra("virgin", true); // Make sure this activity knows it's in tutorial mode
+	                    	tabbieVirgin = false; // User is no longer a prepubescent pussy
+	                    	getPreferences(MODE_PRIVATE).edit().putBoolean("virgin", false)
+	                    	.commit();
+	                    }
+						return intent;
+					}
+					
+					@Override
+					protected void onPostExecute(Intent result) {
+		                startActivityForResult(result,
+		                        RadarCommonController.RETRIEVE_INSTANCE);
+						dialog.dismiss();
+						
+					};
+				}.execute();
+
+
               }
             }
           });
