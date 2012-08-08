@@ -1,4 +1,4 @@
-package com.tabbie.android.radar;
+package com.tabbie.android.radar.http;
 
 /**
  * ServerPostRequest.java
@@ -10,6 +10,8 @@ package com.tabbie.android.radar;
  */
 
 import java.util.LinkedHashMap;
+
+import com.tabbie.android.radar.MessageType;
 
 public class ServerPostRequest extends ServerRequest {
   public final LinkedHashMap<String, String> params = new LinkedHashMap<String, String>();

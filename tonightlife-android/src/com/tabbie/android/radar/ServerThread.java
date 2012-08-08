@@ -21,6 +21,9 @@ import java.net.URL;
 import java.util.LinkedList;
 import java.util.Queue;
 
+import com.tabbie.android.radar.http.ServerRequest;
+import com.tabbie.android.radar.http.ServerResponse;
+
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;

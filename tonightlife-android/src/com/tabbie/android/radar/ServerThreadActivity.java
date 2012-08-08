@@ -18,6 +18,8 @@ import android.os.Handler;
 import android.os.Message;
 import android.widget.Toast;
 
+import com.tabbie.android.radar.http.ServerRequest;
+import com.tabbie.android.radar.http.ServerResponse;
 import com.zubhium.ZubhiumSDK;
 
 public abstract class ServerThreadActivity extends Activity {

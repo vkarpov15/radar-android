@@ -1,4 +1,6 @@
-package com.tabbie.android.radar;
+package com.tabbie.android.radar.http;
+
+import com.tabbie.android.radar.MessageType;
 
 /**
  * ServerDeleteRequest.java
