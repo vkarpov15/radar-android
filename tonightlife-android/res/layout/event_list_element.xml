@@ -36,7 +36,8 @@
 	    
 	    <TextView
 	        android:id="@+id/event_text"
-	        android:maxLines="1"
+	        android:lines="1"
+	        android:ellipsize="marquee"
 	        android:layout_alignParentTop="true"
 	        android:layout_toRightOf="@id/event_image"
 	        android:layout_width="fill_parent"
@@ -72,6 +73,9 @@
 				android:id="@+id/event_location"
 				android:layout_width="wrap_content" 
 				android:layout_height="fill_parent"
+				android:inputType="textCapWords"
+				android:ellipsize="marquee"
+				android:maxEms="30"
 				android:paddingRight="5dp"
 				android:gravity="right"
 				android:maxLines="1"

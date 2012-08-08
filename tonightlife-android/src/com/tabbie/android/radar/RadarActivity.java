@@ -48,7 +48,6 @@ public class RadarActivity extends ServerThreadActivity implements
   private static final String LIST_FEATURED_TAG   = "Featured";
   private static final String EVENT_TAB_TAG       = "Events";
   private static final String RADAR_TAB_TAG       = "Radar";
-  private static final int    MAX_TITLE_LENGTH    = 36;
 
   // Often-used views
   private TabHost   tabHost;
@@ -57,8 +56,8 @@ public class RadarActivity extends ServerThreadActivity implements
   private ListView  allListView;
   private ListView  radarListView;
   private TextView  myNameView;
-  private TextViewConstrainLength eventTitleText;
-  private TextViewConstrainLength eventLocationText;
+  private TextView eventTitleText;
+  private TextView eventLocationText;
 
   // Internal state for views
   private String    token;
@@ -88,13 +87,13 @@ public class RadarActivity extends ServerThreadActivity implements
         convertView = inflater.inflate(R.layout.event_list_element, null);
       }
       final Event e = getItem(position);
-      eventTitleText = new TextViewConstrainLength((TextView) convertView.findViewById(R.id.event_text), MAX_TITLE_LENGTH);
+      eventTitleText = (TextView) convertView.findViewById(R.id.event_text);
       eventTitleText.setText(e.name);
 
       ((TextView) convertView.findViewById(R.id.event_list_time))
           .setText(e.time.makeYourTime());
       
-      eventLocationText = new TextViewConstrainLength(((TextView) convertView.findViewById(R.id.event_location)), 30);
+      eventLocationText = (TextView) convertView.findViewById(R.id.event_location); // TODO Edit View in XML
       eventLocationText.setText(e.venueName);
       
       Log.v("RadarActivity", "Setting RadarCount " + e.radarCount);
