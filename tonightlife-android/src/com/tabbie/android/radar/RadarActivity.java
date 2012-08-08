@@ -592,9 +592,11 @@ public class RadarActivity extends ServerThreadActivity implements
       return true;
     case R.id.report_me:
     	Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);
+    	emailIntent.setType("plain/text");
     	emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL, FOUNDERS_EMAIL);
     	emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, APP_FEEDBACK_SUBJECT);
-    	startActivity(emailIntent);
+    	startActivity(Intent.createChooser(emailIntent, "Send feedback..."));
+    	return true;
     default:
       return super.onOptionsItemSelected(item);
     }
