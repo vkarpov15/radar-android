@@ -454,14 +454,18 @@ public class RadarActivity extends ServerThreadActivity implements
           if (null != radarCountStr && 0 != radarCountStr.compareTo("null"))
             radarCount = Integer.parseInt(radarCountStr);
 
-          final Event e = new Event(obj.getString("id"), obj.getString("name"),
-              obj.getString("description"), obj.getString("location"),
-              obj.getString("street_address"), new URL(
-                  "http://tonight-life.com" + obj.getString("image_url")),
-              obj.getDouble("latitude"), obj.getDouble("longitude"),
-              radarCount, obj.getBoolean("featured"),
-              obj.getString("start_time"), serverRadarIds.contains(obj
-                  .getString("id")));
+          final Event e = new Event(  obj.getString("id"),
+                                      obj.getString("name"),
+                                      obj.getString("description"),
+                                      obj.getString("location"),
+                                      obj.getString("street_address"),
+                                      new URL("http://tonight-life.com" + obj.getString("image_url")),
+                                      obj.getDouble("latitude"),
+                                      obj.getDouble("longitude"),
+                                      radarCount,
+                                      obj.getBoolean("featured"),
+                                      obj.getString("start_time"),
+                                      serverRadarIds.contains(obj.getString("id")));
 
           commonController.addEvent(e);
 
