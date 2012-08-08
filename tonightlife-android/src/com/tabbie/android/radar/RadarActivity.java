@@ -49,25 +49,27 @@ public class RadarActivity extends ServerThreadActivity implements
     OnTabChangeListener, RemoteDrawableController.PreLoadFinishedListener {
 
   // Tab properties
-  private static final String LIST_FEATURED_TAG   = "Featured";
-  private static final String EVENT_TAB_TAG       = "Events";
-  private static final String RADAR_TAB_TAG       = "Radar";
+  private static final String LIST_FEATURED_TAG = "Featured";
+  private static final String EVENT_TAB_TAG = "Events";
+  private static final String RADAR_TAB_TAG = "Radar";
 
   // Often-used views
-  private TabHost   tabHost;
-  private ListView  currentListView;
-  private ListView  featuredListView;
-  private ListView  allListView;
-  private ListView  radarListView;
-  private TextView  myNameView;
+  private TabHost tabHost;
+  private ListView currentListView;
+  private ListView featuredListView;
+  private ListView allListView;
+  private ListView radarListView;
+  private TextView myNameView;
   private TextView eventTitleText;
   private TextView eventLocationText;
 
   // Internal state for views
-  private String    token;
-  private int       currentViewPosition   = 0;
-  private boolean   tabbieVirgin          = true; // SharedPref variable to determine if the tutorial should run
-  private boolean   forceFeatureTab       = false; // Used to make sure the user can't escape the tutorial
+  private String token;
+  private int currentViewPosition = 0;
+  private boolean tabbieVirgin = true; // SharedPref variable to determine if
+                                       // the tutorial should run
+  private boolean forceFeatureTab = false; // Used to make sure the user can't
+                                           // escape the tutorial
 
   // Controllers
   private RadarCommonController commonController;
@@ -97,10 +99,11 @@ public class RadarActivity extends ServerThreadActivity implements
 
       ((TextView) convertView.findViewById(R.id.event_list_time))
           .setText(e.time.makeYourTime());
-      
-      eventLocationText = (TextView) convertView.findViewById(R.id.event_location); // TODO Edit View in XML
+
+      eventLocationText = (TextView) convertView
+          .findViewById(R.id.event_location); // TODO Edit View in XML
       eventLocationText.setText(e.venueName);
-      
+
       Log.v("RadarActivity", "Setting RadarCount " + e.radarCount);
       ((TextView) convertView.findViewById(R.id.upvotes)).setText(Integer
           .toString(e.radarCount));
@@ -137,42 +140,45 @@ public class RadarActivity extends ServerThreadActivity implements
                 currentViewPosition = position;
                 ((Vibrator) getSystemService(Context.VIBRATOR_SERVICE))
                     .vibrate(30);
-                
+
                 new AsyncTask<Void, Void, Intent>() {
-                	
-                	private ProgressDialog dialog;
-                	
-                	@Override
-                	protected void onPreExecute() {
-                		dialog = ProgressDialog.show(RadarActivity.this, "", "Loading, please wait...");
-                		super.onPreExecute();
-                	}
 
-					@Override
-					protected Intent doInBackground(Void... params) {
-		                Intent intent = new Intent(RadarActivity.this,
-		                        EventDetailsActivity.class);
-	                    intent.putExtra("eventId", e.id);
-	                    intent.putExtra("controller", commonController);
-	                    intent.putExtra("token", token);
-	                    if (tabbieVirgin) {
-	                    	intent.putExtra("virgin", true); // Make sure this activity knows it's in tutorial mode
-	                    	tabbieVirgin = false; // User is no longer a prepubescent pussy
-	                    	getPreferences(MODE_PRIVATE).edit().putBoolean("virgin", false)
-	                    	.commit();
-	                    }
-						return intent;
-					}
-					
-					@Override
-					protected void onPostExecute(Intent result) {
-		                startActivityForResult(result,
-		                        RadarCommonController.RETRIEVE_INSTANCE);
-						dialog.dismiss();
-						
-					};
-				}.execute();
+                  private ProgressDialog dialog;
 
+                  @Override
+                  protected void onPreExecute() {
+                    dialog = ProgressDialog.show(RadarActivity.this, "",
+                        "Loading, please wait...");
+                    super.onPreExecute();
+                  }
+
+                  @Override
+                  protected Intent doInBackground(Void... params) {
+                    Intent intent = new Intent(RadarActivity.this,
+                        EventDetailsActivity.class);
+                    intent.putExtra("eventId", e.id);
+                    intent.putExtra("controller", commonController);
+                    intent.putExtra("token", token);
+                    if (tabbieVirgin) {
+                      intent.putExtra("virgin", true); // Make sure this
+                                                       // activity knows it's in
+                                                       // tutorial mode
+                      tabbieVirgin = false; // User is no longer a prepubescent
+                                            // pussy
+                      getPreferences(MODE_PRIVATE).edit()
+                          .putBoolean("virgin", false).commit();
+                    }
+                    return intent;
+                  }
+
+                  @Override
+                  protected void onPostExecute(Intent result) {
+                    startActivityForResult(result,
+                        RadarCommonController.RETRIEVE_INSTANCE);
+                    dialog.dismiss();
+
+                  };
+                }.execute();
 
               }
             }
@@ -252,18 +258,19 @@ public class RadarActivity extends ServerThreadActivity implements
 
     commonController = new RadarCommonController();
     remoteDrawableController = new RemoteDrawableController(this);
-    tutorialController = new UnicornSlayerController(new AlertDialog.Builder(this), new UnicornSlayerController.TabsCallback() {
+    tutorialController = new UnicornSlayerController(new AlertDialog.Builder(
+        this), new UnicornSlayerController.TabsCallback() {
       @Override
       public void openRadarTab() {
         tabHost.setCurrentTab(2);
       }
-      
+
       @Override
       public void openFeaturedTab() {
         tabHost.setCurrentTab(0);
         forceFeatureTab = true;
       }
-      
+
       @Override
       public void openEventsTab() {
         tabHost.setCurrentTab(1);
@@ -287,13 +294,15 @@ public class RadarActivity extends ServerThreadActivity implements
 
     findViewById(R.id.map_button).setOnClickListener(new OnClickListener() {
       public void onClick(View v) {
-    	  if(!forceFeatureTab) {
-	        Intent intent = new Intent(RadarActivity.this, RadarMapActivity.class);
-	        intent.putExtra("controller", commonController);
-	        startActivity(intent);
-    	  } else {
-    		  Toast.makeText(RadarActivity.this, "Please select an event to continue", Toast.LENGTH_SHORT).show();
-    	  }
+        if (!forceFeatureTab) {
+          Intent intent = new Intent(RadarActivity.this, RadarMapActivity.class);
+          intent.putExtra("controller", commonController);
+          startActivity(intent);
+        } else {
+          Toast.makeText(RadarActivity.this,
+              "Please select an event to continue the tutorial",
+              Toast.LENGTH_SHORT).show();
+        }
       }
     });
 
@@ -309,50 +318,51 @@ public class RadarActivity extends ServerThreadActivity implements
   }
 
   public void onTabChanged(String tabName) {
-	  if (!tabbieVirgin) {
-	    findViewById(R.id.radar_list_empty_text).setVisibility(View.GONE);
-	    
-	    final View v;
-	    if (tabName.equals(EVENT_TAB_TAG)) {
-	    	v = findViewById(R.id.all_event_list);
-	    	
-	        currentListView = allListView;
-	        
-	
-	    } else if (tabName.equals(LIST_FEATURED_TAG)) {
-	    	v = findViewById(R.id.featured_event_list);
-	      currentListView = featuredListView;  
-	
-	    } else if (tabName.equals(RADAR_TAB_TAG)) {
-	      if (0 == commonController.radarList.size()) {
-	    	  v = findViewById(R.id.radar_list_empty_text);
-	        v.setVisibility(View.VISIBLE);
-	      } else {
-	    	  v = findViewById(R.id.radar_list);
-	        commonController.order();
-	        ((EventListAdapter) radarListView.getAdapter()).notifyDataSetChanged();
-	      }
-	      currentListView = radarListView;
-	    } else throw new RuntimeException();
-	    
-	    PlayAnim(v,	getBaseContext(),
-				android.R.anim.fade_in,
-				100);
-	  } else if (forceFeatureTab) {
-		  tabHost.setCurrentTab(0); // TODO This probably shouldn't be hardcoded
-		  Toast.makeText(this, "Please select an event to continue", Toast.LENGTH_SHORT).show();
-	  }
+    if (!tabbieVirgin) {
+      findViewById(R.id.radar_list_empty_text).setVisibility(View.GONE);
+
+      final View v;
+      if (tabName.equals(EVENT_TAB_TAG)) {
+        v = findViewById(R.id.all_event_list);
+
+        currentListView = allListView;
+
+      } else if (tabName.equals(LIST_FEATURED_TAG)) {
+        v = findViewById(R.id.featured_event_list);
+        currentListView = featuredListView;
+
+      } else if (tabName.equals(RADAR_TAB_TAG)) {
+        if (0 == commonController.radarList.size()) {
+          v = findViewById(R.id.radar_list_empty_text);
+          v.setVisibility(View.VISIBLE);
+        } else {
+          v = findViewById(R.id.radar_list);
+          commonController.order();
+          ((EventListAdapter) radarListView.getAdapter())
+              .notifyDataSetChanged();
+        }
+        currentListView = radarListView;
+      } else
+        throw new RuntimeException();
+
+      PlayAnim(v, getBaseContext(), android.R.anim.fade_in, 100);
+    } else if (forceFeatureTab) {
+      tabHost.setCurrentTab(0); // TODO This probably shouldn't be hardcoded
+      Toast.makeText(this, "Please select an event to continue the tutorial",
+          Toast.LENGTH_SHORT).show();
+    }
   }
-  
-  public Animation PlayAnim(View v, Context con, int animationId, int StartOffset) {
-	  if (null != v) {
-		  Animation animation = AnimationUtils.loadAnimation(con, animationId);
-		  animation.setStartOffset(StartOffset);
-		  v.startAnimation(animation);
-		  
-		  return animation;
-	  }
-	  return null;
+
+  public Animation PlayAnim(View v, Context con, int animationId,
+      int StartOffset) {
+    if (null != v) {
+      Animation animation = AnimationUtils.loadAnimation(con, animationId);
+      animation.setStartOffset(StartOffset);
+      v.startAnimation(animation);
+
+      return animation;
+    }
+    return null;
   }
 
   @Override
@@ -380,11 +390,11 @@ public class RadarActivity extends ServerThreadActivity implements
 
       currentListView.setSelection(currentViewPosition);
       if (forceFeatureTab) {
-    	  forceFeatureTab = false;
+        forceFeatureTab = false;
       }
       break;
     default:
-    	facebook.authorizeCallback(requestCode, resultCode, data);
+      facebook.authorizeCallback(requestCode, resultCode, data);
       break;
     }
   }
@@ -414,7 +424,6 @@ public class RadarActivity extends ServerThreadActivity implements
     tv.setText(text);
     return view;
   }
-  
 
   @SuppressLint({ "ParserError", "ParserError" })
   @Override
@@ -496,18 +505,14 @@ public class RadarActivity extends ServerThreadActivity implements
           if (null != radarCountStr && 0 != radarCountStr.compareTo("null"))
             radarCount = Integer.parseInt(radarCountStr);
 
-          final Event e = new Event(  obj.getString("id"),
-                                      obj.getString("name"),
-                                      obj.getString("description"),
-                                      obj.getString("location"),
-                                      obj.getString("street_address"),
-                                      new URL("http://tonight-life.com" + obj.getString("image_url")),
-                                      obj.getDouble("latitude"),
-                                      obj.getDouble("longitude"),
-                                      radarCount,
-                                      obj.getBoolean("featured"),
-                                      obj.getString("start_time"),
-                                      serverRadarIds.contains(obj.getString("id")));
+          final Event e = new Event(obj.getString("id"), obj.getString("name"),
+              obj.getString("description"), obj.getString("location"),
+              obj.getString("street_address"), new URL(
+                  "http://tonight-life.com" + obj.getString("image_url")),
+              obj.getDouble("latitude"), obj.getDouble("longitude"),
+              radarCount, obj.getBoolean("featured"),
+              obj.getString("start_time"), serverRadarIds.contains(obj
+                  .getString("id")));
 
           commonController.addEvent(e);
 
@@ -536,11 +541,12 @@ public class RadarActivity extends ServerThreadActivity implements
           findViewById(R.id.loading_screen_image).setVisibility(View.GONE);
           findViewById(R.id.loading_spin).setVisibility(View.GONE);
           findViewById(R.id.tonightlife_layout).setVisibility(View.VISIBLE);
-          
-          tabbieVirgin = true; //getPreferences(MODE_PRIVATE).getBoolean("virgin", true);
-          
+
+          tabbieVirgin = true; // getPreferences(MODE_PRIVATE).getBoolean("virgin",
+                               // true);
+
           if (tabbieVirgin) {
-	          tutorialController.showTabsTutorial();
+            tutorialController.showTabsTutorial();
           }
         }
       });

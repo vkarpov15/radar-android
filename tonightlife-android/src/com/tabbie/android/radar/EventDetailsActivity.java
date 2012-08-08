@@ -1,6 +1,6 @@
 package com.tabbie.android.radar;
 
-/**
+/*
  *  EventDetailsActivity.java
  *
  *  Created on: July 25, 2012
@@ -12,15 +12,9 @@ package com.tabbie.android.radar;
 
 import java.io.IOException;
 
-import com.tabbie.android.radar.http.ServerDeleteRequest;
-import com.tabbie.android.radar.http.ServerPostRequest;
-import com.tabbie.android.radar.http.ServerResponse;
-
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.util.Linkify;
 import android.util.Log;
@@ -30,12 +24,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.tabbie.android.radar.http.ServerDeleteRequest;
+import com.tabbie.android.radar.http.ServerPostRequest;
+import com.tabbie.android.radar.http.ServerResponse;
+
 public class EventDetailsActivity extends ServerThreadActivity {
   private Event e;
   private RadarCommonController commonController;
+  private UnicornSlayerController tutorialController;
   private String token;
-  private ProgressDialog dialog = null;
-  
+
   private ImageView eventImage;
 
   private boolean tutorialMode = false;
@@ -44,10 +42,87 @@ public class EventDetailsActivity extends ServerThreadActivity {
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.event_details_activity);
-    
-    dialog = ProgressDialog.show(this, "", "Loading, please wait...");
-    new LoadThatShit().execute();
-    	
+
+    // TODO: not best idea to have nulls in production code
+    tutorialController = new UnicornSlayerController(new AlertDialog.Builder(
+        this), null, null);
+
+    eventImage = (ImageView) findViewById(R.id.details_event_img);
+
+    Bundle starter = getIntent().getExtras();
+    if (null != starter && starter.containsKey("eventId")) {
+      final String eventId = starter.getString("eventId");
+      commonController = starter.getParcelable("controller");
+      e = commonController.events.get(eventId);
+      token = starter.getString("token");
+      tutorialMode = starter.getBoolean("virgin", false);
+    } else {
+      // No event, nothing to display
+      // Also, fatal error currently
+      this.finish();
+      return;
+    }
+
+    try {
+      eventImage.setImageDrawable(Drawable.createFromStream(
+          e.image.openStream(), "src"));
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+
+    ((TextView) findViewById(R.id.details_event_title)).setText(e.name);
+    ((TextView) findViewById(R.id.details_event_time)).setText(e.time
+        .makeYourTime());
+    ((TextView) findViewById(R.id.details_event_location)).setText(e.venueName);
+    ((TextView) findViewById(R.id.details_event_address)).setText(e.address);
+    ((TextView) findViewById(R.id.details_event_num_radar)).setText(Integer
+        .toString(e.radarCount));
+    ((TextView) findViewById(R.id.details_event_description))
+        .setText(e.description);
+    Linkify.addLinks((TextView) findViewById(R.id.details_event_description),
+        Linkify.WEB_URLS);
+
+    final TextView radarCount = (TextView) findViewById(R.id.details_event_num_radar);
+    final ImageView radarButton = (ImageView) findViewById(R.id.add_to_radar_image);
+    radarButton.setSelected(e.isOnRadar());
+
+    radarButton.setOnClickListener(new OnClickListener() {
+      public void onClick(View v) {
+        if (e.isOnRadar() && commonController.removeFromRadar(e)) {
+          Log.v("EventDetailsActivity", "Removing event from radar");
+          radarButton.setSelected(false);
+          radarCount.setText(Integer.toString(e.radarCount));
+
+          ServerDeleteRequest req = new ServerDeleteRequest(
+              ServerThread.TABBIE_SERVER + "/mobile/radar/" + e.id
+                  + ".json?auth_token=" + token, MessageType.ADD_TO_RADAR);
+
+          serverThread.sendRequest(req);
+        } else if (!e.isOnRadar()) {
+          Log.v("EventDetailsActivity", "Adding event to radar");
+          if (commonController.addToRadar(e)) {
+            radarButton.setSelected(true);
+            radarCount.setText(Integer.toString(e.radarCount));
+
+            ServerPostRequest req = new ServerPostRequest(
+                ServerThread.TABBIE_SERVER + "/mobile/radar/" + e.id + ".json",
+                MessageType.ADD_TO_RADAR);
+            req.params.put("auth_token", token);
+            serverThread.sendRequest(req);
+          } else {
+            Toast.makeText(EventDetailsActivity.this,
+                "You can only add 3 events to your radar!", 5000).show();
+            return;
+          }
+        }
+      }
+    });
+
+    if (tutorialMode) {
+      tutorialController.showDetailsTutorial();
+      tutorialMode = false;
+    }
+
   }
 
   @Override
@@ -62,109 +137,5 @@ public class EventDetailsActivity extends ServerThreadActivity {
   protected boolean handleServerResponse(ServerResponse resp) {
     // Assume that ADD_TO_RADAR and REMOVE_FROM_RADAR always succeed
     return false;
-  }
-  
-  private class LoadThatShit extends AsyncTask<Void, Void, Void> {
-
-	@Override
-	protected Void doInBackground(Void... params) {
-	    
-	    
-	    eventImage = (ImageView) findViewById(R.id.details_event_img);
-
-	    Bundle starter = getIntent().getExtras();
-	    if (null != starter && starter.containsKey("eventId")) {
-	      final String eventId = starter.getString("eventId");
-	      commonController = starter.getParcelable("controller");
-	      e = commonController.events.get(eventId);
-	      token = starter.getString("token");
-	      tutorialMode = starter.getBoolean("virgin", false);
-	    } else {
-	      // No event, nothing to display
-	      // Also, fatal error currently
-	      EventDetailsActivity.this.finish();
-	    }
-	    
-	    final Drawable d;
-	    try {
-			d = Drawable.createFromStream(e.image.openStream(), "src");
-		} catch (IOException e1) {throw new RuntimeException();}
-	    
-	    runOnUiThread(new Runnable() {
-			
-			@Override
-			public void run() {
-				     eventImage.setImageDrawable(d);
-
-				    ((TextView) findViewById(R.id.details_event_title)).setText(e.name);
-				    ((TextView) findViewById(R.id.details_event_time)).setText(e.time
-				        .makeYourTime());
-				    ((TextView) findViewById(R.id.details_event_location)).setText(e.venueName);
-				    ((TextView) findViewById(R.id.details_event_address)).setText(e.address);
-				    ((TextView) findViewById(R.id.details_event_num_radar)).setText(Integer
-				        .toString(e.radarCount));
-				    ((TextView) findViewById(R.id.details_event_description))
-				        .setText(e.description);
-				    Linkify.addLinks((TextView) findViewById(R.id.details_event_description), Linkify.WEB_URLS);
-				    
-				    final TextView radarCount = (TextView) findViewById(R.id.details_event_num_radar);
-				    final ImageView radarButton = (ImageView) findViewById(R.id.add_to_radar_image);
-				    
-
-				    radarButton.setSelected(e.isOnRadar());
-
-				    radarButton.setOnClickListener(new OnClickListener() {
-				      public void onClick(View v) {
-				        if (e.isOnRadar() && commonController.removeFromRadar(e)) {
-				          Log.v("EventDetailsActivity", "Removing event from radar");
-				          radarButton.setSelected(false);
-				          radarCount.setText(Integer.toString(e.radarCount));
-
-				          ServerDeleteRequest req = new ServerDeleteRequest(
-				              ServerThread.TABBIE_SERVER + "/mobile/radar/" + e.id
-				                  + ".json?auth_token=" + token, MessageType.ADD_TO_RADAR);
-
-				          serverThread.sendRequest(req);
-				        } else if (!e.isOnRadar()) {
-				          Log.v("EventDetailsActivity", "Adding event to radar");
-				          if (commonController.addToRadar(e)) {
-				            radarButton.setSelected(true);
-				            radarCount.setText(Integer.toString(e.radarCount));
-
-				            ServerPostRequest req = new ServerPostRequest(
-				                ServerThread.TABBIE_SERVER + "/mobile/radar/" + e.id + ".json",
-				                MessageType.ADD_TO_RADAR);
-				            req.params.put("auth_token", token);
-				            serverThread.sendRequest(req);
-				          } else {
-				            Toast.makeText(EventDetailsActivity.this,
-				                "You can only add 3 events to your radar!", 5000).show();
-				            return;
-				          }
-				        }
-				      }
-				    });
-				
-			}
-		});
-	    
-	    if(tutorialMode) {
-	    	new AlertDialog.Builder(EventDetailsActivity.this)
-	    	.setMessage("The event details page allows you to see more information about a specific event. You can also add it to your radar by clicking the radar button on the right. That's all for now!")
-	    	.setCancelable(true)
-	    	.setPositiveButton("Go forth", null)
-	    	.create().show();
-	    	tutorialMode = false;
-	    }
-		
-		return null;
-	}
-	
-	@Override
-	protected void onPostExecute(Void result) {
-		dialog.dismiss();
-		super.onPostExecute(result);
-	}
-	  
   }
 }
