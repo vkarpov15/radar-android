@@ -54,7 +54,7 @@ public class RadarActivity extends ServerThreadActivity implements
   private static final String RADAR_TAB_TAG = "Radar";
   
   // Intent constants
-  private static final String FOUNDERS_EMAIL = "founders@tonight-life.com";
+  private static final String[] FOUNDERS_EMAIL = {"founders@tonight-life.com"};
   private static final String APP_FEEDBACK_SUBJECT = "TonightLife Application Feedback";
 
   // Often-used views
