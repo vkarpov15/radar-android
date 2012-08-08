@@ -4,4 +4,9 @@
           android:icon="@android:drawable/ic_menu_rotate"
           android:title="Refresh"
           />
+    
+    <item android:id="@+id/report_me"
+        android:icon="@android:drawable/ic_menu_report_image"
+        android:title="Send Feedback"
+        />
 </menu>

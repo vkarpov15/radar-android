@@ -52,6 +52,10 @@ public class RadarActivity extends ServerThreadActivity implements
   private static final String LIST_FEATURED_TAG = "Featured";
   private static final String EVENT_TAB_TAG = "Events";
   private static final String RADAR_TAB_TAG = "Radar";
+  
+  // Intent constants
+  private static final String FOUNDERS_EMAIL = "founders@tonight-life.com";
+  private static final String APP_FEEDBACK_SUBJECT = "TonightLife Application Feedback";
 
   // Often-used views
   private TabHost tabHost;
@@ -586,6 +590,11 @@ public class RadarActivity extends ServerThreadActivity implements
       });
 
       return true;
+    case R.id.report_me:
+    	Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);
+    	emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL, FOUNDERS_EMAIL);
+    	emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, APP_FEEDBACK_SUBJECT);
+    	startActivity(emailIntent);
     default:
       return super.onOptionsItemSelected(item);
     }
