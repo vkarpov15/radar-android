@@ -40,6 +40,9 @@ import com.facebook.android.DialogError;
 import com.facebook.android.Facebook;
 import com.facebook.android.Facebook.DialogListener;
 import com.facebook.android.FacebookError;
+import com.tabbie.android.radar.http.ServerGetRequest;
+import com.tabbie.android.radar.http.ServerPostRequest;
+import com.tabbie.android.radar.http.ServerResponse;
 
 public class RadarActivity extends ServerThreadActivity implements
     OnTabChangeListener, RemoteDrawableController.PreLoadFinishedListener {

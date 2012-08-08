@@ -1,4 +1,4 @@
-package com.tabbie.android.radar;
+package com.tabbie.android.radar.http;
 
 /**
  * ServerResponse.java
@@ -12,6 +12,8 @@ package com.tabbie.android.radar;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import com.tabbie.android.radar.MessageType;
 
 public class ServerResponse {
 	public final int code;
