@@ -13,6 +13,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.LinkedHashMap;
 
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.widget.ImageView;
@@ -53,7 +55,25 @@ public class RemoteDrawableController {
   }
 
   protected boolean hasImage(final URL u) {
-    return myDrawables.containsKey(u.toString()) ? true : false;
+    return myDrawables.containsKey(u.toString());
+  }
+  
+  public Bitmap getAsParcelable(final URL u) {
+    if (myDrawables.containsKey(u.toString())) {
+      return ((BitmapDrawable) myDrawables.get(u.toString())).getBitmap();
+    } else {
+      Drawable d;
+      try {
+        d = Drawable.createFromStream(u.openStream(), "src");
+        synchronized(RemoteDrawableController.this) {
+          myDrawables.put(u.toString(), d);
+        }
+        return ((BitmapDrawable) d).getBitmap();
+      } catch (IOException e) {
+        e.printStackTrace();
+        return null;
+      }
+    }
   }
 
   public void drawImage(URL u, final ImageView view) {

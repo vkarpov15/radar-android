@@ -158,6 +158,7 @@ public class RadarActivity extends ServerThreadActivity implements
                         EventDetailsActivity.class);
                     intent.putExtra("eventId", e.id);
                     intent.putExtra("controller", commonController);
+                    intent.putExtra("image", remoteDrawableController.getAsParcelable(e.image));
                     intent.putExtra("token", token);
                     if (tabbieVirgin) {
                       intent.putExtra("virgin", true); // Make sure this
@@ -546,8 +547,7 @@ public class RadarActivity extends ServerThreadActivity implements
           findViewById(R.id.loading_spin).setVisibility(View.GONE);
           findViewById(R.id.tonightlife_layout).setVisibility(View.VISIBLE);
 
-          tabbieVirgin = true; // getPreferences(MODE_PRIVATE).getBoolean("virgin",
-                               // true);
+          tabbieVirgin = getPreferences(MODE_PRIVATE).getBoolean("virgin", true);
 
           if (tabbieVirgin) {
             tutorialController.showTabsTutorial();

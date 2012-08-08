@@ -10,11 +10,10 @@ package com.tabbie.android.radar;
  *  All we do is just set a bunch of layout views to match our event model
  */
 
-import java.io.IOException;
-
 import android.app.AlertDialog;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.text.util.Linkify;
 import android.util.Log;
@@ -35,6 +34,7 @@ public class EventDetailsActivity extends ServerThreadActivity {
   private String token;
 
   private ImageView eventImage;
+  private Bitmap image;
 
   private boolean tutorialMode = false;
 
@@ -55,6 +55,7 @@ public class EventDetailsActivity extends ServerThreadActivity {
       commonController = starter.getParcelable("controller");
       e = commonController.events.get(eventId);
       token = starter.getString("token");
+      image = starter.getParcelable("image");
       tutorialMode = starter.getBoolean("virgin", false);
     } else {
       // No event, nothing to display
@@ -63,12 +64,7 @@ public class EventDetailsActivity extends ServerThreadActivity {
       return;
     }
 
-    try {
-      eventImage.setImageDrawable(Drawable.createFromStream(
-          e.image.openStream(), "src"));
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
+    eventImage.setImageDrawable(new BitmapDrawable(image));
 
     ((TextView) findViewById(R.id.details_event_title)).setText(e.name);
     ((TextView) findViewById(R.id.details_event_time)).setText(e.time
