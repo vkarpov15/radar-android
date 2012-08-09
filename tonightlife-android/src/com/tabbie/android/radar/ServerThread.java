@@ -94,7 +94,7 @@ public class ServerThread extends Thread {
       		/* No lock should be required here - fireHandler only gets called
       		 * as a helper method in the ServerHandler thread.
       		 */
-      		Message msg = new Message();
+      		Message msg = Message.obtain();
       		msg.obj = responses.poll();
       		Log.v(this.getClass().getName(), "run() found a queued response - '" + ((ServerResponse) msg.obj).content + "'");
       		upstreamHandler.dispatchMessage(msg);
