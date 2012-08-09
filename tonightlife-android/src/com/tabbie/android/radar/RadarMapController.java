@@ -52,7 +52,7 @@ public class RadarMapController {
     protected boolean onTap(int index) {
       final EventMarker m = markers.get(index);
       final View popUp = LayoutInflater.from(context).inflate(R.layout.popup, null);
-      MapView.LayoutParams mapParams = new MapView.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+      MapView.LayoutParams mapParams = new MapView.LayoutParams(300,
     		  ViewGroup.LayoutParams.WRAP_CONTENT,
     		  m.getPoint(),
     		  0,

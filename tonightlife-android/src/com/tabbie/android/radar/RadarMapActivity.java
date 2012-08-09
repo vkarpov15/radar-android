@@ -68,7 +68,6 @@ public class RadarMapActivity extends MapActivity {
       mapController.setLatLon(selected.lat, selected.lon);
       mapController.setZoom(16);
     }
-
   }
 
   @Override
