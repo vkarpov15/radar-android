@@ -571,7 +571,7 @@ public class RadarActivity extends ServerThreadActivity implements
       });
 
       for (Event e : commonController.eventsList) {
-        remoteDrawableController.preload(e.image);
+        remoteDrawableController.preload(e.image); // TODO Switch over to lazy loader
       }
     }
     return false;
