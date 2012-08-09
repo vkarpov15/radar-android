@@ -127,7 +127,13 @@ public class ServerThread extends Thread {
   		waiting = false;
 	  }
 	}
-
+	
+	/**
+	 * Take a request from the top of the queue and
+	 * send it off to the server
+	 * @param The request to be processed
+	 * @return Whether the request was successfully processed or not
+	 */
 	private boolean handleRequest(ServerRequest req) {
 	  waiting = true;
 	  Log.v(this.getClass().getName(), "Got request for URL " + req.url);
