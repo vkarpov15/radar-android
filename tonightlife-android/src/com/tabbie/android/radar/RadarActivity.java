@@ -86,9 +86,8 @@ public class RadarActivity extends ServerThreadActivity implements
 
   protected class EventListAdapter extends ArrayAdapter<Event> {
 
-    public EventListAdapter(Context context, int resource,
-        int textViewResourceId, List<Event> events) {
-      super(context, resource, textViewResourceId, events);
+    public EventListAdapter(int resource, List<Event> events) {
+      super(RadarActivity.this, resource, R.layout.event_list_element, events);
     }
 
     @Override
@@ -287,15 +286,14 @@ public class RadarActivity extends ServerThreadActivity implements
     tabHost.setup();
     tabHost.setOnTabChangedListener(this);
 
-    featuredListView.setAdapter(new EventListAdapter(this,
-        R.id.featured_event_list, R.layout.event_list_element,
-        commonController.featuredList));
+    featuredListView.setAdapter(new EventListAdapter(R.id.featured_event_list,
+    		commonController.featuredList));
 
-    allListView.setAdapter(new EventListAdapter(this, R.id.all_event_list,
-        R.layout.event_list_element, commonController.eventsList));
+    allListView.setAdapter(new EventListAdapter(R.id.all_event_list,
+        commonController.eventsList));
 
-    radarListView.setAdapter(new EventListAdapter(this, R.id.radar_list,
-        R.layout.event_list_element, commonController.radarList));
+    radarListView.setAdapter(new EventListAdapter(R.id.radar_list,
+        commonController.radarList));
 
     findViewById(R.id.map_button).setOnClickListener(new OnClickListener() {
       public void onClick(View v) {
@@ -379,15 +377,16 @@ public class RadarActivity extends ServerThreadActivity implements
       final Bundle controller = data.getExtras();
       commonController = controller.getParcelable("controller");
 
-      featuredListView.setAdapter(new EventListAdapter(this,
-          R.id.featured_event_list, R.layout.event_list_element,
-          commonController.featuredList));
+      // TODO Not sure all this re-instantiation is necessary
+      
+      featuredListView.setAdapter(new EventListAdapter(R.id.featured_event_list,
+    		  commonController.featuredList));
 
-      allListView.setAdapter(new EventListAdapter(this, R.id.all_event_list,
-          R.layout.event_list_element, commonController.eventsList));
+      allListView.setAdapter(new EventListAdapter(R.id.all_event_list,
+    		  commonController.eventsList));
 
-      radarListView.setAdapter(new EventListAdapter(this, R.id.radar_list,
-          R.layout.event_list_element, commonController.radarList));
+      radarListView.setAdapter(new EventListAdapter(R.id.radar_list,
+    		  commonController.radarList));
 
       ((EventListAdapter) featuredListView.getAdapter()).notifyDataSetChanged();
       ((EventListAdapter) allListView.getAdapter()).notifyDataSetChanged();
