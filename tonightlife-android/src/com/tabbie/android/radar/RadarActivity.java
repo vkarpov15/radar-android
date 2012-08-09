@@ -91,25 +91,34 @@ public class RadarActivity extends ServerThreadActivity implements
     }
 
     @Override
-    public View getView(final int position, View convertView, ViewGroup parent) {
+    public View getView(final int position,
+    		View convertView, final ViewGroup parent) {
+    	
       if (null == convertView) {
+    	Log.i("EventListAdapter", "Instantiating a new list view element");
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         convertView = inflater.inflate(R.layout.event_list_element, null);
       }
+      
       final Event e = getItem(position);
-      eventTitleText = (TextView) convertView.findViewById(R.id.event_text);
-      eventTitleText.setText(e.name);
+      
+      
+      // Populate TextViews with data
+      ((TextView) convertView
+    		  .findViewById(R.id.event_text))
+    		  .setText(e.name);
 
-      ((TextView) convertView.findViewById(R.id.event_list_time))
-          .setText(e.time.makeYourTime());
+      ((TextView) convertView
+    		  .findViewById(R.id.event_list_time))
+    		  .setText(e.time.makeYourTime());
 
-      eventLocationText = (TextView) convertView
-          .findViewById(R.id.event_location); // TODO Edit View in XML
-      eventLocationText.setText(e.venueName);
+      ((TextView) convertView
+          .findViewById(R.id.event_location))
+          .setText(e.venueName);
 
-      Log.v("RadarActivity", "Setting RadarCount " + e.radarCount);
-      ((TextView) convertView.findViewById(R.id.upvotes)).setText(Integer
-          .toString(e.radarCount));
+      ((TextView) convertView
+    		  .findViewById(R.id.upvotes))
+    		  .setText(Integer.toString(e.radarCount));
 
       /*
        * Check and see if there is an image that has been loaded If there is an
