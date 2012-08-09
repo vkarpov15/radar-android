@@ -37,7 +37,7 @@ public class RadarMapActivity extends MapActivity {
     mapView = (MapView) findViewById(R.id.my_map_view);
     mapView.setBuiltInZoomControls(true);
 
-    mapController = new RadarMapController(commonController, mapView, this);
+    mapController = new RadarMapController(mapView, this);
 
     if (starter.containsKey("event")) {
       selected = starter.getParcelable("event");

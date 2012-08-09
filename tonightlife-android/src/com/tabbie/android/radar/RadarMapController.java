@@ -19,14 +19,8 @@ import com.google.android.maps.MapView.LayoutParams;
 import com.google.android.maps.OverlayItem;
 
 public class RadarMapController {
-  private final RadarCommonController commonController;
-
-  private double lat;
-  private double lon;
-  private int zoom;
 
   private final MapView mapView;
-  private final Context context;
   private final View popUp;
   
   private class TabbieEventMarkerCollection extends
@@ -88,28 +82,19 @@ public class RadarMapController {
 
   private TabbieEventMarkerCollection markersCollection;
 
-  public RadarMapController(RadarCommonController commonController,
-      MapView mapView, Context context) {
-    this.commonController = commonController;
-    this.lat = 0;
-    this.lon = 0;
-    this.zoom = 0;
+  public RadarMapController(MapView mapView, Context context) {
     this.mapView = mapView;
     this.setLatLon(40.736968, -73.989183);
     this.setZoom(14);
     this.markersCollection = new TabbieEventMarkerCollection();
-    this.context = context;
     popUp = LayoutInflater.from(context).inflate(R.layout.popup, null);
   }
 
   public void setZoom(int zoom) {
-    this.zoom = zoom;
     this.mapView.getController().setZoom(zoom);
   }
 
   public void setLatLon(double lat, double lon) {
-    this.lat = lat;
-    this.lon = lon;
     this.mapView.getController().setCenter(
         new GeoPoint((int) (lat * 1E6), (int) (lon * 1E6)));
   }
@@ -118,8 +103,6 @@ public class RadarMapController {
     if (null == p) {
       return;
     }
-    this.lat = ((double) p.getLatitudeE6()) / 1E6;
-    this.lon = ((double) p.getLongitudeE6()) / 1E6;
     this.mapView.getController().setCenter(p);
   }
 
@@ -134,7 +117,4 @@ public class RadarMapController {
   public ItemizedOverlay<EventMarker> getItemizedOverlay() {
     return markersCollection;
   }
-  
-  
-
 }
