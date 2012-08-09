@@ -3,6 +3,7 @@ package com.tabbie.android.radar;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import android.graphics.Bitmap;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -20,6 +21,7 @@ public class Event implements Parcelable {
 
   public int radarCount;
   private boolean onRadar;
+  private Bitmap eventImage;
 
   public Event( String id,
                 String name,
