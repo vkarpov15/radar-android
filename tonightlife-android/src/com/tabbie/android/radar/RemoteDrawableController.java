@@ -62,17 +62,14 @@ public class RemoteDrawableController {
     if (myDrawables.containsKey(u.toString())) {
       return ((BitmapDrawable) myDrawables.get(u.toString())).getBitmap();
     } else {
-      Drawable d;
+      Drawable d = null;
       try {
         d = Drawable.createFromStream(u.openStream(), "src");
-        synchronized(RemoteDrawableController.this) {
           myDrawables.put(u.toString(), d);
-        }
-        return ((BitmapDrawable) d).getBitmap();
       } catch (IOException e) {
-        e.printStackTrace();
-        return null;
+        e.printStackTrace();;
       }
+      return ((BitmapDrawable) d).getBitmap();
     }
   }
 
