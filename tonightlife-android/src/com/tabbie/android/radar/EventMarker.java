@@ -10,8 +10,6 @@ public class EventMarker extends OverlayItem {
 		public void onClick();
 	}
 	
-	private OnClickListener clickListener;
-	
 	public EventMarker(Event e) {
 		super(new GeoPoint((int) (e.lat * 1E6), (int) (e.lon * 1E6)), e.name, e.description);
 		this.e = e;
@@ -19,16 +17,6 @@ public class EventMarker extends OverlayItem {
 	
 	@Override
 	public String getTitle() {
-		
 		return e.name;
 	}
-	
-	public void setOnClickListener(OnClickListener listener) {
-		this.clickListener = listener;
-	}
-	
-	public void onClick() {
-		clickListener.onClick();
-	}
-
 }
