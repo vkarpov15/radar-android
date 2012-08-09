@@ -23,7 +23,7 @@ import android.os.Message;
 import android.util.Log;
 import android.widget.ImageView;
 
-public class RemoteDrawableController implements Handler.Callback {
+public class RemoteDrawableController {
   private final LinkedHashMap<String, Drawable> myDrawables = new LinkedHashMap<String, Drawable>();
   private final Context context;
 
@@ -93,47 +93,10 @@ public class RemoteDrawableController implements Handler.Callback {
       }
     }
   }
-  
-  // TODO Use this for something
-  /**
-   * Asynchronously retrieve the image at URL u as a Bitmap
-   * in a new Thread  
-   * @param u - The URL of the Bitmap to be decoded
-   * @param handler - An appropriate handler to deal with responses on the UI thread
-   */
-  private static void summonBitmap(final URL u, final Handler handler) {
-	  new Thread(new Runnable() {
-		
-		@Override
-		public void run() {
-			final Message msg = Message.obtain();
-			try {
-				msg.obj = BitmapFactory.decodeStream(u.openStream());
-			} catch(final IOException e) {
-				msg.obj = null;
-			} finally {
-				handler.dispatchMessage(msg);
-			}
-		}
-	}).start();
-  }
 
   public interface PreLoadFinishedListener {
     public void onPreLoadFinished();
   }
   
-@Override
-/*
- * Native handler for dealing with incoming
- * Bitmaps that have successfully loaded from
- * summonBitmap or other appropriate method
- */
-public boolean handleMessage(final Message msg) {
-	if(msg.obj instanceof Bitmap) {
-		// TODO When appropriate, switch this code over to Bitmaps instead of Drawables
-		final Drawable d = new BitmapDrawable(context.getResources(), (Bitmap) msg.obj);
-		// Making Bitmap object a member of Event
-	}
-	return false;
-}
+
 }
