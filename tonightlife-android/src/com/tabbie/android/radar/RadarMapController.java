@@ -14,6 +14,7 @@ import com.google.android.maps.GeoPoint;
 import com.google.android.maps.ItemizedOverlay;
 import com.google.android.maps.MapView;
 import com.google.android.maps.MapView.LayoutParams;
+import com.google.android.maps.OverlayItem;
 
 public class RadarMapController {
   private final RadarCommonController commonController;
@@ -51,13 +52,14 @@ public class RadarMapController {
 
     protected boolean onTap(int index) {
       final EventMarker m = markers.get(index);
+      
       final View popUp = LayoutInflater.from(context).inflate(R.layout.popup, null);
-      MapView.LayoutParams mapParams = new MapView.LayoutParams(300,
+      final MapView.LayoutParams mapParams = new MapView.LayoutParams(300,
     		  ViewGroup.LayoutParams.WRAP_CONTENT,
     		  m.getPoint(),
     		  0,
-    		  0,
-    		  MapView.LayoutParams.BOTTOM_CENTER);
+    		  -50, // TODO Probably shouldn't be hard-coded, but I don't quite know how this works anyways
+    		  MapView.LayoutParams.CENTER);
       mapView.addView(popUp, mapParams);
       return true;
     }
