@@ -23,7 +23,6 @@ import com.tabbie.android.radar.http.ServerResponse;
 import com.zubhium.ZubhiumSDK;
 
 public abstract class ServerThreadActivity extends Activity {
-  protected boolean showing = false;
   protected ServerThread serverThread = null;
 
   protected ZubhiumSDK sdk;
@@ -71,7 +70,6 @@ public abstract class ServerThreadActivity extends Activity {
   protected abstract boolean handleServerResponse(ServerResponse resp);
 
   public void sendServerRequest(ServerRequest req) {
-    showing = true;
     this.serverThread.sendRequest(req);
   }
 

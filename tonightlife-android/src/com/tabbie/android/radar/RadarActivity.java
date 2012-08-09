@@ -441,7 +441,12 @@ public class RadarActivity extends ServerThreadActivity implements
   @SuppressLint({ "ParserError", "ParserError" })
   @Override
   protected synchronized boolean handleServerResponse(ServerResponse resp) {
-    if (MessageType.FACEBOOK_LOGIN == resp.responseTo) {
+	switch(resp.responseTo) {
+	case FACEBOOK_LOGIN:
+		
+	}
+	
+    if (MessageType.FACEBOOK_LOGIN == resp.responseTo) { // Deal with facebook login JSON
       JSONObject json = resp.parseJsonContent();
       if (json == null || !json.has("id")) {
         return false;
@@ -468,7 +473,7 @@ public class RadarActivity extends ServerThreadActivity implements
           sendServerRequest(req);
         }
       });
-    } else if (MessageType.TABBIE_LOGIN == resp.responseTo) {
+    } else if (MessageType.TABBIE_LOGIN == resp.responseTo) { // Deal with Tabbie Login JSON
       JSONObject json = resp.parseJsonContent();
       if (null == json || !json.has("token")) {
         return false;
@@ -487,7 +492,7 @@ public class RadarActivity extends ServerThreadActivity implements
         e.printStackTrace();
         return false;
       }
-    } else if (MessageType.LOAD_EVENTS == resp.responseTo) {
+    } else if (MessageType.LOAD_EVENTS == resp.responseTo) { // Deal with loading event information from Tabbie
       JSONArray list = resp.parseJsonArray();
       if (null == list) {
         return false;
