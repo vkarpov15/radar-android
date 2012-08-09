@@ -441,16 +441,13 @@ public class RadarActivity extends ServerThreadActivity implements
   @SuppressLint({ "ParserError", "ParserError" })
   @Override
   protected synchronized boolean handleServerResponse(ServerResponse resp) {
-    Log.d("RadarActivity", "Handling a server response");
     if (MessageType.FACEBOOK_LOGIN == resp.responseTo) {
       JSONObject json = resp.parseJsonContent();
       if (json == null || !json.has("id")) {
         return false;
       }
-      final Long facebookId;
       final String facebookName;
       try {
-        facebookId = json.getLong("id");
         facebookName = json.getString("first_name") + " "
             + json.getString("last_name").substring(0, 1) + ".";
       } catch (JSONException e) {
