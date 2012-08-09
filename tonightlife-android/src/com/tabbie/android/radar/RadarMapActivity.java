@@ -51,18 +51,12 @@ public class RadarMapActivity extends MapActivity {
     
 
     for (final Event e : commonController.eventsList) {
-      EventMarker.OnClickListener listener = new EventMarker.OnClickListener() {
-        @Override
-        public void onClick() {
-          mapController.setLatLon(e.lat, e.lon);
-        }
-      };
       if (null != selected && 0 == e.id.compareTo(selected.id)) {
         mapController.addEventMarker(e,
-            getResources().getDrawable(R.drawable.marker_highlight), listener);
+            getResources().getDrawable(R.drawable.marker_highlight));
       } else {
         mapController.addEventMarker(e,
-            getResources().getDrawable(R.drawable.marker), listener);
+            getResources().getDrawable(R.drawable.marker));
       }
     }
 

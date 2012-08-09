@@ -113,12 +113,8 @@ public class RadarMapController {
     this.mapView.getController().setCenter(p);
   }
 
-  public void addEventMarker(Event e, Drawable markerImg,
-      EventMarker.OnClickListener listener) {
+  public void addEventMarker(Event e, Drawable markerImg) {
     EventMarker marker = new EventMarker(e);
-    if (null != listener) {
-      marker.setOnClickListener(listener);
-    }
     markerImg.setBounds(0, 0, markerImg.getIntrinsicWidth(),
         markerImg.getIntrinsicHeight());
     marker.setMarker(markersCollection.boundDrawable(markerImg));
