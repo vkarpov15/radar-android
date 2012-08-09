@@ -162,7 +162,6 @@ public class RadarActivity extends ServerThreadActivity implements
                         EventDetailsActivity.class);
                     intent.putExtra("eventId", e.id);
                     intent.putExtra("controller", commonController);
-                    Toast.makeText(RadarActivity.this, "About to parcel bitmap", Toast.LENGTH_SHORT).show();
                     intent.putExtra("image", remoteDrawableController.getAsParcelable(e.image));
                     intent.putExtra("token", token);
                     if (tabbieVirgin) {
