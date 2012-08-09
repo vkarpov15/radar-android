@@ -3,12 +3,17 @@ package com.tabbie.android.radar;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
+import android.view.View;
+import android.view.ViewGroup;
 
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.ItemizedOverlay;
 import com.google.android.maps.MapView;
+import com.google.android.maps.MapView.LayoutParams;
 
 public class RadarMapController {
   private final RadarCommonController commonController;
@@ -18,14 +23,15 @@ public class RadarMapController {
   private int zoom;
 
   private final MapView mapView;
-
+  private final Context context;
+  
   private class TabbieEventMarkerCollection extends
       ItemizedOverlay<EventMarker> {
     private final List<EventMarker> markers = new ArrayList<EventMarker>();
     private long lastClickTime = -1;
 
     public TabbieEventMarkerCollection() {
-      super(null);
+      super(null); // TODO Give a default drawable here
     }
 
     public void addOverlay(EventMarker overlay) {
@@ -44,7 +50,15 @@ public class RadarMapController {
     }
 
     protected boolean onTap(int index) {
-      // markers.get(index).onClick();
+      final EventMarker m = markers.get(index);
+      final View popUp = LayoutInflater.from(context).inflate(R.layout.popup, null);
+      MapView.LayoutParams mapParams = new MapView.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+    		  ViewGroup.LayoutParams.WRAP_CONTENT,
+    		  m.getPoint(),
+    		  0,
+    		  0,
+    		  MapView.LayoutParams.BOTTOM_CENTER);
+      mapView.addView(popUp, mapParams);
       return true;
     }
 
@@ -66,7 +80,7 @@ public class RadarMapController {
   private TabbieEventMarkerCollection markersCollection;
 
   public RadarMapController(RadarCommonController commonController,
-      MapView mapView) {
+      MapView mapView, Context context) {
     this.commonController = commonController;
     this.lat = 0;
     this.lon = 0;
@@ -75,6 +89,7 @@ public class RadarMapController {
     this.setLatLon(40.736968, -73.989183);
     this.setZoom(14);
     this.markersCollection = new TabbieEventMarkerCollection();
+    this.context = context;
   }
 
   public void setZoom(int zoom) {

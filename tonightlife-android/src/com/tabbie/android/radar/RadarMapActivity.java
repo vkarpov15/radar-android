@@ -37,7 +37,7 @@ public class RadarMapActivity extends MapActivity {
     mapView = (MapView) findViewById(R.id.my_map_view);
     mapView.setBuiltInZoomControls(true);
 
-    mapController = new RadarMapController(commonController, mapView);
+    mapController = new RadarMapController(commonController, mapView, this);
 
     if (starter.containsKey("event")) {
       selected = starter.getParcelable("event");
@@ -48,6 +48,7 @@ public class RadarMapActivity extends MapActivity {
 
     myLocationOverlay = new MyLocationOverlay(this, mapView);
     myLocationOverlay.enableMyLocation();
+    
 
     for (final Event e : commonController.eventsList) {
       EventMarker.OnClickListener listener = new EventMarker.OnClickListener() {
