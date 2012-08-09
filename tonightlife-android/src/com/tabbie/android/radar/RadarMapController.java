@@ -5,6 +5,7 @@ import java.util.List;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -25,6 +26,7 @@ public class RadarMapController {
 
   private final MapView mapView;
   private final Context context;
+  private final View popUp;
   
   private class TabbieEventMarkerCollection extends
       ItemizedOverlay<EventMarker> {
@@ -51,9 +53,9 @@ public class RadarMapController {
     }
 
     protected boolean onTap(int index) {
+    	Log.d("onTap", "Item selected at index " + index);
+    	mapView.removeView(popUp);
       final EventMarker m = markers.get(index);
-      
-      final View popUp = LayoutInflater.from(context).inflate(R.layout.popup, null);
       final MapView.LayoutParams mapParams = new MapView.LayoutParams(300,
     		  ViewGroup.LayoutParams.WRAP_CONTENT,
     		  m.getPoint(),
@@ -63,6 +65,7 @@ public class RadarMapController {
       mapView.addView(popUp, mapParams);
       return true;
     }
+    
 
     public Drawable boundDrawable(Drawable drawable) {
       return boundCenterBottom(drawable);
@@ -70,8 +73,10 @@ public class RadarMapController {
 
     public boolean onTouchEvent(MotionEvent event, MapView mapView) {
       if (MotionEvent.ACTION_DOWN == event.getAction()) {
-        if ((System.currentTimeMillis() - lastClickTime) < 750) {
+        if ((System.currentTimeMillis() - lastClickTime) < 500) {
           mapView.getController().zoomIn();
+        } else {
+        	mapView.removeView(popUp);
         }
         lastClickTime = System.currentTimeMillis();
       }
@@ -92,6 +97,7 @@ public class RadarMapController {
     this.setZoom(14);
     this.markersCollection = new TabbieEventMarkerCollection();
     this.context = context;
+    popUp = LayoutInflater.from(context).inflate(R.layout.popup, null);
   }
 
   public void setZoom(int zoom) {
@@ -126,5 +132,7 @@ public class RadarMapController {
   public ItemizedOverlay<EventMarker> getItemizedOverlay() {
     return markersCollection;
   }
+  
+  
 
 }
