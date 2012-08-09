@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.ItemizedOverlay;
@@ -62,6 +63,7 @@ public class RadarMapController {
     		  0,
     		  -50, // TODO Probably shouldn't be hard-coded, but I don't quite know how this works anyways
     		  MapView.LayoutParams.CENTER);
+      ((TextView) popUp.findViewById(R.id.map_event_title)).setText(m.getTitle());
       mapView.addView(popUp, mapParams);
       return true;
     }

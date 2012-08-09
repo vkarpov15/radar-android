@@ -17,6 +17,12 @@ public class EventMarker extends OverlayItem {
 		this.e = e;
 	}
 	
+	@Override
+	public String getTitle() {
+		
+		return e.name;
+	}
+	
 	public void setOnClickListener(OnClickListener listener) {
 		this.clickListener = listener;
 	}
