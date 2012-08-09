@@ -113,13 +113,13 @@ public class ServerThread extends Thread {
   		} else {
   			Message msg;
   			while (responses.peek() != null) {
-  				msg = new Message();
+  				msg = Message.obtain();
   				msg.obj = responses.poll();
   				Log.v(this.getClass().getName(), "Dispatching message in loop '" + ((ServerResponse) msg.obj).content + "'");
   				upstreamHandler.dispatchMessage(msg);
   			}
   			
-  			msg = new Message();
+  			msg = Message.obtain();
   			msg.obj = response;
   			Log.v(this.getClass().getName(), "Dispatching message '" + response.content + "'");
   			upstreamHandler.dispatchMessage(msg);
