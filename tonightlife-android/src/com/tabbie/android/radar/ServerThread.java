@@ -34,7 +34,7 @@ public class ServerThread extends Thread {
   
 	private Handler upstreamHandler;
 	private HttpURLConnection conn;
-	private boolean active = true;
+	private volatile boolean active = true;
 	private boolean waiting = false;
 	private final Queue<ServerResponse> responses = new LinkedList<ServerResponse>();
 	private final Queue<ServerRequest> requests = new LinkedList<ServerRequest>();
@@ -82,7 +82,7 @@ public class ServerThread extends Thread {
 		while (true) {
 		  if (!this.active) {
 		    try {
-          Thread.sleep(100);
+          Thread.sleep(100); // TODO Val, have you considered using Notify() here from another thread?
         } catch (InterruptedException e) {
           e.printStackTrace();
         }
