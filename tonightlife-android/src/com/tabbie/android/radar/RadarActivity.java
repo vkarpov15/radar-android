@@ -166,7 +166,7 @@ public class RadarActivity extends ServerThreadActivity implements
         if (!forceFeatureTab) {
           Intent intent = new Intent(RadarActivity.this, RadarMapActivity.class);
           intent.putExtra("controller", commonController);
-          startActivity(intent);
+          startActivityForResult(intent, RadarCommonController.FIRE_EVENT);
         } else {
           Toast.makeText(RadarActivity.this,
               "Please select an event to continue the tutorial",
@@ -236,8 +236,8 @@ public class RadarActivity extends ServerThreadActivity implements
 
   @Override
   public void onActivityResult(int requestCode, int resultCode, Intent data) {
+	    Log.v("Request Code", "This: " + requestCode);
     super.onActivityResult(requestCode, resultCode, data);
-    Log.v("Request Code", "This: " + requestCode);
     switch (requestCode) {
     case RadarCommonController.RETRIEVE_INSTANCE:
       final Bundle controller = data.getExtras();
