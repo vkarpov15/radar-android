@@ -57,11 +57,15 @@ public class ImageLoader {
         imageViews.put(imageView, url);
         Bitmap bitmap = memoryCache.get(url); // Attempt to retrieve a Bitmap from the cache
         if(bitmap!=null) {
+        	imageView.setVisibility(View.VISIBLE);
+        	((View) imageView.getParent()).findViewById(R.id.element_loader).setVisibility(View.GONE);
             imageView.setImageBitmap(bitmap);
         } else {
         	Log.d("ImageLoader", "Now in the Queue");
             queuePhoto(url, imageView); // Start loading the image, we'll display the default for now
-            imageView.setImageResource(R.drawable.refresh);
+        	imageView.setVisibility(View.GONE);
+        	((View) imageView.getParent()).findViewById(R.id.element_loader).setVisibility(View.VISIBLE);
+            // imageView.setImageResource(R.drawable.refresh);
         }
     }
         
@@ -210,9 +214,10 @@ public class ImageLoader {
             	photoToLoad.imageView.setVisibility(View.VISIBLE);
             	((View) photoToLoad.imageView.getParent()).findViewById(R.id.element_loader).setVisibility(View.GONE);
                 photoToLoad.imageView.setImageBitmap(bitmap);
-            } else // TODO Code this so it doesn't suck JUSTIN JUSTIN JUSTIN
-            	photoToLoad.imageView.setVisibility(View.VISIBLE); // TODO
-            	((View) photoToLoad.imageView.getParent()).findViewById(R.id.element_loader).setVisibility(View.GONE); // TODO
+            } else {
+            	photoToLoad.imageView.setVisibility(View.GONE);
+            	((View) photoToLoad.imageView.getParent()).findViewById(R.id.element_loader).setVisibility(View.VISIBLE);
+            }
         }
     }
 
