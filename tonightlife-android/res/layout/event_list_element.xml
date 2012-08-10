@@ -13,12 +13,12 @@
         android:layout_width="fill_parent"
         android:layout_height="120dp">
         
-        <ImageView 
+        <!--
             android:id="@+id/element_loader"
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:layout_gravity="center"
-            android:src="@drawable/refresh"/>
+            android:src="@drawable/refresh" -->
         
 	    <ImageView
 	        android:visibility="gone"

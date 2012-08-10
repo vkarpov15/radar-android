@@ -70,27 +70,15 @@ public class EventListAdapter extends BaseAdapter {
        * it If there is no image that has been loaded, display the loader and
        * LOAD THAT SH*T
        */
-
+      /*
       final ImageView loader = (ImageView) convertView
-          .findViewById(R.id.element_loader);
+          .findViewById(R.id.element_loader);*/
       final ImageView img = (ImageView) convertView
           .findViewById(R.id.event_image);
       
-      imageLoader.displayImage(e.image, img);
-      
+      imageLoader.displayImage(e.image.toString(), img);
 
-      if (!remoteDrawableController.hasImage(e.image)) {
-        Log.d("RadarActivity", "Image still being retrieved, displaying loader");
-        loader.startAnimation(AnimationUtils.loadAnimation(RadarActivity.this,
-            R.anim.rotate));
-      } else if (img.getTag() == null
-          || 0 != ((URL) img.getTag()).toString().compareTo(e.image.toString())) {
-        Log.d("RadarActivity", "RDC has image");
-        loader.setVisibility(View.GONE);
-        img.setVisibility(View.VISIBLE);
-        remoteDrawableController.drawImage(e.image, img);
-      }
-
+      /*
       convertView.findViewById(R.id.list_list_element_layout)
           .setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
@@ -141,8 +129,9 @@ public class EventListAdapter extends BaseAdapter {
 
               }
             }
-          });
+          }); */
 
+      /*
       convertView.findViewById(R.id.location_image_layout).setOnClickListener(
           new OnClickListener() {
             public void onClick(View v) {
@@ -152,7 +141,7 @@ public class EventListAdapter extends BaseAdapter {
               intent.putExtra("event", e);
               startActivity(intent);
             }
-          });
+          });*/
       return convertView;
     }
 

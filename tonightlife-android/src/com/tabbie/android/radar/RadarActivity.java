@@ -83,7 +83,7 @@ public class RadarActivity extends ServerThreadActivity implements
   // FB junk
   private Facebook facebook = new Facebook("217386331697217");
   private SharedPreferences preferences;
-
+/*
   protected class EventListAdapter extends ArrayAdapter<Event> {
 
     public EventListAdapter(int resource, List<Event> events) {
@@ -127,7 +127,7 @@ public class RadarActivity extends ServerThreadActivity implements
        * it If there is no image that has been loaded, display the loader and
        * LOAD THAT SH*T
        */
-
+/*
       final ImageView loader = (ImageView) convertView
           .findViewById(R.id.element_loader);
       final ImageView img = (ImageView) convertView
@@ -210,7 +210,7 @@ public class RadarActivity extends ServerThreadActivity implements
       return convertView;
     }
   }
-
+*/
   @Override
   public void onCreate(final Bundle savedInstanceState) {
     Log.d("RadarActivity", "OnCreate Method");
@@ -295,14 +295,11 @@ public class RadarActivity extends ServerThreadActivity implements
     tabHost.setup();
     tabHost.setOnTabChangedListener(this);
 
-    featuredListView.setAdapter(new EventListAdapter(R.id.featured_event_list,
-    		commonController.featuredList));
+    featuredListView.setAdapter(new EventListAdapter(this, commonController.featuredList));
 
-    allListView.setAdapter(new EventListAdapter(R.id.all_event_list,
-        commonController.eventsList));
+    allListView.setAdapter(new EventListAdapter(this, commonController.eventsList));
 
-    radarListView.setAdapter(new EventListAdapter(R.id.radar_list,
-        commonController.radarList));
+    radarListView.setAdapter(new EventListAdapter(this, commonController.radarList));
 
     findViewById(R.id.map_button).setOnClickListener(new OnClickListener() {
       public void onClick(View v) {
@@ -388,14 +385,11 @@ public class RadarActivity extends ServerThreadActivity implements
 
       // TODO Not sure all this re-instantiation is necessary
       
-      featuredListView.setAdapter(new EventListAdapter(R.id.featured_event_list,
-    		  commonController.featuredList));
+      featuredListView.setAdapter(new EventListAdapter(this, commonController.featuredList));
 
-      allListView.setAdapter(new EventListAdapter(R.id.all_event_list,
-    		  commonController.eventsList));
+      allListView.setAdapter(new EventListAdapter(this, commonController.eventsList));
 
-      radarListView.setAdapter(new EventListAdapter(R.id.radar_list,
-    		  commonController.radarList));
+      radarListView.setAdapter(new EventListAdapter(this, commonController.radarList));
 
       ((EventListAdapter) featuredListView.getAdapter()).notifyDataSetChanged();
       ((EventListAdapter) allListView.getAdapter()).notifyDataSetChanged();

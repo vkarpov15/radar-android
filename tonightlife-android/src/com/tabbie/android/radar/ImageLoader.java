@@ -27,6 +27,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.text.Html.TagHandler;
+import android.util.Log;
 import android.widget.ImageView;
 
 public class ImageLoader {
@@ -55,6 +57,7 @@ public class ImageLoader {
             imageView.setImageBitmap(bitmap);
         else
         {
+        	Log.d("ImageLoader", "Now in the Queue");
             queuePhoto(url, imageView); // Start loading the image, we'll display the default for now
             imageView.setImageResource(R.drawable.refresh); // TODO This will be glitchy right now,
         													// but should eventually be animated
@@ -167,8 +170,8 @@ public class ImageLoader {
             memoryCache.put(photoToLoad.url, bmp);
             if(imageViewReused(photoToLoad))
                 return;
-            BitmapDisplayer bd=new BitmapDisplayer(bmp, photoToLoad);
-            Activity a=(Activity)photoToLoad.imageView.getContext();
+            BitmapDisplayer bd = new BitmapDisplayer(bmp, photoToLoad);
+            Activity a = (Activity) photoToLoad.imageView.getContext();
             a.runOnUiThread(bd);
         }
     }
@@ -197,9 +200,10 @@ public class ImageLoader {
         public void run() {
             if(imageViewReused(photoToLoad))
                 return;
-            if(bitmap!=null)
+            if(bitmap!=null) {
+            	Log.d("ImageLoader", "Setting Image Bitmap");
                 photoToLoad.imageView.setImageBitmap(bitmap);
-            else
+            } else
                 photoToLoad.imageView.setImageResource(R.drawable.refresh); // TODO Animation, etc.
         }
     }
