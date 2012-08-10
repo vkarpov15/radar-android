@@ -48,7 +48,7 @@ import com.tabbie.android.radar.http.ServerResponse;
 
 public class RadarActivity extends ServerThreadActivity implements
     OnTabChangeListener, RemoteDrawableController.PreLoadFinishedListener, // TODO Delete this once it's safe
-    EventListAdapter.EventClickListener {
+    EventListAdapter.EventClickListener, EventListAdapter.EventLocationClickListener {
 
   // Tab properties
   private static final String LIST_FEATURED_TAG = "Featured";
@@ -533,5 +533,14 @@ public void onEventClicked(final Event e, final int position, final Bitmap image
           };
         }.execute();
       }
+	}
+
+	@Override
+	public void onEventLocationClicked(final Event e) {
+	    Intent intent = new Intent(RadarActivity.this,
+	            RadarMapActivity.class);
+	        intent.putExtra("controller", commonController);
+	        intent.putExtra("event", e);
+	        startActivity(intent);
 	}
 }

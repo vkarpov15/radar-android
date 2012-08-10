@@ -24,6 +24,7 @@ public class EventListAdapter extends BaseAdapter {
 	
 	private final Context context;
 	private final EventClickListener eventClickListener;
+	private final EventLocationClickListener eventLocationClickListener;
 	
 	private List<Event> events;
 	
@@ -34,6 +35,7 @@ public class EventListAdapter extends BaseAdapter {
     	this.events = events;
     	this.context = context;
     	this.eventClickListener = (EventClickListener) context;
+    	this.eventLocationClickListener = (EventLocationClickListener) context;
     	imageLoader = new ImageLoader(context);
     }
 
@@ -76,18 +78,14 @@ public class EventListAdapter extends BaseAdapter {
 			eventClickListener.onEventClicked(e, position, imageLoader.getBitmap(e.image.toString()));
 		}
       });
-
-      /*
+      
       convertView.findViewById(R.id.location_image_layout).setOnClickListener(
           new OnClickListener() {
             public void onClick(View v) {
-              Intent intent = new Intent(RadarActivity.this,
-                  RadarMapActivity.class);
-              intent.putExtra("controller", commonController);
-              intent.putExtra("event", e);
-              startActivity(intent);
+            	eventLocationClickListener.onEventLocationClicked(e);
             }
-          });*/
+          });
+      
       return convertView;
     }
 
@@ -108,5 +106,9 @@ public class EventListAdapter extends BaseAdapter {
 	
 	public interface EventClickListener {
 		public void onEventClicked(final Event e, final int position, final Bitmap image);
+	}
+	
+	public interface EventLocationClickListener {
+		public void onEventLocationClicked(final Event e);
 	}
   }
