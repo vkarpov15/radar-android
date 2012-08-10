@@ -13,13 +13,6 @@
         android:layout_width="fill_parent"
         android:layout_height="120dp">
         
-        <!--
-            android:id="@+id/element_loader"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_gravity="center"
-            android:src="@drawable/refresh" -->
-        
 	    <ImageView
 	        android:scaleType="centerCrop"
 	        android:id="@+id/event_image"
@@ -35,10 +28,9 @@
 	    
 	    <TextView
 	        android:id="@+id/event_text"
-	        android:ellipsize="end"
-			android:maxLines="1"
+	        android:ellipsize="marquee"
+			android:lines="1"
 			android:scrollHorizontally="true"
-			android:singleLine="true"
 	        android:layout_alignParentTop="true"
 	        android:layout_toRightOf="@id/event_image"
 	        android:layout_width="fill_parent"

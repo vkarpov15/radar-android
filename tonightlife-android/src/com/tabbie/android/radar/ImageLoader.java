@@ -29,6 +29,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.text.Html.TagHandler;
 import android.util.Log;
+import android.view.ViewGroup.LayoutParams;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 
 public class ImageLoader {
@@ -51,17 +53,16 @@ public class ImageLoader {
      * @param imageView - The view to be populated
      */
     public void displayImage(String url, ImageView imageView) {
-        imageViews.put(imageView, url); // TODO Again, this should probably be a URL not a String
+        imageViews.put(imageView, url);
         Bitmap bitmap = memoryCache.get(url); // Attempt to retrieve a Bitmap from the cache
-        if(bitmap!=null)
+        if(bitmap!=null) {
             imageView.setImageBitmap(bitmap);
-        else
-        {
+        } else {
         	Log.d("ImageLoader", "Now in the Queue");
             queuePhoto(url, imageView); // Start loading the image, we'll display the default for now
-            imageView.setImageResource(R.drawable.refresh); // TODO This will be glitchy right now,
-        													// but should eventually be animated
-            												// and look pretty
+            imageView.setImageResource(R.drawable.refresh);
+            imageView.startAnimation(AnimationUtils
+        	        .loadAnimation(imageView.getContext(), R.anim.rotate));
         }
     }
         
@@ -207,10 +208,11 @@ public class ImageLoader {
             if(imageViewReused(photoToLoad))
                 return;
             if(bitmap!=null) {
-            	Log.d("ImageLoader", "Setting Image Bitmap");
                 photoToLoad.imageView.setImageBitmap(bitmap);
             } else
-                photoToLoad.imageView.setImageResource(R.drawable.refresh); // TODO Animation, etc.
+                photoToLoad.imageView.setImageResource(R.drawable.refresh);
+            	photoToLoad.imageView.startAnimation(AnimationUtils
+            	        .loadAnimation(photoToLoad.imageView.getContext(), R.anim.rotate));
         }
     }
 
