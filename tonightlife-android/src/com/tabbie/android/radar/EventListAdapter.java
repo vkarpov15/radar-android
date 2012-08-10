@@ -73,10 +73,9 @@ public class EventListAdapter extends BaseAdapter {
       /*
       final ImageView loader = (ImageView) convertView
           .findViewById(R.id.element_loader);*/
-      final ImageView img = (ImageView) convertView
-          .findViewById(R.id.event_image);
       
-      imageLoader.displayImage(e.image.toString(), img);
+      imageLoader.displayImage(e.image.toString(),
+    		  (ImageView) convertView.findViewById(R.id.event_image));
 
       /*
       convertView.findViewById(R.id.list_list_element_layout)

@@ -85,15 +85,19 @@ public class ImageLoader {
      */
     private Bitmap getBitmap(String url) 
     {
+    	Log.d("ImageLoader", "Getting Bitmap");
         File f = fileCache.getFile(url);
         
         //from SD cache
         Bitmap b = decodeFile(f);
-        if(b!=null)
+        if(b!=null) {
+        	Log.i("ImageLoader", "Found Bitmap as a file");
             return b;
+        }
         
         //from web
         try {
+        	Log.d("ImageLoader", "Retrieving Bitmap from web");
             Bitmap bitmap=null;
             URL imageUrl = new URL(url); // TODO When passing URL instead of String, this will be a simpler operation
             HttpURLConnection conn = (HttpURLConnection) imageUrl.openConnection();
@@ -164,9 +168,10 @@ public class ImageLoader {
         
         @Override
         public void run() {
+        	Log.d("ImageLoader.PhotosLoader", "Running");
             if(imageViewReused(photoToLoad))
                 return;
-            Bitmap bmp=getBitmap(photoToLoad.url);
+            Bitmap bmp = getBitmap(photoToLoad.url);
             memoryCache.put(photoToLoad.url, bmp);
             if(imageViewReused(photoToLoad))
                 return;
@@ -198,6 +203,7 @@ public class ImageLoader {
         }
         
         public void run() {
+        	Log.d("ImageLoader.BitmapDisplayer", "Running");
             if(imageViewReused(photoToLoad))
                 return;
             if(bitmap!=null) {
