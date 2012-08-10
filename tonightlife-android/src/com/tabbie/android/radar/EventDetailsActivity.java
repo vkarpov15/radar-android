@@ -13,7 +13,6 @@ package com.tabbie.android.radar;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.text.util.Linkify;
 import android.util.Log;
