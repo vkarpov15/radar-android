@@ -2,7 +2,9 @@ package com.tabbie.android.radar;
 
 import java.util.List;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -12,8 +14,9 @@ import com.google.android.maps.MapView;
 import com.google.android.maps.MyLocationOverlay;
 import com.google.android.maps.Overlay;
 
-public class RadarMapActivity extends MapActivity {
-  private RadarCommonController commonController;
+public class RadarMapActivity extends MapActivity 
+	implements RadarMapController.OnMarkerClickListener {
+  protected RadarCommonController commonController;
   private RadarMapController mapController;
   private Event selected = null;
 
@@ -96,4 +99,12 @@ public class RadarMapActivity extends MapActivity {
     }
   }
 
+	@Override
+	public void onMarkerClick(final Event e) {
+		Log.d("RadarMapActivity", "Callback to onMarkerClick");
+		final Intent data = new Intent();
+		data.putExtra("event", e.id);
+		setResult(RESULT_OK, data);
+		finish(); // TODO Debug
+	}
 }

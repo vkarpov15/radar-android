@@ -34,6 +34,7 @@ public class RadarCommonController implements Parcelable {
   public final List<Event> radarList = new ArrayList<Event>();
   
   public static final int RETRIEVE_INSTANCE = 1;
+  public static final int FIRE_EVENT = 2;
 
   // Sort by # of people with event in radar, reversed
   private static final Comparator<Event> defaultOrdering = new Comparator<Event>() {

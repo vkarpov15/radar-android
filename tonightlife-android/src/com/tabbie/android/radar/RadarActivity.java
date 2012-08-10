@@ -261,6 +261,18 @@ public class RadarActivity extends ServerThreadActivity implements
         forceFeatureTab = false;
       }
       break;
+    case RadarCommonController.FIRE_EVENT:
+    	final Event e = commonController.getEvent(data.getExtras().getString("event"));
+        Intent intent = new Intent(RadarActivity.this,
+                EventDetailsActivity.class);
+            intent.putExtra("eventId", e.id);
+            intent.putExtra("controller", commonController);
+            intent.putExtra("image",
+            		((EventListAdapter) allListView.getAdapter()).
+            		imageLoader.getBitmap(e.image.toString())); // TODO Make this code suck less
+            intent.putExtra("token", token);
+        startActivity(intent);
+        break;
     default:
       facebook.authorizeCallback(requestCode, resultCode, data);
       break;
@@ -520,6 +532,6 @@ public void onEventClicked(final Event e, final int position, final Bitmap image
 	            RadarMapActivity.class);
 	        intent.putExtra("controller", commonController);
 	        intent.putExtra("event", e);
-	        startActivity(intent);
+	        startActivityForResult(intent, RadarCommonController.FIRE_EVENT);
 	}
 }

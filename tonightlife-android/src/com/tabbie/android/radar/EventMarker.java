@@ -21,4 +21,8 @@ public class EventMarker extends OverlayItem {
 	public String getTitle() {
 		return event.name;
 	}
+	
+	public Event getEvent() {
+		return event;
+	}
 }

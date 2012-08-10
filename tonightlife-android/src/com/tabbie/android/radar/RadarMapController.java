@@ -4,11 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
@@ -22,6 +24,7 @@ public class RadarMapController {
 
   private final MapView mapView;
   private final View popUp;
+  private final OnMarkerClickListener markerListener;
   
   private class TabbieEventMarkerCollection extends
       ItemizedOverlay<EventMarker> {
@@ -53,13 +56,22 @@ public class RadarMapController {
     	
     	mapView.removeView(popUp);
       final EventMarker m = markers.get(index);
+      final Event e = m.getEvent();
       final MapView.LayoutParams mapParams = new MapView.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
     		  ViewGroup.LayoutParams.WRAP_CONTENT,
     		  m.getPoint(),
     		  0,
     		  -50, // TODO Probably shouldn't be hard-coded, but I don't quite know how this works anyways
     		  MapView.LayoutParams.CENTER);
-      ((TextView) popUp.findViewById(R.id.map_event_title)).setText(m.getTitle());
+      ((TextView) popUp.findViewById(R.id.map_event_title)).setText(e.name);
+      ((TextView) popUp.findViewById(R.id.map_event_time)).setText(e.time.makeYourTime());
+      popUp.setOnClickListener(new OnClickListener() {
+		
+		@Override
+		public void onClick(View v) {
+			markerListener.onMarkerClick(e);
+		}
+	});
       mapView.addView(popUp, mapParams);
       return true;
     }
@@ -89,6 +101,7 @@ public class RadarMapController {
     this.setLatLon(40.736968, -73.989183);
     this.setZoom(14);
     this.markersCollection = new TabbieEventMarkerCollection();
+    markerListener = (OnMarkerClickListener) context;
     popUp = LayoutInflater.from(context).inflate(R.layout.popup, null);
   }
 
@@ -118,5 +131,9 @@ public class RadarMapController {
 
   public ItemizedOverlay<EventMarker> getItemizedOverlay() {
     return markersCollection;
+  }
+  
+  public interface OnMarkerClickListener {
+	  public void onMarkerClick(final Event e);
   }
 }
