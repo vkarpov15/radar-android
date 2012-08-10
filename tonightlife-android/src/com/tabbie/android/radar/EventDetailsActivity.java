@@ -82,9 +82,11 @@ public class EventDetailsActivity extends ServerThreadActivity {
 		
 		@Override
 		public void onClick(View v) {
-          Intent intent = new Intent(EventDetailsActivity.this, RadarMapActivity.class);
-          intent.putExtra("controller", commonController);
-          startActivity(intent);
+		    Intent intent = new Intent(EventDetailsActivity.this,
+		            RadarMapActivity.class);
+		        intent.putExtra("controller", commonController);
+		        intent.putExtra("event", e);
+		        startActivity(intent);
 		}
 	});
 
