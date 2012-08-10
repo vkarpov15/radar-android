@@ -2,7 +2,6 @@ package com.tabbie.android.radar;
 
 import java.net.URL;
 import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Set;
 
 import org.json.JSONArray;
@@ -26,10 +25,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TabHost;
@@ -66,8 +63,6 @@ public class RadarActivity extends ServerThreadActivity implements
   private ListView allListView;
   private ListView radarListView;
   private TextView myNameView;
-  private TextView eventTitleText;
-  private TextView eventLocationText;
 
   // Internal state for views
   private String token;
@@ -248,7 +243,8 @@ public class RadarActivity extends ServerThreadActivity implements
       final Bundle controller = data.getExtras();
       commonController = controller.getParcelable("controller");
 
-      // TODO Not sure all this re-instantiation is necessary
+      // New adapters are necessary (for now) for the lists
+      // to update if the user clicked anything in Details
       
       featuredListView.setAdapter(new EventListAdapter(this, commonController.featuredList));
 

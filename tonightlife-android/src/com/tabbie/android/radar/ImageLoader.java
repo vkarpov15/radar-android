@@ -23,15 +23,13 @@ import java.util.Map;
 import java.util.WeakHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.text.Html.TagHandler;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup.LayoutParams;
-import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 
 public class ImageLoader {
