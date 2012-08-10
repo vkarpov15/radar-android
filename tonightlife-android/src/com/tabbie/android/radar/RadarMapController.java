@@ -48,10 +48,12 @@ public class RadarMapController {
     }
 
     protected boolean onTap(int index) {
+    	
     	// TODO Launch eventdetails intents here when the drawables shit is fixed
+    	
     	mapView.removeView(popUp);
       final EventMarker m = markers.get(index);
-      final MapView.LayoutParams mapParams = new MapView.LayoutParams(300,
+      final MapView.LayoutParams mapParams = new MapView.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
     		  ViewGroup.LayoutParams.WRAP_CONTENT,
     		  m.getPoint(),
     		  0,
