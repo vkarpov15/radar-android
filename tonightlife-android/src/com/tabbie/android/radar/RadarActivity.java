@@ -47,8 +47,8 @@ import com.tabbie.android.radar.http.ServerPostRequest;
 import com.tabbie.android.radar.http.ServerResponse;
 
 public class RadarActivity extends ServerThreadActivity implements
-    OnTabChangeListener, RemoteDrawableController.PreLoadFinishedListener, // TODO Delete this once it's safe
-    EventListAdapter.EventClickListener, EventListAdapter.EventLocationClickListener {
+    OnTabChangeListener, EventListAdapter.EventClickListener,
+    EventListAdapter.EventLocationClickListener {
 
   // Tab properties
   private static final String LIST_FEATURED_TAG = "Featured";
@@ -79,7 +79,6 @@ public class RadarActivity extends ServerThreadActivity implements
 
   // Controllers
   private RadarCommonController commonController;
-  private RemoteDrawableController remoteDrawableController;
   private UnicornSlayerController tutorialController;
 
   // FB junk
@@ -139,7 +138,6 @@ public class RadarActivity extends ServerThreadActivity implements
     }
 
     commonController = new RadarCommonController();
-    remoteDrawableController = new RemoteDrawableController(this);
     tutorialController = new UnicornSlayerController(new AlertDialog.Builder(
         this), new UnicornSlayerController.TabsCallback() {
       @Override
@@ -467,21 +465,6 @@ public class RadarActivity extends ServerThreadActivity implements
     	return true;
     default:
       return super.onOptionsItemSelected(item);
-    }
-  }
-
-  @Override
-  public void onPreLoadFinished() {
-    synchronized (this) {
-      this.runOnUiThread(new Runnable() {
-        public void run() {
-          ((EventListAdapter) featuredListView.getAdapter())
-              .notifyDataSetChanged();
-          ((EventListAdapter) allListView.getAdapter()).notifyDataSetChanged();
-          ((EventListAdapter) radarListView.getAdapter())
-              .notifyDataSetChanged();
-        }
-      });
     }
   }
 
