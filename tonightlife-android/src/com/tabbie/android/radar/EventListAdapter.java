@@ -68,8 +68,10 @@ public class EventListAdapter extends BaseAdapter {
     		  .findViewById(R.id.upvotes))
     		  .setText(Integer.toString(e.radarCount));
       
-      final ImageView imageView = (ImageView) convertView.findViewById(R.id.event_image);
-      imageLoader.displayImage(e.image.toString(), imageView);
+      final View viewHolder = convertView.findViewById(R.id.image_holder);
+      viewHolder.findViewById(R.id.element_loader).startAnimation(AnimationUtils.loadAnimation(context, R.anim.rotate));
+      imageLoader.displayImage(e.image.toString(),
+    		  (ImageView) viewHolder.findViewById(R.id.event_image));
       
       convertView.findViewById(R.id.list_list_element_layout).setOnClickListener(new OnClickListener() {
 		

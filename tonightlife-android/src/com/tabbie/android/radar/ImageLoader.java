@@ -29,6 +29,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.text.Html.TagHandler;
 import android.util.Log;
+import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
@@ -61,8 +62,6 @@ public class ImageLoader {
         	Log.d("ImageLoader", "Now in the Queue");
             queuePhoto(url, imageView); // Start loading the image, we'll display the default for now
             imageView.setImageResource(R.drawable.refresh);
-            imageView.startAnimation(AnimationUtils
-        	        .loadAnimation(imageView.getContext(), R.anim.rotate));
         }
     }
         
@@ -208,11 +207,12 @@ public class ImageLoader {
             if(imageViewReused(photoToLoad))
                 return;
             if(bitmap!=null) {
+            	photoToLoad.imageView.setVisibility(View.VISIBLE);
+            	((View) photoToLoad.imageView.getParent()).findViewById(R.id.element_loader).setVisibility(View.GONE);
                 photoToLoad.imageView.setImageBitmap(bitmap);
-            } else
-                photoToLoad.imageView.setImageResource(R.drawable.refresh);
-            	photoToLoad.imageView.startAnimation(AnimationUtils
-            	        .loadAnimation(photoToLoad.imageView.getContext(), R.anim.rotate));
+            } else // TODO Code this so it doesn't suck JUSTIN JUSTIN JUSTIN
+            	photoToLoad.imageView.setVisibility(View.VISIBLE); // TODO
+            	((View) photoToLoad.imageView.getParent()).findViewById(R.id.element_loader).setVisibility(View.GONE); // TODO
         }
     }
 
