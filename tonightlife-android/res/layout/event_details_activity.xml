@@ -17,6 +17,7 @@
 	        android:id="@+id/details_event_title"
 	        android:padding="10dp"
 	        android:gravity="center"
+	        android:layout_marginBottom="5dp"
 	        android:layout_below="@id/details_event_img"
 	        android:layout_height="wrap_content"
 	        android:layout_width="fill_parent"
@@ -64,10 +65,12 @@
         <TextView 
             android:id="@+id/details_event_time"
             android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
+            android:layout_width="fill_parent"
+            android:layout_alignLeft="@id/add_to_radar_image"
+            android:layout_alignRight="@id/add_to_radar_image"
             android:text="11:00pm"
-            android:layout_alignBottom="@id/details_event_address"
-            android:layout_toLeftOf="@id/add_to_radar_image" />
+            android:gravity="center"
+            android:layout_above="@id/add_to_radar_image" />
 
         <TextView
             android:id="@+id/details_event_num_radar"
