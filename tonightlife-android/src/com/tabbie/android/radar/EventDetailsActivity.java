@@ -77,6 +77,16 @@ public class EventDetailsActivity extends ServerThreadActivity {
         .setText(e.description);
     Linkify.addLinks((TextView) findViewById(R.id.details_event_description),
         Linkify.WEB_URLS);
+    
+    ((ImageView) findViewById(R.id.location_image)).setOnClickListener(new OnClickListener() {
+		
+		@Override
+		public void onClick(View v) {
+          Intent intent = new Intent(EventDetailsActivity.this, RadarMapActivity.class);
+          intent.putExtra("controller", commonController);
+          startActivity(intent);
+		}
+	});
 
     final TextView radarCount = (TextView) findViewById(R.id.details_event_num_radar);
     final ImageView radarButton = (ImageView) findViewById(R.id.add_to_radar_image);
