@@ -62,17 +62,6 @@ public class EventListAdapter extends BaseAdapter {
       ((TextView) convertView
     		  .findViewById(R.id.upvotes))
     		  .setText(Integer.toString(e.radarCount));
-
-      /*
-       * Check and see if there is an image that has been loaded If there is an
-       * image that has been loaded and it has been drawn, then do nothing If
-       * there is an image that has been loaded, but it hasn't been drawn, draw
-       * it If there is no image that has been loaded, display the loader and
-       * LOAD THAT SH*T
-       */
-      /*
-      final ImageView loader = (ImageView) convertView
-          .findViewById(R.id.element_loader);*/
       
       imageLoader.displayImage(e.image.toString(),
     		  (ImageView) convertView.findViewById(R.id.event_image));
