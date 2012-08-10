@@ -15,6 +15,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Vibrator;
@@ -46,7 +47,8 @@ import com.tabbie.android.radar.http.ServerPostRequest;
 import com.tabbie.android.radar.http.ServerResponse;
 
 public class RadarActivity extends ServerThreadActivity implements
-    OnTabChangeListener, RemoteDrawableController.PreLoadFinishedListener {
+    OnTabChangeListener, RemoteDrawableController.PreLoadFinishedListener, // TODO Delete this once it's safe
+    EventListAdapter.EventClickListener {
 
   // Tab properties
   private static final String LIST_FEATURED_TAG = "Featured";
@@ -482,4 +484,54 @@ public class RadarActivity extends ServerThreadActivity implements
       });
     }
   }
+
+@Override
+public void onEventClicked(final Event e, final int position, final Bitmap image) {
+	Log.d("RadarActivity", "Callback to onEventClicked");
+    if (null != e) {
+        currentViewPosition = position;
+        ((Vibrator) getSystemService(Context.VIBRATOR_SERVICE))
+            .vibrate(30);
+
+        new AsyncTask<Void, Void, Intent>() {
+
+          private ProgressDialog dialog;
+
+          @Override
+          protected void onPreExecute() {
+            dialog = ProgressDialog.show(RadarActivity.this, "",
+                "Loading, please wait...");
+            super.onPreExecute();
+          }
+
+          @Override
+          protected Intent doInBackground(Void... params) {
+            Intent intent = new Intent(RadarActivity.this,
+                EventDetailsActivity.class);
+            intent.putExtra("eventId", e.id);
+            intent.putExtra("controller", commonController);
+            intent.putExtra("image", image);
+            intent.putExtra("token", token);
+            if (tabbieVirgin) {
+              intent.putExtra("virgin", true); // Make sure this
+                                               // activity knows it's in
+                                               // tutorial mode
+              tabbieVirgin = false; // User is no longer a prepubescent
+                                    // pussy
+              getPreferences(MODE_PRIVATE).edit()
+                  .putBoolean("virgin", false).commit();
+            }
+            return intent;
+          }
+
+          @Override
+          protected void onPostExecute(Intent result) {
+            startActivityForResult(result,
+                RadarCommonController.RETRIEVE_INSTANCE);
+            dialog.dismiss();
+
+          };
+        }.execute();
+      }
+	}
 }

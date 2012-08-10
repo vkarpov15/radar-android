@@ -6,6 +6,7 @@ import java.util.List;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Vibrator;
 import android.util.Log;
@@ -22,6 +23,7 @@ import android.widget.TextView;
 public class EventListAdapter extends BaseAdapter {
 	
 	private final Context context;
+	private final EventClickListener eventClickListener;
 	
 	private List<Event> events;
 	
@@ -31,6 +33,7 @@ public class EventListAdapter extends BaseAdapter {
     public EventListAdapter(Context context, List<Event> events) {
     	this.events = events;
     	this.context = context;
+    	this.eventClickListener = (EventClickListener) context;
     	imageLoader = new ImageLoader(context);
     }
 
@@ -65,59 +68,14 @@ public class EventListAdapter extends BaseAdapter {
       
       imageLoader.displayImage(e.image.toString(),
     		  (ImageView) convertView.findViewById(R.id.event_image));
-
-      /*
-      convertView.findViewById(R.id.list_list_element_layout)
-          .setOnClickListener(new OnClickListener() {
-            public void onClick(View v) {
-              if (null != e) {
-                currentViewPosition = position;
-                ((Vibrator) getSystemService(Context.VIBRATOR_SERVICE))
-                    .vibrate(30);
-
-                new AsyncTask<Void, Void, Intent>() {
-
-                  private ProgressDialog dialog;
-
-                  @Override
-                  protected void onPreExecute() {
-                    dialog = ProgressDialog.show(RadarActivity.this, "",
-                        "Loading, please wait...");
-                    super.onPreExecute();
-                  }
-
-                  @Override
-                  protected Intent doInBackground(Void... params) {
-                    Intent intent = new Intent(RadarActivity.this,
-                        EventDetailsActivity.class);
-                    intent.putExtra("eventId", e.id);
-                    intent.putExtra("controller", commonController);
-                    intent.putExtra("image", remoteDrawableController.getAsParcelable(e.image));
-                    intent.putExtra("token", token);
-                    if (tabbieVirgin) {
-                      intent.putExtra("virgin", true); // Make sure this
-                                                       // activity knows it's in
-                                                       // tutorial mode
-                      tabbieVirgin = false; // User is no longer a prepubescent
-                                            // pussy
-                      getPreferences(MODE_PRIVATE).edit()
-                          .putBoolean("virgin", false).commit();
-                    }
-                    return intent;
-                  }
-
-                  @Override
-                  protected void onPostExecute(Intent result) {
-                    startActivityForResult(result,
-                        RadarCommonController.RETRIEVE_INSTANCE);
-                    dialog.dismiss();
-
-                  };
-                }.execute();
-
-              }
-            }
-          }); */
+      
+      convertView.findViewById(R.id.list_list_element_layout).setOnClickListener(new OnClickListener() {
+		
+		@Override
+		public void onClick(View v) {
+			eventClickListener.onEventClicked(e, position, imageLoader.getBitmap(e.image.toString()));
+		}
+      });
 
       /*
       convertView.findViewById(R.id.location_image_layout).setOnClickListener(
@@ -146,5 +104,9 @@ public class EventListAdapter extends BaseAdapter {
 	@Override
 	public long getItemId(int position) {
 		return position;
+	}
+	
+	public interface EventClickListener {
+		public void onEventClicked(final Event e, final int position, final Bitmap image);
 	}
   }

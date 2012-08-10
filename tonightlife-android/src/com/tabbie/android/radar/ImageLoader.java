@@ -83,7 +83,7 @@ public class ImageLoader {
      * @param url - The URL identifier of the file
      * @return A Bitmap or null object if no Bitmap can be found
      */
-    private Bitmap getBitmap(String url) 
+    protected Bitmap getBitmap(String url) 
     {
     	Log.d("ImageLoader", "Getting Bitmap");
         File f = fileCache.getFile(url);
