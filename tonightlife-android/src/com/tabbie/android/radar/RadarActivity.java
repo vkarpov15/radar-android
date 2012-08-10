@@ -86,7 +86,6 @@ public class RadarActivity extends ServerThreadActivity implements
   
   @Override
   public void onCreate(final Bundle savedInstanceState) {
-    Log.d("RadarActivity", "OnCreate Method");
     super.onCreate(savedInstanceState);
     setContentView(R.layout.main);
 
@@ -126,14 +125,9 @@ public class RadarActivity extends ServerThreadActivity implements
                   + facebook.getAccessToken(), MessageType.FACEBOOK_LOGIN));
         }
 
-        public void onFacebookError(FacebookError error) {
-        }
-
-        public void onError(DialogError e) {
-        }
-
-        public void onCancel() {
-        }
+        public void onFacebookError(FacebookError error) {}
+        public void onError(DialogError e) {}
+        public void onCancel() {}
       });
     } else {
       // Already have fb session
@@ -434,10 +428,6 @@ public class RadarActivity extends ServerThreadActivity implements
           }
         }
       });
-
-      for (Event e : commonController.eventsList) {
-        remoteDrawableController.preload(e.image); // TODO Switch over to lazy loader
-      }
     }
     return false;
   }
