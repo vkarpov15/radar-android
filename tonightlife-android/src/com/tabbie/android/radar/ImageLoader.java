@@ -65,7 +65,6 @@ public class ImageLoader {
             queuePhoto(url, imageView); // Start loading the image, we'll display the default for now
         	imageView.setVisibility(View.GONE);
         	((View) imageView.getParent()).findViewById(R.id.element_loader).setVisibility(View.VISIBLE);
-            // imageView.setImageResource(R.drawable.refresh);
         }
     }
         
