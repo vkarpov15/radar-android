@@ -64,7 +64,8 @@ public class EventDetailsActivity extends ServerThreadActivity {
       return;
     }
 
-    eventImage.setImageDrawable(new BitmapDrawable(getResources(), image));
+    // eventImage.setImageDrawable(new BitmapDrawable(getResources(), image));
+    eventImage.setImageBitmap(image);
 
     ((TextView) findViewById(R.id.details_event_title)).setText(e.name);
     ((TextView) findViewById(R.id.details_event_time)).setText(e.time

@@ -69,6 +69,7 @@
             android:layout_alignLeft="@id/add_to_radar_image"
             android:layout_alignRight="@id/add_to_radar_image"
             android:text="11:00pm"
+            android:textSize="10dp"
             android:gravity="center"
             android:layout_above="@id/add_to_radar_image" />
 
