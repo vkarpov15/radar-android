@@ -5,6 +5,5 @@
 	<classpathentry exported="true" kind="lib" path="libs/zubhiumsdk.jar"/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="gen"/>
-	<classpathentry kind="lib" path="/home/val/workspace2/radar-android/acra-4.2.3/build/acra-4.2.3.jar"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>
