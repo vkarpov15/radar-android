@@ -46,11 +46,6 @@ import com.tabbie.android.radar.http.ServerResponse;
 public class RadarActivity extends ServerThreadActivity implements
     OnTabChangeListener, EventListAdapter.EventClickListener,
     EventListAdapter.EventLocationClickListener {
-
-  // Tab properties
-  private static final String LIST_FEATURED_TAG = "Featured";
-  private static final String EVENT_TAB_TAG = "Events";
-  private static final String RADAR_TAB_TAG = "Radar";
   
   // Intent constants
   private static final String[] FOUNDERS_EMAIL = {"founders@tonight-life.com"};
@@ -158,9 +153,9 @@ public class RadarActivity extends ServerThreadActivity implements
       }
     });
 
-    setupTab(featuredListView, LIST_FEATURED_TAG);
-    setupTab(allListView, EVENT_TAB_TAG);
-    setupTab(radarListView, RADAR_TAB_TAG);
+    setupTab(featuredListView, getString(R.string.tab_top10));
+    setupTab(allListView, getString(R.string.tab_all_events));
+    setupTab(radarListView, getString(R.string.tab_short_list));
 
     tabHost.setCurrentTab(0);
 
@@ -174,16 +169,16 @@ public class RadarActivity extends ServerThreadActivity implements
       findViewById(R.id.radar_list_empty_text).setVisibility(View.GONE);
 
       final View v;
-      if (tabName.equals(EVENT_TAB_TAG)) {
+      if (tabName.equals(getString(R.string.tab_all_events))) {
         v = findViewById(R.id.all_event_list);
 
         currentListView = allListView;
 
-      } else if (tabName.equals(LIST_FEATURED_TAG)) {
+      } else if (tabName.equals(getString(R.string.tab_top10))) {
         v = findViewById(R.id.featured_event_list);
         currentListView = featuredListView;
 
-      } else if (tabName.equals(RADAR_TAB_TAG)) {
+      } else if (tabName.equals(getString(R.string.tab_short_list))) {
         if (0 == commonController.radarList.size()) {
           v = findViewById(R.id.radar_list_empty_text);
           v.setVisibility(View.VISIBLE);

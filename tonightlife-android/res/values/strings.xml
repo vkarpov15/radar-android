@@ -6,5 +6,7 @@
 	<string name="debugMapsApiKey">0FOxyEfcQ0KWKXNk-I3ubpC2yVnsVdHjByLdI6Q</string>
 	<string name="productionMapsApiKey">0H7FbiQifcrFnTuix-KVDP8-54E7nG6h38bR4yw</string>
 	<string name="radar_empty_message">No events to display yet!</string>
-	<string name="old_radar_message">This is your Radar. Check off your favorite events and they\'ll show up here - think of it as your game plan for tonight</string>
+	<string name="tab_top10">Top 10</string>
+	<string name="tab_all_events">All Events</string>
+	<string name="tab_short_list">Short List</string>
 </resources>
