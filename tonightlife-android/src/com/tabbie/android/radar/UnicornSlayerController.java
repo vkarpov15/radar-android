@@ -15,14 +15,9 @@ import android.content.SharedPreferences;
 
 public class UnicornSlayerController {
   private final AlertDialog.Builder builder;
-  private final TabsCallback tabs;
-  private final SharedPreferences.Editor editor;
 
-  public UnicornSlayerController(AlertDialog.Builder builder,
-      TabsCallback tabs, SharedPreferences.Editor editor) {
+  public UnicornSlayerController(AlertDialog.Builder builder) {
     this.builder = builder;
-    this.tabs = tabs;
-    this.editor = editor;
   }
 
   public interface TabsCallback {
@@ -33,7 +28,7 @@ public class UnicornSlayerController {
     public void openRadarTab();
   }
 
-  public void showTabsTutorial() {
+  public void showTabsTutorial(final TabsCallback tabs, final SharedPreferences.Editor editor) {
     builder.setMessage("Is this your first time using TonightLife?")
         .setCancelable(false)
         .setPositiveButton("Yes", new DialogInterface.OnClickListener() {

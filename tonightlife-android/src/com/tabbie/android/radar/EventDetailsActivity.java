@@ -42,9 +42,7 @@ public class EventDetailsActivity extends ServerThreadActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.event_details_activity);
 
-    // TODO: not best idea to have nulls in production code
-    tutorialController = new UnicornSlayerController(new AlertDialog.Builder(
-        this), null, null);
+    tutorialController = new UnicornSlayerController(new AlertDialog.Builder(this));
 
     eventImage = (ImageView) findViewById(R.id.details_event_img);
 

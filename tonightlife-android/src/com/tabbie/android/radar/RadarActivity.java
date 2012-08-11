@@ -133,24 +133,7 @@ public class RadarActivity extends ServerThreadActivity implements
     }
 
     commonController = new RadarCommonController();
-    tutorialController = new UnicornSlayerController(new AlertDialog.Builder(
-        this), new UnicornSlayerController.TabsCallback() {
-      @Override
-      public void openRadarTab() {
-        tabHost.setCurrentTab(2);
-      }
-
-      @Override
-      public void openFeaturedTab() {
-        tabHost.setCurrentTab(0);
-        forceFeatureTab = true;
-      }
-
-      @Override
-      public void openEventsTab() {
-        tabHost.setCurrentTab(1);
-      }
-    }, preferences.edit());
+    tutorialController = new UnicornSlayerController(new AlertDialog.Builder(this));
 
     // Set up the Tab Host
     tabHost = (FlingableTabHost) findViewById(android.R.id.tabhost);
@@ -432,7 +415,23 @@ public class RadarActivity extends ServerThreadActivity implements
           
 
           if (tabbieVirgin) {
-            tutorialController.showTabsTutorial();
+            tutorialController.showTabsTutorial(new UnicornSlayerController.TabsCallback() {
+              @Override
+              public void openRadarTab() {
+                tabHost.setCurrentTab(2);
+              }
+
+              @Override
+              public void openFeaturedTab() {
+                tabHost.setCurrentTab(0);
+                forceFeatureTab = true;
+              }
+
+              @Override
+              public void openEventsTab() {
+                tabHost.setCurrentTab(1);
+              }
+            }, preferences.edit());
           }
         }
       });
