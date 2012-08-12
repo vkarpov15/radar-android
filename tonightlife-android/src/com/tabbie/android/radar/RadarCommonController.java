@@ -7,7 +7,8 @@ package com.tabbie.android.radar;
  *      Author: Valeri Karpov
  *      
  *  Data structure for maintaining a collection of events for quick access to
- *  which events are featured, which are on radar, etc.
+ *  which events are featured, which are on radar, etc. Note that this class
+ *  is NOT thread-safe.
  */
 
 import java.util.ArrayList;
@@ -25,6 +26,8 @@ import android.util.Log;
 
 public class RadarCommonController implements Parcelable {
   public static final int MAX_RADAR_SELECTIONS = 100;
+  public static final int RETRIEVE_INSTANCE = 1;
+  public static final int FIRE_EVENT = 2;
 
   private final Map<String, Event>    featured        = new LinkedHashMap<String, Event>();
   public  final List<Event>           featuredList    = new ArrayList<Event>();
@@ -35,9 +38,6 @@ public class RadarCommonController implements Parcelable {
 
   private final Set<String>           radarIds        = new LinkedHashSet<String>();
   public  final List<Event>           radarList       = new ArrayList<Event>();
-  
-  public static final int RETRIEVE_INSTANCE = 1;
-  public static final int FIRE_EVENT = 2;
 
   // Sort by # of people with event in radar, reversed
   private static final Comparator<Event> defaultOrdering = new Comparator<Event>() {
@@ -76,9 +76,9 @@ public class RadarCommonController implements Parcelable {
   
 
   public void order() {
-    Collections.sort(eventsList, defaultOrdering);
-    Collections.sort(featuredList, defaultOrdering);
-    Collections.sort(radarList, chronoOrdering);
+    Collections.sort(eventsList,    defaultOrdering);
+    Collections.sort(featuredList,  defaultOrdering);
+    Collections.sort(radarList,     chronoOrdering);
   }
   
 
