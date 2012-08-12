@@ -2,7 +2,7 @@
 
 <!-- LEEEEEERRRRROOOOYYYYYYY JEEEENNNNNKKKIIINNNNSSSSSS -->
 
-<ViewFlipper xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.view.ViewPager xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:id="@+id/details_event_flipper">
@@ -116,4 +116,4 @@
 		</ScrollView>
        
     </RelativeLayout>
-    </ViewFlipper>
+    </android.support.v4.view.ViewPager>
