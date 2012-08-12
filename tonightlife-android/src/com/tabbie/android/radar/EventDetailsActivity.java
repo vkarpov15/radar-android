@@ -28,7 +28,8 @@ import com.tabbie.android.radar.http.ServerDeleteRequest;
 import com.tabbie.android.radar.http.ServerPostRequest;
 import com.tabbie.android.radar.http.ServerResponse;
 
-public class EventDetailsActivity extends ServerThreadActivity {
+public class EventDetailsActivity extends ServerThreadActivity
+	implements OnClickListener {
   private Event e;
   private RadarCommonController commonController;
   private UnicornSlayerController tutorialController;
@@ -150,4 +151,39 @@ public class EventDetailsActivity extends ServerThreadActivity {
     // Assume that ADD_TO_RADAR and REMOVE_FROM_RADAR always succeed
     return false;
   }
+
+	@Override
+	public void onClick(View v) {
+	
+	    final TextView radarCount = (TextView) v.findViewById(R.id.details_event_num_radar);
+	    final ImageView radarButton = (ImageView) v.findViewById(R.id.add_to_radar_image);
+	
+        if (e.isOnRadar() && commonController.removeFromRadar(e)) {
+          Log.v("EventDetailsActivity", "Removing event from radar");
+          radarButton.setSelected(false);
+          radarCount.setText(Integer.toString(e.radarCount));
+
+          ServerDeleteRequest req = new ServerDeleteRequest(
+              ServerThread.TABBIE_SERVER + "/mobile/radar/" + e.id
+                  + ".json?auth_token=" + token, MessageType.ADD_TO_RADAR);
+
+          serverThread.sendRequest(req);
+        } else if (!e.isOnRadar()) {
+          Log.v("EventDetailsActivity", "Adding event to radar");
+          if (commonController.addToRadar(e)) {
+            radarButton.setSelected(true);
+            radarCount.setText(Integer.toString(e.radarCount));
+
+            ServerPostRequest req = new ServerPostRequest(
+                ServerThread.TABBIE_SERVER + "/mobile/radar/" + e.id + ".json",
+                MessageType.ADD_TO_RADAR);
+            req.params.put("auth_token", token);
+            serverThread.sendRequest(req);
+          } else {
+            Toast.makeText(EventDetailsActivity.this,
+                "You can only add 3 events to your radar!", Toast.LENGTH_SHORT).show();
+            return;
+          }
+        }
+	}
 }

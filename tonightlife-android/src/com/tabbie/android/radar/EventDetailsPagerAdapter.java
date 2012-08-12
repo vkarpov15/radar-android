@@ -17,11 +17,13 @@ import java.util.Map;
 import java.util.WeakHashMap;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v4.view.ViewPager;
 import android.text.util.Linkify;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -73,11 +75,6 @@ public class EventDetailsPagerAdapter
 
 	@Override
 	public boolean isViewFromObject(View view, Object object) {
-		/*
-		if(object instanceof Event) {
-			return (view.getTag()==object);
-		}
-		return false;*/
 		return view==object;
 	}
 	
@@ -95,6 +92,23 @@ public class EventDetailsPagerAdapter
 	        .setText(e.description);
 	    Linkify.addLinks((TextView) v.findViewById(R.id.details_event_description),
 	        Linkify.WEB_URLS);
+	    
+	    ((ImageView) v.findViewById(R.id.location_image)).setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+			    Intent intent = new Intent((EventDetailsActivity) context,
+			            RadarMapActivity.class);
+			        intent.putExtra("controller", controller);
+			        intent.putExtra("event", e);
+			        context.startActivity(intent);
+			}
+		});
+	    
+	    final ImageView radarButton = (ImageView) v.findViewById(R.id.add_to_radar_image);
+	    radarButton.setSelected(e.isOnRadar());
+
+	    radarButton.setOnClickListener((OnClickListener) context);
 	    
 	    v.setTag(e);
 	    
