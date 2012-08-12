@@ -14,6 +14,7 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.support.v4.view.ViewPager;
 import android.text.util.Linkify;
 import android.util.Log;
 import android.view.View;
@@ -45,8 +46,6 @@ public class EventDetailsActivity extends ServerThreadActivity {
 
     tutorialController = new UnicornSlayerController(new AlertDialog.Builder(this));
 
-    eventImage = (ImageView) findViewById(R.id.details_event_img);
-
     Bundle starter = getIntent().getExtras();
     if (null != starter && starter.containsKey("eventId")) {
       final String eventId = starter.getString("eventId");
@@ -61,7 +60,14 @@ public class EventDetailsActivity extends ServerThreadActivity {
       this.finish();
       return;
     }
-
+    
+    // TODO Code added by Justin
+    final ViewPager pager = (ViewPager) findViewById(R.id.details_event_pager);
+    new EventDetailsPagerAdapter(this, commonController, R.layout.event_details_element, pager);
+    pager.setCurrentItem(commonController.eventsList.indexOf(e));
+    
+    /*
+    eventImage = (ImageView) findViewById(R.id.details_event_img);
     eventImage.setImageBitmap(image);
 
     ((TextView) findViewById(R.id.details_event_title)).setText(e.name);
@@ -127,7 +133,7 @@ public class EventDetailsActivity extends ServerThreadActivity {
     if (tutorialMode) {
       tutorialController.showDetailsTutorial();
       tutorialMode = false;
-    }
+    }*/
 
   }
 
