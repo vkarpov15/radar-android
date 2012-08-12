@@ -29,7 +29,7 @@ import com.tabbie.android.radar.http.ServerPostRequest;
 import com.tabbie.android.radar.http.ServerResponse;
 
 public class EventDetailsActivity extends ServerThreadActivity
-	implements OnClickListener {
+	implements EventDetailsPagerAdapter.RadarSelectedListener {
   private Event e;
   private RadarCommonController commonController;
   private UnicornSlayerController tutorialController;
@@ -151,10 +151,10 @@ public class EventDetailsActivity extends ServerThreadActivity
     // Assume that ADD_TO_RADAR and REMOVE_FROM_RADAR always succeed
     return false;
   }
-
+  
+  
 	@Override
-	public void onClick(View v) {
-	
+	public void onRadarSelected(final View v, final Event e) {
 	    final TextView radarCount = (TextView) v.findViewById(R.id.details_event_num_radar);
 	    final ImageView radarButton = (ImageView) v.findViewById(R.id.add_to_radar_image);
 	
