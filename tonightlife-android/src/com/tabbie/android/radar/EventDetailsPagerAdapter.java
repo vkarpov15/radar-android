@@ -35,7 +35,6 @@ public class EventDetailsPagerAdapter
 	private final RadarCommonController controller;
 	private final int pageLayout;
 	private final ViewPager pager;
-	private final ArrayList<View> views;
 	
 	public EventDetailsPagerAdapter(final Context context,
 			final RadarCommonController controller,
@@ -46,7 +45,6 @@ public class EventDetailsPagerAdapter
 		this.controller = controller;
 		this.pageLayout = pageLayout;
 		this.pager = pager;
-		this.views = new ArrayList(controller.events.size());
 		pager.setAdapter(this);
 		pager.setOnPageChangeListener(this);
 	}

@@ -51,7 +51,7 @@ public class EventDetailsActivity extends ServerThreadActivity
     if (null != starter && starter.containsKey("eventId")) {
       final String eventId = starter.getString("eventId");
       commonController = starter.getParcelable("controller");
-      e = commonController.events.get(eventId);
+      e = commonController.getEvent(eventId);
       token = starter.getString("token");
       image = starter.getParcelable("image");
       tutorialMode = starter.getBoolean("virgin", false);
