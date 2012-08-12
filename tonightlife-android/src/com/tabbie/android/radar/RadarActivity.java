@@ -339,10 +339,22 @@ public class RadarActivity extends ServerThreadActivity implements
       }
     } else if (MessageType.LOAD_EVENTS == resp.responseTo) { // Deal with loading event information from Tabbie
       JSONArray list = resp.parseJsonArray();
-      if (null == list) {
-        return false;
+      
+      try {
+    	  if(((JSONObject) list.get(0)).has("error") || null == list) { // TODO Whatever message would induce the timer
+    		  Toast.makeText(this, "No events to show yet!", Toast.LENGTH_LONG).show();
+    		  try {
+				wait(5000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+    		  finish();
+    	  }
+      } catch(Exception e) {
+    	  e.printStackTrace();
+    	  return false;
       }
-      Log.d("RadarActivity", "Loading Benchmark 1");
       Set<String> serverRadarIds = new LinkedHashSet<String>();
       try {
         JSONObject radarObj = list.getJSONObject(list.length() - 1);
