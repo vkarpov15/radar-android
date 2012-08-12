@@ -1,6 +1,6 @@
 package com.tabbie.android.radar;
 
-/*
+/**
  *  EventDetailsActivity.java
  *
  *  Created on: July 25, 2012
@@ -21,6 +21,7 @@ import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ViewFlipper;
 
 import com.tabbie.android.radar.http.ServerDeleteRequest;
 import com.tabbie.android.radar.http.ServerPostRequest;
