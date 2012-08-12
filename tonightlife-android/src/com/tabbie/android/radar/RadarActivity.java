@@ -144,7 +144,7 @@ public class RadarActivity extends ServerThreadActivity implements
         if (!forceFeatureTab) {
           Intent intent = new Intent(RadarActivity.this, RadarMapActivity.class);
           intent.putExtra("controller", commonController);
-          startActivityForResult(intent, RadarCommonController.FIRE_EVENT);
+          startActivity(intent);
         } else {
           Toast.makeText(RadarActivity.this,
               "Please select an event to continue the tutorial",

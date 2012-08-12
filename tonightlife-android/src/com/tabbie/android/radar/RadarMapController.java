@@ -57,8 +57,8 @@ public class RadarMapController {
     		  ViewGroup.LayoutParams.WRAP_CONTENT,
     		  m.getPoint(),
     		  0,
-    		  -50, // TODO Probably shouldn't be hard-coded, but I don't quite know how this works anyways
-    		  MapView.LayoutParams.CENTER);
+    		  -35, // TODO Probably shouldn't be hard-coded, but I don't quite know how this works anyways
+    		  MapView.LayoutParams.BOTTOM_CENTER);
       ((TextView) popUp.findViewById(R.id.map_event_title)).setText(e.name);
       ((TextView) popUp.findViewById(R.id.map_event_time)).setText(e.time.makeYourTime());
       popUp.setOnClickListener(new OnClickListener() {

@@ -2,12 +2,12 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
   android:layout_width="wrap_content"
   android:layout_height="wrap_content"
-  android:background="@drawable/popup_frame">
+  android:background="@drawable/balloon_overlay_unfocused">
     
     <TextView
         android:id="@+id/map_event_title"
         android:text="Test Event Title Here"
-        android:textColor="@color/WHITE"
+        android:textColor="@color/BLACK"
         android:layout_alignParentTop="true"
         android:gravity="center"
         android:layout_width="fill_parent"
@@ -16,7 +16,7 @@
     <TextView
         android:id="@+id/map_event_time"
         android:text="10:00pm"
-        android:textColor="@color/WHITE"
+        android:textColor="@color/BLACK"
         android:lines="1"
         android:layout_marginTop="5dp"
         android:layout_alignParentRight="true"
