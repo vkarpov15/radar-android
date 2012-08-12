@@ -5,12 +5,13 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 /**
- *  RadarCommonController.java
+ *  BufferedStreamCopy.java
  *
  *  Created on: August 12, 2012
  *      Author: Valeri Karpov
  *      
- *  Thread-safe way to copy from an input stream to an output stream
+ *  Thread-safe way to copy from an input stream to an output stream. For details, see
+ *  http://java.sun.com/docs/books/performance/1st_edition/html/JPIOPerformance.fm.html
  */
 
 public class BufferedStreamCopy {
