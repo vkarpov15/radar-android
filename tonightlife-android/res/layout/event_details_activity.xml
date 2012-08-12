@@ -90,7 +90,7 @@
             android:layout_alignBottom="@id/add_to_radar_image"
             android:layout_toRightOf="@id/details_event_num_radar"
             android:textSize="10dp"
-            android:text=" people added this to their radar" />
+            android:text=" people added this to their lineup" />
     
 	    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
 	        android:id="@+id/details_scroll_container"
