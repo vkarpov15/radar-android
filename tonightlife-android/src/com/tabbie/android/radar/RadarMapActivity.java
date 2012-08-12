@@ -50,8 +50,6 @@ public class RadarMapActivity extends MapActivity
     overlays.clear();
 
     myLocationOverlay = new MyLocationOverlay(this, mapView);
-    myLocationOverlay.enableMyLocation();
-    
 
     for (final Event e : commonController.eventsList) {
       if (null != selected && 0 == e.id.compareTo(selected.id)) {
@@ -71,6 +69,18 @@ public class RadarMapActivity extends MapActivity
       mapController.setLatLon(selected.lat, selected.lon);
       mapController.setZoom(16);
     }
+  }
+  
+  @Override
+  protected void onResume() {
+    super.onResume();
+    myLocationOverlay.enableMyLocation();
+  }
+  
+  @Override
+  protected void onPause() {
+    super.onPause();
+    myLocationOverlay.disableMyLocation();
   }
 
   @Override

@@ -3,6 +3,7 @@ package com.tabbie.android.radar;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 /**
  *  UnicornSlayerController.java
@@ -107,6 +108,7 @@ public class UnicornSlayerController {
             editor.commit();
           }
         }).create().show();
+    Log.d(this.getClass().getName(), "IM RETURNING");
   }
 
   public void showDetailsTutorial() {
