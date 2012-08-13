@@ -16,12 +16,13 @@ import com.google.android.maps.Overlay;
 
 public class RadarMapActivity extends MapActivity 
 	implements RadarMapController.OnMarkerClickListener {
-  protected RadarCommonController commonController;
+  private RadarCommonController commonController;
   private RadarMapController mapController;
   private Event selected = null;
 
   private MapView mapView;
   private MyLocationOverlay myLocationOverlay;
+  private String token;
 
   @Override
   public void onCreate(Bundle saved) {
@@ -44,6 +45,12 @@ public class RadarMapActivity extends MapActivity
 
     if (starter.containsKey("event")) {
       selected = starter.getParcelable("event");
+    }
+    
+    if (starter.containsKey("token")) {
+      token = starter.getString("token");
+    } else {
+      finish();
     }
 
     List<Overlay> overlays = mapView.getOverlays();
@@ -112,9 +119,10 @@ public class RadarMapActivity extends MapActivity
 	@Override
 	public void onMarkerClick(final Event e) {
 		Log.d("RadarMapActivity", "Callback to onMarkerClick");
-		final Intent data = new Intent();
-		data.putExtra("event", e.id);
-		setResult(RESULT_OK, data);
-		finish(); // TODO Debug
+		Intent intent = new Intent(this, EventDetailsActivity.class);
+    intent.putExtra("eventId", e.id);
+    intent.putExtra("controller", commonController);
+    intent.putExtra("token", token);
+    startActivity(intent);
 	}
 }

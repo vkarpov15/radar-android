@@ -22,13 +22,12 @@ public class RadarMapController {
   private final View popUp;
   private final OnMarkerClickListener markerListener;
   
-  private class TabbieEventMarkerCollection extends
-      ItemizedOverlay<EventMarker> {
+  private class TabbieEventMarkerCollection extends ItemizedOverlay<EventMarker> {
     private final List<EventMarker> markers = new ArrayList<EventMarker>();
     private long lastClickTime = -1;
 
     public TabbieEventMarkerCollection() {
-      super(null); // TODO Give a default drawable here
+      super(null);
     }
 
     public void addOverlay(EventMarker overlay) {
@@ -81,6 +80,7 @@ public class RadarMapController {
 
     public boolean onTouchEvent(MotionEvent event, MapView mapView) {
       if (MotionEvent.ACTION_DOWN == event.getAction()) {
+        // Double click handler
         if ((System.currentTimeMillis() - lastClickTime) < 500) {
           mapView.getController().zoomIn();
         } else {
