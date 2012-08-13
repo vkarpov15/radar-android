@@ -12,6 +12,7 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -336,25 +337,36 @@ public class RadarActivity extends ServerThreadActivity implements
     } else if (MessageType.LOAD_EVENTS == resp.responseTo) { // Deal with loading event information from Tabbie
       JSONArray list = resp.parseJsonArray();
       
-      try {
-    	  if(((JSONObject) list.get(0)).has("error") || null == list) { // TODO Whatever message would induce the timer
-    		  Toast.makeText(this, "No events to show yet!", Toast.LENGTH_LONG).show();
-    		  try {
-				wait(5000);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-    		  finish();
-    	  }
-      } catch(Exception e) {
-    	  e.printStackTrace();
-    	  return false;
-      }
+
       Set<String> serverRadarIds = new LinkedHashSet<String>();
       try {
         JSONObject radarObj = list.getJSONObject(list.length() - 1);
         JSONArray tmpRadarList = radarObj.getJSONArray("radar");
+        
+        try {
+      	  if(tmpRadarList.length() == 0) {
+      		  runOnUiThread(new Runnable() {
+				
+				@Override
+				public synchronized void run() {
+
+					new AlertDialog.Builder(RadarActivity.this)
+						.setMessage("No events to show yet!")
+						.setPositiveButton("Close", new DialogInterface.OnClickListener() {
+							
+							@Override
+							public void onClick(DialogInterface dialog, int which) {
+								finish();
+							}
+						})
+						.create().show();
+				}
+			});
+      	  }
+        } catch(Exception e) {
+      	  e.printStackTrace();
+      	  return false;
+        }
         for (int i = 0; i < tmpRadarList.length(); ++i) {
           serverRadarIds.add(tmpRadarList.getString(i));
           Log.d("Here is id", tmpRadarList.getString(i));
