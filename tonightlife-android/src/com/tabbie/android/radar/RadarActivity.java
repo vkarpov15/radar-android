@@ -144,6 +144,7 @@ public class RadarActivity extends ServerThreadActivity implements
         if (!forceFeatureTab) {
           Intent intent = new Intent(RadarActivity.this, RadarMapActivity.class);
           intent.putExtra("controller", commonController);
+          intent.putExtra("token", token);
           startActivity(intent);
         } else {
           Toast.makeText(RadarActivity.this,
@@ -286,11 +287,6 @@ public class RadarActivity extends ServerThreadActivity implements
   @SuppressLint({ "ParserError", "ParserError" })
   @Override
   protected synchronized boolean handleServerResponse(ServerResponse resp) {
-	switch(resp.responseTo) {
-	case FACEBOOK_LOGIN:
-		
-	}
-	
     if (MessageType.FACEBOOK_LOGIN == resp.responseTo) { // Deal with facebook login JSON
       JSONObject json = resp.parseJsonContent();
       if (json == null || !json.has("id")) {
@@ -481,8 +477,8 @@ public class RadarActivity extends ServerThreadActivity implements
     }
   }
 
-@Override
-public void onEventClicked(final Event e, final int position, final Bitmap image) {
+  @Override
+  public void onEventClicked(final Event e, final int position, final Bitmap image) {
 	Log.d("RadarActivity", "Callback to onEventClicked");
     if (null != e) {
         currentViewPosition = position;
@@ -537,6 +533,7 @@ public void onEventClicked(final Event e, final int position, final Bitmap image
 	            RadarMapActivity.class);
 	        intent.putExtra("controller", commonController);
 	        intent.putExtra("event", e);
+	        intent.putExtra("token", token);
 	        startActivityForResult(intent, RadarCommonController.FIRE_EVENT);
 	}
 }

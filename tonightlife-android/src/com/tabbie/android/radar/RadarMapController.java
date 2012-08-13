@@ -22,13 +22,12 @@ public class RadarMapController {
   private final View popUp;
   private final OnMarkerClickListener markerListener;
   
-  private class TabbieEventMarkerCollection extends
-      ItemizedOverlay<EventMarker> {
+  private class TabbieEventMarkerCollection extends ItemizedOverlay<EventMarker> {
     private final List<EventMarker> markers = new ArrayList<EventMarker>();
     private long lastClickTime = -1;
 
     public TabbieEventMarkerCollection() {
-      super(null); // TODO Give a default drawable here
+      super(null);
     }
 
     public void addOverlay(EventMarker overlay) {
@@ -61,13 +60,15 @@ public class RadarMapController {
     		  MapView.LayoutParams.BOTTOM_CENTER);
       ((TextView) popUp.findViewById(R.id.map_event_title)).setText(e.name);
       ((TextView) popUp.findViewById(R.id.map_event_time)).setText(e.time.makeYourTime());
+      setLatLon(e.lat, e.lon);
+      
       popUp.setOnClickListener(new OnClickListener() {
-		
-		@Override
-		public void onClick(View v) {
-			markerListener.onMarkerClick(e);
-		}
-	});
+        @Override
+        public void onClick(View v) {
+          markerListener.onMarkerClick(e);
+        }
+      });
+      
       mapView.addView(popUp, mapParams);
       return true;
     }
@@ -79,6 +80,7 @@ public class RadarMapController {
 
     public boolean onTouchEvent(MotionEvent event, MapView mapView) {
       if (MotionEvent.ACTION_DOWN == event.getAction()) {
+        // Double click handler
         if ((System.currentTimeMillis() - lastClickTime) < 500) {
           mapView.getController().zoomIn();
         } else {
@@ -106,7 +108,7 @@ public class RadarMapController {
   }
 
   public void setLatLon(double lat, double lon) {
-    this.mapView.getController().setCenter(
+    this.mapView.getController().animateTo(
         new GeoPoint((int) (lat * 1E6), (int) (lon * 1E6)));
   }
 
