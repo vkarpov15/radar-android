@@ -12,7 +12,6 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -160,6 +159,8 @@ public class RadarActivity extends ServerThreadActivity implements
     setupTab(radarListView, getString(R.string.tab_short_list));
 
     tabHost.setCurrentTab(0);
+    if(0 == commonController.eventsList.size() || 0 == commonController.featuredList.size())
+    	findViewById(R.id.radar_list_empty_text).setVisibility(View.VISIBLE);
 
     featuredListView.setFastScrollEnabled(true);
     allListView.setFastScrollEnabled(true);
@@ -169,9 +170,14 @@ public class RadarActivity extends ServerThreadActivity implements
   public void onTabChanged(String tabName) {
     if (!tabbieVirgin) {
       findViewById(R.id.radar_list_empty_text).setVisibility(View.GONE);
+      
 
       final View v;
-      if (tabName.equals(getString(R.string.tab_all_events))) {
+      
+      if(0 == commonController.eventsList.size()) {
+    	v = findViewById(R.id.radar_list_empty_text);
+      	v.setVisibility(View.VISIBLE);
+      } else if (tabName.equals(getString(R.string.tab_all_events))) {
         v = findViewById(R.id.all_event_list);
 
         currentListView = allListView;
@@ -342,31 +348,6 @@ public class RadarActivity extends ServerThreadActivity implements
       try {
         JSONObject radarObj = list.getJSONObject(list.length() - 1);
         JSONArray tmpRadarList = radarObj.getJSONArray("radar");
-        
-        try {
-      	  if(tmpRadarList.length() == 0) {
-      		  runOnUiThread(new Runnable() {
-				
-				@Override
-				public synchronized void run() {
-
-					new AlertDialog.Builder(RadarActivity.this)
-						.setMessage("No events to show yet!")
-						.setPositiveButton("Close", new DialogInterface.OnClickListener() {
-							
-							@Override
-							public void onClick(DialogInterface dialog, int which) {
-								finish();
-							}
-						})
-						.create().show();
-				}
-			});
-      	  }
-        } catch(Exception e) {
-      	  e.printStackTrace();
-      	  return false;
-        }
         for (int i = 0; i < tmpRadarList.length(); ++i) {
           serverRadarIds.add(tmpRadarList.getString(i));
           Log.d("Here is id", tmpRadarList.getString(i));
