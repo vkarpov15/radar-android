@@ -1,4 +1,4 @@
-package com.tabbie.android.radar;
+package com.tabbie.android.radar.core;
 
 import java.util.LinkedHashMap;
 import java.util.Map;

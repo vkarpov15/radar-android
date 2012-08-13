@@ -5,12 +5,12 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- * TonightlifeDatetime.java
+ *  TonightlifeDatetime.java
  * 
- * Created on: Aug 3, 2012
- * Author: vkarpov
+ *  Created on: Aug 3, 2012
+ *      Author: Valeri Karpov
  * 
- * Wrapper around Datetime classes for convenience
+ *  Wrapper around Datetime classes for convenience
  */
 
 public class TonightlifeDatetime implements Comparable<TonightlifeDatetime> {
@@ -21,7 +21,7 @@ public class TonightlifeDatetime implements Comparable<TonightlifeDatetime> {
     final String minutes = d.getMinutes() > 9 ? ":" + d.getMinutes() : ":0"
         + d.getMinutes();
     final int hours = d.getHours();
-    if (hours == 0) {
+    if (0 == hours) {
       return "12" + minutes + "am";
     } else if (hours > 0 && hours < 12) {
       return Integer.toString(hours) + minutes + "am";
