@@ -49,7 +49,7 @@ public class UnicornSlayerController {
                         tabs.openRadarTab();
                         builder
                             .setMessage(
-                                "This is your radar - events will show up here in chronological order when you add them. We'll do that in a second - for now, think of this as your own personal planner")
+                                "This is your lineup - events will show up here in chronological order when you add them. We'll do that in a second - for now, think of this as your own personal planner")
                             .setCancelable(false)
                             .setPositiveButton("Got it",
                                 new DialogInterface.OnClickListener() {
@@ -114,7 +114,7 @@ public class UnicornSlayerController {
   public void showDetailsTutorial() {
     builder
         .setMessage(
-            "The event details page allows you to see more information about a specific event. You can also add it to your radar by clicking the radar button on the right. That's all for now!")
+            "The event details page allows you to see more information about a specific event. You can also add it to your lineup by clicking the button on the right. That's all for now!")
         .setCancelable(true).setPositiveButton("Go forth", null).create()
         .show();
   }
