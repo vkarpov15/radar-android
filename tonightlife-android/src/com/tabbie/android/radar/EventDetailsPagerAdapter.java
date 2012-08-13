@@ -105,11 +105,10 @@ public class EventDetailsPagerAdapter
 	    
 	    final ImageView radarButton = (ImageView) v.findViewById(R.id.add_to_radar_image);
 	    radarButton.setSelected(e.isOnRadar());
-
+	    
 	    radarButton.setOnClickListener(new OnClickListener() {
-			
 			@Override
-			public void onClick(View v) {
+			public void onClick(View radar) {
 				((RadarSelectedListener) context).onRadarSelected(v, e);
 			}
 		});
