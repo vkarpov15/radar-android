@@ -24,6 +24,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -31,6 +32,8 @@ public class EventDetailsPagerAdapter
 	extends android.support.v4.view.PagerAdapter
 	implements ViewPager.OnPageChangeListener {
 	
+	
+	private final ImageLoader imageLoader;
 	private final Context context;
 	private final RadarCommonController controller;
 	private final int pageLayout;
@@ -42,6 +45,7 @@ public class EventDetailsPagerAdapter
 			final ViewPager pager) {
 		
 		this.context = context;
+		imageLoader = new ImageLoader(context);
 		this.controller = controller;
 		this.pageLayout = pageLayout;
 		this.pager = pager;
@@ -78,6 +82,9 @@ public class EventDetailsPagerAdapter
 	
 	private View bindEvent(final Event e) {
 		final View v = LayoutInflater.from(context).inflate(pageLayout, null);
+
+	    v.findViewById(R.id.element_loader).startAnimation(AnimationUtils.loadAnimation(context, R.anim.rotate));
+		imageLoader.displayImage(e.image.toString(), ((ImageView) v.findViewById(R.id.details_event_img)));
 		
 	    ((TextView) v.findViewById(R.id.details_event_title)).setText(e.name);
 	    ((TextView) v.findViewById(R.id.details_event_time)).setText(e.time

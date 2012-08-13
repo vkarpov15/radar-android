@@ -30,6 +30,7 @@ import com.tabbie.android.radar.http.ServerResponse;
 
 public class EventDetailsActivity extends ServerThreadActivity
 	implements EventDetailsPagerAdapter.RadarSelectedListener {
+	
   private Event e;
   private RadarCommonController commonController;
   private UnicornSlayerController tutorialController;

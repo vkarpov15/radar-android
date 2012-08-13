@@ -3,20 +3,34 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent">
         
-        <ImageView
-            android:id="@+id/details_event_img"
-            android:scaleType="centerCrop"
-            android:layout_alignParentTop="true"
-            android:layout_margin="10dp"
-            android:layout_width="fill_parent"
-   			android:layout_height="120dp" />
+        <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	        android:id="@+id/details_image_holder"
+	        android:layout_width="fill_parent"
+	        android:layout_height="120dp">
+        
+	        <ImageView
+	            android:id="@+id/details_event_img"
+	            android:scaleType="centerCrop"
+	            android:layout_alignParentTop="true"
+	            android:layout_margin="10dp"
+	            android:layout_width="fill_parent"
+	   			android:layout_height="fill_parent" />
+	        
+	        <ImageView
+	            android:id="@+id/element_loader"
+	            android:layout_width="20dp"
+	            android:layout_height="20dp"
+	            android:layout_gravity="center"
+	            android:src="@drawable/refresh" />
+	        
+	    </FrameLayout>
         
         <TextView
 	        android:id="@+id/details_event_title"
 	        android:padding="10dp"
 	        android:gravity="center"
 	        android:layout_marginBottom="5dp"
-	        android:layout_below="@id/details_event_img"
+	        android:layout_below="@id/details_image_holder"
 	        android:layout_height="wrap_content"
 	        android:layout_width="fill_parent"
 	        android:text="Test Event Title"
@@ -24,8 +38,8 @@
 	    	android:textStyle="bold" />
         
         <ImageView
-			android:src="@drawable/radar_button_selector"
 			android:id="@+id/add_to_radar_image"
+			android:src="@drawable/radar_button_selector"
 			android:layout_below="@id/details_event_title"
 			android:layout_width="50dp"
 			android:layout_height="50dp"
