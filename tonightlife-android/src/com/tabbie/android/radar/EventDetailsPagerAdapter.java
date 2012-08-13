@@ -11,11 +11,6 @@ package com.tabbie.android.radar;
  *  unimplemented methods for Tab Bar integration
  */
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Map;
-import java.util.WeakHashMap;
-
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.view.ViewPager;
@@ -37,7 +32,6 @@ public class EventDetailsPagerAdapter
 	private final Context context;
 	private final RadarCommonController controller;
 	private final int pageLayout;
-	private final ViewPager pager;
 	
 	public EventDetailsPagerAdapter(final Context context,
 			final RadarCommonController controller,
@@ -48,7 +42,6 @@ public class EventDetailsPagerAdapter
 		imageLoader = new ImageLoader(context);
 		this.controller = controller;
 		this.pageLayout = pageLayout;
-		this.pager = pager;
 		pager.setAdapter(this);
 		pager.setOnPageChangeListener(this);
 	}

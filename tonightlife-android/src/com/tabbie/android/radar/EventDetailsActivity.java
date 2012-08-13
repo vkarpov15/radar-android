@@ -12,17 +12,13 @@ package com.tabbie.android.radar;
 
 import android.app.AlertDialog;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
-import android.text.util.Linkify;
 import android.util.Log;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.ViewFlipper;
 
 import com.tabbie.android.radar.http.ServerDeleteRequest;
 import com.tabbie.android.radar.http.ServerPostRequest;
@@ -35,9 +31,6 @@ public class EventDetailsActivity extends ServerThreadActivity
   private RadarCommonController commonController;
   private UnicornSlayerController tutorialController;
   private String token;
-
-  private ImageView eventImage;
-  private Bitmap image;
 
   private boolean tutorialMode = false;
 
@@ -54,7 +47,6 @@ public class EventDetailsActivity extends ServerThreadActivity
       commonController = starter.getParcelable("controller");
       e = commonController.getEvent(eventId);
       token = starter.getString("token");
-      image = starter.getParcelable("image");
       tutorialMode = starter.getBoolean("virgin", false);
     } else {
       // No event, nothing to display
@@ -63,16 +55,15 @@ public class EventDetailsActivity extends ServerThreadActivity
       return;
     }
     
-    // TODO Code added by Justin
     final ViewPager pager = (ViewPager) findViewById(R.id.details_event_pager);
     new EventDetailsPagerAdapter(this, commonController, R.layout.event_details_element, pager);
     pager.setCurrentItem(commonController.eventsList.indexOf(e));
     
-    /*
+    
     if (tutorialMode) {
       tutorialController.showDetailsTutorial();
       tutorialMode = false;
-    }*/
+    }
 
   }
 
