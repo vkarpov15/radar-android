@@ -159,8 +159,6 @@ public class RadarActivity extends ServerThreadActivity implements
     setupTab(radarListView, getString(R.string.tab_short_list));
 
     tabHost.setCurrentTab(0);
-    if(0 == commonController.eventsList.size() || 0 == commonController.featuredList.size())
-    	findViewById(R.id.radar_list_empty_text).setVisibility(View.VISIBLE);
 
     featuredListView.setFastScrollEnabled(true);
     allListView.setFastScrollEnabled(true);
@@ -406,6 +404,9 @@ public class RadarActivity extends ServerThreadActivity implements
           findViewById(R.id.loading_screen_image).setVisibility(View.GONE);
           findViewById(R.id.loading_spin).setVisibility(View.GONE);
           findViewById(R.id.tonightlife_layout).setVisibility(View.VISIBLE);
+          
+          if(0 == commonController.eventsList.size() || 0 == commonController.featuredList.size())
+          	findViewById(R.id.radar_list_empty_text).setVisibility(View.VISIBLE);
 
           tabbieVirgin = getPreferences(MODE_PRIVATE).getBoolean("virgin", true);
 
