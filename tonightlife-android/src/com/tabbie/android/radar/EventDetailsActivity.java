@@ -12,7 +12,6 @@ package com.tabbie.android.radar;
 
 import android.app.AlertDialog;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
@@ -48,7 +47,6 @@ public class EventDetailsActivity extends ServerThreadActivity
       commonController = starter.getParcelable("controller");
       e = commonController.getEvent(eventId);
       token = starter.getString("token");
-      image = starter.getParcelable("image");
       tutorialMode = starter.getBoolean("virgin", false);
     } else {
       // No event, nothing to display
