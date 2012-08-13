@@ -405,6 +405,7 @@ public class RadarActivity extends ServerThreadActivity implements
           findViewById(R.id.loading_spin).setVisibility(View.GONE);
           findViewById(R.id.tonightlife_layout).setVisibility(View.VISIBLE);
           
+          findViewById(R.id.radar_list_empty_text).setVisibility(View.GONE);
           if(0 == commonController.eventsList.size() || 0 == commonController.featuredList.size())
           	findViewById(R.id.radar_list_empty_text).setVisibility(View.VISIBLE);
 
