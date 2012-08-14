@@ -409,7 +409,7 @@ public class RadarActivity extends ServerThreadActivity implements
           if(0 == commonController.eventsList.size() || 0 == commonController.featuredList.size())
           	findViewById(R.id.radar_list_empty_text).setVisibility(View.VISIBLE);
 
-          tabbieVirgin = true; //getPreferences(MODE_PRIVATE).getBoolean("virgin", true);
+          tabbieVirgin = getPreferences(MODE_PRIVATE).getBoolean("virgin", true);
 
           if (tabbieVirgin) {
             tutorialController.showTabsTutorial(new UnicornSlayerController.TabsCallback() {
