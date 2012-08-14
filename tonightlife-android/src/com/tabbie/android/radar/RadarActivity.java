@@ -409,7 +409,7 @@ public class RadarActivity extends ServerThreadActivity implements
           if(0 == commonController.eventsList.size() || 0 == commonController.featuredList.size())
           	findViewById(R.id.radar_list_empty_text).setVisibility(View.VISIBLE);
 
-          tabbieVirgin = getPreferences(MODE_PRIVATE).getBoolean("virgin", true);
+          tabbieVirgin = true; //getPreferences(MODE_PRIVATE).getBoolean("virgin", true);
 
           if (tabbieVirgin) {
             tutorialController.showTabsTutorial(new UnicornSlayerController.TabsCallback() {
@@ -428,7 +428,15 @@ public class RadarActivity extends ServerThreadActivity implements
               public void openEventsTab() {
                 tabHost.setCurrentTab(1);
               }
-            }, preferences.edit());
+            }, new UnicornSlayerController.CancelCallback() {
+              @Override
+              public void onCancel() {
+                tabbieVirgin = false;
+                SharedPreferences.Editor editor = preferences.edit();
+                editor.putBoolean("virgin", false);
+                editor.commit();
+              }
+            });
           }
         }
       });

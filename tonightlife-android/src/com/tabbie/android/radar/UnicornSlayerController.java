@@ -2,7 +2,6 @@ package com.tabbie.android.radar;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.util.Log;
 
 /**
@@ -28,8 +27,12 @@ public class UnicornSlayerController {
 
     public void openRadarTab();
   }
+  
+  public interface CancelCallback {
+    public void onCancel();
+  }
 
-  public void showTabsTutorial(final TabsCallback tabs, final SharedPreferences.Editor editor) {
+  public void showTabsTutorial(final TabsCallback tabs, final CancelCallback cancelCallback) {
     builder.setMessage("Is this your first time using TonightLife?")
         .setCancelable(false)
         .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
@@ -104,8 +107,7 @@ public class UnicornSlayerController {
 
           @Override
           public void onClick(DialogInterface dialog, int which) {
-            editor.putBoolean("virgin", false);
-            editor.commit();
+            cancelCallback.onCancel();
           }
         }).create().show();
     Log.d(this.getClass().getName(), "IM RETURNING");
