@@ -5,6 +5,7 @@ import java.util.List;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -48,7 +49,7 @@ public class RadarMapController {
     protected boolean onTap(int index) {
     	
     	// TODO Launch eventdetails intents here when the drawables shit is fixed
-    	
+    	Log.d("ASDF", "I clicked " + index);
     	mapView.removeView(popUp);
       final EventMarker m = markers.get(index);
       final Event e = m.getEvent();
@@ -83,8 +84,6 @@ public class RadarMapController {
         // Double click handler
         if ((System.currentTimeMillis() - lastClickTime) < 500) {
           mapView.getController().zoomIn();
-        } else {
-        	mapView.removeView(popUp);
         }
         lastClickTime = System.currentTimeMillis();
       }
