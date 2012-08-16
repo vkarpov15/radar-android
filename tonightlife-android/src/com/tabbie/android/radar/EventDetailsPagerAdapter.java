@@ -86,6 +86,9 @@ public class EventDetailsPagerAdapter
 	    ((TextView) v.findViewById(R.id.details_event_address)).setText(e.address);
 	    ((TextView) v.findViewById(R.id.details_event_num_radar)).setText(Integer
 	        .toString(e.radarCount));
+	    if (1 == e.radarCount) {
+	      ((TextView) v.findViewById(R.id.event_num_radar_desc)).setText(" person has added this to her lineup");
+	    }
 	    ((TextView) v.findViewById(R.id.details_event_description))
 	        .setText(e.description);
 	    Linkify.addLinks((TextView) v.findViewById(R.id.details_event_description),

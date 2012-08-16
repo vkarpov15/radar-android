@@ -110,7 +110,7 @@ public class EventDetailsActivity extends ServerThreadActivity
             serverThread.sendRequest(req);
           } else {
             Toast.makeText(EventDetailsActivity.this,
-                "You can only add 3 events to your radar!", Toast.LENGTH_SHORT).show();
+                "Failed to add event to your shortlist!", Toast.LENGTH_SHORT).show();
             return;
           }
         }
