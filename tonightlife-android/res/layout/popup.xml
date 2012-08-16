@@ -9,8 +9,8 @@
         android:text="Test Event Title Here"
         android:textColor="@color/BLACK"
         android:layout_alignParentTop="true"
-        android:gravity="center"
-        android:layout_width="fill_parent"
+        android:layout_width="wrap_content"
+        android:padding="5dp"
         android:layout_height="wrap_content" />
     
     <TextView
@@ -18,9 +18,9 @@
         android:text="10:00pm"
         android:textColor="@color/BLACK"
         android:lines="1"
-        android:layout_marginTop="5dp"
-        android:layout_alignParentRight="true"
+        android:layout_marginTop="0dp"
         android:layout_below="@id/map_event_title"
+        android:layout_alignRight="@id/map_event_title"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content" />
 </RelativeLayout>
