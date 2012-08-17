@@ -1,5 +1,6 @@
 package com.tabbie.android.radar;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
@@ -26,7 +27,8 @@ public class EventListAdapter extends BaseAdapter {
 	public ImageLoader imageLoader; // I don't know why this is public, but it is in the source
 
     public EventListAdapter(Context context, List<Event> events) {
-    	this.events = events;
+    	
+    	this.events = new ArrayList<Event>(events);
     	this.context = context;
     	this.eventClickListener = (EventClickListener) context;
     	this.eventLocationClickListener = (EventLocationClickListener) context;

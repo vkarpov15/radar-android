@@ -1,5 +1,17 @@
 package com.tabbie.android.radar;
 
+/**
+ *  PreferencesDialog.java
+ *
+ *  Created on: August 16, 2012
+ *      Author: Justin Knutson
+ *      
+ *  An extension of Dialog that builds itself as a preferences menu to
+ *  minimize code overhead in other activities. Objects of this class
+ *  MUST supply MultiSpinListeners or click actions will throw 
+ *  NullPointerExceptions
+ */
+
 import com.tabbie.android.radar.MultiSpinner.MultiSpinnerListener;
 
 import android.app.Dialog;

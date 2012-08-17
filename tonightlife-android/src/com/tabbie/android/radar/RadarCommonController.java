@@ -25,7 +25,7 @@ import android.os.Parcelable;
 import android.util.Log;
 
 public class RadarCommonController implements Parcelable {
-  public static final int MAX_RADAR_SELECTIONS = 100;
+  public static final int MAX_RADAR_SELECTIONS = 100; // Practically infinite
   public static final int RETRIEVE_INSTANCE = 1;
   public static final int FIRE_EVENT = 2;
 
