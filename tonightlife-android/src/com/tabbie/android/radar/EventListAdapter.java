@@ -105,6 +105,13 @@ public class EventListAdapter extends BaseAdapter {
 		return position;
 	}
 	
+	private static void filterByAge(final List<Event> eventList,
+			final short ageReq) {
+		for(final Event e : eventList) {
+			// TODO Remove all events that don't satisfy the age requirement
+		}
+	}
+	
 	public interface EventClickListener {
 		public void onEventClicked(final Event e, final int position, final Bitmap image);
 	}

@@ -19,6 +19,8 @@ public class Event implements Parcelable, Handler.Callback {
   public final double lon;
   public final boolean featured;
   public final TonightlifeDatetime time;
+  
+  // TODO Add short minimumAge for sorting
 
   public int radarCount;
   private boolean onRadar;
