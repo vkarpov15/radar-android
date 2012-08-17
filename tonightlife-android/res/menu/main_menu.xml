@@ -10,7 +10,7 @@
         android:title="Send Feedback"
         />
     
-    <item android:id="@+id/feature_me"
+    <item android:id="@+id/preference_me"
         android:icon="@android:drawable/ic_menu_sort_by_size"
         android:title="Preferences"
         />

@@ -11,4 +11,24 @@
 	<string name="tab_all_events">All Events</string>
 	<string name="tab_short_list">My Lineup</string>
 	
+	<string-array name="age_array">
+        <item>All</item>
+        <item>Under 18</item>
+        <item>18+</item>
+        <item>19+</item>
+        <item>21+</item>
+    </string-array>
+    
+	<string-array name="cost_array">
+	    <item>Free</item>
+	    <item>Cheap</item>
+	    <item>Expensive</item>
+	</string-array>
+	
+	<string-array name="energy_array">
+	    <item>Casual</item>
+	    <item>Upbeat</item>
+	    <item>Rage</item>
+	</string-array>
+	
 </resources>

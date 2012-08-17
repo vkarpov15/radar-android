@@ -10,6 +10,7 @@ import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -27,8 +28,10 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TabHost;
 import android.widget.TabHost.OnTabChangeListener;
 import android.widget.TabHost.TabSpec;
@@ -455,7 +458,6 @@ public class RadarActivity extends ServerThreadActivity implements
   public boolean onOptionsItemSelected(final MenuItem item) {
     // Handle item selection
 
-    // TODO This doesn't work right now, don't know why
     switch (item.getItemId()) {
     case R.id.refresh_me:
       this.runOnUiThread(new Runnable() {
@@ -475,6 +477,13 @@ public class RadarActivity extends ServerThreadActivity implements
     	emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, APP_FEEDBACK_SUBJECT);
     	startActivity(Intent.createChooser(emailIntent, "Send feedback..."));
     	return true;
+    	
+    case R.id.preference_me:
+    	final Dialog preferencesDialog = new PreferencesDialog(this, R.layout.preferences);
+    	preferencesDialog.setTitle("Preferences");
+    	preferencesDialog.show();
+    	return true;
+    	
     default:
       return super.onOptionsItemSelected(item);
     }
