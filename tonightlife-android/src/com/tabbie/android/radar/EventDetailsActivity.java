@@ -10,22 +10,29 @@ package com.tabbie.android.radar;
  *  All we do is just set a bunch of layout views to match our event model
  */
 
+import java.util.Arrays;
+import java.util.List;
+
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
+import android.util.Pair;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.tabbie.android.radar.EventDetailsPagerAdapter.LineupSelectedCallback;
+import com.tabbie.android.radar.EventDetailsPagerAdapter.LocationClickCallback;
+import com.tabbie.android.radar.core.BundleChecker;
 import com.tabbie.android.radar.http.ServerDeleteRequest;
 import com.tabbie.android.radar.http.ServerPostRequest;
 import com.tabbie.android.radar.http.ServerResponse;
 
 public class EventDetailsActivity extends ServerThreadActivity
-	implements EventDetailsPagerAdapter.RadarSelectedListener {
+	implements LineupSelectedCallback, LocationClickCallback {
 	
   private Event e;
   private RadarCommonController commonController;
@@ -33,6 +40,14 @@ public class EventDetailsActivity extends ServerThreadActivity
   private String token;
 
   private boolean tutorialMode = false;
+  
+  @SuppressWarnings("unchecked")
+  private static final List<Pair<String, Class<?> > >
+      REQUIRED_INTENT_PARAMS = Arrays.asList(
+          new Pair<String, Class<?> >("eventId", String.class),
+          new Pair<String, Class<?> >("controller", RadarCommonController.class),
+          new Pair<String, Class<?> >("token", String.class)
+      );
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
@@ -42,21 +57,21 @@ public class EventDetailsActivity extends ServerThreadActivity
     tutorialController = new UnicornSlayerController(new AlertDialog.Builder(this));
 
     Bundle starter = getIntent().getExtras();
-    if (null != starter && starter.containsKey("eventId")) {
-      final String eventId = starter.getString("eventId");
-      commonController = starter.getParcelable("controller");
-      e = commonController.getEvent(eventId);
-      token = starter.getString("token");
-      tutorialMode = starter.getBoolean("virgin", false);
-    } else {
-      // No event, nothing to display
-      // Also, fatal error currently
+    BundleChecker b = new BundleChecker(starter);
+    if (!b.check(REQUIRED_INTENT_PARAMS)) {
+      Log.e("BundleChecker", "Bundle check failed for EventDetailsActivity!");
       this.finish();
       return;
     }
     
+    final String eventId = starter.getString("eventId");
+    commonController = starter.getParcelable("controller");
+    e = commonController.getEvent(eventId);
+    token = starter.getString("token");
+    tutorialMode = starter.getBoolean("virgin", false);
+    
     final ViewPager pager = (ViewPager) findViewById(R.id.details_event_pager);
-    new EventDetailsPagerAdapter(this, commonController, R.layout.event_details_element, pager);
+    new EventDetailsPagerAdapter(this, commonController, R.layout.event_details_element, pager, this, this);
     pager.setCurrentItem(commonController.eventsList.indexOf(e));
     
     
@@ -115,4 +130,13 @@ public class EventDetailsActivity extends ServerThreadActivity
           }
         }
 	}
+
+  @Override
+  public void onLocationClicked(Event e) {
+    Intent intent = new Intent(this, RadarMapActivity.class);
+    intent.putExtra("controller", commonController);
+    intent.putExtra("event", e);
+    intent.putExtra("token", token);
+    startActivity(intent);
+  }
 }

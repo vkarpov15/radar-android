@@ -12,7 +12,6 @@ package com.tabbie.android.radar;
  */
 
 import android.content.Context;
-import android.content.Intent;
 import android.support.v4.view.ViewPager;
 import android.text.util.Linkify;
 import android.util.Log;
@@ -27,21 +26,26 @@ public class EventDetailsPagerAdapter
 	extends android.support.v4.view.PagerAdapter
 	implements ViewPager.OnPageChangeListener {
 	
-	
 	private final ImageLoader imageLoader;
 	private final Context context;
 	private final RadarCommonController controller;
 	private final int pageLayout;
+	private final LineupSelectedCallback lineupSelectedCallback;
+	private final LocationClickCallback locationClickCallback;
 	
 	public EventDetailsPagerAdapter(final Context context,
-			final RadarCommonController controller,
-			final int pageLayout,
-			final ViewPager pager) {
+	                                final RadarCommonController controller,
+	                                final int pageLayout,
+	                                final ViewPager pager,
+	                                final LineupSelectedCallback lineupSelectedCallback,
+	                                final LocationClickCallback locationClickCallback) {
 		
 		this.context = context;
 		imageLoader = new ImageLoader(context);
 		this.controller = controller;
 		this.pageLayout = pageLayout;
+		this.lineupSelectedCallback = lineupSelectedCallback;
+		this.locationClickCallback = locationClickCallback;
 		pager.setAdapter(this);
 		pager.setOnPageChangeListener(this);
 	}
@@ -70,7 +74,7 @@ public class EventDetailsPagerAdapter
 
 	@Override
 	public boolean isViewFromObject(View view, Object object) {
-		return view==object;
+		return view == object;
 	}
 	
 	private View bindEvent(final Event e) {
@@ -88,6 +92,8 @@ public class EventDetailsPagerAdapter
 	        .toString(e.radarCount));
 	    if (1 == e.radarCount) {
 	      ((TextView) v.findViewById(R.id.event_num_radar_desc)).setText(" person has added this to her lineup");
+	    } else {
+	      ((TextView) v.findViewById(R.id.event_num_radar_desc)).setText(" people have added this to their lineup");
 	    }
 	    ((TextView) v.findViewById(R.id.details_event_description))
 	        .setText(e.description);
@@ -95,16 +101,11 @@ public class EventDetailsPagerAdapter
 	        Linkify.WEB_URLS);
 	    
 	    ((ImageView) v.findViewById(R.id.location_image)).setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-			    Intent intent = new Intent((EventDetailsActivity) context,
-			            RadarMapActivity.class);
-			        intent.putExtra("controller", controller);
-			        intent.putExtra("event", e);
-			        context.startActivity(intent);
-			}
-		});
+	      @Override
+	      public void onClick(View v) {
+	        locationClickCallback.onLocationClicked(e);
+	      }
+	    });
 	    
 	    final ImageView radarButton = (ImageView) v.findViewById(R.id.add_to_radar_image);
 	    radarButton.setSelected(e.isOnRadar());
@@ -112,7 +113,7 @@ public class EventDetailsPagerAdapter
 	    radarButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View radar) {
-				((RadarSelectedListener) context).onRadarSelected(v, e);
+				lineupSelectedCallback.onRadarSelected(v, e);
 			}
 		});
 	    
@@ -146,7 +147,11 @@ public class EventDetailsPagerAdapter
 		
 	}
 	
-	public interface RadarSelectedListener {
+	public interface LineupSelectedCallback {
 		public void onRadarSelected(final View v, final Event e);
+	}
+	
+	public interface LocationClickCallback {
+	  public void onLocationClicked(final Event e);
 	}
 }
