@@ -2,10 +2,15 @@ package com.tabbie.android.radar;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
 public class PreferencesDialog extends Dialog {
+	
+	private final Spinner ageSpinner;
+	private final Spinner costSpinner;
+	private final Spinner energySpinner;
 	
 	private final ArrayAdapter<CharSequence> ageAdapter;
 	private final ArrayAdapter<CharSequence> costAdapter;
@@ -27,9 +32,9 @@ public class PreferencesDialog extends Dialog {
 		costAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		energyAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		
-		final Spinner ageSpinner = (Spinner) this.findViewById(R.id.preferences_age_spinner);
-		final Spinner costSpinner = (Spinner) this.findViewById(R.id.preferences_cost_spinner);
-		final Spinner energySpinner = (Spinner) this.findViewById(R.id.preferences_energy_spinner);
+		ageSpinner = (Spinner) this.findViewById(R.id.preferences_age_spinner);
+		costSpinner = (Spinner) this.findViewById(R.id.preferences_cost_spinner);
+		energySpinner = (Spinner) this.findViewById(R.id.preferences_energy_spinner);
 		
 		ageSpinner.setPrompt("Select an age range");
 		costSpinner.setPrompt("Select price options");
@@ -39,5 +44,16 @@ public class PreferencesDialog extends Dialog {
 		costSpinner.setAdapter(costAdapter);
 		energySpinner.setAdapter(energyAdapter);
 	}
-
+	
+	protected void setOnAgeItemSelectedListener(final OnItemSelectedListener listener) {
+		ageSpinner.setOnItemSelectedListener(listener);
+	}
+	
+	protected void setOnCostItemSelectedListener(final OnItemSelectedListener listener) {
+		costSpinner.setOnItemSelectedListener(listener);
+	}
+	
+	protected void setOnEnergyItemSelectedListener(final OnItemSelectedListener listener) {
+		energySpinner.setOnItemSelectedListener(listener);
+	}
 }
