@@ -54,6 +54,7 @@
             android:layout_height="44dp"
             android:layout_margin="5dp"
             android:layout_alignParentLeft="true"
+            android:clickable="true"
             android:layout_below="@id/details_event_title"
             android:src="@drawable/location_marker" />
         
@@ -104,7 +105,7 @@
             android:layout_alignBottom="@id/add_to_radar_image"
             android:layout_toRightOf="@id/details_event_num_radar"
             android:textSize="10dp"
-            android:text=" people added this to their lineup" />
+            android:text="{ people added this to their lineup}" />
     
 	    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
 	        android:id="@+id/details_scroll_container"

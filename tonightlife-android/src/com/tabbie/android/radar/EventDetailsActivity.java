@@ -20,12 +20,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.tabbie.android.radar.EventDetailsPagerAdapter.LineupSelectedCallback;
+import com.tabbie.android.radar.EventDetailsPagerAdapter.LocationClickCallback;
 import com.tabbie.android.radar.http.ServerDeleteRequest;
 import com.tabbie.android.radar.http.ServerPostRequest;
 import com.tabbie.android.radar.http.ServerResponse;
 
 public class EventDetailsActivity extends ServerThreadActivity
-	implements EventDetailsPagerAdapter.RadarSelectedListener {
+	implements LineupSelectedCallback, LocationClickCallback {
 	
   private Event e;
   private RadarCommonController commonController;
@@ -56,7 +58,7 @@ public class EventDetailsActivity extends ServerThreadActivity
     }
     
     final ViewPager pager = (ViewPager) findViewById(R.id.details_event_pager);
-    new EventDetailsPagerAdapter(this, commonController, R.layout.event_details_element, pager);
+    new EventDetailsPagerAdapter(this, commonController, R.layout.event_details_element, pager, this, this);
     pager.setCurrentItem(commonController.eventsList.indexOf(e));
     
     
@@ -115,4 +117,13 @@ public class EventDetailsActivity extends ServerThreadActivity
           }
         }
 	}
+
+  @Override
+  public void onLocationClicked(Event e) {
+    Intent intent = new Intent(this, RadarMapActivity.class);
+    intent.putExtra("controller", commonController);
+    intent.putExtra("event", e);
+    intent.putExtra("token", token);
+    startActivity(intent);
+  }
 }
