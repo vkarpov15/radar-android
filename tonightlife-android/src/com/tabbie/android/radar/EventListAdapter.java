@@ -21,14 +21,17 @@ public class EventListAdapter extends BaseAdapter {
 	private final EventClickListener eventClickListener;
 	private final EventLocationClickListener eventLocationClickListener;
 	
-	private List<Event> events;
+	private final List<Event> events;
+	private List<Event> filteredEvents;
 	
 	
 	public ImageLoader imageLoader; // I don't know why this is public, but it is in the source
 
     public EventListAdapter(Context context, List<Event> events) {
     	
-    	this.events = new ArrayList<Event>(events);
+    	this.events = events;
+    	this.filteredEvents = new ArrayList<Event>(this.events);
+    	
     	this.context = context;
     	this.eventClickListener = (EventClickListener) context;
     	this.eventLocationClickListener = (EventLocationClickListener) context;
