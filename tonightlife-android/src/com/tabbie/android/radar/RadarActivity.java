@@ -141,6 +141,10 @@ public class RadarActivity extends ServerThreadActivity implements
     featuredListView.setAdapter(new EventListAdapter(this, commonController.featuredList));
     allListView.setAdapter(new EventListAdapter(this, commonController.eventsList));
     radarListView.setAdapter(new EventListAdapter(this, commonController.radarList));
+    
+    
+    // featuredListView.setOnItemLongClickListener
+    // featuredListView.setOnItemClickListener TODO Switch EventListAdapter over to this
 
     findViewById(R.id.map_button).setOnClickListener(new OnClickListener() {
       public void onClick(View v) {
