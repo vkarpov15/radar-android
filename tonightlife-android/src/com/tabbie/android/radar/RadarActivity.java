@@ -507,6 +507,15 @@ public class RadarActivity extends ServerThreadActivity implements
 			}
 		});
     	
+    	preferencesDialog.setOnEnergyItemsSelectedListener(new MultiSpinnerListener() {
+			
+			@Override
+			public void onItemsSelected(boolean[] selected) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+    	
     	preferencesDialog.show();
     	return true;
     	

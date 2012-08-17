@@ -1,7 +1,5 @@
 package com.tabbie.android.radar;
 
-import java.util.List;
-
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;

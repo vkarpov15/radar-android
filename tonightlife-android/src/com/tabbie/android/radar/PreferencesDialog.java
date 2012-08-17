@@ -12,7 +12,7 @@ public class PreferencesDialog extends Dialog {
 	
 	private final Spinner ageSpinner;
 	private final MultiSpinner costSpinner;
-	private final Spinner energySpinner;
+	private final MultiSpinner energySpinner;
 	
 	private final ArrayAdapter<CharSequence> ageAdapter;
 	private final ArrayAdapter<CharSequence> costAdapter;
@@ -36,17 +36,13 @@ public class PreferencesDialog extends Dialog {
 		
 		ageSpinner = (Spinner) this.findViewById(R.id.preferences_age_spinner);
 		costSpinner = (MultiSpinner) this.findViewById(R.id.preferences_cost_spinner);
-		energySpinner = (Spinner) this.findViewById(R.id.preferences_energy_spinner);
-		
-		costSpinner.setItems(context.getResources().getStringArray(R.array.cost_array), "All", null);
+		energySpinner = (MultiSpinner) this.findViewById(R.id.preferences_energy_spinner);
 		
 		ageSpinner.setPrompt("Select an age range");
-		costSpinner.setPrompt("Select price options");
-		energySpinner.setPrompt("Select event vibe");
-		
 		ageSpinner.setAdapter(ageAdapter);
-		// costSpinner.setAdapter(costAdapter);
-		energySpinner.setAdapter(energyAdapter);
+		
+		costSpinner.setItems(context.getResources().getStringArray(R.array.cost_array), "Any", null);
+		energySpinner.setItems(context.getResources().getStringArray(R.array.energy_array), "Any", null);
 	}
 	
 	protected void setOnAgeItemSelectedListener(final OnItemSelectedListener listener) {
@@ -57,7 +53,7 @@ public class PreferencesDialog extends Dialog {
 		costSpinner.setMultiSpinnerListener(listener);
 	}
 	
-	protected void setOnEnergyItemsSelectedListener(final OnItemSelectedListener listener) { // TODO
-		energySpinner.setOnItemSelectedListener(listener);
+	protected void setOnEnergyItemsSelectedListener(final MultiSpinnerListener listener) {
+		energySpinner.setMultiSpinnerListener(listener);
 	}
 }
