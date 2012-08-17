@@ -20,6 +20,8 @@ import org.json.JSONObject;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
 
 import com.facebook.android.DialogError;
 import com.facebook.android.Facebook;
@@ -44,6 +46,8 @@ public class AuthenticateActivity extends ServerThreadActivity {
 	public void onCreate(final Bundle savedInstanceState) {
 		
 		setContentView(R.layout.authenticate_background);
+	    ((ImageView) findViewById(R.id.loading_spin)).startAnimation(AnimationUtils
+	            .loadAnimation(this, R.anim.rotate));
 		
 		final Intent data = this.getIntent();
 		
