@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:padding="10dp"
+    android:id="@+id/preferences_root">
+    
+    <TextView android:id="@+id/preferences_age_title"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:gravity="center"
+        android:text="Age restriction" />
+    
+    <Spinner android:id="@+id/preferences_age_spinner"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        />
+    
+    <TextView android:id="@+id/preferences_cost_title"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:gravity="center"
+        android:text="Price point" />
+    
+    <Spinner android:id="@+id/preferences_cost_spinner"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        />
+    
+    <TextView android:id="@+id/preferences_energy_title"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:gravity="center"
+        android:text="Energy level" />
+    
+    <Spinner android:id="@+id/preferences_energy_spinner"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        />
+    
+</LinearLayout>
