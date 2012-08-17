@@ -27,7 +27,8 @@
         android:gravity="center"
         android:text="@string/cost_title" />
     
-    <Spinner android:id="@+id/preferences_cost_spinner"
+    <com.tabbie.android.radar.MultiSpinner
+        android:id="@+id/preferences_cost_spinner"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         />

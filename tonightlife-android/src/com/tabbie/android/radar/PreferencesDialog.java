@@ -1,5 +1,7 @@
 package com.tabbie.android.radar;
 
+import com.tabbie.android.radar.MultiSpinner.MultiSpinnerListener;
+
 import android.app.Dialog;
 import android.content.Context;
 import android.widget.AdapterView.OnItemSelectedListener;
@@ -9,7 +11,7 @@ import android.widget.Spinner;
 public class PreferencesDialog extends Dialog {
 	
 	private final Spinner ageSpinner;
-	private final Spinner costSpinner;
+	private final MultiSpinner costSpinner;
 	private final Spinner energySpinner;
 	
 	private final ArrayAdapter<CharSequence> ageAdapter;
@@ -33,15 +35,17 @@ public class PreferencesDialog extends Dialog {
 		energyAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		
 		ageSpinner = (Spinner) this.findViewById(R.id.preferences_age_spinner);
-		costSpinner = (Spinner) this.findViewById(R.id.preferences_cost_spinner);
+		costSpinner = (MultiSpinner) this.findViewById(R.id.preferences_cost_spinner);
 		energySpinner = (Spinner) this.findViewById(R.id.preferences_energy_spinner);
+		
+		costSpinner.setItems(context.getResources().getStringArray(R.array.cost_array), "All", null);
 		
 		ageSpinner.setPrompt("Select an age range");
 		costSpinner.setPrompt("Select price options");
 		energySpinner.setPrompt("Select event vibe");
 		
 		ageSpinner.setAdapter(ageAdapter);
-		costSpinner.setAdapter(costAdapter);
+		// costSpinner.setAdapter(costAdapter);
 		energySpinner.setAdapter(energyAdapter);
 	}
 	
@@ -49,11 +53,11 @@ public class PreferencesDialog extends Dialog {
 		ageSpinner.setOnItemSelectedListener(listener);
 	}
 	
-	protected void setOnCostItemSelectedListener(final OnItemSelectedListener listener) {
-		costSpinner.setOnItemSelectedListener(listener);
+	protected void setOnCostItemsSelectedListener(final MultiSpinnerListener listener) {
+		costSpinner.setMultiSpinnerListener(listener);
 	}
 	
-	protected void setOnEnergyItemSelectedListener(final OnItemSelectedListener listener) {
+	protected void setOnEnergyItemsSelectedListener(final OnItemSelectedListener listener) { // TODO
 		energySpinner.setOnItemSelectedListener(listener);
 	}
 }

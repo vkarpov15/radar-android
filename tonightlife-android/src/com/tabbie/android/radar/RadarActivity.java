@@ -10,7 +10,6 @@ import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -30,10 +29,8 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.Spinner;
 import android.widget.TabHost;
 import android.widget.TabHost.OnTabChangeListener;
 import android.widget.TabHost.TabSpec;
@@ -44,6 +41,7 @@ import com.facebook.android.DialogError;
 import com.facebook.android.Facebook;
 import com.facebook.android.Facebook.DialogListener;
 import com.facebook.android.FacebookError;
+import com.tabbie.android.radar.MultiSpinner.MultiSpinnerListener;
 import com.tabbie.android.radar.http.ServerGetRequest;
 import com.tabbie.android.radar.http.ServerPostRequest;
 import com.tabbie.android.radar.http.ServerResponse;
@@ -500,33 +498,10 @@ public class RadarActivity extends ServerThreadActivity implements
 			}
 		});
     	
-    	preferencesDialog.setOnCostItemSelectedListener(new OnItemSelectedListener() {
-
+    	preferencesDialog.setOnCostItemsSelectedListener(new MultiSpinnerListener() {
+			
 			@Override
-			public void onItemSelected(AdapterView<?> parent, View v,
-					int position, long id) {
-				// TODO Auto-generated method stub
-				
-			}
-
-			@Override
-			public void onNothingSelected(AdapterView<?> parent) {
-				// TODO Auto-generated method stub
-				
-			}
-		});
-    	
-    	preferencesDialog.setOnEnergyItemSelectedListener(new OnItemSelectedListener() {
-
-			@Override
-			public void onItemSelected(AdapterView<?> parent, View v,
-					int position, long id) {
-				// TODO Auto-generated method stub
-				
-			}
-
-			@Override
-			public void onNothingSelected(AdapterView<?> parent) {
+			public void onItemsSelected(boolean[] selected) {
 				// TODO Auto-generated method stub
 				
 			}
