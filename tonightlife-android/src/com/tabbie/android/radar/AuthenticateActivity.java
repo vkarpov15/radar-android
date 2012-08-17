@@ -43,7 +43,7 @@ public class AuthenticateActivity extends ServerThreadActivity {
 	@Override
 	public void onCreate(final Bundle savedInstanceState) {
 		
-		// TODO Set Background
+		setContentView(R.layout.authenticate_background);
 		
 		final Intent data = this.getIntent();
 		
