@@ -9,4 +9,9 @@
         android:icon="@android:drawable/ic_menu_report_image"
         android:title="Send Feedback"
         />
+    
+    <item android:id="@+id/feature_me"
+        android:icon="@android:drawable/ic_menu_sort_by_size"
+        android:title="Preferences"
+        />
 </menu>
