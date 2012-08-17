@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
         android:gravity="center"
-        android:text="Age restriction" />
+        android:text="@string/age_title" />
     
     <Spinner android:id="@+id/preferences_age_spinner"
         android:layout_width="fill_parent"
@@ -23,7 +23,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
         android:gravity="center"
-        android:text="Price point" />
+        android:text="@string/cost_title" />
     
     <Spinner android:id="@+id/preferences_cost_spinner"
         android:layout_width="fill_parent"
@@ -35,7 +35,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
         android:gravity="center"
-        android:text="Energy level" />
+        android:text="@string/energy_title" />
     
     <Spinner android:id="@+id/preferences_energy_spinner"
         android:layout_width="fill_parent"

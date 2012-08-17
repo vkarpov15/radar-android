@@ -11,6 +11,10 @@
 	<string name="tab_all_events">All Events</string>
 	<string name="tab_short_list">My Lineup</string>
 	
+	<string name="age_title">Age restriction</string>
+	<string name="cost_title">Price point</string>
+	<string name="energy_title">Energy level</string>
+	
 	<string-array name="age_array">
         <item>All</item>
         <item>Under 18</item>
