@@ -99,6 +99,17 @@ public class RadarActivity extends ServerThreadActivity implements
     // Facebook Access Token
     String accessToken = preferences.getString("access_token", null);
     long expires = preferences.getLong("access_expires", 0);
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    // TODO Migrate Facebook code to new launch activity
     // Check and see if the facebook access is still valid
     if (null != accessToken) {
       facebook.setAccessToken(accessToken);
@@ -129,6 +140,15 @@ public class RadarActivity extends ServerThreadActivity implements
           "https://graph.facebook.com/me/?access_token="
               + facebook.getAccessToken(), MessageType.FACEBOOK_LOGIN));
     }
+    
+    
+    
+    
+    
+    
+    
+    
+    
 
     commonController = new RadarCommonController();
     tutorialController = new UnicornSlayerController(new AlertDialog.Builder(this));
@@ -299,6 +319,20 @@ public class RadarActivity extends ServerThreadActivity implements
   @SuppressLint({ "ParserError", "ParserError" })
   @Override
   protected synchronized boolean handleServerResponse(ServerResponse resp) {
+	  
+	  
+	  
+	  
+	  
+	  
+	  
+	  
+	  
+	  
+	  
+	  
+	  
+	  // TODO Migrate facebook code to new activity
     if (MessageType.FACEBOOK_LOGIN == resp.responseTo) { // Deal with facebook login JSON
       JSONObject json = resp.parseJsonContent();
       if (json == null || !json.has("id")) {
@@ -345,7 +379,26 @@ public class RadarActivity extends ServerThreadActivity implements
         e.printStackTrace();
         return false;
       }
-    } else if (MessageType.LOAD_EVENTS == resp.responseTo) { // Deal with loading event information from Tabbie
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    else if (MessageType.LOAD_EVENTS == resp.responseTo) { // Deal with loading event information from Tabbie
       JSONArray list = resp.parseJsonArray();
       
 
