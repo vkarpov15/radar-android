@@ -28,6 +28,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -479,8 +481,57 @@ public class RadarActivity extends ServerThreadActivity implements
     	return true;
     	
     case R.id.preference_me:
-    	final Dialog preferencesDialog = new PreferencesDialog(this, R.layout.preferences);
+    	final PreferencesDialog preferencesDialog = new PreferencesDialog(this, R.layout.preferences);
     	preferencesDialog.setTitle("Preferences");
+    	
+    	preferencesDialog.setOnAgeItemSelectedListener(new OnItemSelectedListener() {
+
+			@Override
+			public void onItemSelected(AdapterView<?> parent, View v,
+					int position, long id) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> container) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+    	
+    	preferencesDialog.setOnCostItemSelectedListener(new OnItemSelectedListener() {
+
+			@Override
+			public void onItemSelected(AdapterView<?> parent, View v,
+					int position, long id) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> parent) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+    	
+    	preferencesDialog.setOnEnergyItemSelectedListener(new OnItemSelectedListener() {
+
+			@Override
+			public void onItemSelected(AdapterView<?> parent, View v,
+					int position, long id) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> parent) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+    	
     	preferencesDialog.show();
     	return true;
     	
