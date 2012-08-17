@@ -1,10 +1,12 @@
 package com.tabbie.android.radar;
 
+import java.util.Arrays;
 import java.util.List;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -13,6 +15,7 @@ import com.google.android.maps.MapActivity;
 import com.google.android.maps.MapView;
 import com.google.android.maps.MyLocationOverlay;
 import com.google.android.maps.Overlay;
+import com.tabbie.android.radar.core.BundleChecker;
 
 public class RadarMapActivity extends MapActivity 
 	implements RadarMapController.OnMarkerClickListener {
@@ -23,6 +26,13 @@ public class RadarMapActivity extends MapActivity
   private MapView mapView;
   private MyLocationOverlay myLocationOverlay;
   private String token;
+  
+  @SuppressWarnings("unchecked")
+  private static final List<Pair<String, Class<?> > >
+      REQUIRED_INTENT_PARAMS = Arrays.asList(
+          new Pair<String, Class<?> >("controller", RadarCommonController.class),
+          new Pair<String, Class<?> >("token", String.class)
+      );
 
   @Override
   public void onCreate(Bundle saved) {
@@ -30,13 +40,16 @@ public class RadarMapActivity extends MapActivity
     setContentView(R.layout.map_activity);
 
     Bundle starter = getIntent().getExtras();
-    if (null != starter && starter.containsKey("controller")) {
-      commonController = starter.getParcelable("controller");
-    } else {
-      // No controller, nothing to display
+    BundleChecker checker = new BundleChecker(starter);
+    if (!checker.check(REQUIRED_INTENT_PARAMS)) {
+      // No controller or token, fail
+      Log.e("BundleChecker", "Missing intent param in RadarMapActivity");
       this.finish();
       return;
     }
+    
+    commonController = starter.getParcelable("controller");
+    token = starter.getString("token");
 
     mapView = (MapView) findViewById(R.id.my_map_view);
     mapView.setBuiltInZoomControls(true);
@@ -45,12 +58,6 @@ public class RadarMapActivity extends MapActivity
 
     if (starter.containsKey("event")) {
       selected = starter.getParcelable("event");
-    }
-    
-    if (starter.containsKey("token")) {
-      token = starter.getString("token");
-    } else {
-      finish();
     }
 
     List<Overlay> overlays = mapView.getOverlays();
