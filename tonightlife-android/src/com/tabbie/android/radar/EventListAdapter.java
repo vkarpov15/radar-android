@@ -116,7 +116,7 @@ public class EventListAdapter extends BaseAdapter {
 		public void onEventClicked(final Event e, final int position, final Bitmap image);
 	}
 	
-	public interface EventLocationClickListener {
+	public interface EventLocationClickListener { // TODO Remove this functionality, replace with ListView.setOnItemClickListener();
 		public void onEventLocationClicked(final Event e);
 	}
   }

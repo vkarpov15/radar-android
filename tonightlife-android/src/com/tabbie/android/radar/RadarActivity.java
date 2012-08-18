@@ -278,10 +278,6 @@ public class RadarActivity extends ServerThreadActivity implements
   @SuppressLint({ "ParserError", "ParserError" })
   @Override
   protected synchronized boolean handleServerResponse(ServerResponse resp) {
-    
-	  Log.d("handleServerResponse", "Handling response");
-    if (MessageType.LOAD_EVENTS == resp.responseTo) { // Deal with loading event information from Tabbie
-    	Log.d("handleServerResponse", "Response is LOAD_EVENTS");
       JSONArray list = resp.parseJsonArray();
       
 
@@ -378,7 +374,6 @@ public class RadarActivity extends ServerThreadActivity implements
           }
         }
       });
-    }
     return false;
   }
 
