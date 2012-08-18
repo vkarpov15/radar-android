@@ -59,10 +59,10 @@ public class RadarActivity extends ServerThreadActivity implements
   private TextView myNameView;
 
   // Internal state for views
-  private String tabbieAccessToken = null;
-  private String fbAccessToken = null;
-  private String facebookName = "John Doe";
-  private long expires = 0;
+  private String tabbieAccessToken = null; // TODO Do something with this
+  private String fbAccessToken = null; // TODO Do something with this
+  private String facebookName = "John Doe"; // TODO Set name to this
+  private long expires = 0; // TODO Do something with this
   private int currentViewPosition = 0;
   private boolean tabbieVirgin = true; // SharedPref variable to determine if
                                        // the tutorial should run

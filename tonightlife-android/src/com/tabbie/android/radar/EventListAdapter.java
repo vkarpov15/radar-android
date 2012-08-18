@@ -112,7 +112,7 @@ public class EventListAdapter extends BaseAdapter {
 		}
 	}
 	
-	public interface EventClickListener {
+	public interface EventClickListener { // TODO Replace these with setOnBlahClickListeners
 		public void onEventClicked(final Event e, final int position, final Bitmap image);
 	}
 	
