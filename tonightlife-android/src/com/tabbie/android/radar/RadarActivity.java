@@ -210,6 +210,7 @@ public class RadarActivity extends ServerThreadActivity implements
     			+ tabbieAccessToken, MessageType.LOAD_EVENTS);
     	sendServerRequest(req);
     	break;
+    	
     case RadarCommonController.RETRIEVE_INSTANCE:
       final Bundle controller = data.getExtras();
       commonController = controller.getParcelable("controller");
@@ -232,6 +233,7 @@ public class RadarActivity extends ServerThreadActivity implements
         forceFeatureTab = false;
       }
       break;
+      
     case RadarCommonController.FIRE_EVENT:
     	final Event e = commonController.getEvent(data.getExtras().getString("event"));
         Intent intent = new Intent(RadarActivity.this,
@@ -244,9 +246,6 @@ public class RadarActivity extends ServerThreadActivity implements
             intent.putExtra("token", tabbieAccessToken);
         startActivity(intent);
         break;
-    default:
-      facebook.authorizeCallback(requestCode, resultCode, data);
-      break;
     }
   }
 
@@ -343,11 +342,6 @@ public class RadarActivity extends ServerThreadActivity implements
           ((EventListAdapter) allListView.getAdapter()).notifyDataSetChanged();
           ((EventListAdapter) radarListView.getAdapter())
               .notifyDataSetChanged();
-
-          findViewById(R.id.loading_screen).setVisibility(View.GONE);
-          findViewById(R.id.loading_screen_image).setVisibility(View.GONE);
-          findViewById(R.id.loading_spin).setVisibility(View.GONE);
-          findViewById(R.id.tonightlife_layout).setVisibility(View.VISIBLE);
           
           findViewById(R.id.radar_list_empty_text).setVisibility(View.GONE);
           if(0 == commonController.eventsList.size() || 0 == commonController.featuredList.size())
