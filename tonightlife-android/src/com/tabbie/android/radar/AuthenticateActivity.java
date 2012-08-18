@@ -87,11 +87,12 @@ public class AuthenticateActivity extends ServerThreadActivity {
 	@Override
 	protected boolean handleServerResponse(final ServerResponse resp) {
 		
-		JSONObject json = resp.parseJsonContent();
+		final JSONObject json = resp.parseJsonContent();
 		if(json==null) return false;
 		
 		switch(resp.responseTo) {
 		case FACEBOOK_LOGIN:
+			Log.d(TAG, "Facebook Login case");
 			if(json.has("id"))
 			{
 				try {
@@ -107,7 +108,7 @@ public class AuthenticateActivity extends ServerThreadActivity {
 							ServerThread.TABBIE_SERVER + "/mobile/auth.json",
 							MessageType.TABBIE_LOGIN);
 						
-						req.params.put("fb_token", fbAccessToken);
+						req.params.put("fb_token", facebook.getAccessToken());
 						
 						sendServerRequest(req);
 					}
@@ -116,6 +117,7 @@ public class AuthenticateActivity extends ServerThreadActivity {
 			break;
 			
 		case TABBIE_LOGIN:
+			Log.d(TAG, "Tabbie Login case");
 			if (json.has("token")) {
 				try {
 					tabbieAccessToken = json.getString("token");
