@@ -200,6 +200,7 @@ public class RadarActivity extends ServerThreadActivity implements
         final SharedPreferences.Editor editor = preferences.edit();
         editor.putString("access_token", data.getStringExtra("fbAccessToken"));
         editor.putLong("access_expires", data.getLongExtra("expires", 0));
+        editor.commit();
         
     	tabbieAccessToken = data.getStringExtra("tabbieAccessToken");
     	myNameView.setText(data.getStringExtra("facebookName"));
