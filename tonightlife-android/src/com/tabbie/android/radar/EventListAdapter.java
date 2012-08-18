@@ -4,11 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.widget.BaseAdapter;
@@ -18,10 +16,7 @@ import android.widget.TextView;
 public class EventListAdapter extends BaseAdapter {
 	
 	private final Context context;
-	private final EventClickListener eventClickListener;
-	private final EventLocationClickListener eventLocationClickListener;
-	
-	private final List<Event> events;
+	protected final List<Event> events;
 	private List<Event> filteredEvents;
 	
 	
@@ -33,8 +28,6 @@ public class EventListAdapter extends BaseAdapter {
     	this.filteredEvents = new ArrayList<Event>(this.events);
     	
     	this.context = context;
-    	this.eventClickListener = (EventClickListener) context;
-    	this.eventLocationClickListener = (EventLocationClickListener) context;
     	imageLoader = new ImageLoader(context);
     }
 
@@ -72,20 +65,13 @@ public class EventListAdapter extends BaseAdapter {
       imageLoader.displayImage(e.image.toString(),
     		  (ImageView) viewHolder.findViewById(R.id.event_image));
       
-      convertView.findViewById(R.id.list_list_element_layout).setOnClickListener(new OnClickListener() {
-		
-		@Override
-		public void onClick(View v) {
-			eventClickListener.onEventClicked(e, position, imageLoader.getBitmap(e.image.toString()));
-		}
-      });
       
-      convertView.findViewById(R.id.location_image_layout).setOnClickListener(
-          new OnClickListener() {
-            public void onClick(View v) {
-            	eventLocationClickListener.onEventLocationClicked(e);
-            }
-          });
+      /* If this view is clickable then
+       * OnItemClickListener will NEVER
+       * be called for this view. Do not
+       * delete lightheartedly.
+       */
+      convertView.setClickable(false);
       
       return convertView;
     }
@@ -110,13 +96,5 @@ public class EventListAdapter extends BaseAdapter {
 		for(final Event e : eventList) {
 			// TODO Remove all events that don't satisfy the age requirement
 		}
-	}
-	
-	public interface EventClickListener { // TODO Replace these with setOnBlahClickListeners
-		public void onEventClicked(final Event e, final int position, final Bitmap image);
-	}
-	
-	public interface EventLocationClickListener { // TODO Remove this functionality, replace with ListView.setOnItemClickListener();
-		public void onEventLocationClicked(final Event e);
 	}
   }

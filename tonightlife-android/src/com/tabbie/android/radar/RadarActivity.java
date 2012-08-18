@@ -14,7 +14,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Vibrator;
@@ -28,6 +27,7 @@ import android.view.View.OnClickListener;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ListView;
 import android.widget.TabHost;
@@ -42,8 +42,7 @@ import com.tabbie.android.radar.http.ServerGetRequest;
 import com.tabbie.android.radar.http.ServerResponse;
 
 public class RadarActivity extends ServerThreadActivity implements
-    OnTabChangeListener, EventListAdapter.EventClickListener,
-    EventListAdapter.EventLocationClickListener {
+    OnTabChangeListener, OnItemClickListener {
   
   // Intent constants
   private static final String[] FOUNDERS_EMAIL = {"founders@tonight-life.com"};
@@ -85,7 +84,6 @@ public class RadarActivity extends ServerThreadActivity implements
     allListView = (ListView) findViewById(R.id.all_event_list);
     radarListView = (ListView) findViewById(R.id.radar_list);
     myNameView = (TextView) findViewById(R.id.user_name);
-    
 
     commonController = new RadarCommonController();
     tutorialController = new UnicornSlayerController(new AlertDialog.Builder(this));
@@ -128,7 +126,9 @@ public class RadarActivity extends ServerThreadActivity implements
     allListView.setFastScrollEnabled(true);
     radarListView.setFastScrollEnabled(true);
     
-
+    featuredListView.setOnItemClickListener(this);
+    allListView.setOnItemClickListener(this);
+    radarListView.setOnItemClickListener(this);
 
     preferences = getPreferences(MODE_PRIVATE);
     final Intent authenticate = new Intent(this, AuthenticateActivity.class);
@@ -453,64 +453,57 @@ public class RadarActivity extends ServerThreadActivity implements
       return super.onOptionsItemSelected(item);
     }
   }
-
-  @Override
-  public void onEventClicked(final Event e, final int position, final Bitmap image) {
-	Log.d("RadarActivity", "Callback to onEventClicked");
-    if (null != e) {
-        currentViewPosition = position;
-        ((Vibrator) getSystemService(Context.VIBRATOR_SERVICE))
-            .vibrate(30);
-
-        new AsyncTask<Void, Void, Intent>() {
-
-          private ProgressDialog dialog;
-
-          @Override
-          protected void onPreExecute() {
-            dialog = ProgressDialog.show(RadarActivity.this, "",
-                "Loading, please wait...");
-            super.onPreExecute();
-          }
-
-          @Override
-          protected Intent doInBackground(Void... params) {
-            Intent intent = new Intent(RadarActivity.this,
-                EventDetailsActivity.class);
-            intent.putExtra("eventId", e.id);
-            intent.putExtra("controller", commonController);
-            intent.putExtra("image", image);
-            intent.putExtra("token", tabbieAccessToken);
-            if (tabbieVirgin) {
-              intent.putExtra("virgin", true); // Make sure this
-                                               // activity knows it's in
-                                               // tutorial mode
-              tabbieVirgin = false; // User is no longer a prepubescent
-                                    // pussy
-              getPreferences(MODE_PRIVATE).edit()
-                  .putBoolean("virgin", false).commit();
-            }
-            return intent;
-          }
-
-          @Override
-          protected void onPostExecute(Intent result) {
-            startActivityForResult(result,
-                RadarCommonController.RETRIEVE_INSTANCE);
-            dialog.dismiss();
-
-          };
-        }.execute();
-      }
-	}
-
+  
 	@Override
-	public void onEventLocationClicked(final Event e) {
-	    Intent intent = new Intent(RadarActivity.this,
-	            RadarMapActivity.class);
-	        intent.putExtra("controller", commonController);
-	        intent.putExtra("event", e);
-	        intent.putExtra("token", tabbieAccessToken);
-	        startActivityForResult(intent, RadarCommonController.FIRE_EVENT);
+	public void onItemClick(AdapterView<?> parent, View view, int position, long rowId) {
+		
+		final Event e = (Event) parent.getItemAtPosition(position);
+		
+		Log.d("OnItemClick", "Event is " + e.name);
+		
+	    if (null != e) {
+	        currentViewPosition = position;
+	        ((Vibrator) getSystemService(Context.VIBRATOR_SERVICE))
+	            .vibrate(30);
+
+	        new AsyncTask<Void, Void, Intent>() {
+
+	          private ProgressDialog dialog;
+
+	          @Override
+	          protected void onPreExecute() {
+	            dialog = ProgressDialog.show(RadarActivity.this, "",
+	                "Loading, please wait...");
+	            super.onPreExecute();
+	          }
+
+	          @Override
+	          protected Intent doInBackground(Void... params) {
+	            Intent intent = new Intent(RadarActivity.this,
+	                EventDetailsActivity.class);
+	            intent.putExtra("eventId", e.id);
+	            intent.putExtra("controller", commonController);
+	            intent.putExtra("token", tabbieAccessToken);
+	            if (tabbieVirgin) {
+	              intent.putExtra("virgin", true); // Make sure this
+	                                               // activity knows it's in
+	                                               // tutorial mode
+	              tabbieVirgin = false; // User is no longer a prepubescent
+	                                    // pussy
+	              getPreferences(MODE_PRIVATE).edit()
+	                  .putBoolean("virgin", false).commit();
+	            }
+	            return intent;
+	          }
+
+	          @Override
+	          protected void onPostExecute(Intent result) {
+	            startActivityForResult(result,
+	                RadarCommonController.RETRIEVE_INSTANCE);
+	            dialog.dismiss();
+
+	          };
+	        }.execute();
+	      }
 	}
 }
