@@ -44,7 +44,7 @@ public class AuthenticateActivity extends ServerThreadActivity {
 	
 	@Override
 	public void onCreate(final Bundle savedInstanceState) {
-		
+		super.onCreate(savedInstanceState);
 		setContentView(R.layout.authenticate_background);
 	    ((ImageView) findViewById(R.id.loading_spin)).startAnimation(AnimationUtils
 	            .loadAnimation(this, R.anim.rotate));
@@ -87,7 +87,7 @@ public class AuthenticateActivity extends ServerThreadActivity {
 	@Override
 	protected boolean handleServerResponse(final ServerResponse resp) {
 		
-		final JSONObject json = resp.parseJsonContent();
+		JSONObject json = resp.parseJsonContent();
 		if(json==null) return false;
 		
 		switch(resp.responseTo) {

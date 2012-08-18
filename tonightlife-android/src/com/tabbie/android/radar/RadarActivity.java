@@ -29,7 +29,6 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TabHost;
 import android.widget.TabHost.OnTabChangeListener;
@@ -37,13 +36,9 @@ import android.widget.TabHost.TabSpec;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.facebook.android.DialogError;
 import com.facebook.android.Facebook;
-import com.facebook.android.Facebook.DialogListener;
-import com.facebook.android.FacebookError;
 import com.tabbie.android.radar.MultiSpinner.MultiSpinnerListener;
 import com.tabbie.android.radar.http.ServerGetRequest;
-import com.tabbie.android.radar.http.ServerPostRequest;
 import com.tabbie.android.radar.http.ServerResponse;
 
 public class RadarActivity extends ServerThreadActivity implements
@@ -53,6 +48,7 @@ public class RadarActivity extends ServerThreadActivity implements
   // Intent constants
   private static final String[] FOUNDERS_EMAIL = {"founders@tonight-life.com"};
   private static final String APP_FEEDBACK_SUBJECT = "TonightLife Application Feedback";
+  private static final int REQUEST_LOGIN = 42;
 
   // Often-used views
   private TabHost tabHost;
@@ -63,7 +59,10 @@ public class RadarActivity extends ServerThreadActivity implements
   private TextView myNameView;
 
   // Internal state for views
-  private String token;
+  private String tabbieAccessToken = null;
+  private String fbAccessToken = null;
+  private String facebookName = "John Doe";
+  private long expires = 0;
   private int currentViewPosition = 0;
   private boolean tabbieVirgin = true; // SharedPref variable to determine if
                                        // the tutorial should run
@@ -89,65 +88,6 @@ public class RadarActivity extends ServerThreadActivity implements
     allListView = (ListView) findViewById(R.id.all_event_list);
     radarListView = (ListView) findViewById(R.id.radar_list);
     myNameView = (TextView) findViewById(R.id.user_name);
-
-    // Spinning loading dialog
-
-    ((ImageView) findViewById(R.id.loading_spin)).startAnimation(AnimationUtils
-        .loadAnimation(this, R.anim.rotate));
-
-    preferences = getPreferences(MODE_PRIVATE);
-    // Facebook Access Token
-    String accessToken = preferences.getString("access_token", null);
-    long expires = preferences.getLong("access_expires", 0);
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    // TODO Migrate Facebook code to new launch activity
-    // Check and see if the facebook access is still valid
-    if (null != accessToken) {
-      facebook.setAccessToken(accessToken);
-    }
-    if (0 != expires) {
-      facebook.setAccessExpires(expires);
-    }
-
-    if (!facebook.isSessionValid()) {
-      facebook.authorize(this, new String[] { "email" }, new DialogListener() {
-        public void onComplete(Bundle values) {
-          SharedPreferences.Editor editor = preferences.edit();
-          editor.putString("access_token", facebook.getAccessToken());
-          editor.putLong("access_expires", facebook.getAccessExpires());
-          editor.commit();
-          sendServerRequest(new ServerGetRequest(
-              "https://graph.facebook.com/me/?access_token="
-                  + facebook.getAccessToken(), MessageType.FACEBOOK_LOGIN));
-        }
-
-        public void onFacebookError(FacebookError error) {}
-        public void onError(DialogError e) {}
-        public void onCancel() {}
-      });
-    } else {
-      // Already have fb session
-      sendServerRequest(new ServerGetRequest(
-          "https://graph.facebook.com/me/?access_token="
-              + facebook.getAccessToken(), MessageType.FACEBOOK_LOGIN));
-    }
-    
-    
-    
-    
-    
-    
-    
-    
     
 
     commonController = new RadarCommonController();
@@ -171,7 +111,7 @@ public class RadarActivity extends ServerThreadActivity implements
         if (!forceFeatureTab) {
           Intent intent = new Intent(RadarActivity.this, RadarMapActivity.class);
           intent.putExtra("controller", commonController);
-          intent.putExtra("token", token);
+          intent.putExtra("token", tabbieAccessToken);
           startActivity(intent);
         } else {
           Toast.makeText(RadarActivity.this,
@@ -190,6 +130,14 @@ public class RadarActivity extends ServerThreadActivity implements
     featuredListView.setFastScrollEnabled(true);
     allListView.setFastScrollEnabled(true);
     radarListView.setFastScrollEnabled(true);
+    
+
+
+    preferences = getPreferences(MODE_PRIVATE);
+    final Intent authenticate = new Intent(this, AuthenticateActivity.class);
+    authenticate.putExtra("token", preferences.getString("access_token", null));
+    authenticate.putExtra("expires", preferences.getLong("access_expires", 0));
+    startActivityForResult(authenticate, REQUEST_LOGIN);
   }
 
   public void onTabChanged(String tabName) {
@@ -247,9 +195,21 @@ public class RadarActivity extends ServerThreadActivity implements
 
   @Override
   public void onActivityResult(int requestCode, int resultCode, Intent data) {
-	    Log.v("Request Code", "This: " + requestCode);
     super.onActivityResult(requestCode, resultCode, data);
+    
     switch (requestCode) {
+    case REQUEST_LOGIN:
+    	Log.d("onActivityResult", "Login request has returned");
+    	fbAccessToken = data.getStringExtra("fbAccessToken");
+    	tabbieAccessToken = data.getStringExtra("tabbieAccessToken");
+    	facebookName = data.getStringExtra("facebookName");
+    	expires = data.getLongExtra("expires", 0);
+    	
+    	final ServerGetRequest req = new ServerGetRequest(
+    			ServerThread.TABBIE_SERVER + "/mobile/all.json?auth_token="
+    			+ tabbieAccessToken, MessageType.LOAD_EVENTS);
+    	sendServerRequest(req);
+    	break;
     case RadarCommonController.RETRIEVE_INSTANCE:
       final Bundle controller = data.getExtras();
       commonController = controller.getParcelable("controller");
@@ -281,7 +241,7 @@ public class RadarActivity extends ServerThreadActivity implements
             intent.putExtra("image",
             		((EventListAdapter) allListView.getAdapter()).
             		imageLoader.getBitmap(e.image.toString())); // TODO Make this code suck less
-            intent.putExtra("token", token);
+            intent.putExtra("token", tabbieAccessToken);
         startActivity(intent);
         break;
     default:
@@ -319,86 +279,10 @@ public class RadarActivity extends ServerThreadActivity implements
   @SuppressLint({ "ParserError", "ParserError" })
   @Override
   protected synchronized boolean handleServerResponse(ServerResponse resp) {
-	  
-	  
-	  
-	  
-	  
-	  
-	  
-	  
-	  
-	  
-	  
-	  
-	  
-	  // TODO Migrate facebook code to new activity
-    if (MessageType.FACEBOOK_LOGIN == resp.responseTo) { // Deal with facebook login JSON
-      JSONObject json = resp.parseJsonContent();
-      if (json == null || !json.has("id")) {
-        return false;
-      }
-      final String facebookName;
-      try {
-        facebookName = json.getString("first_name") + " "
-            + json.getString("last_name").substring(0, 1) + ".";
-      } catch (JSONException e) {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
-        return false;
-      }
-      // Now that we have our Facebook user info, we can send this to Tabbie to
-      // get our Tabbie id
-      this.runOnUiThread(new Runnable() {
-        public void run() {
-          myNameView.setText(facebookName);
-          ServerPostRequest req = new ServerPostRequest(
-              ServerThread.TABBIE_SERVER + "/mobile/auth.json",
-              MessageType.TABBIE_LOGIN);
-          req.params.put("fb_token", facebook.getAccessToken());
-
-          sendServerRequest(req);
-        }
-      });
-    } else if (MessageType.TABBIE_LOGIN == resp.responseTo) { // Deal with Tabbie Login JSON
-      JSONObject json = resp.parseJsonContent();
-      if (null == json || !json.has("token")) {
-        return false;
-      }
-      try {
-        token = json.getString("token");
-        this.runOnUiThread(new Runnable() {
-          public void run() {
-            ServerGetRequest req = new ServerGetRequest(
-                ServerThread.TABBIE_SERVER + "/mobile/all.json?auth_token="
-                    + token, MessageType.LOAD_EVENTS);
-            sendServerRequest(req);
-          }
-        });
-      } catch (JSONException e) {
-        e.printStackTrace();
-        return false;
-      }
-    }
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    else if (MessageType.LOAD_EVENTS == resp.responseTo) { // Deal with loading event information from Tabbie
+	  Log.d("handleServerResponse", "Handling response");
+    if (MessageType.LOAD_EVENTS == resp.responseTo) { // Deal with loading event information from Tabbie
+    	Log.d("handleServerResponse", "Response is LOAD_EVENTS");
       JSONArray list = resp.parseJsonArray();
       
 
@@ -521,7 +405,7 @@ public class RadarActivity extends ServerThreadActivity implements
         public void run() {
           ServerGetRequest req = new ServerGetRequest(
               ServerThread.TABBIE_SERVER + "/mobile/all.json?auth_token="
-                  + token, MessageType.LOAD_EVENTS);
+                  + tabbieAccessToken, MessageType.LOAD_EVENTS);
           sendServerRequest(req);
         }
       });
@@ -607,7 +491,7 @@ public class RadarActivity extends ServerThreadActivity implements
             intent.putExtra("eventId", e.id);
             intent.putExtra("controller", commonController);
             intent.putExtra("image", image);
-            intent.putExtra("token", token);
+            intent.putExtra("token", tabbieAccessToken);
             if (tabbieVirgin) {
               intent.putExtra("virgin", true); // Make sure this
                                                // activity knows it's in
@@ -637,7 +521,7 @@ public class RadarActivity extends ServerThreadActivity implements
 	            RadarMapActivity.class);
 	        intent.putExtra("controller", commonController);
 	        intent.putExtra("event", e);
-	        intent.putExtra("token", token);
+	        intent.putExtra("token", tabbieAccessToken);
 	        startActivityForResult(intent, RadarCommonController.FIRE_EVENT);
 	}
 }
