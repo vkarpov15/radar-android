@@ -60,9 +60,6 @@ public class RadarActivity extends ServerThreadActivity implements
 
   // Internal state for views
   private String tabbieAccessToken = null; // TODO Do something with this
-  private String fbAccessToken = null; // TODO Do something with this
-  private String facebookName = "John Doe"; // TODO Set name to this
-  private long expires = 0; // TODO Do something with this
   private int currentViewPosition = 0;
   private boolean tabbieVirgin = true; // SharedPref variable to determine if
                                        // the tutorial should run
@@ -199,11 +196,13 @@ public class RadarActivity extends ServerThreadActivity implements
     
     switch (requestCode) {
     case REQUEST_LOGIN:
-    	Log.d("onActivityResult", "Login request has returned");
-    	fbAccessToken = data.getStringExtra("fbAccessToken");
+    	
+        final SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("access_token", data.getStringExtra("fbAccessToken"));
+        editor.putLong("access_expires", data.getLongExtra("expires", 0));
+        
     	tabbieAccessToken = data.getStringExtra("tabbieAccessToken");
-    	facebookName = data.getStringExtra("facebookName");
-    	expires = data.getLongExtra("expires", 0);
+    	myNameView.setText(data.getStringExtra("facebookName"));
     	
     	final ServerGetRequest req = new ServerGetRequest(
     			ServerThread.TABBIE_SERVER + "/mobile/all.json?auth_token="
