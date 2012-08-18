@@ -2,38 +2,6 @@
 <LinearLayout android:orientation="vertical"
     android:layout_width="fill_parent" android:layout_height="fill_parent" xmlns:android="http://schemas.android.com/apk/res/android">
     
-    <RelativeLayout
-        android:id="@+id/loading_screen"
-        android:layout_height="fill_parent"
-        android:layout_width="fill_parent">
-        
-	    <ImageView
-	        android:layout_width="fill_parent"
-	        android:layout_height="fill_parent"
-	        android:id="@+id/loading_screen_image"
-	        android:src="@drawable/launch_screen" />
-	    
-	    <TextView
-	        android:id="@+id/loading_text"
-	        android:layout_margin="10dp"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:layout_centerHorizontal="true"
-	        android:layout_alignParentBottom="true"
-	        android:text="Loading..."
-	        android:textColor="@color/WHITE"
-	        android:textSize="12dp" />
-	    
-	    <ImageView  
-        	android:id="@+id/loading_spin"  
-        	android:layout_width="20dp"  
-        	android:layout_height="20dp"
-        	android:layout_centerHorizontal="true"
-        	android:layout_above="@id/loading_text"
-        	android:src="@drawable/refresh"/>
-	    
-    </RelativeLayout>
-    
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:visibility="gone"
         android:layout_width="fill_parent"
