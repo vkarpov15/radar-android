@@ -37,6 +37,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.android.Facebook;
+import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 import com.tabbie.android.radar.MultiSpinner.MultiSpinnerListener;
 import com.tabbie.android.radar.http.ServerGetRequest;
 import com.tabbie.android.radar.http.ServerResponse;
@@ -73,6 +74,9 @@ public class RadarActivity extends ServerThreadActivity implements
   private Facebook facebook = new Facebook("217386331697217");
   private SharedPreferences preferences;
   
+  // Google analytics
+  private GoogleAnalyticsTracker googleAnalyticsTracker;
+  
   @Override
   public void onCreate(final Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -80,6 +84,10 @@ public class RadarActivity extends ServerThreadActivity implements
 
     Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
 
+    googleAnalyticsTracker = GoogleAnalyticsTracker.getInstance();
+    googleAnalyticsTracker.startNewSession("UA-34193317-1", this);
+    googleAnalyticsTracker.trackPageView(this.getClass().getName());
+    
     currentListView = featuredListView = (ListView) findViewById(R.id.featured_event_list);
     allListView = (ListView) findViewById(R.id.all_event_list);
     radarListView = (ListView) findViewById(R.id.radar_list);
@@ -452,6 +460,12 @@ public class RadarActivity extends ServerThreadActivity implements
     default:
       return super.onOptionsItemSelected(item);
     }
+  }
+  
+  @Override
+  public void onDestroy() {
+    super.onDestroy();
+    googleAnalyticsTracker.stopSession();
   }
   
 	@Override

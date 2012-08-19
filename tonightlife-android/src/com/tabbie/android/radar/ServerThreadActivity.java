@@ -20,19 +20,13 @@ import android.widget.Toast;
 
 import com.tabbie.android.radar.http.ServerRequest;
 import com.tabbie.android.radar.http.ServerResponse;
-import com.zubhium.ZubhiumSDK;
 
 public abstract class ServerThreadActivity extends Activity {
   protected ServerThread serverThread = null;
 
-  protected ZubhiumSDK sdk;
-
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-
-    // sdk = ZubhiumSDK.getZubhiumSDKInstance(getApplicationContext(),
-    // "cf36201cec04f886a90fd08eb44b00");
 
     // If this is a configuration change, get the thread back
     if (this.getLastNonConfigurationInstance() != null
