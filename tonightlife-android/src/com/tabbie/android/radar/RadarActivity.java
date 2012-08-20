@@ -59,7 +59,7 @@ public class RadarActivity extends ServerThreadActivity implements
   private TextView myNameView;
 
   // Internal state for views
-  private String tabbieAccessToken = null; // TODO Do something with this
+  private String tabbieAccessToken = null;
   private int currentViewPosition = 0;
   private boolean tabbieVirgin = true; // SharedPref variable to determine if
                                        // the tutorial should run
@@ -71,72 +71,74 @@ public class RadarActivity extends ServerThreadActivity implements
   private UnicornSlayerController tutorialController;
 
   // FB junk
-  private Facebook facebook = new Facebook("217386331697217");
+  private final Facebook facebook = new Facebook("217386331697217");
   private SharedPreferences preferences;
   
   // Google analytics
   private GoogleAnalyticsTracker googleAnalyticsTracker;
   
+  
   @Override
   public void onCreate(final Bundle savedInstanceState) {
+	  
+	// Set initial conditions
     super.onCreate(savedInstanceState);
     setContentView(R.layout.main);
-
     Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
+    commonController = new RadarCommonController();
 
+    // Start Google Analytics
     googleAnalyticsTracker = GoogleAnalyticsTracker.getInstance();
     googleAnalyticsTracker.startNewSession("UA-34193317-1", this);
     googleAnalyticsTracker.trackPageView(this.getClass().getName());
     
+    // Create view references
     currentListView = featuredListView = (ListView) findViewById(R.id.featured_event_list);
     allListView = (ListView) findViewById(R.id.all_event_list);
     radarListView = (ListView) findViewById(R.id.radar_list);
     myNameView = (TextView) findViewById(R.id.user_name);
+    tabHost = (FlingableTabHost) findViewById(android.R.id.tabhost);
+    findViewById(R.id.map_button).setOnClickListener(new OnClickListener() {
+        public void onClick(View v) {
+          if (!forceFeatureTab) {
+            Intent intent = new Intent(RadarActivity.this, RadarMapActivity.class);
+            intent.putExtra("controller", commonController);
+            intent.putExtra("token", tabbieAccessToken);
+            startActivity(intent);
+          } else {
+            Toast.makeText(RadarActivity.this,
+                "Please select an event to continue the tutorial",
+                Toast.LENGTH_SHORT).show();
+          }
+        }
+      });
 
-    commonController = new RadarCommonController();
-    tutorialController = new UnicornSlayerController(new AlertDialog.Builder(this));
+    
+    // Build Tutorial Mode
+    tutorialController = new UnicornSlayerController(new AlertDialog.Builder(this)); // TODO Remove Tutorial Mode
 
     // Set up the Tab Host
-    tabHost = (FlingableTabHost) findViewById(android.R.id.tabhost);
     tabHost.setup();
     tabHost.setOnTabChangedListener(this);
-
-    featuredListView.setAdapter(new EventListAdapter(this, commonController.featuredList));
-    allListView.setAdapter(new EventListAdapter(this, commonController.eventsList));
-    radarListView.setAdapter(new EventListAdapter(this, commonController.radarList));
-    
-    
-    // featuredListView.setOnItemLongClickListener
-    // featuredListView.setOnItemClickListener TODO Switch EventListAdapter over to this
-
-    findViewById(R.id.map_button).setOnClickListener(new OnClickListener() {
-      public void onClick(View v) {
-        if (!forceFeatureTab) {
-          Intent intent = new Intent(RadarActivity.this, RadarMapActivity.class);
-          intent.putExtra("controller", commonController);
-          intent.putExtra("token", tabbieAccessToken);
-          startActivity(intent);
-        } else {
-          Toast.makeText(RadarActivity.this,
-              "Please select an event to continue the tutorial",
-              Toast.LENGTH_SHORT).show();
-        }
-      }
-    });
-
     setupTab(featuredListView, getString(R.string.tab_top10));
     setupTab(allListView, getString(R.string.tab_all_events));
     setupTab(radarListView, getString(R.string.tab_short_list));
-
     tabHost.setCurrentTab(0);
 
+    // Set ListView Properties
+    featuredListView.setAdapter(new EventListAdapter(this, commonController.featuredList));
     featuredListView.setFastScrollEnabled(true);
-    allListView.setFastScrollEnabled(true);
-    radarListView.setFastScrollEnabled(true);
-    
     featuredListView.setOnItemClickListener(this);
+    
+    allListView.setAdapter(new EventListAdapter(this, commonController.eventsList));
+    allListView.setFastScrollEnabled(true);
     allListView.setOnItemClickListener(this);
+    
+    radarListView.setAdapter(new EventListAdapter(this, commonController.radarList));
+    radarListView.setFastScrollEnabled(true);
     radarListView.setOnItemClickListener(this);
+    
+    // featuredListView.setOnItemLongClickListener TODO
 
     preferences = getPreferences(MODE_PRIVATE);
     final Intent authenticate = new Intent(this, AuthenticateActivity.class);
