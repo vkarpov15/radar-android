@@ -87,7 +87,7 @@ public class AuthenticateActivity extends ServerThreadActivity {
 	}
 
 	@Override
-	protected boolean handleServerResponse(final ServerResponse resp) {
+	protected synchronized boolean handleServerResponse(final ServerResponse resp) {
 		
 		final JSONObject json = resp.parseJsonContent();
 		

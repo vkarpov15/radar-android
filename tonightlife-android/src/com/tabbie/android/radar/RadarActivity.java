@@ -235,6 +235,10 @@ public class RadarActivity extends ServerThreadActivity implements
             intent.putExtra("token", tabbieAccessToken);
         startActivity(intent);
         break;
+        
+    default:
+        facebook.authorizeCallback(requestCode, resultCode, data);
+        break;
     }
   }
 
