@@ -22,6 +22,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.facebook.android.DialogError;
 import com.facebook.android.Facebook;
@@ -54,11 +55,13 @@ public class AuthenticateActivity extends ServerThreadActivity {
 		fbAccessToken = data.getStringExtra("token");
 		expires = data.getLongExtra("expires", 0);
 		
-		if (fbAccessToken!=null)
+		if (fbAccessToken!=null) {
 		  facebook.setAccessToken(fbAccessToken);
+		}
 		
-		if (expires!=0)
+		if (expires!=0) {
 		  facebook.setAccessExpires(expires);
+		}
 		
 		if (facebook.isSessionValid()) {
 			Log.i(TAG, "Session is valid");
@@ -92,7 +95,6 @@ public class AuthenticateActivity extends ServerThreadActivity {
 		
 		switch(resp.responseTo) {
 		case FACEBOOK_LOGIN:
-			Log.d(TAG, "Facebook Login case");
 			if(json.has("id"))
 			{
 				try {
@@ -117,7 +119,6 @@ public class AuthenticateActivity extends ServerThreadActivity {
 			break;
 			
 		case TABBIE_LOGIN:
-			Log.d(TAG, "Tabbie Login case");
 			if (json.has("token")) {
 				try {
 					tabbieAccessToken = json.getString("token");
