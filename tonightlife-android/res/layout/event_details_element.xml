@@ -41,7 +41,7 @@
         
         <ImageView
 			android:id="@+id/add_to_radar_image"
-			android:src="@drawable/radar_button_selector"
+			android:src="@drawable/lineup_button_selector"
 			android:layout_below="@id/details_event_title"
 			android:layout_width="50dp"
 			android:layout_height="50dp"
