@@ -93,27 +93,6 @@
 				android:src="@drawable/location_marker" />
 			
 		</LinearLayout>
-	   	
-	   	<TextView
-	   	    android:visibility="gone"
-	   	    android:id="@+id/upvotes"
-	      	android:layout_width="wrap_content"
-	      	android:layout_height="wrap_content"
-	      	android:layout_below="@id/event_list_time"
-	      	android:paddingLeft="10dp"
-	      	android:textSize="10dp"
-	      	android:textColor="@color/ORANGE"
-	      	android:text="100" />
-	   	
-	   	<TextView 
-	   	    android:visibility="gone"
-	   	    android:id="@+id/added_radar"
-	   	    android:layout_width="wrap_content"
-	   	    android:layout_height="wrap_content"
-	   	    android:layout_below="@id/event_list_time"
-	   	    android:layout_toRightOf="@id/upvotes"
-	   	    android:text=" people added this to their radar"
-	   	    android:textSize="10dp" />
 	  
 	   
 	</RelativeLayout>

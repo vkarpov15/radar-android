@@ -56,10 +56,6 @@ public class EventListAdapter extends BaseAdapter {
       ((TextView) convertView
           .findViewById(R.id.event_location))
           .setText(e.venueName);
-
-      ((TextView) convertView
-    		  .findViewById(R.id.upvotes))
-    		  .setText(Integer.toString(e.radarCount));
       
       final View viewHolder = convertView.findViewById(R.id.image_holder);
       viewHolder.findViewById(R.id.element_loader).startAnimation(AnimationUtils.loadAnimation(context, R.anim.rotate));
