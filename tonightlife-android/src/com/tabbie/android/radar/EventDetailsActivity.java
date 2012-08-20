@@ -13,7 +13,6 @@ package com.tabbie.android.radar;
 import java.util.Arrays;
 import java.util.List;
 
-import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
@@ -36,10 +35,7 @@ public class EventDetailsActivity extends ServerThreadActivity
 	
   private Event e;
   private RadarCommonController commonController;
-  private UnicornSlayerController tutorialController;
   private String token;
-
-  private boolean tutorialMode = false;
   
   @SuppressWarnings("unchecked")
   private static final List<Pair<String, Class<?> > >
@@ -54,8 +50,6 @@ public class EventDetailsActivity extends ServerThreadActivity
     super.onCreate(savedInstanceState);
     setContentView(R.layout.event_details_activity);
 
-    tutorialController = new UnicornSlayerController(new AlertDialog.Builder(this));
-
     Bundle starter = getIntent().getExtras();
     BundleChecker b = new BundleChecker(starter);
     if (!b.check(REQUIRED_INTENT_PARAMS)) {
@@ -68,17 +62,10 @@ public class EventDetailsActivity extends ServerThreadActivity
     commonController = starter.getParcelable("controller");
     e = commonController.getEvent(eventId);
     token = starter.getString("token");
-    tutorialMode = starter.getBoolean("virgin", false);
     
     final ViewPager pager = (ViewPager) findViewById(R.id.details_event_pager);
     new EventDetailsPagerAdapter(this, commonController, R.layout.event_details_element, pager, this, this);
     pager.setCurrentItem(commonController.eventsList.indexOf(e));
-    
-    
-    if (tutorialMode) {
-      tutorialController.showDetailsTutorial();
-      tutorialMode = false;
-    }
 
   }
 
