@@ -88,13 +88,6 @@ public class EventDetailsPagerAdapter
 	        .makeYourTime());
 	    ((TextView) v.findViewById(R.id.details_event_location)).setText(e.venueName);
 	    ((TextView) v.findViewById(R.id.details_event_address)).setText(e.address);
-	    ((TextView) v.findViewById(R.id.details_event_num_radar)).setText(Integer
-	        .toString(e.radarCount));
-	    if (1 == e.radarCount) {
-	      ((TextView) v.findViewById(R.id.event_num_radar_desc)).setText(" person has added this to her lineup");
-	    } else {
-	      ((TextView) v.findViewById(R.id.event_num_radar_desc)).setText(" people have added this to their lineup");
-	    }
 	    ((TextView) v.findViewById(R.id.details_event_description))
 	        .setText(e.description);
 	    Linkify.addLinks((TextView) v.findViewById(R.id.details_event_description),

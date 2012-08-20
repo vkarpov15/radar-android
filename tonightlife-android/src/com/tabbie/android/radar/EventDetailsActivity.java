@@ -20,7 +20,6 @@ import android.util.Log;
 import android.util.Pair;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.tabbie.android.radar.EventDetailsPagerAdapter.LineupSelectedCallback;
@@ -86,13 +85,11 @@ public class EventDetailsActivity extends ServerThreadActivity
   
 	@Override
 	public void onRadarSelected(final View v, final Event e) {
-	    final TextView radarCount = (TextView) v.findViewById(R.id.details_event_num_radar);
 	    final ImageView radarButton = (ImageView) v.findViewById(R.id.add_to_radar_image);
 	
         if (e.isOnRadar() && commonController.removeFromRadar(e)) {
           Log.v("EventDetailsActivity", "Removing event from radar");
           radarButton.setSelected(false);
-          radarCount.setText(Integer.toString(e.radarCount));
 
           ServerDeleteRequest req = new ServerDeleteRequest(
               ServerThread.TABBIE_SERVER + "/mobile/radar/" + e.id
@@ -103,7 +100,6 @@ public class EventDetailsActivity extends ServerThreadActivity
           Log.v("EventDetailsActivity", "Adding event to radar");
           if (commonController.addToRadar(e)) {
             radarButton.setSelected(true);
-            radarCount.setText(Integer.toString(e.radarCount));
 
             ServerPostRequest req = new ServerPostRequest(
                 ServerThread.TABBIE_SERVER + "/mobile/radar/" + e.id + ".json",

@@ -87,32 +87,13 @@
             android:textSize="10dp"
             android:gravity="center"
             android:layout_above="@id/add_to_radar_image" />
-
-        <TextView
-            android:id="@+id/details_event_num_radar"
-			android:layout_alignBottom="@id/add_to_radar_image"
-			android:layout_toRightOf="@id/location_image"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="6"
-            android:textSize="10dp"
-            android:textColor="@color/ORANGE" />
-
-        <TextView
-            android:id="@+id/event_num_radar_desc"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@id/add_to_radar_image"
-            android:layout_toRightOf="@id/details_event_num_radar"
-            android:textSize="10dp"
-            android:text="{ people added this to their lineup}" />
     
 	    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
 	        android:id="@+id/details_scroll_container"
 	        android:layout_width="fill_parent"
 	        android:layout_height="fill_parent"
 	        android:layout_margin="10dp"
-	        android:layout_below="@id/event_num_radar_desc">
+	        android:layout_below="@id/location_image">
 		        
 		    <TextView
 		            android:id="@+id/details_event_description"
