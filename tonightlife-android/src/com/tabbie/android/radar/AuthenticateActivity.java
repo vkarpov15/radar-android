@@ -136,10 +136,11 @@ public class AuthenticateActivity extends ServerThreadActivity {
 					this.setResult(RESULT_OK, data);
 					finish();
 				}
-			} else return false;
+			} else {
+				return false;
+			}
 			break;
 		}
-
 		return true;
 	}
 }
