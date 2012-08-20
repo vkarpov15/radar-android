@@ -9,7 +9,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -62,14 +61,9 @@ public class RadarActivity extends ServerThreadActivity implements
   // Internal state for views
   private String tabbieAccessToken = null;
   private int currentViewPosition = 0;
-  private boolean tabbieVirgin = true; // SharedPref variable to determine if
-                                       // the tutorial should run
-  private boolean forceFeatureTab = false; // Used to make sure the user can't
-                                           // escape the tutorial
 
   // Controllers
   private RadarCommonController commonController;
-  private UnicornSlayerController tutorialController;
 
   // FB junk
   private final Facebook facebook = new Facebook("217386331697217");
@@ -102,22 +96,12 @@ public class RadarActivity extends ServerThreadActivity implements
     
     findViewById(R.id.map_button).setOnClickListener(new OnClickListener() {
         public void onClick(View v) {
-          if (!forceFeatureTab) {
             Intent intent = new Intent(RadarActivity.this, RadarMapActivity.class);
             intent.putExtra("controller", commonController);
             intent.putExtra("token", tabbieAccessToken);
             startActivity(intent);
-          } else {
-            Toast.makeText(RadarActivity.this,
-                "Please select an event to continue the tutorial",
-                Toast.LENGTH_SHORT).show();
-          }
         }
       });
-
-    
-    // Build Tutorial Mode
-    tutorialController = new UnicornSlayerController(new AlertDialog.Builder(this)); // TODO Remove Tutorial Mode
 
     // Set up the Tab Host
     tabHost.setup();
@@ -152,7 +136,6 @@ public class RadarActivity extends ServerThreadActivity implements
   }
 
   public void onTabChanged(String tabName) {
-    if (!tabbieVirgin) {
       findViewById(R.id.radar_list_empty_text).setVisibility(View.GONE);
       
 
@@ -185,11 +168,6 @@ public class RadarActivity extends ServerThreadActivity implements
         throw new RuntimeException();
 
       PlayAnim(v, getBaseContext(), android.R.anim.fade_in, 100);
-    } else if (forceFeatureTab) {
-      tabHost.setCurrentTab(0); // TODO This probably shouldn't be hardcoded
-      Toast.makeText(this, "Please select an event to continue the tutorial",
-          Toast.LENGTH_SHORT).show();
-    }
   }
 
   public Animation PlayAnim(View v, Context con, int animationId,
@@ -243,9 +221,6 @@ public class RadarActivity extends ServerThreadActivity implements
       ((EventListAdapter) radarListView.getAdapter()).notifyDataSetChanged();
 
       currentListView.setSelection(currentViewPosition);
-      if (forceFeatureTab) {
-        forceFeatureTab = false;
-      }
       break;
       
     case RadarCommonController.FIRE_EVENT:
@@ -356,36 +331,6 @@ public class RadarActivity extends ServerThreadActivity implements
           findViewById(R.id.radar_list_empty_text).setVisibility(View.GONE);
           if(0 == commonController.eventsList.size() || 0 == commonController.featuredList.size())
           	findViewById(R.id.radar_list_empty_text).setVisibility(View.VISIBLE);
-
-          tabbieVirgin = getPreferences(MODE_PRIVATE).getBoolean("virgin", true);
-
-          if (tabbieVirgin) {
-            tutorialController.showTabsTutorial(new UnicornSlayerController.TabsCallback() {
-              @Override
-              public void openRadarTab() {
-                tabHost.setCurrentTab(2);
-              }
-
-              @Override
-              public void openFeaturedTab() {
-                tabHost.setCurrentTab(0);
-                forceFeatureTab = true;
-              }
-
-              @Override
-              public void openEventsTab() {
-                tabHost.setCurrentTab(1);
-              }
-            }, new UnicornSlayerController.CancelCallback() {
-              @Override
-              public void onCancel() {
-                tabbieVirgin = false;
-                SharedPreferences.Editor editor = preferences.edit();
-                editor.putBoolean("virgin", false);
-                editor.commit();
-              }
-            });
-          }
         }
       });
     return false;
@@ -497,15 +442,6 @@ public class RadarActivity extends ServerThreadActivity implements
 	            intent.putExtra("eventId", e.id);
 	            intent.putExtra("controller", commonController);
 	            intent.putExtra("token", tabbieAccessToken);
-	            if (tabbieVirgin) {
-	              intent.putExtra("virgin", true); // Make sure this
-	                                               // activity knows it's in
-	                                               // tutorial mode
-	              tabbieVirgin = false; // User is no longer a prepubescent
-	                                    // pussy
-	              getPreferences(MODE_PRIVATE).edit()
-	                  .putBoolean("virgin", false).commit();
-	            }
 	            return intent;
 	          }
 
