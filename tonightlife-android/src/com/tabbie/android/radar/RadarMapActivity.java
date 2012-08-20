@@ -113,14 +113,14 @@ public class RadarMapActivity extends MapActivity
 
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
-    switch (item.getItemId()) {
-    case R.id.zoom_to_me:
-      mapController.setLatLon(myLocationOverlay.getMyLocation());
-      mapController.setZoom(16);
-      return true;
-    default:
-      return super.onOptionsItemSelected(item);
-    }
+    int itemId = item.getItemId();
+	if (itemId == R.id.zoom_to_me) {
+		mapController.setLatLon(myLocationOverlay.getMyLocation());
+		mapController.setZoom(16);
+		return true;
+	} else {
+		return super.onOptionsItemSelected(item);
+	}
   }
 
 	@Override

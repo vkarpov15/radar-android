@@ -11,13 +11,11 @@ public class EventMarker extends OverlayItem {
 	}
 	
 	public EventMarker(final Event e) {
-		super(new GeoPoint((int) (e.lat * 1E6),
-				(int) (e.lon * 1E6)),
+		super(new GeoPoint(0, 0),
 				e.name, e.description);
 		this.event = e;
 	}
 	
-	@Override
 	public String getTitle() {
 		return event.name;
 	}

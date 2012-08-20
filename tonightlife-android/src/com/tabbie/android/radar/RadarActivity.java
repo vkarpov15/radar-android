@@ -396,31 +396,28 @@ public class RadarActivity extends ServerThreadActivity implements
   public boolean onOptionsItemSelected(final MenuItem item) {
     // Handle item selection
 
-    switch (item.getItemId()) {
-    case R.id.refresh_me:
-      this.runOnUiThread(new Runnable() {
-        public void run() {
-          ServerGetRequest req = new ServerGetRequest(
-              ServerThread.TABBIE_SERVER + "/mobile/all.json?auth_token="
-                  + tabbieAccessToken, MessageType.LOAD_EVENTS);
-          sendServerRequest(req);
-        }
-      });
-
-      return true;
-    case R.id.report_me:
-    	Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);
-    	emailIntent.setType("plain/text");
-    	emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL, FOUNDERS_EMAIL);
-    	emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, APP_FEEDBACK_SUBJECT);
-    	startActivity(Intent.createChooser(emailIntent, "Send feedback..."));
-    	return true;
-    	
-    case R.id.preference_me:
-    	final PreferencesDialog preferencesDialog = new PreferencesDialog(this, R.layout.preferences);
-    	preferencesDialog.setTitle("Preferences");
-    	
-    	preferencesDialog.setOnAgeItemSelectedListener(new OnItemSelectedListener() {
+    int itemId = item.getItemId();
+	if (itemId == R.id.refresh_me) {
+		this.runOnUiThread(new Runnable() {
+		    public void run() {
+		      ServerGetRequest req = new ServerGetRequest(
+		          ServerThread.TABBIE_SERVER + "/mobile/all.json?auth_token="
+		              + tabbieAccessToken, MessageType.LOAD_EVENTS);
+		      sendServerRequest(req);
+		    }
+		  });
+		return true;
+	} else if (itemId == R.id.report_me) {
+		Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);
+		emailIntent.setType("plain/text");
+		emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL, FOUNDERS_EMAIL);
+		emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, APP_FEEDBACK_SUBJECT);
+		startActivity(Intent.createChooser(emailIntent, "Send feedback..."));
+		return true;
+	} else if (itemId == R.id.preference_me) {
+		final PreferencesDialog preferencesDialog = new PreferencesDialog(this, R.layout.preferences);
+		preferencesDialog.setTitle("Preferences");
+		preferencesDialog.setOnAgeItemSelectedListener(new OnItemSelectedListener() {
 
 			@Override
 			public void onItemSelected(AdapterView<?> parent, View v,
@@ -435,8 +432,7 @@ public class RadarActivity extends ServerThreadActivity implements
 				
 			}
 		});
-    	
-    	preferencesDialog.setOnCostItemsSelectedListener(new MultiSpinnerListener() {
+		preferencesDialog.setOnCostItemsSelectedListener(new MultiSpinnerListener() {
 			
 			@Override
 			public void onItemsSelected(boolean[] selected) {
@@ -444,8 +440,7 @@ public class RadarActivity extends ServerThreadActivity implements
 				
 			}
 		});
-    	
-    	preferencesDialog.setOnEnergyItemsSelectedListener(new MultiSpinnerListener() {
+		preferencesDialog.setOnEnergyItemsSelectedListener(new MultiSpinnerListener() {
 			
 			@Override
 			public void onItemsSelected(boolean[] selected) {
@@ -453,13 +448,11 @@ public class RadarActivity extends ServerThreadActivity implements
 				
 			}
 		});
-    	
-    	preferencesDialog.show();
-    	return true;
-    	
-    default:
-      return super.onOptionsItemSelected(item);
-    }
+		preferencesDialog.show();
+		return true;
+	} else {
+		return super.onOptionsItemSelected(item);
+	}
   }
   
   @Override

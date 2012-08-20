@@ -12,13 +12,16 @@ package com.tabbie.android.radar;
  *  NullPointerExceptions
  */
 
-import com.tabbie.android.radar.MultiSpinner.MultiSpinnerListener;
+
 
 import android.app.Dialog;
 import android.content.Context;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+
+import com.tabbie.android.radar.MultiSpinner.MultiSpinnerListener;
+
 
 public class PreferencesDialog extends Dialog {
 	
