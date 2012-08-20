@@ -28,6 +28,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ListView;
 import android.widget.TabHost;
@@ -43,7 +44,7 @@ import com.tabbie.android.radar.http.ServerGetRequest;
 import com.tabbie.android.radar.http.ServerResponse;
 
 public class RadarActivity extends ServerThreadActivity implements
-    OnTabChangeListener, OnItemClickListener {
+    OnTabChangeListener, OnItemClickListener, OnItemLongClickListener {
   
   // Intent constants
   private static final String[] FOUNDERS_EMAIL = {"founders@tonight-life.com"};
@@ -98,6 +99,7 @@ public class RadarActivity extends ServerThreadActivity implements
     radarListView = (ListView) findViewById(R.id.radar_list);
     myNameView = (TextView) findViewById(R.id.user_name);
     tabHost = (FlingableTabHost) findViewById(android.R.id.tabhost);
+    
     findViewById(R.id.map_button).setOnClickListener(new OnClickListener() {
         public void onClick(View v) {
           if (!forceFeatureTab) {
@@ -129,17 +131,19 @@ public class RadarActivity extends ServerThreadActivity implements
     featuredListView.setAdapter(new EventListAdapter(this, commonController.featuredList));
     featuredListView.setFastScrollEnabled(true);
     featuredListView.setOnItemClickListener(this);
+    featuredListView.setOnItemLongClickListener(this);
     
     allListView.setAdapter(new EventListAdapter(this, commonController.eventsList));
     allListView.setFastScrollEnabled(true);
     allListView.setOnItemClickListener(this);
+    allListView.setOnItemLongClickListener(this);
     
     radarListView.setAdapter(new EventListAdapter(this, commonController.radarList));
     radarListView.setFastScrollEnabled(true);
     radarListView.setOnItemClickListener(this);
+    radarListView.setOnItemLongClickListener(this);
     
-    // featuredListView.setOnItemLongClickListener TODO
-
+    // Launch Authentication Activity
     preferences = getPreferences(MODE_PRIVATE);
     final Intent authenticate = new Intent(this, AuthenticateActivity.class);
     authenticate.putExtra("token", preferences.getString("access_token", null));
@@ -514,5 +518,13 @@ public class RadarActivity extends ServerThreadActivity implements
 	          };
 	        }.execute();
 	      }
+	}
+
+	@Override
+	public boolean onItemLongClick(AdapterView<?> parent, View v, int position,
+			long rowId) {
+		// TODO Pop up a dialog here
+		Toast.makeText(this, "Long click!", Toast.LENGTH_SHORT).show();
+		return true;
 	}
 }
