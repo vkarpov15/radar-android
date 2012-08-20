@@ -22,7 +22,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.facebook.android.DialogError;
 import com.facebook.android.Facebook;
@@ -91,7 +90,10 @@ public class AuthenticateActivity extends ServerThreadActivity {
 	protected boolean handleServerResponse(final ServerResponse resp) {
 		
 		final JSONObject json = resp.parseJsonContent();
-		if(json==null) return false;
+		
+		if(json==null) {
+			return false;
+		}
 		
 		switch(resp.responseTo) {
 		case FACEBOOK_LOGIN:
