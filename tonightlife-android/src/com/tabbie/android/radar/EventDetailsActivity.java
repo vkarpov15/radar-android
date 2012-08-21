@@ -23,18 +23,19 @@ import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.tabbie.android.radar.EventDetailsPagerAdapter.LineupSelectedCallback;
 import com.tabbie.android.radar.core.BundleChecker;
 import com.tabbie.android.radar.http.ServerDeleteRequest;
 import com.tabbie.android.radar.http.ServerPostRequest;
 import com.tabbie.android.radar.http.ServerResponse;
 
 public class EventDetailsActivity extends ServerThreadActivity
-	implements LineupSelectedCallback, OnClickListener {
+	implements OnClickListener {
 	
   private Event e;
   private RadarCommonController commonController;
   private String token;
+  
+  protected static final String TAG = "EventDetailsActivity";
   
   @SuppressWarnings("unchecked")
   private static final List<Pair<String, Class<?> > >
@@ -82,25 +83,36 @@ public class EventDetailsActivity extends ServerThreadActivity
     return false;
   }
   
-  
-	@Override
-	public void onRadarSelected(final View v, final Event e) {
-	    final ImageView radarButton = (ImageView) v.findViewById(R.id.add_to_radar_image);
+@Override
+public void onClick(View v) {
 	
+	final Event e = (Event) v.getTag();
+	
+	switch(v.getId()) {
+	case R.id.details_event_address:
+		Log.d(TAG, "Event Address Selected");
+	case R.id.location_image:
+		Log.d(TAG, "Location Image Selected");
+		final Intent intent = new Intent(this, RadarMapActivity.class);
+		intent.putExtra("controller", commonController);
+		intent.putExtra("event", e);
+		intent.putExtra("token", token);
+		startActivity(intent);
+		break;
+		
+	case R.id.add_to_radar_image:
+		Log.d(TAG, "Lineup Button Selected");
+	    final ImageView radarButton = (ImageView) v.findViewById(R.id.add_to_radar_image);
+		
         if (e.isOnRadar() && commonController.removeFromRadar(e)) {
-          Log.v("EventDetailsActivity", "Removing event from radar");
           radarButton.setSelected(false);
-
           ServerDeleteRequest req = new ServerDeleteRequest(
               ServerThread.TABBIE_SERVER + "/mobile/radar/" + e.id
                   + ".json?auth_token=" + token, MessageType.ADD_TO_RADAR);
-
           serverThread.sendRequest(req);
         } else if (!e.isOnRadar()) {
-          Log.v("EventDetailsActivity", "Adding event to radar");
           if (commonController.addToRadar(e)) {
             radarButton.setSelected(true);
-
             ServerPostRequest req = new ServerPostRequest(
                 ServerThread.TABBIE_SERVER + "/mobile/radar/" + e.id + ".json",
                 MessageType.ADD_TO_RADAR);
@@ -109,22 +121,9 @@ public class EventDetailsActivity extends ServerThreadActivity
           } else {
             Toast.makeText(EventDetailsActivity.this,
                 "Failed to add event to your shortlist!", Toast.LENGTH_SHORT).show();
-            return;
           }
         }
-	}
-
-@Override
-public void onClick(View v) {
-	switch(v.getId()) {
-	case R.id.location_image:
-		final Event e = (Event) v.getTag();
-		final Intent intent = new Intent(this, RadarMapActivity.class);
-		intent.putExtra("controller", commonController);
-		intent.putExtra("event", e);
-		intent.putExtra("token", token);
-		startActivity(intent);
-		break;
+        break;
 	}
 }
 }

@@ -30,19 +30,19 @@ public class EventDetailsPagerAdapter
 	private final Context context;
 	private final RadarCommonController controller;
 	private final int pageLayout;
-	private final LineupSelectedCallback lineupSelectedCallback;
+	private final OnClickListener listener;
 	
 	public EventDetailsPagerAdapter(final Context context,
 	                                final RadarCommonController controller,
 	                                final int pageLayout,
 	                                final ViewPager pager,
-	                                final LineupSelectedCallback lineupSelectedCallback) {
+	                                final OnClickListener listener) {
 		
 		this.context = context;
+		this.listener = listener;
 		imageLoader = new ImageLoader(context);
 		this.controller = controller;
 		this.pageLayout = pageLayout;
-		this.lineupSelectedCallback = lineupSelectedCallback;
 		pager.setAdapter(this);
 		pager.setOnPageChangeListener(this);
 	}
@@ -84,30 +84,22 @@ public class EventDetailsPagerAdapter
 	    ((TextView) v.findViewById(R.id.details_event_time)).setText(e.time
 	        .makeYourTime());
 	    ((TextView) v.findViewById(R.id.details_event_location)).setText(e.venueName);
-	    ((TextView) v.findViewById(R.id.details_event_address)).setText(e.address);
+	    
+	    final TextView addressView = ((TextView) v.findViewById(R.id.details_event_address));
+	    addressView.setText(e.address);
+	    
 	    ((TextView) v.findViewById(R.id.details_event_description))
 	        .setText(e.description);
 	    Linkify.addLinks((TextView) v.findViewById(R.id.details_event_description),
 	        Linkify.WEB_URLS);
 	    
-	    /*
-	    ((ImageView) v.findViewById(R.id.location_image)).setOnClickListener(new OnClickListener() {
-	      @Override
-	      public void onClick(View v) {
-	        locationClickCallback.onLocationClicked(e);
-	      }
-	    });*/
-	    ((ImageView) v.findViewById(R.id.location_image)).setOnClickListener((OnClickListener) context);
+	    ((ImageView) v.findViewById(R.id.location_image)).setOnClickListener(listener);
+	    addressView.setOnClickListener(listener);
 	    
 	    final ImageView radarButton = (ImageView) v.findViewById(R.id.add_to_radar_image);
 	    radarButton.setSelected(e.isOnRadar());
 	    
-	    radarButton.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View radar) {
-				lineupSelectedCallback.onRadarSelected(v, e);
-			}
-		});
+	    radarButton.setOnClickListener(listener);
 	    
 	    v.setTag(e);
 	    
@@ -132,9 +124,5 @@ public class EventDetailsPagerAdapter
 	@Override
 	public void onPageSelected(int arg0) {
 		
-	}
-	
-	public interface LineupSelectedCallback {
-		public void onRadarSelected(final View v, final Event e);
 	}
 }
