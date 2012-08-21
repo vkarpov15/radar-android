@@ -86,7 +86,7 @@ public class EventDetailsActivity extends ServerThreadActivity
 @Override
 public void onClick(View v) {
 	
-	final Event e = (Event) v.getTag();
+	final Event e = (Event) ((View) v.getParent()).getTag();
 	
 	switch(v.getId()) {
 	case R.id.details_event_address:
@@ -103,7 +103,6 @@ public void onClick(View v) {
 	case R.id.add_to_radar_image:
 		Log.d(TAG, "Lineup Button Selected");
 	    final ImageView radarButton = (ImageView) v.findViewById(R.id.add_to_radar_image);
-		
         if (e.isOnRadar() && commonController.removeFromRadar(e)) {
           radarButton.setSelected(false);
           ServerDeleteRequest req = new ServerDeleteRequest(
