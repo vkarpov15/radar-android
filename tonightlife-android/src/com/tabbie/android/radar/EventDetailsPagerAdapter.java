@@ -75,32 +75,44 @@ public class EventDetailsPagerAdapter
 	}
 	
 	private View bindEvent(final Event e) {
-		final View v = LayoutInflater.from(context).inflate(pageLayout, null);
-
-	    v.findViewById(R.id.element_loader).startAnimation(AnimationUtils.loadAnimation(context, R.anim.rotate));
-		imageLoader.displayImage(e.image.toString(), ((ImageView) v.findViewById(R.id.details_event_img)));
 		
-	    ((TextView) v.findViewById(R.id.details_event_title)).setText(e.name);
-	    ((TextView) v.findViewById(R.id.details_event_time)).setText(e.time
-	        .makeYourTime());
-	    ((TextView) v.findViewById(R.id.details_event_location)).setText(e.venueName);
+		// Acquire references to all of our views
+		final View v = LayoutInflater.from(context).inflate(pageLayout, null);
+		final View loaderView = v.findViewById(R.id.element_loader);
+		final TextView titleView = (TextView) v.findViewById(R.id.details_event_title);
+		final TextView timeView = (TextView) v.findViewById(R.id.details_event_time);
+		final TextView locationView = (TextView) v.findViewById(R.id.details_event_location);
+	    final TextView addressView = (TextView) v.findViewById(R.id.details_event_address);
+	    final TextView descriptionView = (TextView) v.findViewById(R.id.details_event_description);
+	    final ImageView radarButton = (ImageView) v.findViewById(R.id.add_to_radar_image);
+	    final ImageView locationLinkView = (ImageView) v.findViewById(R.id.location_image);
+	    final ImageView imageView = (ImageView) v.findViewById(R.id.details_event_img);
+
+	    // Begin loading image into display
+		imageLoader.displayImage(e.image.toString(), imageView);
+	    loaderView.startAnimation(AnimationUtils.loadAnimation(context, R.anim.rotate));
 	    
-	    final TextView addressView = ((TextView) v.findViewById(R.id.details_event_address));
+	    // Set string values
+	    titleView.setText(e.name);
+	    timeView.setText(e.time.makeYourTime());
+	    locationView.setText(e.venueName);
 	    addressView.setText(e.address);
+	    descriptionView.setText(e.description);
 	    
-	    ((TextView) v.findViewById(R.id.details_event_description))
-	        .setText(e.description);
-	    Linkify.addLinks((TextView) v.findViewById(R.id.details_event_description),
-	        Linkify.WEB_URLS);
+	    // Make sure hyper-links are in place
+	    Linkify.addLinks(descriptionView, Linkify.WEB_URLS);
 	    
-	    ((ImageView) v.findViewById(R.id.location_image)).setOnClickListener(listener);
+	    // MapView link listeners
+	    locationLinkView.setOnClickListener(listener);
 	    addressView.setOnClickListener(listener);
 	    
-	    final ImageView radarButton = (ImageView) v.findViewById(R.id.add_to_radar_image);
+	    // Set RadarButton and listener
 	    radarButton.setSelected(e.isOnRadar());
-	    
 	    radarButton.setOnClickListener(listener);
 	    
+	    
+	    // Make sure our main view has a reference
+	    // to the event that's populating it
 	    v.setTag(e);
 	    
 	    return v;
