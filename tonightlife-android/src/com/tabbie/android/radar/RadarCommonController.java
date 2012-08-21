@@ -76,7 +76,7 @@ public class RadarCommonController implements Parcelable {
   
 
   public void order() {
-    Collections.sort(eventsList,    defaultOrdering);
+    Collections.sort(eventsList,    chronoOrdering);
     Collections.sort(featuredList,  defaultOrdering);
     Collections.sort(radarList,     chronoOrdering);
   }

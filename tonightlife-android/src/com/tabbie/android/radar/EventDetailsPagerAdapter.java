@@ -31,21 +31,18 @@ public class EventDetailsPagerAdapter
 	private final RadarCommonController controller;
 	private final int pageLayout;
 	private final LineupSelectedCallback lineupSelectedCallback;
-	private final LocationClickCallback locationClickCallback;
 	
 	public EventDetailsPagerAdapter(final Context context,
 	                                final RadarCommonController controller,
 	                                final int pageLayout,
 	                                final ViewPager pager,
-	                                final LineupSelectedCallback lineupSelectedCallback,
-	                                final LocationClickCallback locationClickCallback) {
+	                                final LineupSelectedCallback lineupSelectedCallback) {
 		
 		this.context = context;
 		imageLoader = new ImageLoader(context);
 		this.controller = controller;
 		this.pageLayout = pageLayout;
 		this.lineupSelectedCallback = lineupSelectedCallback;
-		this.locationClickCallback = locationClickCallback;
 		pager.setAdapter(this);
 		pager.setOnPageChangeListener(this);
 	}
@@ -93,12 +90,14 @@ public class EventDetailsPagerAdapter
 	    Linkify.addLinks((TextView) v.findViewById(R.id.details_event_description),
 	        Linkify.WEB_URLS);
 	    
+	    /*
 	    ((ImageView) v.findViewById(R.id.location_image)).setOnClickListener(new OnClickListener() {
 	      @Override
 	      public void onClick(View v) {
 	        locationClickCallback.onLocationClicked(e);
 	      }
-	    });
+	    });*/
+	    ((ImageView) v.findViewById(R.id.location_image)).setOnClickListener((OnClickListener) context);
 	    
 	    final ImageView radarButton = (ImageView) v.findViewById(R.id.add_to_radar_image);
 	    radarButton.setSelected(e.isOnRadar());
@@ -112,39 +111,30 @@ public class EventDetailsPagerAdapter
 	    
 	    v.setTag(e);
 	    
-	    // TODO Code to load image, etc.
-	    
 	    return v;
 	}
 
 	
-	// TODO These methods give us access to
+	// 		These methods give us access to
 	//		the action bar/tab bar if we ever
 	//		want to create such a display.
 	
 	@Override
 	public void onPageScrollStateChanged(int arg0) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void onPageScrolled(int arg0, float arg1, int arg2) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void onPageSelected(int arg0) {
-		// TODO Auto-generated method stub
 		
 	}
 	
 	public interface LineupSelectedCallback {
 		public void onRadarSelected(final View v, final Event e);
-	}
-	
-	public interface LocationClickCallback {
-	  public void onLocationClicked(final Event e);
 	}
 }
