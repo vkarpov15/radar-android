@@ -347,8 +347,8 @@ public class RadarActivity extends ServerThreadActivity implements
   public boolean onOptionsItemSelected(final MenuItem item) {
     // Handle item selection
 
-    int itemId = item.getItemId();
-	if (itemId == R.id.refresh_me) {
+    switch(item.getItemId()) {
+    case R.id.refresh_me:
 		this.runOnUiThread(new Runnable() {
 		    public void run() {
 		      ServerGetRequest req = new ServerGetRequest(
@@ -357,15 +357,17 @@ public class RadarActivity extends ServerThreadActivity implements
 		      sendServerRequest(req);
 		    }
 		  });
-		return true;
-	} else if (itemId == R.id.report_me) {
+		break;
+		
+    case R.id.report_me:
 		Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);
 		emailIntent.setType("plain/text");
 		emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL, FOUNDERS_EMAIL);
 		emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, APP_FEEDBACK_SUBJECT);
 		startActivity(Intent.createChooser(emailIntent, "Send feedback..."));
-		return true;
-	} else if (itemId == R.id.preference_me) {
+		break;
+		
+    case R.id.preference_me:
 		final PreferencesDialog preferencesDialog = new PreferencesDialog(this, R.layout.preferences);
 		preferencesDialog.setTitle("Preferences");
 		preferencesDialog.setOnAgeItemSelectedListener(new OnItemSelectedListener() {
@@ -400,10 +402,12 @@ public class RadarActivity extends ServerThreadActivity implements
 			}
 		});
 		preferencesDialog.show();
-		return true;
-	} else {
+		break;
+		
+	default:
 		return super.onOptionsItemSelected(item);
 	}
+    return true;
   }
   
   @Override
