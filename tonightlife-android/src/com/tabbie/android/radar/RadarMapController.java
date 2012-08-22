@@ -18,6 +18,8 @@ import com.google.android.maps.ItemizedOverlay;
 import com.google.android.maps.MapView;
 
 public class RadarMapController {
+	
+	private static final String TAG = "RadarMapController";
 
   private final MapView mapView;
   private final View popUp;
@@ -119,6 +121,7 @@ public class RadarMapController {
   }
 
   public void addEventMarker(Event e, Drawable markerImg) {
+	  Log.d(TAG, "Adding drawable marker");
     EventMarker marker = new EventMarker(e);
     markerImg.setBounds(0, 0, markerImg.getIntrinsicWidth(),
         markerImg.getIntrinsicHeight());

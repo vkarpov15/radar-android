@@ -11,7 +11,8 @@ public class EventMarker extends OverlayItem {
 	}
 	
 	public EventMarker(final Event e) {
-		super(new GeoPoint(0, 0),
+		super(new GeoPoint((int) (e.lat*1E6),
+				(int) (e.lon*1E6)),
 				e.name, e.description);
 		this.event = e;
 	}
