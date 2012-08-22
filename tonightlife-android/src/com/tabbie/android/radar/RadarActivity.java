@@ -241,9 +241,20 @@ public class RadarActivity extends ServerThreadActivity implements
   public void onResume() {
     super.onResume();
     facebook.extendAccessTokenIfNeeded(this, null);
-    
-    // TODO Refresh functionality
   }
+  
+  @Override
+	protected void onRestart() {
+		super.onRestart();
+		this.runOnUiThread(new Runnable() {
+		    public void run() {
+		      ServerGetRequest req = new ServerGetRequest(
+		          ServerThread.TABBIE_SERVER + "/mobile/all.json?auth_token="
+		              + tabbieAccessToken, MessageType.LOAD_EVENTS);
+		      sendServerRequest(req);
+		    }
+		  });
+	}
 
   private void setupTab(final View view, final String tag) {
     View tabview = createTabView(tabHost.getContext(), tag);
@@ -344,7 +355,6 @@ public class RadarActivity extends ServerThreadActivity implements
 
   @Override
   public boolean onOptionsItemSelected(final MenuItem item) {
-    // Handle item selection
 
     switch(item.getItemId()) {
     case R.id.refresh_me:
