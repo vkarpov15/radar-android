@@ -62,8 +62,11 @@ public class RadarActivity extends ServerThreadActivity implements
   private String tabbieAccessToken = null;
   private int currentViewPosition = 0;
 
-  // Controllers
+  // Controllers and adapters
   private RadarCommonController commonController;
+  private EventListAdapter featuredAdapter;
+  private EventListAdapter allAdapter;
+  private EventListAdapter lineupAdapter;
 
   // FB junk
   private final Facebook facebook = new Facebook("217386331697217");
@@ -110,19 +113,24 @@ public class RadarActivity extends ServerThreadActivity implements
     setupTab(allListView, getString(R.string.tab_all_events));
     setupTab(radarListView, getString(R.string.tab_short_list));
     tabHost.setCurrentTab(0);
+    
+    // Create adapters
+    featuredAdapter = new EventListAdapter(this, commonController.featuredList);
+    allAdapter = new EventListAdapter(this, commonController.eventsList);
+    lineupAdapter = new EventListAdapter(this, commonController.radarList);
 
     // Set ListView Properties
-    featuredListView.setAdapter(new EventListAdapter(this, commonController.featuredList));
+    featuredListView.setAdapter(featuredAdapter);
     featuredListView.setFastScrollEnabled(true);
     featuredListView.setOnItemClickListener(this);
     featuredListView.setOnItemLongClickListener(this);
     
-    allListView.setAdapter(new EventListAdapter(this, commonController.eventsList));
+    allListView.setAdapter(allAdapter);
     allListView.setFastScrollEnabled(true);
     allListView.setOnItemClickListener(this);
     allListView.setOnItemLongClickListener(this);
     
-    radarListView.setAdapter(new EventListAdapter(this, commonController.radarList));
+    radarListView.setAdapter(lineupAdapter);
     radarListView.setFastScrollEnabled(true);
     radarListView.setOnItemClickListener(this);
     radarListView.setOnItemLongClickListener(this);
@@ -160,8 +168,7 @@ public class RadarActivity extends ServerThreadActivity implements
         } else {
           v = findViewById(R.id.radar_list);
           commonController.order();
-          ((EventListAdapter) radarListView.getAdapter())
-              .notifyDataSetChanged();
+          lineupAdapter.notifyDataSetChanged();
         }
         currentListView = radarListView;
       } else
@@ -206,19 +213,14 @@ public class RadarActivity extends ServerThreadActivity implements
     case RadarCommonController.RETRIEVE_INSTANCE:
       final Bundle controller = data.getExtras();
       commonController = controller.getParcelable("controller");
-
-      // New adapters are necessary (for now) for the lists
-      // to update if the user clicked anything in Details
       
-      featuredListView.setAdapter(new EventListAdapter(this, commonController.featuredList));
-
-      allListView.setAdapter(new EventListAdapter(this, commonController.eventsList));
-
-      radarListView.setAdapter(new EventListAdapter(this, commonController.radarList));
-
-      ((EventListAdapter) featuredListView.getAdapter()).notifyDataSetChanged();
-      ((EventListAdapter) allListView.getAdapter()).notifyDataSetChanged();
-      ((EventListAdapter) radarListView.getAdapter()).notifyDataSetChanged();
+      featuredAdapter = new EventListAdapter(this, commonController.featuredList);
+      allAdapter = new EventListAdapter(this, commonController.eventsList);
+      lineupAdapter = new EventListAdapter(this, commonController.radarList);
+      
+      featuredListView.setAdapter(featuredAdapter);
+      allListView.setAdapter(allAdapter);
+      radarListView.setAdapter(lineupAdapter);
 
       currentListView.setSelection(currentViewPosition);
       break;
@@ -229,9 +231,6 @@ public class RadarActivity extends ServerThreadActivity implements
                 EventDetailsActivity.class);
             intent.putExtra("eventId", e.id);
             intent.putExtra("controller", commonController);
-            intent.putExtra("image",
-            		((EventListAdapter) allListView.getAdapter()).
-            		imageLoader.getBitmap(e.image.toString())); // TODO Make this code suck less
             intent.putExtra("token", tabbieAccessToken);
         startActivity(intent);
         break;
@@ -242,6 +241,8 @@ public class RadarActivity extends ServerThreadActivity implements
   public void onResume() {
     super.onResume();
     facebook.extendAccessTokenIfNeeded(this, null);
+    
+    // TODO Refresh functionality
   }
 
   private void setupTab(final View view, final String tag) {
@@ -322,11 +323,9 @@ public class RadarActivity extends ServerThreadActivity implements
       commonController.order();
       this.runOnUiThread(new Runnable() {
         public void run() {
-          ((EventListAdapter) featuredListView.getAdapter())
-              .notifyDataSetChanged();
-          ((EventListAdapter) allListView.getAdapter()).notifyDataSetChanged();
-          ((EventListAdapter) radarListView.getAdapter())
-              .notifyDataSetChanged();
+          featuredAdapter.notifyDataSetChanged();
+          allAdapter.notifyDataSetChanged();
+          lineupAdapter.notifyDataSetChanged();
           
           findViewById(R.id.radar_list_empty_text).setVisibility(View.GONE);
           if(0 == commonController.eventsList.size() || 0 == commonController.featuredList.size())
