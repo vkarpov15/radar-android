@@ -45,8 +45,20 @@
 			android:layout_below="@id/details_event_title"
 			android:layout_width="44dp"
 			android:layout_height="44dp"
-			android:layout_margin="10dp"
+			android:layout_marginRight="10dp"
+			android:layout_marginLeft="10dp"
 			android:layout_alignParentRight="true" />
+        
+        <TextView 
+            android:id="@+id/add_to_radar_text"
+            android:text="My Lineup"
+            android:textSize="8dp"
+            android:gravity="center"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/add_to_radar_image"
+            android:layout_alignRight="@id/add_to_radar_image"
+            android:layout_below="@id/add_to_radar_image"/>
         
         <ImageView
             android:id="@+id/location_image"
