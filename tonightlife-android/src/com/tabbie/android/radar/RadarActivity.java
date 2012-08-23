@@ -171,8 +171,9 @@ public class RadarActivity extends ServerThreadActivity implements
           lineupAdapter.notifyDataSetChanged();
         }
         currentListView = radarListView;
-      } else
+      } else {
         throw new RuntimeException();
+      }
 
       PlayAnim(v, getBaseContext(), android.R.anim.fade_in, 100);
   }
