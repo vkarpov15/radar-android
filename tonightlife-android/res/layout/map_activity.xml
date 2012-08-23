@@ -10,7 +10,8 @@
 		android:layout_width="fill_parent"
 		android:layout_height="fill_parent"
 		android:clickable="true"
-		android:apiKey="0FOxyEfcQ0KWKXNk-I3ubpC2yVnsVdHjByLdI6Q" />
+		android:apiKey="@string/productionMapsApiKey" />
+
 
 	<LinearLayout android:id="@+id/layout_zoom" 
     	android:layout_width="wrap_content" 
