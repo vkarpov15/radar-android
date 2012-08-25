@@ -474,7 +474,7 @@ public class RadarActivity extends ServerThreadActivity implements
 	public boolean onItemLongClick(AdapterView<?> parent, View v, int position,
 			long rowId) {
 		// TODO Pop up a dialog here
-		Toast.makeText(this, "Long click!", Toast.LENGTH_SHORT).show();
+		// Toast.makeText(this, "Long click!", Toast.LENGTH_SHORT).show();
 		return true;
 	}
 }

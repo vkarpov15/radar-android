@@ -11,6 +11,7 @@
         />
     
     <item android:id="@+id/preference_me"
+        android:visible="false"
         android:icon="@android:drawable/ic_menu_preferences"
         android:title="Preferences"
         />

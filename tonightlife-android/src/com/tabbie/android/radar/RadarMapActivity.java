@@ -71,7 +71,7 @@ public class RadarMapActivity extends MapActivity
             getResources().getDrawable(R.drawable.marker_highlight));
       } else {
         mapController.addEventMarker(e,
-            getResources().getDrawable(R.drawable.location_marker));
+            getResources().getDrawable(R.drawable.marker));
       }
     }
 
