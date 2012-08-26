@@ -26,7 +26,7 @@ public class TonightlifeDatetime implements Comparable<TonightlifeDatetime> {
     } else if (hours > 0 && hours < 12) {
       return Integer.toString(hours) + minutes + "am";
     } else {
-      return Integer.toString(hours - 12) + minutes + "pm";
+      return Integer.toString(12 == hours ? 12 : hours - 12) + minutes + "pm";
     }
   }
   
