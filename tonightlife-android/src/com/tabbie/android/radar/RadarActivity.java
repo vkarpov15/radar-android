@@ -195,44 +195,42 @@ public class RadarActivity extends ServerThreadActivity implements
     super.onActivityResult(requestCode, resultCode, data);
     
     switch (requestCode) {
-    case REQUEST_LOGIN:
-    	
+      case REQUEST_LOGIN:
         final SharedPreferences.Editor editor = preferences.edit();
         editor.putString("access_token", data.getStringExtra("fbAccessToken"));
         editor.putLong("access_expires", data.getLongExtra("expires", 0));
         editor.commit();
+          
+      	tabbieAccessToken = data.getStringExtra("tabbieAccessToken");
+      	myNameView.setText(data.getStringExtra("facebookName"));
+      	
+      	final ServerGetRequest req = new ServerGetRequest(
+      			ServerThread.TABBIE_SERVER + "/mobile/all.json?auth_token="
+      			+ tabbieAccessToken, MessageType.LOAD_EVENTS);
+      	sendServerRequest(req);
+      	break;
+    	
+      case RadarCommonController.RETRIEVE_INSTANCE:
+        final Bundle controller = data.getExtras();
+        commonController = controller.getParcelable("controller");
         
-    	tabbieAccessToken = data.getStringExtra("tabbieAccessToken");
-    	myNameView.setText(data.getStringExtra("facebookName"));
-    	
-    	final ServerGetRequest req = new ServerGetRequest(
-    			ServerThread.TABBIE_SERVER + "/mobile/all.json?auth_token="
-    			+ tabbieAccessToken, MessageType.LOAD_EVENTS);
-    	sendServerRequest(req);
-    	break;
-    	
-    case RadarCommonController.RETRIEVE_INSTANCE:
-      final Bundle controller = data.getExtras();
-      commonController = controller.getParcelable("controller");
+        featuredAdapter = new EventListAdapter(this, commonController.featuredList);
+        allAdapter = new EventListAdapter(this, commonController.eventsList);
+        lineupAdapter = new EventListAdapter(this, commonController.radarList);
+        
+        featuredListView.setAdapter(featuredAdapter);
+        allListView.setAdapter(allAdapter);
+        radarListView.setAdapter(lineupAdapter);
+  
+        currentListView.setSelection(currentViewPosition);
+        break;
       
-      featuredAdapter = new EventListAdapter(this, commonController.featuredList);
-      allAdapter = new EventListAdapter(this, commonController.eventsList);
-      lineupAdapter = new EventListAdapter(this, commonController.radarList);
-      
-      featuredListView.setAdapter(featuredAdapter);
-      allListView.setAdapter(allAdapter);
-      radarListView.setAdapter(lineupAdapter);
-
-      currentListView.setSelection(currentViewPosition);
-      break;
-      
-    case RadarCommonController.FIRE_EVENT:
-    	final Event e = commonController.getEvent(data.getExtras().getString("event"));
-        Intent intent = new Intent(RadarActivity.this,
-                EventDetailsActivity.class);
-            intent.putExtra("eventId", e.id);
-            intent.putExtra("controller", commonController);
-            intent.putExtra("token", tabbieAccessToken);
+      case RadarCommonController.FIRE_EVENT:
+      	final Event e = commonController.getEvent(data.getExtras().getString("event"));
+        Intent intent = new Intent(RadarActivity.this, EventDetailsActivity.class);
+        intent.putExtra("eventId", e.id);
+        intent.putExtra("controller", commonController);
+        intent.putExtra("token", tabbieAccessToken);
         startActivity(intent);
         break;
     }
@@ -340,8 +338,9 @@ public class RadarActivity extends ServerThreadActivity implements
           lineupAdapter.notifyDataSetChanged();
           
           findViewById(R.id.radar_list_empty_text).setVisibility(View.GONE);
-          if(0 == commonController.eventsList.size() || 0 == commonController.featuredList.size())
+          if (0 == commonController.eventsList.size() || 0 == commonController.featuredList.size()) {
           	findViewById(R.id.radar_list_empty_text).setVisibility(View.VISIBLE);
+          }
         }
       });
     return false;
@@ -358,65 +357,64 @@ public class RadarActivity extends ServerThreadActivity implements
   public boolean onOptionsItemSelected(final MenuItem item) {
 
     switch(item.getItemId()) {
-    case R.id.refresh_me:
-		this.runOnUiThread(new Runnable() {
-		    public void run() {
-		      ServerGetRequest req = new ServerGetRequest(
-		          ServerThread.TABBIE_SERVER + "/mobile/all.json?auth_token="
-		              + tabbieAccessToken, MessageType.LOAD_EVENTS);
-		      sendServerRequest(req);
-		    }
-		  });
-		break;
+      case R.id.refresh_me:
+    		this.runOnUiThread(new Runnable() {
+    		    public void run() {
+    		      ServerGetRequest req = new ServerGetRequest(
+    		          ServerThread.TABBIE_SERVER + "/mobile/all.json?auth_token="
+    		              + tabbieAccessToken, MessageType.LOAD_EVENTS);
+    		      sendServerRequest(req);
+    		    }
+    		  });
+    		break;
+      case R.id.report_me:
+    		Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);
+    		emailIntent.setType("plain/text");
+    		emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL, FOUNDERS_EMAIL);
+    		emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, APP_FEEDBACK_SUBJECT);
+    		startActivity(Intent.createChooser(emailIntent, "Send feedback..."));
+    		break;
 		
-    case R.id.report_me:
-		Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);
-		emailIntent.setType("plain/text");
-		emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL, FOUNDERS_EMAIL);
-		emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, APP_FEEDBACK_SUBJECT);
-		startActivity(Intent.createChooser(emailIntent, "Send feedback..."));
-		break;
+      case R.id.preference_me:
+    		final PreferencesDialog preferencesDialog = new PreferencesDialog(this, R.layout.preferences);
+    		preferencesDialog.setTitle("Preferences");
+    		preferencesDialog.setOnAgeItemSelectedListener(new OnItemSelectedListener() {
+    
+    			@Override
+    			public void onItemSelected(AdapterView<?> parent, View v,
+    					int position, long id) {
+    				// TODO Auto-generated method stub
+    				
+    			}
+    
+    			@Override
+    			public void onNothingSelected(AdapterView<?> container) {
+    				// TODO Auto-generated method stub
+    				
+    			}
+    		});
+    		preferencesDialog.setOnCostItemsSelectedListener(new MultiSpinnerListener() {
+    			
+    			@Override
+    			public void onItemsSelected(boolean[] selected) {
+    				// TODO Auto-generated method stub
+    				
+    			}
+    		});
+    		preferencesDialog.setOnEnergyItemsSelectedListener(new MultiSpinnerListener() {
+    			
+    			@Override
+    			public void onItemsSelected(boolean[] selected) {
+    				// TODO Auto-generated method stub
+    				
+    			}
+    		});
+    		preferencesDialog.show();
+    		break;
 		
-    case R.id.preference_me:
-		final PreferencesDialog preferencesDialog = new PreferencesDialog(this, R.layout.preferences);
-		preferencesDialog.setTitle("Preferences");
-		preferencesDialog.setOnAgeItemSelectedListener(new OnItemSelectedListener() {
-
-			@Override
-			public void onItemSelected(AdapterView<?> parent, View v,
-					int position, long id) {
-				// TODO Auto-generated method stub
-				
-			}
-
-			@Override
-			public void onNothingSelected(AdapterView<?> container) {
-				// TODO Auto-generated method stub
-				
-			}
-		});
-		preferencesDialog.setOnCostItemsSelectedListener(new MultiSpinnerListener() {
-			
-			@Override
-			public void onItemsSelected(boolean[] selected) {
-				// TODO Auto-generated method stub
-				
-			}
-		});
-		preferencesDialog.setOnEnergyItemsSelectedListener(new MultiSpinnerListener() {
-			
-			@Override
-			public void onItemsSelected(boolean[] selected) {
-				// TODO Auto-generated method stub
-				
-			}
-		});
-		preferencesDialog.show();
-		break;
-		
-	default:
-		return super.onOptionsItemSelected(item);
-	}
+      default:
+        return super.onOptionsItemSelected(item);
+    }
     return true;
   }
   

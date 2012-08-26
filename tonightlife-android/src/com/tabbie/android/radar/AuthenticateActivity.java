@@ -54,11 +54,11 @@ public class AuthenticateActivity extends ServerThreadActivity {
 		fbAccessToken = data.getStringExtra("token");
 		expires = data.getLongExtra("expires", 0);
 		
-		if (fbAccessToken!=null) {
+		if (fbAccessToken != null) {
 		  facebook.setAccessToken(fbAccessToken);
 		}
 		
-		if (expires!=0) {
+		if (expires != 0) {
 		  facebook.setAccessExpires(expires);
 		}
 		
@@ -96,50 +96,51 @@ public class AuthenticateActivity extends ServerThreadActivity {
 		}
 		
 		switch(resp.responseTo) {
-		case FACEBOOK_LOGIN:
-			if(json.has("id"))
-			{
-				try {
-					facebookName = json.getString("first_name") + " "
-					+ json.getString("last_name").substring(0, 1) + ".";
-				} catch (final JSONException e) {
-					e.printStackTrace();
-					return false;
-				}
-				this.runOnUiThread(new Runnable() {
-					public void run() {
-						final ServerPostRequest req = new ServerPostRequest(
-							ServerThread.TABBIE_SERVER + "/mobile/auth.json",
-							MessageType.TABBIE_LOGIN);
-						
-						req.params.put("fb_token", facebook.getAccessToken());
-						
-						sendServerRequest(req);
-					}
-				});
-			} else return false;
-			break;
+		  case FACEBOOK_LOGIN:
+  			if (json.has("id")) {
+  				try {
+  					facebookName = json.getString("first_name") + " "
+  					+ json.getString("last_name").substring(0, 1) + ".";
+  				} catch (final JSONException e) {
+  					e.printStackTrace();
+  					return false;
+  				}
+  				this.runOnUiThread(new Runnable() {
+  					public void run() {
+  						final ServerPostRequest req = new ServerPostRequest(
+  							ServerThread.TABBIE_SERVER + "/mobile/auth.json",
+  							MessageType.TABBIE_LOGIN);
+  						
+  						req.params.put("fb_token", facebook.getAccessToken());
+  						
+  						sendServerRequest(req);
+  					}
+  				});
+  			} else {
+  			  return false;
+  			}
+  			break;
 			
-		case TABBIE_LOGIN:
-			if (json.has("token")) {
-				try {
-					tabbieAccessToken = json.getString("token");
-				} catch (final JSONException e) {
-					e.printStackTrace();
-					return false;
-				} finally {
-					final Intent data = new Intent();
-					data.putExtra("fbAccessToken", fbAccessToken);
-					data.putExtra("tabbieAccessToken", tabbieAccessToken);
-					data.putExtra("facebookName", facebookName);
-					data.putExtra("expires", expires);
-					this.setResult(RESULT_OK, data);
-					finish();
-				}
-			} else {
-				return false;
-			}
-			break;
+		  case TABBIE_LOGIN:
+  			if (json.has("token")) {
+  				try {
+  					tabbieAccessToken = json.getString("token");
+  				} catch (final JSONException e) {
+  					e.printStackTrace();
+  					return false;
+  				} finally {
+  					final Intent data = new Intent();
+  					data.putExtra("fbAccessToken", fbAccessToken);
+  					data.putExtra("tabbieAccessToken", tabbieAccessToken);
+  					data.putExtra("facebookName", facebookName);
+  					data.putExtra("expires", expires);
+  					this.setResult(RESULT_OK, data);
+  					finish();
+  				}
+  			} else {
+  				return false;
+  			}
+  			break;
 		}
 		return true;
 	}
@@ -147,6 +148,6 @@ public class AuthenticateActivity extends ServerThreadActivity {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-        facebook.authorizeCallback(requestCode, resultCode, data);
+	  facebook.authorizeCallback(requestCode, resultCode, data);
 	}
 }
