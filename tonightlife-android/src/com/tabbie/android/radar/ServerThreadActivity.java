@@ -12,6 +12,8 @@ package com.tabbie.android.radar;
  * changes, and handles Zubhium stuff.
  */
 
+import java.lang.ref.WeakReference;
+
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
@@ -21,8 +23,9 @@ import android.widget.Toast;
 import com.tabbie.android.radar.http.ServerRequest;
 import com.tabbie.android.radar.http.ServerResponse;
 
-public abstract class ServerThreadActivity extends Activity {
+public abstract class ServerThreadActivity extends Activity implements Handler.Callback {
   protected ServerThread serverThread = null;
+  private final Handler handler = new Handler(this);
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
@@ -67,19 +70,18 @@ public abstract class ServerThreadActivity extends Activity {
     this.serverThread.sendRequest(req);
   }
 
-  private Handler handler = new Handler() {
-    @Override
-    public void handleMessage(Message msg) {
-      ServerResponse resp = (ServerResponse) msg.obj;
-      if (resp.code == ServerThread.NO_INTERNET) {
-        ServerThreadActivity.this.runOnUiThread(new Runnable() {
-          public void run() {
-            Toast.makeText(ServerThreadActivity.this,
-                "No internet connection found!", 5000).show();
-          }
-        });
-      }
-      handleServerResponse(resp);
+  @Override
+  public boolean handleMessage(Message msg) {
+    ServerResponse resp = (ServerResponse) msg.obj;
+    if (resp.code == ServerThread.NO_INTERNET) {
+      ServerThreadActivity.this.runOnUiThread(new Runnable() {
+        public void run() {
+          Toast.makeText(ServerThreadActivity.this,
+              "No internet connection found!", Toast.LENGTH_LONG).show();
+        }
+      });
     }
-  };
+    handleServerResponse(resp);
+    return true;
+  }
 }
