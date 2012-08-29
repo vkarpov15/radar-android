@@ -14,6 +14,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.tabbie.android.radar.http.ServerRequest;
@@ -24,16 +25,19 @@ public abstract class ServerThreadActivity extends Activity
 	
 	private ServerThread serverThread = null;
 	private final Handler handler = new Handler(this);
+	private static final String TAG = "ServerThreadActivity";
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
     // If this is a configuration change, get the thread back
+    /*
     if (this.getLastNonConfigurationInstance() != null
         && this.getLastNonConfigurationInstance() instanceof ServerThread) {
+    	Log.d(TAG, "Inside getLastNonConfigurationInstance block");
       this.serverThread = (ServerThread) this.getLastNonConfigurationInstance();
-    }
+    }*/
 
     if (serverThread == null) {
       serverThread = new ServerThread("LoginThread", handler);
