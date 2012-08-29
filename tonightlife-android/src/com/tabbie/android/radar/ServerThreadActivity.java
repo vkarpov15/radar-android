@@ -7,9 +7,7 @@ package com.tabbie.android.radar;
  * Author: vkarpov
  * 
  * Provides a general interface for Activities that want to use ServerThread,
- * basically taking care of some life cycle tasks related to the thread. Also
- * provides a decent way for dealing with ProgressDialog during configuration
- * changes, and handles Zubhium stuff.
+ * basically taking care of some life cycle tasks related to the thread.
  */
 
 import android.app.Activity;
