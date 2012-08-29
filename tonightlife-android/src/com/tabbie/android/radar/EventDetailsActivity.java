@@ -108,7 +108,7 @@ public void onClick(View v) {
           ServerDeleteRequest req = new ServerDeleteRequest(
               ServerThread.TABBIE_SERVER + "/mobile/radar/" + e.id
                   + ".json?auth_token=" + token, MessageType.ADD_TO_RADAR);
-          serverThread.sendRequest(req);
+          sendServerRequest(req);
         } else if (!e.isOnRadar()) {
           if (commonController.addToRadar(e)) {
             radarButton.setSelected(true);
@@ -116,7 +116,7 @@ public void onClick(View v) {
                 ServerThread.TABBIE_SERVER + "/mobile/radar/" + e.id + ".json",
                 MessageType.ADD_TO_RADAR);
             req.params.put("auth_token", token);
-            serverThread.sendRequest(req);
+            sendServerRequest(req);
           } else {
             Toast.makeText(EventDetailsActivity.this,
                 "Failed to add event to your shortlist!", Toast.LENGTH_SHORT).show();

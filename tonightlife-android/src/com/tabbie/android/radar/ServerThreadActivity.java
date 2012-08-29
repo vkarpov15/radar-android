@@ -12,8 +12,6 @@ package com.tabbie.android.radar;
  * changes, and handles Zubhium stuff.
  */
 
-import java.lang.ref.WeakReference;
-
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
@@ -23,9 +21,11 @@ import android.widget.Toast;
 import com.tabbie.android.radar.http.ServerRequest;
 import com.tabbie.android.radar.http.ServerResponse;
 
-public abstract class ServerThreadActivity extends Activity implements Handler.Callback {
-  protected ServerThread serverThread = null;
-  private final Handler handler = new Handler(this);
+public abstract class ServerThreadActivity extends Activity
+	implements Handler.Callback {
+	
+	private ServerThread serverThread = null;
+	private final Handler handler = new Handler(this);
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
