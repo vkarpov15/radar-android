@@ -57,6 +57,7 @@ public class RadarActivity extends ServerThreadActivity implements
   private ListView allListView;
   private ListView radarListView;
   private TextView myNameView;
+  private ProgressDialog loadingDialog;
 
   // Internal state for views
   private String tabbieAccessToken = null;
@@ -207,6 +208,7 @@ public class RadarActivity extends ServerThreadActivity implements
       	final ServerGetRequest req = new ServerGetRequest(
       			ServerThread.TABBIE_SERVER + "/mobile/all.json?auth_token="
       			+ tabbieAccessToken, MessageType.LOAD_EVENTS);
+      	loadingDialog = ProgressDialog.show(this, null, "Loading... Please wait");
       	sendServerRequest(req);
       	break;
     	
@@ -282,7 +284,6 @@ public class RadarActivity extends ServerThreadActivity implements
   protected synchronized boolean handleServerResponse(ServerResponse resp) {
       JSONArray list = resp.parseJsonArray();
       
-
       Set<String> serverRadarIds = new LinkedHashSet<String>();
       try {
         JSONObject radarObj = list.getJSONObject(list.length() - 1);
@@ -345,6 +346,11 @@ public class RadarActivity extends ServerThreadActivity implements
           }
         }
       });
+      
+	  if(loadingDialog!=null && loadingDialog.isShowing()) {
+		  loadingDialog.dismiss();
+		  loadingDialog = null;
+	  }
     return false;
   }
 
