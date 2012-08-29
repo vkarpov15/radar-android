@@ -212,7 +212,9 @@ public class RadarActivity extends ServerThreadActivity implements
     	
       case RadarCommonController.RETRIEVE_INSTANCE:
         final Bundle controller = data.getExtras();
+        
         commonController = controller.getParcelable("controller");
+        commonController.order();
         
         featuredAdapter = new EventListAdapter(this, commonController.featuredList);
         allAdapter = new EventListAdapter(this, commonController.eventsList);
