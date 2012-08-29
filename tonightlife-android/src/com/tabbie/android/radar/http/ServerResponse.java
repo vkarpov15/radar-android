@@ -16,6 +16,7 @@ import org.json.JSONObject;
 import com.tabbie.android.radar.MessageType;
 
 public class ServerResponse {
+	public static final int NO_INTERNET = -2;
 	public final int code;
 	public final String content;
 	public final MessageType responseTo;

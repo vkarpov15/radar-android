@@ -65,25 +65,39 @@ public abstract class ServerThreadActivity extends Activity
     this.serverThread.setActive();
   }
 
-  // Override this method to handle responses from the server
-  protected abstract boolean handleServerResponse(ServerResponse resp);
-
-  public void sendServerRequest(ServerRequest req) {
+  /** Send a message to a serverThread instance
+   * 
+   * @param req The request to be sent
+   */
+  
+  public void sendServerRequest(final ServerRequest req) {
     this.serverThread.sendRequest(req);
   }
 
   @Override
-  public boolean handleMessage(Message msg) {
-    ServerResponse resp = (ServerResponse) msg.obj;
-    if (resp.code == ServerThread.NO_INTERNET) {
-      ServerThreadActivity.this.runOnUiThread(new Runnable() {
-        public void run() {
-          Toast.makeText(ServerThreadActivity.this,
-              "No internet connection found!", Toast.LENGTH_LONG).show();
-        }
-      });
-    }
-    handleServerResponse(resp);
-    return true;
+  public boolean handleMessage(final Message msg) {
+	  
+	  if(msg.obj instanceof ServerResponse) {
+	    final ServerResponse resp = (ServerResponse) msg.obj;
+	    // Case statement always drops down to default
+	    switch(resp.code)
+	    {
+	    case ServerResponse.NO_INTERNET:
+			Toast.makeText(ServerThreadActivity.this,
+					"No internet connection found!", Toast.LENGTH_LONG).show();
+	    default:
+	    	return handleServerResponse(resp);
+	    }
+	  } else {
+		  return false;
+	  }
   }
+
+  /** Override this method to handle responses from the server
+   * 
+   * @param resp The message returned from the server
+   * @return Whether the response was handled properly or not
+   */
+  
+  protected abstract boolean handleServerResponse(final ServerResponse resp);
 }

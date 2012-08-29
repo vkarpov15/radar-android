@@ -30,7 +30,6 @@ import android.util.Log;
 
 public class ServerThread extends Thread {
   public static final String TABBIE_SERVER = "http://tonight-life.com";
-  public static final int    NO_INTERNET   = -2;
   
 	private Handler upstreamHandler;
 	private HttpURLConnection conn;
@@ -141,11 +140,11 @@ public class ServerThread extends Thread {
 			conn = (HttpURLConnection) new URL(req.url).openConnection();
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
-			fireHandler(new ServerResponse(NO_INTERNET, "Malformed URL", req.type));
+			fireHandler(new ServerResponse(ServerResponse.NO_INTERNET, "Malformed URL", req.type));
 			return true;
 		} catch (IOException e) {
 			e.printStackTrace();
-			fireHandler(new ServerResponse(NO_INTERNET, "Could not open connection", req.type));
+			fireHandler(new ServerResponse(ServerResponse.NO_INTERNET, "Could not open connection", req.type));
 			return true;
 		}
 		
@@ -171,7 +170,7 @@ public class ServerThread extends Thread {
 			e.printStackTrace();
 			return true;
 		} catch (IOException e) {
-		  fireHandler(new ServerResponse(NO_INTERNET, "ProtocolException", req.type));
+		  fireHandler(new ServerResponse(ServerResponse.NO_INTERNET, "ProtocolException", req.type));
       e.printStackTrace();
       return true;
     }
