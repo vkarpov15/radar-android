@@ -1,6 +1,5 @@
 package com.tabbie.android.radar;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
@@ -17,7 +16,6 @@ public class EventListAdapter extends BaseAdapter {
 	
 	private final Context context;
 	protected final List<Event> events;
-	private List<Event> filteredEvents;
 	
 	
 	public ImageLoader imageLoader; // I don't know why this is public, but it is in the source
@@ -25,8 +23,6 @@ public class EventListAdapter extends BaseAdapter {
     public EventListAdapter(Context context, List<Event> events) {
     	
     	this.events = events;
-    	this.filteredEvents = new ArrayList<Event>(this.events);
-    	
     	this.context = context;
     	imageLoader = new ImageLoader(context);
     }
@@ -85,12 +81,5 @@ public class EventListAdapter extends BaseAdapter {
 	@Override
 	public long getItemId(int position) {
 		return position;
-	}
-	
-	private static void filterByAge(final List<Event> eventList,
-			final short ageReq) {
-		for(final Event e : eventList) {
-			// TODO Remove all events that don't satisfy the age requirement
-		}
 	}
   }

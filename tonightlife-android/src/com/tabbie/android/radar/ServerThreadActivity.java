@@ -14,7 +14,6 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.tabbie.android.radar.http.ServerRequest;
@@ -25,7 +24,7 @@ public abstract class ServerThreadActivity extends Activity
 	
 	private ServerThread serverThread = null;
 	private final Handler handler = new Handler(this);
-	private static final String TAG = "ServerThreadActivity";
+	public static final String TAG = "ServerThreadActivity";
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
