@@ -23,7 +23,6 @@ public class RadarMapController {
 
   private final MapView mapView;
   private final View popUp;
-  private final OnMarkerClickListener markerListener;
   
   private class TabbieEventMarkerCollection extends ItemizedOverlay<EventMarker> {
     private final List<EventMarker> markers = new ArrayList<EventMarker>();
@@ -65,17 +64,11 @@ public class RadarMapController {
       ((TextView) popUp.findViewById(R.id.map_event_time)).setText(e.time.makeYourTime());
       setLatLon(e.lat, e.lon);
       
-      popUp.setOnClickListener(new OnClickListener() {
-        @Override
-        public void onClick(View v) {
-          markerListener.onMarkerClick(e);
-        }
-      });
+      popUp.setTag(e);
       
       mapView.addView(popUp, mapParams);
       return true;
     }
-    
 
     public Drawable boundDrawable(Drawable drawable) {
       return boundCenterBottom(drawable);
@@ -100,8 +93,11 @@ public class RadarMapController {
     this.setLatLon(40.736968, -73.989183);
     this.setZoom(14);
     this.markersCollection = new TabbieEventMarkerCollection();
-    markerListener = (OnMarkerClickListener) context;
     popUp = LayoutInflater.from(context).inflate(R.layout.popup, null);
+  }
+  
+  public void setOnClickListener(final OnClickListener listener) {
+  	popUp.setOnClickListener(listener);
   }
 
   public void setZoom(int zoom) {
@@ -131,9 +127,5 @@ public class RadarMapController {
 
   public ItemizedOverlay<EventMarker> getItemizedOverlay() {
     return markersCollection;
-  }
-  
-  public interface OnMarkerClickListener {
-	  public void onMarkerClick(final Event e);
   }
 }

@@ -10,6 +10,8 @@ import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.View.OnClickListener;
 
 import com.google.android.maps.MapActivity;
 import com.google.android.maps.MapView;
@@ -17,8 +19,9 @@ import com.google.android.maps.MyLocationOverlay;
 import com.google.android.maps.Overlay;
 import com.tabbie.android.radar.core.BundleChecker;
 
-public class RadarMapActivity extends MapActivity 
-	implements RadarMapController.OnMarkerClickListener {
+public class RadarMapActivity extends MapActivity
+	implements OnClickListener {
+	
   private RadarCommonController commonController;
   private RadarMapController mapController;
   private Event selected = null;
@@ -55,6 +58,7 @@ public class RadarMapActivity extends MapActivity
     mapView.setBuiltInZoomControls(true);
 
     mapController = new RadarMapController(mapView, this);
+    mapController.setOnClickListener(this);
 
     if (starter.containsKey("event")) {
       selected = starter.getParcelable("event");
@@ -124,12 +128,13 @@ public class RadarMapActivity extends MapActivity
   }
 
 	@Override
-	public void onMarkerClick(final Event e) {
-		Log.d("RadarMapActivity", "Callback to onMarkerClick");
+	public void onClick(final View v) {
+		
+		final Event e = (Event) v.getTag();
 		Intent intent = new Intent(this, EventDetailsActivity.class);
-    intent.putExtra("eventId", e.id);
-    intent.putExtra("controller", commonController);
-    intent.putExtra("token", token);
-    startActivity(intent);
+	    intent.putExtra("eventId", e.id);
+	    intent.putExtra("controller", commonController);
+	    intent.putExtra("token", token);
+	    startActivity(intent);
 	}
 }
