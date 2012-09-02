@@ -43,7 +43,9 @@ import com.tabbie.android.radar.http.ServerGetRequest;
 import com.tabbie.android.radar.http.ServerResponse;
 
 public class RadarActivity extends ServerThreadActivity implements
-    OnTabChangeListener, OnItemClickListener, OnItemLongClickListener {
+    OnTabChangeListener,
+    OnItemClickListener,
+    OnItemLongClickListener {
   
   // Intent constants
   private static final String[] FOUNDERS_EMAIL = {"founders@tonight-life.com"};
