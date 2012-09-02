@@ -90,7 +90,7 @@ public class RadarActivity extends ServerThreadActivity implements
     googleAnalyticsTracker.startNewSession("UA-34193317-1", this);
     googleAnalyticsTracker.trackPageView(this.getClass().getName());
     
-    // TODO Confirm this code
+    // Instantiate list views
     listViews[FEATURED] = (ListView) findViewById(R.id.featured_event_list);
     listViews[ALL] = (ListView) findViewById(R.id.all_event_list);
     listViews[LINEUP] = (ListView) findViewById(R.id.lineup_event_list);
@@ -213,8 +213,16 @@ public class RadarActivity extends ServerThreadActivity implements
         			commonController.findListById(v.getId())));
         }
         listViews[currentTabIndex].setSelection(currentViewPosition);
+        
+        // TODO Use this paradigm (in more robust form) for other instances of this view
+        if(((BaseAdapter) listViews[currentTabIndex].getAdapter()).isEmpty()) {
+        	findViewById(R.id.radar_list_empty_text).setVisibility(View.VISIBLE);
+        } else {
+        	findViewById(R.id.radar_list_empty_text).setVisibility(View.GONE);
+        }
         break;
       
+        // TODO I Don't think this code block is used any more
       case RadarCommonController.FIRE_EVENT:
       	final Event e = commonController.getEvent(data.getExtras().getString("event"));
         Intent intent = new Intent(RadarActivity.this, EventDetailsActivity.class);
