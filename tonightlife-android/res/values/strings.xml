@@ -8,9 +8,6 @@
 	<string name="debugMapsApiKey">0FOxyEfcQ0KWKXNk-I3ubpC2yVnsVdHjByLdI6Q</string>
 	<string name="productionMapsApiKey">0H7FbiQifcrFnTuix-KVDP8-54E7nG6h38bR4yw</string>
 	<string name="radar_empty_message">No events to display yet!</string>
-	<string name="tab_top10">Short List</string> <!--  Apologies, this is confusing - Short List is My Lineup in the layout -->
-	<string name="tab_all_events">All Events</string>
-	<string name="tab_short_list">My Lineup</string>
 	
 	<string name="age_title">Age restriction</string>
 	<string name="cost_title">Price point</string>

@@ -65,7 +65,7 @@ public class EventDetailsActivity extends ServerThreadActivity
     
     final ViewPager pager = (ViewPager) findViewById(R.id.details_event_pager);
     new EventDetailsPagerAdapter(this, commonController, R.layout.event_details_element, pager, this);
-    pager.setCurrentItem(commonController.eventsList.indexOf(e));
+    pager.setCurrentItem(commonController.getAllList().indexOf(e));
 
   }
 

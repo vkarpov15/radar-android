@@ -25,19 +25,19 @@ import android.os.Parcelable;
 import android.util.Log;
 
 public class RadarCommonController implements Parcelable {
-  public static final int MAX_RADAR_SELECTIONS = 100; // Practically infinite
+  public static final int MAX_RADAR_SELECTIONS = 100; // TODO Remove this functionality entirely
   public static final int RETRIEVE_INSTANCE = 1;
   public static final int FIRE_EVENT = 2;
 
   private final Map<String, Event>    featured        = new LinkedHashMap<String, Event>();
-  public  final List<Event>           featuredList    = new ArrayList<Event>();
+  private final List<Event>           featuredList    = new ArrayList<Event>();
 
   private final Map<String, Event>    events          = new LinkedHashMap<String, Event>();
   private final Map<String, Integer>  eventIdToIndex  = new LinkedHashMap<String, Integer>();
-  public  final List<Event>           eventsList      = new ArrayList<Event>();
+  private final List<Event>           eventsList      = new ArrayList<Event>();
 
   private final Set<String>           radarIds        = new LinkedHashSet<String>();
-  public  final List<Event>           radarList       = new ArrayList<Event>();
+  private final List<Event>           lineupList       = new ArrayList<Event>();
 
   // Sort by # of people with event in radar, reversed
   private static final Comparator<Event> defaultOrdering = new Comparator<Event>() {
@@ -69,7 +69,7 @@ public class RadarCommonController implements Parcelable {
       featuredList.add(e);
     }
     if (e.isOnRadar()) {
-      radarList.add(e);
+      lineupList.add(e);
       radarIds.add(e.id);
     }
   }
@@ -78,14 +78,14 @@ public class RadarCommonController implements Parcelable {
   public void order() {
     Collections.sort(eventsList,    chronoOrdering);
     Collections.sort(featuredList,  defaultOrdering);
-    Collections.sort(radarList,     chronoOrdering);
+    Collections.sort(lineupList,     chronoOrdering);
   }
   
 
   public void clear() {
     eventsList.clear();
     featuredList.clear();
-    radarList.clear();
+    lineupList.clear();
     featured.clear();
     events.clear();
     radarIds.clear();
@@ -108,12 +108,12 @@ public class RadarCommonController implements Parcelable {
 
   
   public boolean addToRadar(final Event e) {
-    if (radarIds.contains(e.id) || radarList.size() >= MAX_RADAR_SELECTIONS) {
+    if (radarIds.contains(e.id) || lineupList.size() >= MAX_RADAR_SELECTIONS) {
     	Log.v("RadarCommonController", "Add to Radar Failed");
       return false;
     }
     radarIds.add(e.id);
-    radarList.add(e);
+    lineupList.add(e);
     ++e.radarCount;
     Log.d("Radar Count", "" + e.radarCount);
     e.setOnRadar(true);
@@ -127,14 +127,48 @@ public class RadarCommonController implements Parcelable {
     }
     radarIds.remove(e.id);
     // TODO: this is slow, improve
-    radarList.remove(e);
+    lineupList.remove(e);
     --e.radarCount;
     e.setOnRadar(false);
     return true;
   }
+  
+  public List<Event> findListById(final int id) {
+	  switch(id) {
+	  case R.id.featured_event_list:
+		  return featuredList;
+	  case R.id.all_event_list:
+		  return eventsList;
+	  case R.id.lineup_event_list:
+		  return lineupList;
+	  default:
+		  return null;
+	  }
+  }
+  
+  public boolean hasNoEvents() {
+	  return events.isEmpty();
+  }
+  
+  public boolean hasNoLineupEvents() {
+	  return lineupList.isEmpty();
+  }
+  
+  public List<Event> getFeaturedList() {
+	  return featuredList;
+  }
+  
+  public List<Event> getAllList() {
+	  return eventsList;
+  }
+  
+  public List<Event> getLineupList() {
+	  return lineupList;
+  }
 
   
   public int describeContents() {
+	  // TODO Robust implementation
     return 0;
   }
 
