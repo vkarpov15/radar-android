@@ -155,9 +155,9 @@ public class RadarActivity extends ServerThreadActivity implements
 	  case LINEUP:
 		  tabView = listViews[LINEUP];
 		  if(commonController.hasNoLineupEvents()) {
-			  findViewById(R.id.radar_list_empty_text).setVisibility(View.GONE);
-		  } else {
 			  findViewById(R.id.radar_list_empty_text).setVisibility(View.VISIBLE);
+		  } else {
+			  findViewById(R.id.radar_list_empty_text).setVisibility(View.GONE);
 		  }
 		  break;
 	  default:
