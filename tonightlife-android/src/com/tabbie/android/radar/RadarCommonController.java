@@ -26,8 +26,8 @@ import android.util.Log;
 
 public class RadarCommonController implements Parcelable {
 	
-  public static final int RETRIEVE_INSTANCE = 1;
-  public static final int FIRE_EVENT = 2;
+  public static final int REQUEST_RETRIEVE_INSTANCE = 1;
+  public static final int REQUEST_FIRE_EVENT = 2;
 
   private final Map<String, Event>    featured        = new LinkedHashMap<String, Event>();
   private final List<Event>           featuredList    = new ArrayList<Event>();
@@ -39,7 +39,9 @@ public class RadarCommonController implements Parcelable {
   private final Set<String>           radarIds        = new LinkedHashSet<String>();
   private final List<Event>           lineupList       = new ArrayList<Event>();
 
-  // Sort by # of people with event in radar, reversed
+  /** Sort by the number of people who have added
+   * the event to their radar in REVERSE order
+   */
   private static final Comparator<Event> defaultOrdering = new Comparator<Event>() {
     public int compare(Event e1, Event e2) {
       if (e1.radarCount > e2.radarCount) {
@@ -50,9 +52,10 @@ public class RadarCommonController implements Parcelable {
       return 0;
     }
   };
+
   
-  
-  // Sort by time
+  /** Sort by the start time of the event 
+   */
   private static final Comparator<Event> chronoOrdering = new Comparator<Event>() {
 	  public int compare(final Event e1, final Event e2) {
 		  return e1.time.compareTo(e2.time);
@@ -60,7 +63,7 @@ public class RadarCommonController implements Parcelable {
   };
   
 
-  public void addEvent(Event e) {
+  public void addEvent(final Event e) {
     events.put(e.id, e);
     eventsList.add(e);
     eventIdToIndex.put(e.id, eventsList.size() - 1);

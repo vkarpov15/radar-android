@@ -203,7 +203,7 @@ public class RadarActivity extends ServerThreadActivity implements
       	sendServerRequest(req);
       	break;
     	
-      case RadarCommonController.RETRIEVE_INSTANCE:
+      case RadarCommonController.REQUEST_RETRIEVE_INSTANCE:
         final Bundle controller = data.getExtras();
         
         commonController = controller.getParcelable("controller");
@@ -223,7 +223,7 @@ public class RadarActivity extends ServerThreadActivity implements
         break;
       
         // TODO I Don't think this code block is used any more
-      case RadarCommonController.FIRE_EVENT:
+      case RadarCommonController.REQUEST_FIRE_EVENT:
       	final Event e = commonController.getEvent(data.getExtras().getString("event"));
         Intent intent = new Intent(RadarActivity.this, EventDetailsActivity.class);
         intent.putExtra("eventId", e.id);
@@ -447,7 +447,7 @@ public class RadarActivity extends ServerThreadActivity implements
 	          @Override
 	          protected void onPostExecute(Intent result) {
 	            startActivityForResult(result,
-	                RadarCommonController.RETRIEVE_INSTANCE);
+	                RadarCommonController.REQUEST_RETRIEVE_INSTANCE);
 	            dialog.dismiss();
 
 	          };
