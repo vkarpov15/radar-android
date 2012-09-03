@@ -20,8 +20,8 @@ public class Event implements Parcelable, Handler.Callback {
   private final boolean isFeatured;
   private final TonightlifeDatetime time; 
 
-  public int radarCount;
-  private boolean onRadar;
+  public int lineupCount;
+  private boolean onLineup;
 
   public Event(String id,
                String name,
@@ -43,10 +43,10 @@ public class Event implements Parcelable, Handler.Callback {
     this.imageUrl = image;
     this.lat = lat;
     this.lon = lon;
-    this.radarCount = radarCount;
+    this.lineupCount = radarCount;
     this.isFeatured = featured;
     this.time = new TonightlifeDatetime(time);
-    this.onRadar = onRadar;
+    this.onLineup = onRadar;
   }
   
   public String getTag() {
@@ -89,12 +89,12 @@ public class Event implements Parcelable, Handler.Callback {
 	  return lon;
   }
   
-  public boolean isOnRadar() {
-    return onRadar;
+  public boolean isOnLineup() {
+    return onLineup;
   }
 
-  public void setOnRadar(boolean onRadar) {
-    this.onRadar = onRadar;
+  public void setOnLineup(boolean onLineup) {
+    this.onLineup = onLineup;
   }
 
   public int describeContents() {
@@ -102,7 +102,7 @@ public class Event implements Parcelable, Handler.Callback {
   }
   
   public String toString() {
-    return "'" + this.name + "' radarCount=" + radarCount + " onRadar=" + onRadar;
+    return "'" + this.name + "' radarCount=" + lineupCount + " onRadar=" + onLineup;
   }
 
   public void writeToParcel(Parcel dest, int flags) {
@@ -114,10 +114,10 @@ public class Event implements Parcelable, Handler.Callback {
     dest.writeString(address);
     dest.writeDouble(lat);
     dest.writeDouble(lon);
-    dest.writeInt(radarCount);
+    dest.writeInt(lineupCount);
     dest.writeInt(isFeatured ? 1 : 0);
     dest.writeString(time.initializer);
-    dest.writeInt(onRadar ? 1 : 0);
+    dest.writeInt(onLineup ? 1 : 0);
   }
 
   public static final Parcelable.Creator<Event> CREATOR = new Parcelable.Creator<Event>() {

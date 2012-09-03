@@ -1,6 +1,7 @@
 package com.tabbie.android.radar;
 
 import java.net.URL;
+import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -147,12 +148,18 @@ public class RadarActivity extends ServerThreadActivity implements
 	  
 	  switch(currentTabIndex) {
 	  case FEATURED:
+		  Collections.sort(commonController.featuredEventsList,
+				  RadarCommonController.defaultOrdering);
 		  tabView = listViews[FEATURED];
 		  break;
 	  case ALL:
+		  Collections.sort(commonController.masterEventsList,
+				  RadarCommonController.defaultOrdering);
 		  tabView = listViews[ALL];
 		  break;
 	  case LINEUP:
+		  Collections.sort(commonController.lineupEventsList,
+				  RadarCommonController.chronoOrdering);
 		  tabView = listViews[LINEUP];
 		  if(commonController.hasNoLineupEvents()) {
 			  findViewById(R.id.radar_list_empty_text).setVisibility(View.VISIBLE);
@@ -165,7 +172,6 @@ public class RadarActivity extends ServerThreadActivity implements
 		  throw new RuntimeException();
 	  }
 	  
-	  commonController.order();
 	  ((BaseAdapter) tabView.getAdapter()).notifyDataSetChanged();
       PlayAnim(tabView, getBaseContext(), android.R.anim.fade_in, 100);
   }
@@ -207,7 +213,20 @@ public class RadarActivity extends ServerThreadActivity implements
         final Bundle controller = data.getExtras();
         
         commonController = controller.getParcelable("controller");
-        commonController.order();
+        
+        tabHost.setCurrentTab(currentTabIndex);
+
+        /*
+        Collections.sort(commonController.featuredEventsList,
+  			  RadarCommonController.chronoOrdering);
+	    Collections.sort(commonController.masterEventsList,
+			  RadarCommonController.chronoOrdering);
+	    Collections.sort(commonController.lineupEventsList,
+			  RadarCommonController.chronoOrdering);
+			  
+			  *******Delete this code if it does not appear to affect anything******
+			  */
+
         for(final ListView v : listViews) {
         	v.setAdapter(new EventListAdapter(this,
         			commonController.findListById(v.getId())));
@@ -306,8 +325,15 @@ public class RadarActivity extends ServerThreadActivity implements
           throw new RuntimeException();
         }
       }
-      Log.d("RadarActivity", "Loading Benchmark 3, all events instantiated");
-      commonController.order();
+      /*
+      Collections.sort(commonController.featuredEventsList,
+			  RadarCommonController.chronoOrdering);
+	    Collections.sort(commonController.masterEventsList,
+			  RadarCommonController.chronoOrdering);
+	    Collections.sort(commonController.lineupEventsList,
+			  RadarCommonController.chronoOrdering);
+			  
+			  */
       this.runOnUiThread(new Runnable() {
         public void run() {
 
@@ -323,6 +349,8 @@ public class RadarActivity extends ServerThreadActivity implements
         	} else {
         		findViewById(R.id.radar_list_empty_text).setVisibility(View.GONE);
         	}
+        	
+        	tabHost.setCurrentTab(currentTabIndex);
         }
       });
       

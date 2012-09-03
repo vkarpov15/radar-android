@@ -103,13 +103,13 @@ public void onClick(View v) {
 	case R.id.add_to_radar_image:
 		Log.d(TAG, "Lineup Button Selected");
 	    final ImageView radarButton = (ImageView) v.findViewById(R.id.add_to_radar_image);
-        if (e.isOnRadar() && commonController.removeFromRadar(e)) {
+        if (e.isOnLineup() && commonController.removeFromRadar(e)) {
           radarButton.setSelected(false);
           ServerDeleteRequest req = new ServerDeleteRequest(
               ServerThread.TABBIE_SERVER + "/mobile/radar/" + e.getTag()
                   + ".json?auth_token=" + token, MessageType.ADD_TO_RADAR);
           sendServerRequest(req);
-        } else if (!e.isOnRadar()) {
+        } else if (!e.isOnLineup()) {
           if (commonController.addToRadar(e)) {
             radarButton.setSelected(true);
             ServerPostRequest req = new ServerPostRequest(
