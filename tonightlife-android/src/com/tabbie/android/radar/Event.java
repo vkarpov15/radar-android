@@ -9,48 +9,86 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class Event implements Parcelable, Handler.Callback {
-  public final String tag;
-  public final String name;
-  public final String description;
-  public final String venueName;
-  public final String address;
-  public final URL image;
-  public final double lat;
-  public final double lon;
-  public final boolean featured;
-  public final TonightlifeDatetime time;
-  
-  // TODO Add short minimumAge for sorting
+  private final String tag;
+  private final String name;
+  private final String description;
+  private final String venue;
+  private final String address;
+  private final URL imageUrl;
+  private final double lat;
+  private final double lon;
+  private final boolean isFeatured;
+  private final TonightlifeDatetime time; 
 
   public int radarCount;
   private boolean onRadar;
 
-  public Event( String id,
-                String name,
-                String description,
-                String venueName,
-                String address,
-                URL image,
-                double lat,
-                double lon,
-                int radarCount,
-                boolean featured,
-                String time,
-                boolean onRadar) {
+  public Event(String id,
+               String name,
+               String description,
+               String venueName,
+               String address,
+               URL image,
+               double lat,
+               double lon,
+               int radarCount,
+               boolean featured,
+               String time,
+               boolean onRadar) {
     this.tag = id;
     this.name = name;
     this.description = description;
-    this.venueName = venueName;
+    this.venue = venueName;
     this.address = address;
-    this.image = image;
+    this.imageUrl = image;
     this.lat = lat;
     this.lon = lon;
     this.radarCount = radarCount;
-    this.featured = featured;
+    this.isFeatured = featured;
     this.time = new TonightlifeDatetime(time);
     this.onRadar = onRadar;
   }
+  
+  public String getTag() {
+	  return tag;
+  }
+  
+  public URL getUrl() {
+	  return imageUrl;
+  }
+  
+  public String getName() {
+	  return name;
+  }
 
+  public TonightlifeDatetime getTime() {
+	  return time;
+  }
+  
+  public String getVenueName() {
+	  return venue;
+  }
+  
+  public String getAddress() {
+	  return address;
+  }
+  
+  public String getDescription() {
+	  return description;
+  }
+  
+  public boolean isFeatured() {
+	  return isFeatured;
+  }
+  
+  public double getLatitude() {
+	  return lat;
+  }
+  
+  public double getLongitude() {
+	  return lon;
+  }
+  
   public boolean isOnRadar() {
     return onRadar;
   }
@@ -68,16 +106,16 @@ public class Event implements Parcelable, Handler.Callback {
   }
 
   public void writeToParcel(Parcel dest, int flags) {
-    dest.writeString(image.toString());
+    dest.writeString(imageUrl.toString());
     dest.writeString(tag);
     dest.writeString(name);
     dest.writeString(description);
-    dest.writeString(venueName);
+    dest.writeString(venue);
     dest.writeString(address);
     dest.writeDouble(lat);
     dest.writeDouble(lon);
     dest.writeInt(radarCount);
-    dest.writeInt(featured ? 1 : 0);
+    dest.writeInt(isFeatured ? 1 : 0);
     dest.writeString(time.initializer);
     dest.writeInt(onRadar ? 1 : 0);
   }

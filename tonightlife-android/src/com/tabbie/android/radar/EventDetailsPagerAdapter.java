@@ -88,15 +88,15 @@ public class EventDetailsPagerAdapter
 	    final ImageView imageView = (ImageView) v.findViewById(R.id.details_event_img);
 
 	    // Begin loading image into display
-		imageLoader.displayImage(e.image.toString(), imageView);
+		imageLoader.displayImage(e.getUrl().toString(), imageView);
 	    loaderView.startAnimation(AnimationUtils.loadAnimation(context, R.anim.rotate));
 	    
 	    // Set string values
-	    titleView.setText(e.name);
-	    timeView.setText(e.time.makeYourTime());
-	    locationView.setText(e.venueName);
-	    addressView.setText(e.address);
-	    descriptionView.setText(e.description);
+	    titleView.setText(e.getName());
+	    timeView.setText(e.getTime().makeYourTime());
+	    locationView.setText(e.getVenueName());
+	    addressView.setText(e.getAddress());
+	    descriptionView.setText(e.getDescription());
 	    
 	    // Make sure hyper-links are in place
 	    Linkify.addLinks(descriptionView, Linkify.WEB_URLS);

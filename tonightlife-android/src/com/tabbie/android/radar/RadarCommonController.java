@@ -29,15 +29,31 @@ public class RadarCommonController implements Parcelable {
   public static final int REQUEST_RETRIEVE_INSTANCE = 1;
   public static final int REQUEST_FIRE_EVENT = 2;
 
-  private final Map<String, Event>    featured        = new LinkedHashMap<String, Event>();
-  private final List<Event>           featuredList    = new ArrayList<Event>();
+  private final Map<String, Event> featuredEventsMap;
+  private final List<Event> featuredEventsList;
 
-  private final Map<String, Event>    events          = new LinkedHashMap<String, Event>();
+  private final Map<String, Event> masterEventsMap;
+  private final List<Event> masterEventsList;
+  
+  private final Map<String, Event> lineupEventsMap;
+  private final List<Event> lineupEventsList;
+  
   private final Map<String, Integer>  eventIdToIndex  = new LinkedHashMap<String, Integer>();
-  private final List<Event>           eventsList      = new ArrayList<Event>();
 
-  private final Set<String>           radarIds        = new LinkedHashSet<String>();
+  private final Set<String>           lineupIds        = new LinkedHashSet<String>();
+  
   private final List<Event>           lineupList       = new ArrayList<Event>();
+  
+  public RadarCommonController() {
+	  masterEventsMap = new LinkedHashMap<String, Event>();
+	  masterEventsList = new ArrayList<Event>();
+	  
+	  featuredEventsMap = new LinkedHashMap<String, Event>();
+	  featuredEventsList = new ArrayList<Event>();
+	  
+	  lineupEventsMap = new LinkedHashMap<String, Event>();
+	  lineupEventsList = new ArrayList<Event>();
+  }
 
   /** Sort by the number of people who have added
    * the event to their radar in REVERSE order
@@ -52,70 +68,71 @@ public class RadarCommonController implements Parcelable {
       return 0;
     }
   };
-
-  
+ 
   /** Sort by the start time of the event 
    */
   private static final Comparator<Event> chronoOrdering = new Comparator<Event>() {
 	  public int compare(final Event e1, final Event e2) {
-		  return e1.time.compareTo(e2.time);
+		  return e1.getTime().compareTo(e2.getTime());
 	  }
   };
   
 
   public void addEvent(final Event e) {
-    events.put(e.tag, e);
-    eventsList.add(e);
-    eventIdToIndex.put(e.tag, eventsList.size() - 1);
-    if (e.featured) {
-      featured.put(e.tag, e);
-      featuredList.add(e);
+    masterEventsMap.put(e.getTag(), e);
+    masterEventsList.add(e);
+    
+    			eventIdToIndex.put(e.getTag(), masterEventsList.size() - 1);
+    			
+    if (e.isFeatured()) {
+      featuredEventsMap.put(e.getTag(), e);
+      featuredEventsList.add(e);
     }
     if (e.isOnRadar()) {
       lineupList.add(e);
-      radarIds.add(e.tag);
+      lineupIds.add(e.getTag());
     }
   }
   
 
   public void order() {
-    Collections.sort(eventsList,    chronoOrdering);
-    Collections.sort(featuredList,  defaultOrdering);
+    Collections.sort(masterEventsList,    chronoOrdering);
+    Collections.sort(featuredEventsList,  defaultOrdering);
     Collections.sort(lineupList,     chronoOrdering);
   }
   
 
   public void clear() {
-    eventsList.clear();
-    featuredList.clear();
+    masterEventsList.clear();
+    featuredEventsList.clear();
     lineupList.clear();
-    featured.clear();
-    events.clear();
-    radarIds.clear();
+    featuredEventsMap.clear();
+    masterEventsMap.clear();
+    lineupIds.clear();
   }
   
 
   public Event getEvent(String id) {
-    return events.get(id);
+    return masterEventsMap.get(id);
   }
   
 
   public boolean isOnRadar(Event e) {
-    return radarIds.contains(e.tag);
+    return lineupIds.contains(e.getTag());
   }
   
   
   public int getIndexInEventList(Event e) {
-    return eventIdToIndex.get(e.tag);
+    return eventIdToIndex.get(e.getTag());
   }
 
   
   public boolean addToRadar(final Event e) {
-    if (radarIds.contains(e.tag)) {
+    if (lineupIds.contains(e.getTag())) {
     	Log.v("RadarCommonController", "Add to Radar Failed");
       return false;
     }
-    radarIds.add(e.tag);
+    lineupIds.add(e.getTag());
     lineupList.add(e);
     ++e.radarCount;
     Log.d("Radar Count", "" + e.radarCount);
@@ -125,10 +142,10 @@ public class RadarCommonController implements Parcelable {
   
 
   public boolean removeFromRadar(Event e) {
-    if (!radarIds.contains(e.tag)) {
+    if (!lineupIds.contains(e.getTag())) {
       return false;
     }
-    radarIds.remove(e.tag);
+    lineupIds.remove(e.getTag());
     // TODO: this is slow, improve
     lineupList.remove(e);
     --e.radarCount;
@@ -139,9 +156,9 @@ public class RadarCommonController implements Parcelable {
   public List<Event> findListById(final int id) {
 	  switch(id) {
 	  case R.id.featured_event_list:
-		  return featuredList;
+		  return featuredEventsList;
 	  case R.id.all_event_list:
-		  return eventsList;
+		  return masterEventsList;
 	  case R.id.lineup_event_list:
 		  return lineupList;
 	  default:
@@ -150,7 +167,7 @@ public class RadarCommonController implements Parcelable {
   }
   
   public boolean hasNoEvents() {
-	  return events.isEmpty();
+	  return masterEventsMap.isEmpty();
   }
   
   public boolean hasNoLineupEvents() {
@@ -158,11 +175,11 @@ public class RadarCommonController implements Parcelable {
   }
   
   public List<Event> getFeaturedList() {
-	  return featuredList;
+	  return featuredEventsList;
   }
   
   public List<Event> getAllList() {
-	  return eventsList;
+	  return masterEventsList;
   }
   
   public List<Event> getLineupList() {
@@ -179,7 +196,7 @@ public class RadarCommonController implements Parcelable {
   public void writeToParcel(Parcel dest, int flags) {
     // Technically all we need to do is write eventsList, and then reconstruct
     // on the other side
-    dest.writeTypedList(eventsList);
+    dest.writeTypedList(masterEventsList);
   }
 
   
@@ -189,7 +206,7 @@ public class RadarCommonController implements Parcelable {
       in.readTypedList(events, Event.CREATOR);
       RadarCommonController c = new RadarCommonController();
       c.clear();
-      Log.d("RadarCommonController", "Events List Size: " + c.eventsList.size());
+      Log.d("RadarCommonController", "Events List Size: " + c.masterEventsList.size());
       for (Event e : events) {
         c.addEvent(e);
       }

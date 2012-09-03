@@ -70,7 +70,7 @@ public class RadarMapActivity extends MapActivity
     myLocationOverlay = new MyLocationOverlay(this, mapView);
 
     for (final Event e : commonController.getAllList()) {
-      if (null != selected && 0 == e.tag.compareTo(selected.tag)) {
+      if (null != selected && 0 == e.getTag().compareTo(selected.getTag())) {
         mapController.addEventMarker(e,
             getResources().getDrawable(R.drawable.marker_highlight));
       } else {
@@ -84,7 +84,7 @@ public class RadarMapActivity extends MapActivity
     mapView.postInvalidate();
 
     if (null != selected) {
-      mapController.setLatLon(selected.lat, selected.lon);
+      mapController.setLatLon(selected.getLatitude(), selected.getLongitude());
       mapController.setZoom(16);
     }
   }
@@ -132,7 +132,7 @@ public class RadarMapActivity extends MapActivity
 		
 		final Event e = (Event) v.getTag();
 		Intent intent = new Intent(this, EventDetailsActivity.class);
-	    intent.putExtra("eventId", e.tag);
+	    intent.putExtra("eventId", e.getTag());
 	    intent.putExtra("controller", commonController);
 	    intent.putExtra("token", token);
 	    startActivity(intent);

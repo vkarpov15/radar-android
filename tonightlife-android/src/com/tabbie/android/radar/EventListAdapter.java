@@ -42,19 +42,19 @@ public class EventListAdapter extends BaseAdapter {
       // Populate TextViews with data
       ((TextView) convertView
     		  .findViewById(R.id.event_text))
-    		  .setText(e.name);
+    		  .setText(e.getName());
 
       ((TextView) convertView
     		  .findViewById(R.id.event_list_time))
-    		  .setText(e.time.makeYourTime());
+    		  .setText(e.getTime().makeYourTime());
 
       ((TextView) convertView
           .findViewById(R.id.event_location))
-          .setText(e.venueName);
+          .setText(e.getVenueName());
       
       final View viewHolder = convertView.findViewById(R.id.image_holder);
       viewHolder.findViewById(R.id.element_loader).startAnimation(AnimationUtils.loadAnimation(context, R.anim.rotate));
-      imageLoader.displayImage(e.image.toString(),
+      imageLoader.displayImage(e.getUrl().toString(),
     		  (ImageView) viewHolder.findViewById(R.id.event_image));
       
       
