@@ -37,10 +37,6 @@ public class RadarCommonController implements Parcelable {
   public final List<Event> lineupEventsList;
   
   private final Map<String, Integer>  eventIdToIndex  = new LinkedHashMap<String, Integer>();
-
-  private final Set<String>           lineupIds        = new LinkedHashSet<String>();
-  
-  private final List<Event>           lineupList       = new ArrayList<Event>();
   
   public RadarCommonController() {
 	  masterEventsMap = new LinkedHashMap<String, Event>();
@@ -90,61 +86,57 @@ public class RadarCommonController implements Parcelable {
     if (e.isOnLineup()) {
     	lineupEventsMap.put(e.getTag(), e);
     	lineupEventsList.add(e);
-    	
-    			lineupList.add(e);
-      			lineupIds.add(e.getTag());
     }
   }
 
   public void clear() {
-    masterEventsList.clear();
     featuredEventsList.clear();
-    lineupList.clear();
+    masterEventsList.clear();
+    lineupEventsList.clear();
     featuredEventsMap.clear();
     masterEventsMap.clear();
-    lineupIds.clear();
+    lineupEventsMap.clear();
   }
   
 
-  public Event getEvent(String id) {
+  public Event getEvent(final String id) {
     return masterEventsMap.get(id);
   }
   
 
-  public boolean isOnRadar(Event e) {
-    return lineupIds.contains(e.getTag());
+  public boolean isOnRadar(final Event e) {
+    return lineupEventsMap.containsKey(e.getTag());
   }
   
   
-  public int getIndexInEventList(Event e) {
+  public int getIndexInEventList(final Event e) {
     return eventIdToIndex.get(e.getTag());
   }
 
-  
   public boolean addToRadar(final Event e) {
-    if (lineupIds.contains(e.getTag())) {
-    	Log.v("RadarCommonController", "Add to Radar Failed");
+	  
+    if (lineupEventsMap.containsKey(e.getTag())) {
+    	Log.e("RadarCommonController", "Add to Radar Failed");
       return false;
     }
-    lineupIds.add(e.getTag());
-    lineupList.add(e);
+    lineupEventsMap.put(e.getTag(), e);
+    lineupEventsList.add(e);
     ++e.lineupCount;
-    Log.d("Radar Count", "" + e.lineupCount);
     e.setOnLineup(true);
     return true;
   }
   
 
-  public boolean removeFromRadar(Event e) {
-    if (!lineupIds.contains(e.getTag())) {
-      return false;
+  public boolean removeFromRadar(final Event e) {
+    if (lineupEventsMap.containsKey(e.getTag())) {
+	    lineupEventsMap.remove(e.getTag());
+	    lineupEventsList.remove(e);
+	    --e.lineupCount;
+	    e.setOnLineup(false);
+	    return true;
+    } else {
+    	return false;
     }
-    lineupIds.remove(e.getTag());
-    // TODO: this is slow, improve
-    lineupList.remove(e);
-    --e.lineupCount;
-    e.setOnLineup(false);
-    return true;
   }
   
   public List<Event> findListById(final int id) {
@@ -154,7 +146,7 @@ public class RadarCommonController implements Parcelable {
 	  case R.id.all_event_list:
 		  return masterEventsList;
 	  case R.id.lineup_event_list:
-		  return lineupList;
+		  return lineupEventsList;
 	  default:
 		  return null;
 	  }
@@ -165,7 +157,7 @@ public class RadarCommonController implements Parcelable {
   }
   
   public boolean hasNoLineupEvents() {
-	  return lineupList.isEmpty();
+	  return lineupEventsList.isEmpty();
   }
   
   public List<Event> getFeaturedList() {
@@ -177,7 +169,7 @@ public class RadarCommonController implements Parcelable {
   }
   
   public List<Event> getLineupList() {
-	  return lineupList;
+	  return lineupEventsList;
   }
 
   
@@ -199,7 +191,6 @@ public class RadarCommonController implements Parcelable {
       List<Event> events = new ArrayList<Event>();
       in.readTypedList(events, Event.CREATOR);
       RadarCommonController c = new RadarCommonController();
-      c.clear();
       Log.d("RadarCommonController", "Events List Size: " + c.masterEventsList.size());
       for (Event e : events) {
         c.addEvent(e);

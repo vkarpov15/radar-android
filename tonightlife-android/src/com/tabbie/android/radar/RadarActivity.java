@@ -267,7 +267,6 @@ public class RadarActivity extends ServerThreadActivity implements
       } catch (JSONException e1) {
         e1.printStackTrace();
       }
-
       commonController.clear();
       for (int i = 0; i < list.length() - 1; ++i) {
         try {
