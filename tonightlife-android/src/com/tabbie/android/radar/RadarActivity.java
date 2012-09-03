@@ -224,7 +224,7 @@ public class RadarActivity extends ServerThreadActivity implements
 	    Collections.sort(commonController.lineupEventsList,
 			  RadarCommonController.chronoOrdering);
 			  
-			  *******Delete this code if it does not appear to affect anything******
+			  ******* TODO Delete this code if it does not appear to affect anything******
 			  */
 
         for(final ListView v : listViews) {
@@ -239,16 +239,6 @@ public class RadarActivity extends ServerThreadActivity implements
         } else {
         	findViewById(R.id.radar_list_empty_text).setVisibility(View.GONE);
         }
-        break;
-      
-        // TODO I Don't think this code block is used any more
-      case RadarCommonController.REQUEST_FIRE_EVENT:
-      	final Event e = commonController.getEvent(data.getExtras().getString("event"));
-        Intent intent = new Intent(RadarActivity.this, EventDetailsActivity.class);
-        intent.putExtra("eventId", e.getTag());
-        intent.putExtra("controller", commonController);
-        intent.putExtra("token", tabbieAccessToken);
-        startActivity(intent);
         break;
     }
   }
@@ -325,6 +315,7 @@ public class RadarActivity extends ServerThreadActivity implements
           throw new RuntimeException();
         }
       }
+      // TODO Delete me
       /*
       Collections.sort(commonController.featuredEventsList,
 			  RadarCommonController.chronoOrdering);

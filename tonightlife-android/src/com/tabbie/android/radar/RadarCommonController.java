@@ -12,7 +12,6 @@ package com.tabbie.android.radar;
  */
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -27,7 +26,6 @@ import android.util.Log;
 public class RadarCommonController implements Parcelable {
 	
   public static final int REQUEST_RETRIEVE_INSTANCE = 1;
-  public static final int REQUEST_FIRE_EVENT = 2;
 
   private final Map<String, Event> featuredEventsMap;
   public final List<Event> featuredEventsList;
