@@ -25,7 +25,7 @@ import android.os.Parcelable;
 import android.util.Log;
 
 public class RadarCommonController implements Parcelable {
-  public static final int MAX_RADAR_SELECTIONS = 100; // TODO Remove this functionality entirely
+	
   public static final int RETRIEVE_INSTANCE = 1;
   public static final int FIRE_EVENT = 2;
 
@@ -108,7 +108,7 @@ public class RadarCommonController implements Parcelable {
 
   
   public boolean addToRadar(final Event e) {
-    if (radarIds.contains(e.id) || lineupList.size() >= MAX_RADAR_SELECTIONS) {
+    if (radarIds.contains(e.id)) {
     	Log.v("RadarCommonController", "Add to Radar Failed");
       return false;
     }
