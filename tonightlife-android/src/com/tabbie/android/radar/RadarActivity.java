@@ -216,17 +216,6 @@ public class RadarActivity extends ServerThreadActivity implements
         
         tabHost.setCurrentTab(currentTabIndex);
 
-        /*
-        Collections.sort(commonController.featuredEventsList,
-  			  RadarCommonController.chronoOrdering);
-	    Collections.sort(commonController.masterEventsList,
-			  RadarCommonController.chronoOrdering);
-	    Collections.sort(commonController.lineupEventsList,
-			  RadarCommonController.chronoOrdering);
-			  
-			  ******* TODO Delete this code if it does not appear to affect anything******
-			  */
-
         for(final ListView v : listViews) {
         	v.setAdapter(new EventListAdapter(this,
         			commonController.findListById(v.getId())));
@@ -315,16 +304,6 @@ public class RadarActivity extends ServerThreadActivity implements
           throw new RuntimeException();
         }
       }
-      // TODO Delete me
-      /*
-      Collections.sort(commonController.featuredEventsList,
-			  RadarCommonController.chronoOrdering);
-	    Collections.sort(commonController.masterEventsList,
-			  RadarCommonController.chronoOrdering);
-	    Collections.sort(commonController.lineupEventsList,
-			  RadarCommonController.chronoOrdering);
-			  
-			  */
       this.runOnUiThread(new Runnable() {
         public void run() {
 
@@ -478,7 +457,7 @@ public class RadarActivity extends ServerThreadActivity implements
 	public boolean onItemLongClick(AdapterView<?> parent, View v, int position,
 			long rowId) {
 		// TODO Pop up a dialog here
-		// Toast.makeText(this, "Long click!", Toast.LENGTH_SHORT).show();
+		Toast.makeText(this, "Long click!", Toast.LENGTH_SHORT).show();
 		return true;
 	}
 }
