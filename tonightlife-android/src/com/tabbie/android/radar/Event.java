@@ -9,7 +9,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class Event implements Parcelable, Handler.Callback {
-  public final String id;
+  public final String tag;
   public final String name;
   public final String description;
   public final String venueName;
@@ -37,7 +37,7 @@ public class Event implements Parcelable, Handler.Callback {
                 boolean featured,
                 String time,
                 boolean onRadar) {
-    this.id = id;
+    this.tag = id;
     this.name = name;
     this.description = description;
     this.venueName = venueName;
@@ -69,7 +69,7 @@ public class Event implements Parcelable, Handler.Callback {
 
   public void writeToParcel(Parcel dest, int flags) {
     dest.writeString(image.toString());
-    dest.writeString(id);
+    dest.writeString(tag);
     dest.writeString(name);
     dest.writeString(description);
     dest.writeString(venueName);

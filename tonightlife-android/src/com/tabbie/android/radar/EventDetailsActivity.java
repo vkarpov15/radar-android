@@ -106,14 +106,14 @@ public void onClick(View v) {
         if (e.isOnRadar() && commonController.removeFromRadar(e)) {
           radarButton.setSelected(false);
           ServerDeleteRequest req = new ServerDeleteRequest(
-              ServerThread.TABBIE_SERVER + "/mobile/radar/" + e.id
+              ServerThread.TABBIE_SERVER + "/mobile/radar/" + e.tag
                   + ".json?auth_token=" + token, MessageType.ADD_TO_RADAR);
           sendServerRequest(req);
         } else if (!e.isOnRadar()) {
           if (commonController.addToRadar(e)) {
             radarButton.setSelected(true);
             ServerPostRequest req = new ServerPostRequest(
-                ServerThread.TABBIE_SERVER + "/mobile/radar/" + e.id + ".json",
+                ServerThread.TABBIE_SERVER + "/mobile/radar/" + e.tag + ".json",
                 MessageType.ADD_TO_RADAR);
             req.params.put("auth_token", token);
             sendServerRequest(req);

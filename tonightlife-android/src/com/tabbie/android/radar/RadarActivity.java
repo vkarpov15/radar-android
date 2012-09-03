@@ -226,7 +226,7 @@ public class RadarActivity extends ServerThreadActivity implements
       case RadarCommonController.REQUEST_FIRE_EVENT:
       	final Event e = commonController.getEvent(data.getExtras().getString("event"));
         Intent intent = new Intent(RadarActivity.this, EventDetailsActivity.class);
-        intent.putExtra("eventId", e.id);
+        intent.putExtra("eventId", e.tag);
         intent.putExtra("controller", commonController);
         intent.putExtra("token", tabbieAccessToken);
         startActivity(intent);
@@ -438,7 +438,7 @@ public class RadarActivity extends ServerThreadActivity implements
 	          protected Intent doInBackground(Void... params) {
 	            Intent intent = new Intent(RadarActivity.this,
 	                EventDetailsActivity.class);
-	            intent.putExtra("eventId", e.id);
+	            intent.putExtra("eventId", e.tag);
 	            intent.putExtra("controller", commonController);
 	            intent.putExtra("token", tabbieAccessToken);
 	            return intent;

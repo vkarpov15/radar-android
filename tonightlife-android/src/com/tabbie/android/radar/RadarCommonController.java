@@ -64,16 +64,16 @@ public class RadarCommonController implements Parcelable {
   
 
   public void addEvent(final Event e) {
-    events.put(e.id, e);
+    events.put(e.tag, e);
     eventsList.add(e);
-    eventIdToIndex.put(e.id, eventsList.size() - 1);
+    eventIdToIndex.put(e.tag, eventsList.size() - 1);
     if (e.featured) {
-      featured.put(e.id, e);
+      featured.put(e.tag, e);
       featuredList.add(e);
     }
     if (e.isOnRadar()) {
       lineupList.add(e);
-      radarIds.add(e.id);
+      radarIds.add(e.tag);
     }
   }
   
@@ -101,21 +101,21 @@ public class RadarCommonController implements Parcelable {
   
 
   public boolean isOnRadar(Event e) {
-    return radarIds.contains(e.id);
+    return radarIds.contains(e.tag);
   }
   
   
   public int getIndexInEventList(Event e) {
-    return eventIdToIndex.get(e.id);
+    return eventIdToIndex.get(e.tag);
   }
 
   
   public boolean addToRadar(final Event e) {
-    if (radarIds.contains(e.id)) {
+    if (radarIds.contains(e.tag)) {
     	Log.v("RadarCommonController", "Add to Radar Failed");
       return false;
     }
-    radarIds.add(e.id);
+    radarIds.add(e.tag);
     lineupList.add(e);
     ++e.radarCount;
     Log.d("Radar Count", "" + e.radarCount);
@@ -125,10 +125,10 @@ public class RadarCommonController implements Parcelable {
   
 
   public boolean removeFromRadar(Event e) {
-    if (!radarIds.contains(e.id)) {
+    if (!radarIds.contains(e.tag)) {
       return false;
     }
-    radarIds.remove(e.id);
+    radarIds.remove(e.tag);
     // TODO: this is slow, improve
     lineupList.remove(e);
     --e.radarCount;
