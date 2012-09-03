@@ -1,7 +1,6 @@
 package com.tabbie.android.radar;
 
 import java.net.URL;
-import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -59,9 +58,6 @@ public class RadarActivity extends ServerThreadActivity implements
   private ProgressDialog loadingDialog;
 
   // Internal state for views
-  private static final short FEATURED = 0;
-  private static final short ALL = 1;
-  private static final short LINEUP = 2;
   private String tabbieAccessToken = null;
   private int currentViewPosition = 0;
   private short currentTabIndex = 0;
@@ -92,9 +88,9 @@ public class RadarActivity extends ServerThreadActivity implements
     googleAnalyticsTracker.trackPageView(this.getClass().getName());
     
     // Instantiate list views
-    listViews[FEATURED] = (ListView) findViewById(R.id.featured_event_list);
-    listViews[ALL] = (ListView) findViewById(R.id.all_event_list);
-    listViews[LINEUP] = (ListView) findViewById(R.id.lineup_event_list);
+    listViews[RadarCommonController.FEATURED] = (ListView) findViewById(R.id.featured_event_list);
+    listViews[RadarCommonController.ALL] = (ListView) findViewById(R.id.all_event_list);
+    listViews[RadarCommonController.LINEUP] = (ListView) findViewById(R.id.lineup_event_list);
     
     myNameView = (TextView) findViewById(R.id.user_name);
     tabHost = (FlingableTabHost) findViewById(android.R.id.tabhost);
@@ -130,48 +126,19 @@ public class RadarActivity extends ServerThreadActivity implements
   }
 
   public void onTabChanged(final String tabName) {
-	  
-	  if(commonController.hasNoEvents()) {
-		  findViewById(R.id.radar_list_empty_text).setVisibility(View.VISIBLE);
-		  return;
-	  } else {
-		  findViewById(R.id.radar_list_empty_text).setVisibility(View.GONE);
-	  }
-	  
 	  for(short i = 0; i < listViews.length; i++) {
 		  if(tabName.equals(listViews[i].getTag())) {
 			  currentTabIndex = i;
 		  }
 	  }
-
-	  final ListView tabView;
-	  
-	  switch(currentTabIndex) {
-	  case FEATURED:
-		  Collections.sort(commonController.featuredEventsList,
-				  RadarCommonController.defaultOrdering);
-		  tabView = listViews[FEATURED];
-		  break;
-	  case ALL:
-		  Collections.sort(commonController.masterEventsList,
-				  RadarCommonController.defaultOrdering);
-		  tabView = listViews[ALL];
-		  break;
-	  case LINEUP:
-		  Collections.sort(commonController.lineupEventsList,
-				  RadarCommonController.chronoOrdering);
-		  tabView = listViews[LINEUP];
-		  if(commonController.hasNoLineupEvents()) {
-			  findViewById(R.id.radar_list_empty_text).setVisibility(View.VISIBLE);
-		  } else {
-			  findViewById(R.id.radar_list_empty_text).setVisibility(View.GONE);
-		  }
-		  break;
-	  default:
-		  Log.d(TAG, "Tab Index Not Found!");
-		  throw new RuntimeException();
+	  if(commonController.hasNoEvents(currentTabIndex)) {
+		  findViewById(R.id.radar_list_empty_text).setVisibility(View.VISIBLE);
+		  return;
+	  } else {
+		  findViewById(R.id.radar_list_empty_text).setVisibility(View.GONE);
 	  }
-	  
+	  commonController.sort(currentTabIndex);
+	  final ListView tabView = listViews[currentTabIndex];
 	  ((BaseAdapter) tabView.getAdapter()).notifyDataSetChanged();
       PlayAnim(tabView, getBaseContext(), android.R.anim.fade_in, 100);
   }
@@ -313,7 +280,7 @@ public class RadarActivity extends ServerThreadActivity implements
         		}
         	}
           
-        	if(commonController.hasNoEvents()) {
+        	if(commonController.hasNoEvents(currentTabIndex)) {
         		findViewById(R.id.radar_list_empty_text).setVisibility(View.VISIBLE);
         	} else {
         		findViewById(R.id.radar_list_empty_text).setVisibility(View.GONE);

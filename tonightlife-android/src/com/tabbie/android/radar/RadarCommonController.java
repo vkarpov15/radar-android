@@ -12,12 +12,11 @@ package com.tabbie.android.radar;
  */
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -26,17 +25,22 @@ import android.util.Log;
 public class RadarCommonController implements Parcelable {
 	
   public static final int REQUEST_RETRIEVE_INSTANCE = 1;
+  
+  
+  public static final String TAG = "RadarCommonController";
+  
+
+  public static final short FEATURED = 0;
+  public static final short ALL = 1;
+  public static final short LINEUP = 2;
 
   private final Map<String, Event> featuredEventsMap;
-  public final List<Event> featuredEventsList;
-
   private final Map<String, Event> masterEventsMap;
-  public final List<Event> masterEventsList;
-  
   private final Map<String, Event> lineupEventsMap;
-  public final List<Event> lineupEventsList;
   
-  private final Map<String, Integer>  eventIdToIndex  = new LinkedHashMap<String, Integer>();
+  private final List<Event> featuredEventsList;
+  private final List<Event> masterEventsList;
+  private final List<Event> lineupEventsList;
   
   public RadarCommonController() {
 	  masterEventsMap = new LinkedHashMap<String, Event>();
@@ -52,7 +56,7 @@ public class RadarCommonController implements Parcelable {
   /** Sort by the number of people who have added
    * the event to their radar in REVERSE order
    */
-  public static final Comparator<Event> defaultOrdering = new Comparator<Event>() {
+  private static final Comparator<Event> defaultOrdering = new Comparator<Event>() {
     public int compare(Event e1, Event e2) {
       if (e1.lineupCount > e2.lineupCount) {
         return -1;
@@ -65,18 +69,31 @@ public class RadarCommonController implements Parcelable {
  
   /** Sort by the start time of the event 
    */
-  public static final Comparator<Event> chronoOrdering = new Comparator<Event>() {
+  private static final Comparator<Event> chronoOrdering = new Comparator<Event>() {
 	  public int compare(final Event e1, final Event e2) {
 		  return e1.getTime().compareTo(e2.getTime());
 	  }
   };
   
-
+  public void sort(final short index) {
+	  switch(index) {
+	  case FEATURED:
+		  Collections.sort(featuredEventsList, defaultOrdering);
+		  break;
+	  case ALL:
+		  Collections.sort(masterEventsList, defaultOrdering);
+		  break;
+	  case LINEUP:
+		  Collections.sort(lineupEventsList, chronoOrdering);
+		  break;
+	  default:
+		  break;
+	  }
+  }
+  
   public void addEvent(final Event e) {
     masterEventsMap.put(e.getTag(), e);
     masterEventsList.add(e);
-    
-    			eventIdToIndex.put(e.getTag(), masterEventsList.size() - 1);
     			
     if (e.isFeatured()) {
       featuredEventsMap.put(e.getTag(), e);
@@ -93,30 +110,19 @@ public class RadarCommonController implements Parcelable {
     featuredEventsList.clear();
     masterEventsList.clear();
     lineupEventsList.clear();
+    
     featuredEventsMap.clear();
     masterEventsMap.clear();
     lineupEventsMap.clear();
   }
   
-
-  public Event getEvent(final String id) {
-    return masterEventsMap.get(id);
-  }
-  
-
-  public boolean isOnRadar(final Event e) {
-    return lineupEventsMap.containsKey(e.getTag());
-  }
-  
-  
-  public int getIndexInEventList(final Event e) {
-    return eventIdToIndex.get(e.getTag());
+  public Event findEventByTag(final String tag) {
+    return masterEventsMap.get(tag);
   }
 
   public boolean addToRadar(final Event e) {
-	  
     if (lineupEventsMap.containsKey(e.getTag())) {
-    	Log.e("RadarCommonController", "Add to Radar Failed");
+      Log.e("RadarCommonController", "Add to Radar Failed");
       return false;
     }
     lineupEventsMap.put(e.getTag(), e);
@@ -126,7 +132,6 @@ public class RadarCommonController implements Parcelable {
     return true;
   }
   
-
   public boolean removeFromRadar(final Event e) {
     if (lineupEventsMap.containsKey(e.getTag())) {
 	    lineupEventsMap.remove(e.getTag());
@@ -152,47 +157,37 @@ public class RadarCommonController implements Parcelable {
 	  }
   }
   
-  public boolean hasNoEvents() {
-	  return masterEventsMap.isEmpty();
+  public boolean hasNoEvents(final short index) {
+	  switch(index) {
+	  case FEATURED:
+		  return featuredEventsList.isEmpty();
+	  case ALL:
+		  return masterEventsMap.isEmpty();
+	  case LINEUP:
+		  return lineupEventsList.isEmpty();
+	  default:
+		  return true;
+	  }
   }
   
-  public boolean hasNoLineupEvents() {
-	  return lineupEventsList.isEmpty();
-  }
-  
-  public List<Event> getFeaturedList() {
-	  return featuredEventsList;
-  }
-  
-  public List<Event> getAllList() {
+  public List<Event> getMasterList() {
 	  return masterEventsList;
   }
   
-  public List<Event> getLineupList() {
-	  return lineupEventsList;
-  }
-
-  
   public int describeContents() {
-	  // TODO Robust implementation
     return 0;
   }
-
   
   public void writeToParcel(Parcel dest, int flags) {
-    // Technically all we need to do is write eventsList, and then reconstruct
-    // on the other side
     dest.writeTypedList(masterEventsList);
   }
 
-  
   public static final Parcelable.Creator<RadarCommonController> CREATOR = new Parcelable.Creator<RadarCommonController>() {
     public RadarCommonController createFromParcel(Parcel in) {
-      List<Event> events = new ArrayList<Event>();
+      final List<Event> events = new ArrayList<Event>();
       in.readTypedList(events, Event.CREATOR);
-      RadarCommonController c = new RadarCommonController();
-      Log.d("RadarCommonController", "Events List Size: " + c.masterEventsList.size());
-      for (Event e : events) {
+      final RadarCommonController c = new RadarCommonController();
+      for (final Event e : events) {
         c.addEvent(e);
       }
       return c;

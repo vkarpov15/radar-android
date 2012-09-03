@@ -50,7 +50,7 @@ public class EventDetailsPagerAdapter
 	@Override
 	public Object instantiateItem(android.view.ViewGroup container, int position) {
 		Log.d("EventDetailsPagerAdapter", "Adding View at position " + position);
-		final Event e = controller.getAllList().get(position);
+		final Event e = controller.getMasterList().get(position);
 		final View v = bindEvent(e);
 		container.addView(v);
 		return v;
@@ -65,7 +65,7 @@ public class EventDetailsPagerAdapter
 
 	@Override
 	public int getCount() {
-		return controller.getAllList().size();
+		return controller.getMasterList().size();
 	}
 
 	@Override

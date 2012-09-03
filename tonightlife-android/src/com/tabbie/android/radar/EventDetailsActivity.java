@@ -60,12 +60,12 @@ public class EventDetailsActivity extends ServerThreadActivity
     
     final String eventId = starter.getString("eventId");
     commonController = starter.getParcelable("controller");
-    e = commonController.getEvent(eventId);
+    e = commonController.findEventByTag(eventId);
     token = starter.getString("token");
     
     final ViewPager pager = (ViewPager) findViewById(R.id.details_event_pager);
     new EventDetailsPagerAdapter(this, commonController, R.layout.event_details_element, pager, this);
-    pager.setCurrentItem(commonController.getAllList().indexOf(e));
+    pager.setCurrentItem(commonController.getMasterList().indexOf(e));
 
   }
 

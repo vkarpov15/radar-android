@@ -69,7 +69,7 @@ public class RadarMapActivity extends MapActivity
 
     myLocationOverlay = new MyLocationOverlay(this, mapView);
 
-    for (final Event e : commonController.getAllList()) {
+    for (final Event e : commonController.getMasterList()) {
       if (null != selected && 0 == e.getTag().compareTo(selected.getTag())) {
         mapController.addEventMarker(e,
             getResources().getDrawable(R.drawable.marker_highlight));
