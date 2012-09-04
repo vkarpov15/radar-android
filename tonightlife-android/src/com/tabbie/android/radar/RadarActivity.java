@@ -228,20 +228,14 @@ public class RadarActivity extends Activity implements
   @Override
 	protected void onRestart() {
 		super.onRestart();
-		this.runOnUiThread(new Runnable() {
-		    public void run() {
-		      ServerGetRequest req = new ServerGetRequest(
-		          ServerThread.TABBIE_SERVER + "/mobile/all.json?auth_token="
-		              + tabbieAccessToken, MessageType.LOAD_EVENTS);
-		      sendServerRequest(req);
-		    }
-		  });
+        ServerGetRequest req = new ServerGetRequest(
+            ServerThread.TABBIE_SERVER + "/mobile/all.json?auth_token="
+                + tabbieAccessToken, MessageType.LOAD_EVENTS);
+        req.setResponseHandler(new Handler(this));
+        final Message message = Message.obtain();
+        message.obj = req;
+        upstreamHandler.sendMessage(message);
 	}
-
-  @SuppressLint({ "ParserError", "ParserError" })
-  @Override
-  protected synchronized boolean handleServerResponse(ServerResponse resp) {
-  }
 
   @Override
   public boolean onCreateOptionsMenu(final Menu menu) {
