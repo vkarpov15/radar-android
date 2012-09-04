@@ -23,18 +23,18 @@ public class Event implements Parcelable, Handler.Callback {
   public int lineupCount;
   private boolean onLineup;
 
-  public Event(String id,
-               String name,
-               String description,
-               String venueName,
-               String address,
-               URL image,
-               double lat,
-               double lon,
-               int radarCount,
-               boolean featured,
-               String time,
-               boolean onRadar) {
+  public Event(final String id,
+		  	final String name,
+		  	final String description,
+		  	final String venueName,
+		  	final String address,
+		  	final URL image,
+		  	final double lat,
+		  	final double lon,
+		  	final int radarCount,
+		  	final boolean featured,
+		  	final String time,
+		  	final boolean onRadar) {
     this.tag = id;
     this.name = name;
     this.description = description;
@@ -93,7 +93,7 @@ public class Event implements Parcelable, Handler.Callback {
     return onLineup;
   }
 
-  public void setOnLineup(boolean onLineup) {
+  public void setOnLineup(final boolean onLineup) {
     this.onLineup = onLineup;
   }
 
