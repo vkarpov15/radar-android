@@ -50,11 +50,12 @@ public class RadarActivity extends Activity implements
     OnItemLongClickListener,
     Handler.Callback {
 	
-  private static final Handler upstreamHandler;
   public static final String TAG = "RadarActivity";
+  private static final Handler upstreamHandler;
+  private static final HandlerThread serverThread;
 
   static {
-  	final HandlerThread serverThread = new HandlerThread(TAG + "Thread");
+  	serverThread = new HandlerThread(TAG + "Thread");
   	serverThread.start();
   	upstreamHandler = new ServerThreadHandler(serverThread.getLooper());
   }
@@ -69,6 +70,8 @@ public class RadarActivity extends Activity implements
   private ListView[] listViews = new ListView[3];
   private TextView myNameView;
   private ProgressDialog loadingDialog;
+  
+  
 
   // Internal state for views
   private String tabbieAccessToken = null;
