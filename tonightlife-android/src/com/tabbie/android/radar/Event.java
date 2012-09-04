@@ -3,12 +3,10 @@ package com.tabbie.android.radar;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import android.os.Handler;
-import android.os.Message;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class Event implements Parcelable, Handler.Callback {
+public class Event implements Parcelable {
   private final String tag;
   private final String name;
   private final String description;
@@ -122,7 +120,7 @@ public class Event implements Parcelable, Handler.Callback {
 
   public static final Parcelable.Creator<Event> CREATOR = new Parcelable.Creator<Event>() {
     public Event createFromParcel(Parcel in) {
-      String url = in.readString();
+      final String url = in.readString();
       try {
         return new Event( in.readString(),
                           in.readString(),
@@ -136,7 +134,7 @@ public class Event implements Parcelable, Handler.Callback {
                           in.readInt() == 1,
                           in.readString(),
                           in.readInt() == 1);
-      } catch (MalformedURLException e) {
+      } catch (final MalformedURLException e) {
         e.printStackTrace();
         return null;
       }
@@ -146,10 +144,4 @@ public class Event implements Parcelable, Handler.Callback {
       return new Event[size];
     }
   };
-
-  @Override
-  public boolean handleMessage(final Message msg) {
-	  // TODO Deal with Bitmap here
-  	return false;
-  }
 }
