@@ -120,7 +120,7 @@ public class Event implements Parcelable {
 
   public static final Parcelable.Creator<Event> CREATOR = new Parcelable.Creator<Event>() {
     public Event createFromParcel(Parcel in) {
-      String url = in.readString();
+      final String url = in.readString();
       try {
         return new Event( in.readString(),
                           in.readString(),
@@ -134,7 +134,7 @@ public class Event implements Parcelable {
                           in.readInt() == 1,
                           in.readString(),
                           in.readInt() == 1);
-      } catch (MalformedURLException e) {
+      } catch (final MalformedURLException e) {
         e.printStackTrace();
         return null;
       }
