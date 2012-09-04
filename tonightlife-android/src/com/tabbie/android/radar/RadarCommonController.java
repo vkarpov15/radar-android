@@ -25,11 +25,8 @@ import android.util.Log;
 public class RadarCommonController implements Parcelable {
 	
   public static final int REQUEST_RETRIEVE_INSTANCE = 1;
-  
-  
   public static final String TAG = "RadarCommonController";
   
-
   public static final short FEATURED = 0;
   public static final short ALL = 1;
   public static final short LINEUP = 2;
@@ -75,6 +72,12 @@ public class RadarCommonController implements Parcelable {
 	  }
   };
   
+  /** Sort the specified list according
+   * to its pre-coded ordering
+   * 
+   * @param index Use the built in
+   * controller indices
+   */
   public void sort(final short index) {
 	  switch(index) {
 	  case FEATURED:
@@ -91,6 +94,13 @@ public class RadarCommonController implements Parcelable {
 	  }
   }
   
+  /** Add an event to the appropriate lists. These
+   * will not be garbage collected until the controller
+   * is destroyed.
+   * 
+   * 
+   * @param e The newly instantiated event
+   */
   public void addEvent(final Event e) {
     masterEventsMap.put(e.getTag(), e);
     masterEventsList.add(e);
@@ -106,6 +116,10 @@ public class RadarCommonController implements Parcelable {
     }
   }
 
+  /** Clear the controller. Use this method
+   * instead of instantiating a new object
+   * so that adapters retain their references
+   */
   public void clear() {
     featuredEventsList.clear();
     masterEventsList.clear();
@@ -116,13 +130,25 @@ public class RadarCommonController implements Parcelable {
     lineupEventsMap.clear();
   }
   
+  /** Find an event by its tag
+   * 
+   * @param tag The tag corresponding to this event
+   * @return The event
+   */
   public Event findEventByTag(final String tag) {
     return masterEventsMap.get(tag);
   }
 
-  public boolean addToRadar(final Event e) {
+  /** Add the event to the lineup and keep
+   * a reference to it.
+   * 
+   * @param e The event to add
+   * @return Whether the event was successfully
+   * added to the lineup or not
+   */
+  public boolean addToLineup(final Event e) {
     if (lineupEventsMap.containsKey(e.getTag())) {
-      Log.e("RadarCommonController", "Add to Radar Failed");
+      Log.e("RadarCommonController", "Add to Lineup Failed");
       return false;
     }
     lineupEventsMap.put(e.getTag(), e);
@@ -132,7 +158,12 @@ public class RadarCommonController implements Parcelable {
     return true;
   }
   
-  public boolean removeFromRadar(final Event e) {
+  /** Remove the given event from the lineup
+   * 
+   * @param e The event to remove
+   * @return Whether the event was removed or not
+   */
+  public boolean removeFromLineup(final Event e) {
     if (lineupEventsMap.containsKey(e.getTag())) {
 	    lineupEventsMap.remove(e.getTag());
 	    lineupEventsList.remove(e);
@@ -144,6 +175,12 @@ public class RadarCommonController implements Parcelable {
     }
   }
   
+  /** Find the appropriate list based on the ID
+   * specified in the R file
+   * 
+   * @param id The R file ID of the event list
+   * @return The list or null if no list is found
+   */
   public List<Event> findListById(final int id) {
 	  switch(id) {
 	  case R.id.featured_event_list:
@@ -170,6 +207,12 @@ public class RadarCommonController implements Parcelable {
 	  }
   }
   
+  /** Retrieve the master events list.
+   * This method is used for keeping track of
+   * indices in the Details Activity
+   * 
+   * @return The master events list
+   */
   public List<Event> getMasterList() {
 	  return masterEventsList;
   }
