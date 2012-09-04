@@ -183,7 +183,7 @@ public class RadarActivity extends Activity implements
       	myNameView.setText(data.getStringExtra("facebookName"));
       	
       	final ServerGetRequest req = new ServerGetRequest(
-      			ServerThread.TABBIE_SERVER + "/mobile/all.json?auth_token="
+      			getString(R.string.tabbie_server) + "/mobile/all.json?auth_token="
       			+ tabbieAccessToken, MessageType.LOAD_EVENTS);
       	loadingDialog = ProgressDialog.show(this, null, "Loading... Please wait");
       	req.setResponseHandler(new Handler(this));
@@ -226,7 +226,7 @@ public class RadarActivity extends Activity implements
 	protected void onRestart() {
 		super.onRestart();
         ServerGetRequest req = new ServerGetRequest(
-            ServerThread.TABBIE_SERVER + "/mobile/all.json?auth_token="
+            getString(R.string.tabbie_server) + "/mobile/all.json?auth_token="
                 + tabbieAccessToken, MessageType.LOAD_EVENTS);
         req.setResponseHandler(new Handler(this));
         final Message message = Message.obtain();
@@ -247,7 +247,7 @@ public class RadarActivity extends Activity implements
     switch(item.getItemId()) {
       case R.id.refresh_me:
     	  ServerGetRequest req = new ServerGetRequest(
-    			  ServerThread.TABBIE_SERVER + "/mobile/all.json?auth_token="
+    			  getString(R.string.tabbie_server) + "/mobile/all.json?auth_token="
     					  + tabbieAccessToken, MessageType.LOAD_EVENTS);
     	  req.setResponseHandler(new Handler(this));
     	  final Message message = Message.obtain();

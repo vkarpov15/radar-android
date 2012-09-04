@@ -139,7 +139,7 @@ public class AuthenticateActivity extends Activity implements Handler.Callback{
 	          return false;
 	        }
 	        final ServerPostRequest req = new ServerPostRequest(
-	            ServerThread.TABBIE_SERVER + "/mobile/auth.json",
+	            getString(R.string.tabbie_server) + "/mobile/auth.json",
 	            MessageType.TABBIE_LOGIN);
 	
 	        	req.params.put("fb_token", facebook.getAccessToken());
