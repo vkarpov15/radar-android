@@ -1,5 +1,15 @@
 package com.tabbie.android.radar;
 
+/**
+ *  ServerThreadHandler.java
+ * 
+ *  Created on: September 4, 2012
+ *  @Author: Justin Knutson
+ *  
+ *  Abstract handler for communicating with
+ *  the Tabbie server
+ */
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -19,8 +29,6 @@ import android.util.Log;
 public class ServerThreadHandler extends Handler {
 	public static final String TAG = "ServerThreadHandler";
 	
-	private HttpURLConnection conn;
-	
 	public ServerThreadHandler(final Looper looper) {
 		super(looper);
 	}
@@ -34,8 +42,9 @@ public class ServerThreadHandler extends Handler {
 		}
 		final ServerRequest req = (ServerRequest) msg.obj;
 		final Handler responseHandler = req.getResponseHandler();
+		
 		try {
-			conn = (HttpURLConnection) new URL(req.getUrl()).openConnection();
+			final HttpURLConnection conn = (HttpURLConnection) new URL(req.getUrl()).openConnection();
 			conn.setRequestMethod(req.getReqMethod());
 			for (final String key : req.getHttpParams().keySet()) {
 			  conn.setRequestProperty(key, req.getHttpParams().get(key));
