@@ -9,12 +9,15 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.os.Vibrator;
 import android.util.Log;
 import android.view.Menu;
@@ -41,10 +44,18 @@ import com.tabbie.android.radar.MultiSpinner.MultiSpinnerListener;
 import com.tabbie.android.radar.http.ServerGetRequest;
 import com.tabbie.android.radar.http.ServerResponse;
 
-public class RadarActivity extends ServerThreadActivity implements
+public class RadarActivity extends Activity implements
     OnTabChangeListener,
     OnItemClickListener,
-    OnItemLongClickListener {
+    OnItemLongClickListener,
+    Runnable,
+    Handler.Callback {
+
+	static {
+		final ServerHandlerThread serverThread = new ServerHandlerThread();
+		serverThread.start();
+		final Handler upstreamHandler = new Handler(serverThread.getLooper());
+	}
   
   // Intent constants
   private static final String[] FOUNDERS_EMAIL = {"founders@tonight-life.com"};
@@ -173,6 +184,7 @@ public class RadarActivity extends ServerThreadActivity implements
       			ServerThread.TABBIE_SERVER + "/mobile/all.json?auth_token="
       			+ tabbieAccessToken, MessageType.LOAD_EVENTS);
       	loadingDialog = ProgressDialog.show(this, null, "Loading... Please wait");
+      	// TODO
       	sendServerRequest(req);
       	break;
     	
@@ -425,5 +437,17 @@ public class RadarActivity extends ServerThreadActivity implements
 		// TODO Pop up a dialog here
 		Toast.makeText(this, "Long click!", Toast.LENGTH_SHORT).show();
 		return true;
+	}
+
+	@Override
+	public boolean handleMessage(Message arg0) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void run() {
+		// TODO Auto-generated method stub
+		
 	}
 }

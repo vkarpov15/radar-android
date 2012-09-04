@@ -16,8 +16,8 @@ public class ServerPutRequest extends ServerRequest {
   
   public ServerPutRequest(String url, MessageType type, String jsonContents) {
     super(url, "PUT", type);
+    super.put("Content-Type", "application/json");
     this.jsonContents = jsonContents;
-    this.httpParams.put("Content-Type", "application/json");
   }
 
   @Override

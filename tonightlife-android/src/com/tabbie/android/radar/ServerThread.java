@@ -135,24 +135,24 @@ public class ServerThread extends Thread {
 	 */
 	private boolean handleRequest(ServerRequest req) {
 	  waiting = true;
-	  Log.v(this.getClass().getName(), "Got request for URL " + req.url);
+	  Log.v(this.getClass().getName(), "Got request for URL " + req.getUrl());
 		try {
-			conn = (HttpURLConnection) new URL(req.url).openConnection();
+			conn = (HttpURLConnection) new URL(req.getUrl()).openConnection();
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
-			fireHandler(new ServerResponse(ServerResponse.NO_INTERNET, "Malformed URL", req.type));
+			fireHandler(new ServerResponse(ServerResponse.NO_INTERNET, "Malformed URL", req.getType()));
 			return true;
 		} catch (IOException e) {
 			e.printStackTrace();
-			fireHandler(new ServerResponse(ServerResponse.NO_INTERNET, "Could not open connection", req.type));
+			fireHandler(new ServerResponse(ServerResponse.NO_INTERNET, "Could not open connection", req.getType()));
 			return true;
 		}
 		
 		try {
 		  // POST, GET, etc
-			conn.setRequestMethod(req.reqMethod);
-			for (String key : req.httpParams.keySet()) {
-			  conn.setRequestProperty(key, req.httpParams.get(key));
+			conn.setRequestMethod(req.getReqMethod());
+			for (String key : req.getHttpParams().keySet()) {
+			  conn.setRequestProperty(key, req.getHttpParams().get(key));
 			}
 			
 			if (req.hasOutput()) {
@@ -166,11 +166,11 @@ public class ServerThread extends Thread {
       }
 		} catch (ProtocolException e) {
 			// Should never happen
-			fireHandler(new ServerResponse(-1, "ProtocolException", req.type));
+			fireHandler(new ServerResponse(-1, "ProtocolException", req.getType()));
 			e.printStackTrace();
 			return true;
 		} catch (IOException e) {
-		  fireHandler(new ServerResponse(ServerResponse.NO_INTERNET, "ProtocolException", req.type));
+		  fireHandler(new ServerResponse(ServerResponse.NO_INTERNET, "ProtocolException", req.getType()));
       e.printStackTrace();
       return true;
     }
@@ -178,7 +178,7 @@ public class ServerThread extends Thread {
 		try {
       Log.v(this.getClass().getName(), "Got HTTP response code " + conn.getResponseCode() + " " + conn.getResponseMessage());
       if (conn.getResponseCode() < 200 || conn.getResponseCode() >= 300) {
-        fireHandler(new ServerResponse(conn.getResponseCode(), conn.getResponseMessage(), req.type));
+        fireHandler(new ServerResponse(conn.getResponseCode(), conn.getResponseMessage(), req.getType()));
         return true;
       }
     } catch (IOException e1) {
@@ -191,7 +191,7 @@ public class ServerThread extends Thread {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			fireHandler(new ServerResponse(-1, "Reader IOException", req.type));
+			fireHandler(new ServerResponse(-1, "Reader IOException", req.getType()));
 			return true;
 		}
 		StringBuilder sb = new StringBuilder();
@@ -211,7 +211,7 @@ public class ServerThread extends Thread {
 		String s = sb.toString();
 		s = s.replace("\t", "").replace("\n", "");
 		Log.v(this.getClass().getName(), "Read from url : '" + sb.toString() + "'");
-		fireHandler(new ServerResponse(0, sb.toString(), req.type));
+		fireHandler(new ServerResponse(0, sb.toString(), req.getType()));
 		
 		return true;
 	}
