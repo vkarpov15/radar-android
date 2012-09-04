@@ -49,7 +49,6 @@ public class RadarActivity extends Activity implements
     OnTabChangeListener,
     OnItemClickListener,
     OnItemLongClickListener,
-    Runnable,
     Handler.Callback {
 	
   private static final Handler upstreamHandler;
@@ -445,11 +444,5 @@ public class RadarActivity extends Activity implements
 		loadingDialog = null;
 	  }
 	  return false;
-	}
-
-	@Override
-	public void run() {
-		// TODO Auto-generated method stub
-		
 	}
 }
