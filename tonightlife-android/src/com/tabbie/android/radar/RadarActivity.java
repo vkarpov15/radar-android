@@ -187,12 +187,10 @@ public class RadarActivity extends Activity implements
       			ServerThread.TABBIE_SERVER + "/mobile/all.json?auth_token="
       			+ tabbieAccessToken, MessageType.LOAD_EVENTS);
       	loadingDialog = ProgressDialog.show(this, null, "Loading... Please wait");
-      	
-					      	// TODO Test this code
-					      	req.setResponseHandler(new Handler(this));
-					      	final Message message = Message.obtain();
-					      	message.obj = req;
-					      	upstreamHandler.sendMessage(message);
+      	req.setResponseHandler(new Handler(this));
+      	final Message message = Message.obtain();
+      	message.obj = req;
+      	upstreamHandler.sendMessage(message);
       	
       	break;
     	
@@ -249,15 +247,14 @@ public class RadarActivity extends Activity implements
 
     switch(item.getItemId()) {
       case R.id.refresh_me:
-    		this.runOnUiThread(new Runnable() {
-    		    public void run() {
-    		      ServerGetRequest req = new ServerGetRequest(
-    		          ServerThread.TABBIE_SERVER + "/mobile/all.json?auth_token="
-    		              + tabbieAccessToken, MessageType.LOAD_EVENTS);
-    		      sendServerRequest(req);
-    		    }
-    		  });
-    		break;
+    	  ServerGetRequest req = new ServerGetRequest(
+    			  ServerThread.TABBIE_SERVER + "/mobile/all.json?auth_token="
+    					  + tabbieAccessToken, MessageType.LOAD_EVENTS);
+    	  req.setResponseHandler(new Handler(this));
+    	  final Message message = Message.obtain();
+    	  message.obj = req;
+    	  upstreamHandler.sendMessage(message);
+    	  break;
       case R.id.report_me:
     		Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);
     		emailIntent.setType("plain/text");
