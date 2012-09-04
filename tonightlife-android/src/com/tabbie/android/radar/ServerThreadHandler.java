@@ -59,8 +59,9 @@ public class ServerThreadHandler extends Handler {
 				sb.append(y);
 			}
 			if(responseHandler!=null) {
-				msg.obj = new ServerResponse(0, sb.toString(), req.getType());
-				responseHandler.sendMessage(msg);
+				final Message responseMessage = Message.obtain();
+				responseMessage.obj = new ServerResponse(0, sb.toString(), req.getType());
+				responseHandler.sendMessage(responseMessage);
 			} else {
 				Log.i(TAG, "No response handler available");
 				return;
