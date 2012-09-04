@@ -17,8 +17,12 @@ package com.tabbie.android.radar;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.HandlerThread;
+import android.os.Message;
 import android.util.Log;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
@@ -31,12 +35,19 @@ import com.tabbie.android.radar.http.ServerGetRequest;
 import com.tabbie.android.radar.http.ServerPostRequest;
 import com.tabbie.android.radar.http.ServerResponse;
 
-public class AuthenticateActivity extends ServerThreadActivity {
+public class AuthenticateActivity extends Activity implements Handler.Callback{
 
+  private static final Handler upstreamHandler;
   private static final String TAG = "Authenticate Activity";
+  
+  static {
+	  	final HandlerThread serverThread = new HandlerThread(TAG + "Thread");
+	  	serverThread.start();
+	  	upstreamHandler = new ServerThreadHandler(serverThread.getLooper());
+  }
 
   private final Facebook facebook = new Facebook("217386331697217");
-
+  
   private String fbAccessToken = null;
   private String tabbieAccessToken = null;
   private String facebookName = null;
@@ -64,15 +75,23 @@ public class AuthenticateActivity extends ServerThreadActivity {
 
     if (facebook.isSessionValid()) {
       Log.i(TAG, "Session is valid");
-      sendServerRequest(new ServerGetRequest(
+      final ServerGetRequest req = new ServerGetRequest(
           "https://graph.facebook.com/me/?access_token="
-              + facebook.getAccessToken(), MessageType.FACEBOOK_LOGIN));
+              + facebook.getAccessToken(), MessageType.FACEBOOK_LOGIN);
+      req.setResponseHandler(new Handler(this));
+      final Message message = Message.obtain();
+      message.obj = req;
+      upstreamHandler.sendMessage(message);
     } else {
       facebook.authorize(this, new String[] { "email" }, new DialogListener() {
         public void onComplete(final Bundle values) {
-          sendServerRequest(new ServerGetRequest(
-              "https://graph.facebook.com/me/?access_token="
-                  + facebook.getAccessToken(), MessageType.FACEBOOK_LOGIN));
+            final ServerGetRequest req = new ServerGetRequest(
+                    "https://graph.facebook.com/me/?access_token="
+                        + facebook.getAccessToken(), MessageType.FACEBOOK_LOGIN);
+            req.setResponseHandler(new Handler(AuthenticateActivity.this));
+            final Message message = Message.obtain();
+            message.obj = req;
+            upstreamHandler.sendMessage(message);
         }
 
         public void onFacebookError(final FacebookError e) {
@@ -91,67 +110,70 @@ public class AuthenticateActivity extends ServerThreadActivity {
   }
 
   @Override
-  protected synchronized boolean handleServerResponse(final ServerResponse resp) {
-
-    final JSONObject json = resp.parseJsonContent();
-
-    if (null == json) {
-      return false;
-    }
-
-    switch (resp.responseTo) {
-    case FACEBOOK_LOGIN:
-      if (json.has("id")) {
-        try {
-          facebookName = json.getString("first_name") + " "
-              + json.getString("last_name").substring(0, 1) + ".";
-        } catch (final JSONException e) {
-          e.printStackTrace();
-          return false;
-        }
-        this.runOnUiThread(new Runnable() {
-          public void run() {
-            final ServerPostRequest req = new ServerPostRequest(
-                ServerThread.TABBIE_SERVER + "/mobile/auth.json",
-                MessageType.TABBIE_LOGIN);
-
-            req.params.put("fb_token", facebook.getAccessToken());
-
-            sendServerRequest(req);
-          }
-        });
-      } else {
-        return false;
-      }
-      break;
-
-    case TABBIE_LOGIN:
-      if (json.has("token")) {
-        try {
-          tabbieAccessToken = json.getString("token");
-        } catch (final JSONException e) {
-          e.printStackTrace();
-          return false;
-        } finally {
-          final Intent data = new Intent();
-          data.putExtra("fbAccessToken", fbAccessToken);
-          data.putExtra("tabbieAccessToken", tabbieAccessToken);
-          data.putExtra("facebookName", facebookName);
-          data.putExtra("expires", expires);
-          this.setResult(RESULT_OK, data);
-          finish();
-        }
-      } else {
-        return false;
-      }
-      break;
-    }
-    return true;
-  }
-
-  @Override
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
     facebook.authorizeCallback(requestCode, resultCode, data);
   }
+
+	@Override
+	public boolean handleMessage(Message msg) {
+		Log.d(TAG, "Received message response");
+		if(!(msg.obj instanceof ServerResponse)) {
+			Log.e(TAG, "Message is not a Server Response");
+			return false;
+		}
+		final ServerResponse resp = (ServerResponse) msg.obj;
+	    final JSONObject json = resp.parseJsonContent();
+	    if (null == json) {
+	      Log.i(TAG, "JSON Response is null");
+	      return false;
+	    }
+	    switch (resp.responseTo) {
+	    case FACEBOOK_LOGIN:
+	      if (json.has("id")) {
+	        try {
+	          facebookName = json.getString("first_name") + " "
+	              + json.getString("last_name").substring(0, 1) + ".";
+	        } catch (final JSONException e) {
+	          e.printStackTrace();
+	          return false;
+	        }
+	        final ServerPostRequest req = new ServerPostRequest(
+	            ServerThread.TABBIE_SERVER + "/mobile/auth.json",
+	            MessageType.TABBIE_LOGIN);
+	
+	        	req.params.put("fb_token", facebook.getAccessToken());
+	          	req.setResponseHandler(new Handler(this));
+	          	final Message message = Message.obtain();
+	          	message.obj = req;
+	          	upstreamHandler.sendMessage(message);
+	      } else {
+	    	Log.e(TAG, "Facebook Log-in JSON does not have an ID!");
+	    	throw new RuntimeException();
+	      }
+	      break;
+	    case TABBIE_LOGIN:
+	      if (json.has("token")) {
+	        try {
+	          tabbieAccessToken = json.getString("token");
+	        } catch (final JSONException e) {
+	          e.printStackTrace();
+	          return false;
+	        } finally {
+	          final Intent data = new Intent();
+	          data.putExtra("fbAccessToken", fbAccessToken);
+	          data.putExtra("tabbieAccessToken", tabbieAccessToken);
+	          data.putExtra("facebookName", facebookName);
+	          data.putExtra("expires", expires);
+	          this.setResult(RESULT_OK, data);
+	          finish();
+	        }
+	      } else {
+	    	Log.e(TAG, "Tabbie Log-in JSON does not have a token!");
+	    	throw new RuntimeException();
+	      }
+	      break;
+	    }
+	    return true;
+    }
 }
