@@ -11,6 +11,8 @@ package com.tabbie.android.radar.http;
 
 import java.util.LinkedHashMap;
 
+import android.os.Handler;
+
 import com.tabbie.android.radar.MessageType;
 
 public abstract class ServerRequest {
@@ -19,7 +21,12 @@ public abstract class ServerRequest {
 	private final MessageType type;
 	private final LinkedHashMap<String, String> httpParams = new LinkedHashMap<String, String>();
 	
-	public ServerRequest(final String url, final String reqMethod, final MessageType type) {
+	private Handler responseHandler = null;
+	
+	public ServerRequest(final String url,
+			final String reqMethod,
+			final MessageType type) {
+		
 		this.url = url;
 		this.reqMethod = reqMethod;
 		this.type = type;
@@ -41,7 +48,15 @@ public abstract class ServerRequest {
 		return httpParams;
 	}
 	
-	protected void put(final String key, final String value) {
+	public void setResponseHandler(final Handler responseHandler) {
+		this.responseHandler = responseHandler;
+	}
+	
+	public Handler getResponseHandler() {
+		return responseHandler;
+	}
+	
+ 	protected void put(final String key, final String value) {
 		this.httpParams.put(key, value);
 	}
 	

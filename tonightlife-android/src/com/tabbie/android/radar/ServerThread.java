@@ -161,9 +161,9 @@ public class ServerThread extends Thread {
         OutputStream stream = conn.getOutputStream();
         stream.write(req.getOutput().getBytes());
         stream.flush();
-      } else {
-        conn.connect();
-      }
+	      } else {
+	        conn.connect();
+	      }
 		} catch (ProtocolException e) {
 			// Should never happen
 			fireHandler(new ServerResponse(-1, "ProtocolException", req.getType()));

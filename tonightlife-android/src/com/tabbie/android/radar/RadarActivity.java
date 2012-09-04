@@ -17,6 +17,7 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.HandlerThread;
 import android.os.Message;
 import android.os.Vibrator;
 import android.util.Log;
@@ -50,12 +51,15 @@ public class RadarActivity extends Activity implements
     OnItemLongClickListener,
     Runnable,
     Handler.Callback {
+	
+  private static final Handler upstreamHandler;
+  public static final String TAG = "RadarActivity";
 
-	static {
-		final ServerHandlerThread serverThread = new ServerHandlerThread();
-		serverThread.start();
-		final Handler upstreamHandler = new Handler(serverThread.getLooper());
-	}
+  static {
+  	final HandlerThread serverThread = new HandlerThread(TAG + "Thread");
+  	serverThread.start();
+  	upstreamHandler = new ServerThreadHandler(serverThread.getLooper());
+  }
   
   // Intent constants
   private static final String[] FOUNDERS_EMAIL = {"founders@tonight-life.com"};
@@ -184,8 +188,13 @@ public class RadarActivity extends Activity implements
       			ServerThread.TABBIE_SERVER + "/mobile/all.json?auth_token="
       			+ tabbieAccessToken, MessageType.LOAD_EVENTS);
       	loadingDialog = ProgressDialog.show(this, null, "Loading... Please wait");
-      	// TODO
-      	sendServerRequest(req);
+      	
+					      	// TODO Test this code
+					      	req.setResponseHandler(new Handler(this));
+					      	final Message message = Message.obtain();
+					      	message.obj = req;
+					      	upstreamHandler.sendMessage(message);
+      	
       	break;
     	
       case RadarCommonController.REQUEST_RETRIEVE_INSTANCE:
@@ -233,80 +242,6 @@ public class RadarActivity extends Activity implements
   @SuppressLint({ "ParserError", "ParserError" })
   @Override
   protected synchronized boolean handleServerResponse(ServerResponse resp) {
-      JSONArray list = resp.parseJsonArray();
-      
-      Set<String> serverRadarIds = new LinkedHashSet<String>();
-      try {
-        JSONObject radarObj = list.getJSONObject(list.length() - 1);
-        JSONArray tmpRadarList = radarObj.getJSONArray("radar");
-        for (int i = 0; i < tmpRadarList.length(); ++i) {
-          serverRadarIds.add(tmpRadarList.getString(i));
-          Log.d("Here is id", tmpRadarList.getString(i));
-        }
-      } catch (JSONException e1) {
-        e1.printStackTrace();
-      }
-      commonController.clear();
-      for (int i = 0; i < list.length() - 1; ++i) {
-        try {
-          JSONObject obj = list.getJSONObject(i);
-          String radarCountStr = obj.getString("user_count");
-          int radarCount = 0;
-
-          if (null != radarCountStr && 0 != radarCountStr.compareTo("null"))
-            radarCount = Integer.parseInt(radarCountStr);
-
-          final Event e = new Event(  obj.getString("id"),
-                                      obj.getString("name"),
-                                      obj.getString("description"),
-                                      obj.getString("location"),
-                                      obj.getString("street_address"),
-                                      new URL("http://tonight-life.com" + obj.getString("image_url")),
-                                      obj.getDouble("latitude"),
-                                      obj.getDouble("longitude"),
-                                      radarCount,
-                                      obj.getBoolean("featured"),
-                                      obj.getString("start_time"),
-                                      serverRadarIds.contains(obj.getString("id")));
-
-          commonController.addEvent(e);
-
-        } catch (JSONException e) {
-          Toast.makeText(this, "Fatal Error: Failed to Parse JSON",
-              Toast.LENGTH_SHORT).show();
-          e.printStackTrace();
-          return false;
-        } catch (final Exception e) {
-          Log.e("RadarActivity",
-              "Fatal Error: Non JSON-Exception during event creation");
-          throw new RuntimeException();
-        }
-      }
-      this.runOnUiThread(new Runnable() {
-        public void run() {
-
-        	for(final ListView v : listViews) {
-        		final BaseAdapter adapter = (BaseAdapter) v.getAdapter();
-        		if(adapter!=null) {
-        			adapter.notifyDataSetChanged();
-        		}
-        	}
-          
-        	if(commonController.hasNoEvents(currentTabIndex)) {
-        		findViewById(R.id.radar_list_empty_text).setVisibility(View.VISIBLE);
-        	} else {
-        		findViewById(R.id.radar_list_empty_text).setVisibility(View.GONE);
-        	}
-        	
-        	tabHost.setCurrentTab(currentTabIndex);
-        }
-      });
-      
-	  if(loadingDialog!=null && loadingDialog.isShowing()) {
-		  loadingDialog.dismiss();
-		  loadingDialog = null;
-	  }
-    return false;
   }
 
   @Override
@@ -440,9 +375,76 @@ public class RadarActivity extends Activity implements
 	}
 
 	@Override
-	public boolean handleMessage(Message arg0) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean handleMessage(final Message msg) {
+		if(!(msg.obj instanceof ServerResponse)) {
+			Log.e(TAG, "Message is not a Server Response");
+			return false;
+		}
+		final ServerResponse resp = (ServerResponse) msg.obj;
+		final JSONArray list = resp.parseJsonArray();
+		final Set<String> serverRadarIds = new LinkedHashSet<String>();
+		try {
+			final JSONObject radarObj = list.getJSONObject(list.length() - 1);
+			JSONArray tmpRadarList = radarObj.getJSONArray("radar");
+			for(int i = 0; i < tmpRadarList.length(); ++i) {
+				serverRadarIds.add(tmpRadarList.getString(i));
+			}
+			commonController.clear();
+			for(int i = 0; i < list.length() - 1; ++i) {
+				final JSONObject obj = list.getJSONObject(i);
+				final String radarCountStr = obj.getString("user_count");
+				int radarCount = 0;
+				if (null != radarCountStr && 0 != radarCountStr.compareTo("null"))
+					radarCount = Integer.parseInt(radarCountStr);
+				final Event e = new Event(  obj.getString("id"),
+	                                    obj.getString("name"),
+	                                    obj.getString("description"),
+	                                    obj.getString("location"),
+	                                    obj.getString("street_address"),
+	                                    new URL("http://tonight-life.com" + obj.getString("image_url")),
+	                                    obj.getDouble("latitude"),
+	                                    obj.getDouble("longitude"),
+	                                    radarCount,
+	                                    obj.getBoolean("featured"),
+	                                    obj.getString("start_time"),
+	                                    serverRadarIds.contains(obj.getString("id")));
+				commonController.addEvent(e);
+			}
+        } catch (final JSONException e) {
+        	Toast.makeText(this, "Fatal Error: Failed to Parse JSON",
+            Toast.LENGTH_SHORT).show();
+        	e.printStackTrace();
+        	return false;
+        } catch (final Exception e) {
+        	Log.e("RadarActivity",
+            "Fatal Error: Non JSON-Exception during event creation");
+        	throw new RuntimeException();
+        }
+	    this.runOnUiThread(new Runnable() {
+		  public void run() {
+
+		  for(final ListView v : listViews) {
+      		final BaseAdapter adapter = (BaseAdapter) v.getAdapter();
+      		if(adapter!=null) {
+      			adapter.notifyDataSetChanged();
+      		}
+      	  }
+        
+      	  if(commonController.hasNoEvents(currentTabIndex)) {
+      		findViewById(R.id.radar_list_empty_text).setVisibility(View.VISIBLE);
+      	  } else {
+      		findViewById(R.id.radar_list_empty_text).setVisibility(View.GONE);
+       	  }
+      	
+      	  tabHost.setCurrentTab(currentTabIndex);
+        }
+      });
+    
+	  if(loadingDialog!=null && loadingDialog.isShowing()) {
+		loadingDialog.dismiss();
+		loadingDialog = null;
+	  }
+	  return false;
 	}
 
 	@Override
