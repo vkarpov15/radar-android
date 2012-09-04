@@ -13,8 +13,12 @@ package com.tabbie.android.radar;
 import java.util.Arrays;
 import java.util.List;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.HandlerThread;
+import android.os.Message;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.util.Pair;
@@ -26,16 +30,24 @@ import android.widget.Toast;
 import com.tabbie.android.radar.core.BundleChecker;
 import com.tabbie.android.radar.http.ServerDeleteRequest;
 import com.tabbie.android.radar.http.ServerPostRequest;
-import com.tabbie.android.radar.http.ServerResponse;
 
-public class EventDetailsActivity extends ServerThreadActivity
+public class EventDetailsActivity extends Activity
 	implements OnClickListener {
+	
+
+  public static final String TAG = "EventDetailsActivity";
+  private static final Handler upstreamHandler;
+
+  static {
+  	final HandlerThread serverThread = new HandlerThread(TAG + "Thread");
+  	serverThread.start();
+  	upstreamHandler = new ServerThreadHandler(serverThread.getLooper());
+  }
 	
   private Event e;
   private RadarCommonController commonController;
   private String token;
   
-  protected static final String TAG = "EventDetailsActivity";
   
   @SuppressWarnings("unchecked")
   private static final List<Pair<String, Class<?> > >
@@ -76,15 +88,9 @@ public class EventDetailsActivity extends ServerThreadActivity
     setResult(RESULT_OK, intent);
     super.onBackPressed();
   }
-
-  @Override
-  protected boolean handleServerResponse(ServerResponse resp) {
-    // Assume that ADD_TO_RADAR and REMOVE_FROM_RADAR always succeed
-    return false;
-  }
   
-@Override
-public void onClick(View v) {
+  @Override
+  public void onClick(View v) {
 	
 	final Event e = (Event) ((View) v.getParent()).getTag();
 	
@@ -105,10 +111,12 @@ public void onClick(View v) {
 	    final ImageView radarButton = (ImageView) v.findViewById(R.id.add_to_radar_image);
         if (e.isOnLineup() && commonController.removeFromLineup(e)) {
           radarButton.setSelected(false);
-          ServerDeleteRequest req = new ServerDeleteRequest(
+          final ServerDeleteRequest req = new ServerDeleteRequest(
               ServerThread.TABBIE_SERVER + "/mobile/radar/" + e.getTag()
                   + ".json?auth_token=" + token, MessageType.ADD_TO_RADAR);
-          sendServerRequest(req);
+          final Message message = Message.obtain();
+          message.obj = req;
+          upstreamHandler.sendMessage(message);
         } else if (!e.isOnLineup()) {
           if (commonController.addToLineup(e)) {
             radarButton.setSelected(true);
@@ -116,7 +124,9 @@ public void onClick(View v) {
                 ServerThread.TABBIE_SERVER + "/mobile/radar/" + e.getTag() + ".json",
                 MessageType.ADD_TO_RADAR);
             req.params.put("auth_token", token);
-            sendServerRequest(req);
+            final Message message = Message.obtain();
+            message.obj = req;
+            upstreamHandler.sendMessage(message);
           } else {
             Toast.makeText(EventDetailsActivity.this,
                 "Failed to add event to your shortlist!", Toast.LENGTH_SHORT).show();
@@ -124,5 +134,5 @@ public void onClick(View v) {
         }
         break;
 	}
-}
+  }
 }
