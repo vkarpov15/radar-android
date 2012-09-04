@@ -435,6 +435,6 @@ public class RadarActivity extends Activity implements
 		loadingDialog.dismiss();
 		loadingDialog = null;
 	  }
-	  return false;
+	  return true;
 	}
 }
