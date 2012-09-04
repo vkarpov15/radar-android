@@ -51,15 +51,10 @@ public class RadarActivity extends Activity implements
     Handler.Callback {
 	
   public static final String TAG = "RadarActivity";
-  private static final Handler upstreamHandler;
-  private static final HandlerThread serverThread;
-
-  static {
-  	serverThread = new HandlerThread(TAG + "Thread");
-  	serverThread.start();
-  	upstreamHandler = new ServerThreadHandler(serverThread.getLooper());
-  }
   
+  private final Handler upstreamHandler;
+  private final HandlerThread serverThread;
+
   // Intent constants
   private static final String[] FOUNDERS_EMAIL = {"founders@tonight-life.com"};
   private static final String APP_FEEDBACK_SUBJECT = "TonightLife Application Feedback";
@@ -70,8 +65,6 @@ public class RadarActivity extends Activity implements
   private ListView[] listViews = new ListView[3];
   private TextView myNameView;
   private ProgressDialog loadingDialog;
-  
-  
 
   // Internal state for views
   private String tabbieAccessToken = null;
@@ -88,6 +81,12 @@ public class RadarActivity extends Activity implements
   // Google analytics
   private GoogleAnalyticsTracker googleAnalyticsTracker;
   
+  public RadarActivity() {
+	  super();
+  	  serverThread = new HandlerThread(TAG + "Thread");
+  	  serverThread.start();
+  	  upstreamHandler = new ServerThreadHandler(serverThread.getLooper());
+  }
   
   @Override
   public void onCreate(final Bundle savedInstanceState) {

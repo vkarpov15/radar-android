@@ -36,16 +36,9 @@ import com.tabbie.android.radar.http.ServerPostRequest;
 import com.tabbie.android.radar.http.ServerResponse;
 
 public class AuthenticateActivity extends Activity implements Handler.Callback{
-
-  private static final Handler upstreamHandler;
-  private static final String TAG = "Authenticate Activity";
+  public final String TAG = "Authenticate Activity";
+  private final Handler upstreamHandler;
   
-  static {
-	  	final HandlerThread serverThread = new HandlerThread(TAG + "Thread");
-	  	serverThread.start();
-	  	upstreamHandler = new ServerThreadHandler(serverThread.getLooper());
-  }
-
   private final Facebook facebook = new Facebook("217386331697217");
   
   private String fbAccessToken = null;
@@ -53,6 +46,13 @@ public class AuthenticateActivity extends Activity implements Handler.Callback{
   private String facebookName = null;
   private long expires = 0;
 
+  public AuthenticateActivity() {
+	  super();
+	  final HandlerThread serverThread = new HandlerThread(TAG + "Thread");
+	  serverThread.start();
+	  upstreamHandler = new ServerThreadHandler(serverThread.getLooper());
+  }
+  
   @Override
   public void onCreate(final Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);

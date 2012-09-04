@@ -34,19 +34,19 @@ import com.tabbie.android.radar.http.ServerPostRequest;
 public class EventDetailsActivity extends Activity
 	implements OnClickListener {
 	
-
-  public static final String TAG = "EventDetailsActivity";
-  private static final Handler upstreamHandler;
-
-  static {
-  	final HandlerThread serverThread = new HandlerThread(TAG + "Thread");
-  	serverThread.start();
-  	upstreamHandler = new ServerThreadHandler(serverThread.getLooper());
-  }
+  public final String TAG = "EventDetailsActivity";
+  private final Handler upstreamHandler;
 	
   private Event e;
   private RadarCommonController commonController;
   private String token;
+  
+  public EventDetailsActivity() {
+	  super();
+	  final HandlerThread serverThread = new HandlerThread(TAG + "Thread");
+	  serverThread.start();
+	  upstreamHandler = new ServerThreadHandler(serverThread.getLooper());
+  }
   
   
   @SuppressWarnings("unchecked")
