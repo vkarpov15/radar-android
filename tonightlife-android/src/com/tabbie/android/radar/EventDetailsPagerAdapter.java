@@ -23,8 +23,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 public class EventDetailsPagerAdapter
-	extends android.support.v4.view.PagerAdapter
-	implements ViewPager.OnPageChangeListener {
+	extends android.support.v4.view.PagerAdapter {
 	
 	private final ImageLoader imageLoader;
 	private final Context context;
@@ -35,7 +34,6 @@ public class EventDetailsPagerAdapter
 	public EventDetailsPagerAdapter(final Context context,
 	                                final RadarCommonController controller,
 	                                final int pageLayout,
-	                                final ViewPager pager,
 	                                final OnClickListener listener) {
 		
 		this.context = context;
@@ -43,8 +41,6 @@ public class EventDetailsPagerAdapter
 		imageLoader = new ImageLoader(context);
 		this.controller = controller;
 		this.pageLayout = pageLayout;
-		pager.setAdapter(this);
-		pager.setOnPageChangeListener(this);
 	}
 	
 	@Override
@@ -115,25 +111,5 @@ public class EventDetailsPagerAdapter
 	    v.setTag(e);
 	    
 	    return v;
-	}
-
-	
-	// 		These methods give us access to
-	//		the action bar/tab bar if we ever
-	//		want to create such a display.
-	
-	@Override
-	public void onPageScrollStateChanged(int arg0) {
-		
-	}
-
-	@Override
-	public void onPageScrolled(int arg0, float arg1, int arg2) {
-		
-	}
-
-	@Override
-	public void onPageSelected(int arg0) {
-		
 	}
 }
