@@ -87,7 +87,6 @@ public class EventDetailsActivity extends Activity implements
   @Override
   protected void onStart() {
   	googleAnalyticsTracker.startNewSession("UA-34193317-1", 20, this);
-  	googleAnalyticsTracker.trackPageView(TAG);
   	super.onStart();
   }
 
@@ -155,6 +154,6 @@ public class EventDetailsActivity extends Activity implements
 
 	@Override
 	public void onPageChanged(Event e) {
-		googleAnalyticsTracker.trackEvent("Event", "Click", e.getName(), 1);
+  	googleAnalyticsTracker.trackPageView(e.getName());
 	}
 }
