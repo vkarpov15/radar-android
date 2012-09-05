@@ -1,5 +1,6 @@
 package com.tabbie.android.radar;
 
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -99,8 +100,9 @@ public class RadarActivity extends Activity implements
 
     // Start Google Analytics
     googleAnalyticsTracker = GoogleAnalyticsTracker.getInstance();
-    googleAnalyticsTracker.startNewSession("UA-34193317-1", this);
-    googleAnalyticsTracker.trackPageView(this.getClass().getName());
+    // googleAnalyticsTracker.startNewSession("UA-34193317-1", 20, this);
+    // googleAnalyticsTracker.trackPageView(this.getClass().getName());
+    // googleAnalyticsTracker.dispatch();
     
     // Instantiate list views
     listViews[RadarCommonController.FEATURED] = (ListView) findViewById(R.id.featured_event_list);
@@ -138,6 +140,19 @@ public class RadarActivity extends Activity implements
     authenticate.putExtra("token", preferences.getString("access_token", null));
     authenticate.putExtra("expires", preferences.getLong("access_expires", 0));
     startActivityForResult(authenticate, REQUEST_LOGIN);
+  }
+  
+  @Override
+  protected void onStart() {
+  	googleAnalyticsTracker.startNewSession("UA-34193317-1", 20, this);
+  	googleAnalyticsTracker.trackPageView(TAG);
+  	super.onStart();
+  }
+  
+  @Override
+  protected void onStop() {
+  	googleAnalyticsTracker.stopSession();
+  	super.onStop();
   }
 
   public void onTabChanged(final String tabName) {
@@ -318,6 +333,9 @@ public class RadarActivity extends Activity implements
 		
 		final Event e = (Event) parent.getItemAtPosition(position);
 		
+		googleAnalyticsTracker.trackEvent("Event", "Click", e.getName(), 1);
+		googleAnalyticsTracker.dispatch();
+		
 		Log.d("OnItemClick", "Event is " + e.getName());
 		
 	    if (null != e) {
@@ -407,10 +425,10 @@ public class RadarActivity extends Activity implements
             Toast.LENGTH_SHORT).show();
         	e.printStackTrace();
         	return false;
-        } catch (final Exception e) {
-        	Log.e("RadarActivity",
-            "Fatal Error: Non JSON-Exception during event creation");
-        	throw new RuntimeException();
+        } catch (final MalformedURLException e) {
+        	Log.e(TAG, "Malformed URL during Event creation");
+        	Toast.makeText(this, "Error occurred during boot", Toast.LENGTH_LONG).show();
+        	return false;
         }
 	    this.runOnUiThread(new Runnable() {
 		  public void run() {
