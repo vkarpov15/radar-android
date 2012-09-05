@@ -100,9 +100,6 @@ public class RadarActivity extends Activity implements
 
     // Start Google Analytics
     googleAnalyticsTracker = GoogleAnalyticsTracker.getInstance();
-    // googleAnalyticsTracker.startNewSession("UA-34193317-1", 20, this);
-    // googleAnalyticsTracker.trackPageView(this.getClass().getName());
-    // googleAnalyticsTracker.dispatch();
     
     // Instantiate list views
     listViews[RadarCommonController.FEATURED] = (ListView) findViewById(R.id.featured_event_list);
