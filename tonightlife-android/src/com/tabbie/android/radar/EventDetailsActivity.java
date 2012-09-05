@@ -27,6 +27,7 @@ import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 import com.tabbie.android.radar.core.BundleChecker;
 import com.tabbie.android.radar.http.ServerDeleteRequest;
 import com.tabbie.android.radar.http.ServerPostRequest;
@@ -40,6 +41,7 @@ public class EventDetailsActivity extends Activity
   private Event e;
   private RadarCommonController commonController;
   private String token;
+  private GoogleAnalyticsTracker googleAnalyticsTracker;
   
   public EventDetailsActivity() {
 	  super();
@@ -79,6 +81,20 @@ public class EventDetailsActivity extends Activity
     new EventDetailsPagerAdapter(this, commonController, R.layout.event_details_element, pager, this);
     pager.setCurrentItem(commonController.getMasterList().indexOf(e));
 
+  }
+  
+  @Override
+  protected void onStart() {
+  	googleAnalyticsTracker.startNewSession("UA-34193317-1", 20, this);
+  	googleAnalyticsTracker.trackPageView(TAG);
+  	super.onStart();
+  }
+
+  
+  @Override
+  protected void onStop() {
+  	googleAnalyticsTracker.stopSession();
+  	super.onStop();
   }
 
   @Override
