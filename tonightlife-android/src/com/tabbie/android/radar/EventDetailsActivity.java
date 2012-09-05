@@ -34,7 +34,7 @@ import com.tabbie.android.radar.http.ServerPostRequest;
 
 public class EventDetailsActivity extends Activity implements
 	OnClickListener,
-	ViewPager.OnPageChangeListener {
+	EventDetailsPagerAdapter.OnPageChangeListener {
 	
   public final String TAG = "EventDetailsActivity";
   private final Handler upstreamHandler;
@@ -80,7 +80,6 @@ public class EventDetailsActivity extends Activity implements
     
     final ViewPager pager = (ViewPager) findViewById(R.id.details_event_pager);
 		pager.setAdapter(new EventDetailsPagerAdapter(this, commonController, R.layout.event_details_element, this));
-		pager.setOnPageChangeListener(this);
     pager.setCurrentItem(commonController.getMasterList().indexOf(e));
 
   }
@@ -152,23 +151,10 @@ public class EventDetailsActivity extends Activity implements
         }
         break;
 	}
-  }
-
-	@Override
-	public void onPageScrollStateChanged(int arg0) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
-	public void onPageScrolled(int arg0, float arg1, int arg2) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void onPageSelected(int arg0) {
-		// TODO Auto-generated method stub
-		
+	public void onPageChanged(Event e) {
+		googleAnalyticsTracker.trackEvent("Event", "Click", e.getName(), 1);
 	}
 }

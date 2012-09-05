@@ -12,7 +12,6 @@ package com.tabbie.android.radar;
  */
 
 import android.content.Context;
-import android.support.v4.view.ViewPager;
 import android.text.util.Linkify;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -29,7 +28,8 @@ public class EventDetailsPagerAdapter
 	private final Context context;
 	private final RadarCommonController controller;
 	private final int pageLayout;
-	private final OnClickListener listener;
+	private final OnClickListener clickListener;
+	private final OnPageChangeListener pageListener;
 	
 	public EventDetailsPagerAdapter(final Context context,
 	                                final RadarCommonController controller,
@@ -37,10 +37,11 @@ public class EventDetailsPagerAdapter
 	                                final OnClickListener listener) {
 		
 		this.context = context;
-		this.listener = listener;
+		this.clickListener = listener;
 		imageLoader = new ImageLoader(context);
 		this.controller = controller;
 		this.pageLayout = pageLayout;
+		this.pageListener = (OnPageChangeListener) context;
 	}
 	
 	@Override
@@ -49,6 +50,7 @@ public class EventDetailsPagerAdapter
 		final Event e = controller.getMasterList().get(position);
 		final View v = bindEvent(e);
 		container.addView(v);
+		pageListener.onPageChanged(e);
 		return v;
 	};
 	
@@ -98,12 +100,12 @@ public class EventDetailsPagerAdapter
 	    Linkify.addLinks(descriptionView, Linkify.WEB_URLS);
 	    
 	    // MapView link listeners
-	    locationLinkView.setOnClickListener(listener);
-	    addressView.setOnClickListener(listener);
+	    locationLinkView.setOnClickListener(clickListener);
+	    addressView.setOnClickListener(clickListener);
 	    
 	    // Set RadarButton and listener
 	    radarButton.setSelected(e.isOnLineup());
-	    radarButton.setOnClickListener(listener);
+	    radarButton.setOnClickListener(clickListener);
 	    
 	    
 	    // Make sure our main view has a reference
@@ -111,5 +113,9 @@ public class EventDetailsPagerAdapter
 	    v.setTag(e);
 	    
 	    return v;
+	}
+	
+	public interface OnPageChangeListener {
+		public abstract void onPageChanged(final Event e);
 	}
 }
