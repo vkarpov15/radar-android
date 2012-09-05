@@ -64,6 +64,7 @@ public class EventDetailsActivity extends Activity implements
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.event_details_activity);
+    googleAnalyticsTracker = GoogleAnalyticsTracker.getInstance();
 
     Bundle starter = getIntent().getExtras();
     BundleChecker b = new BundleChecker(starter);
