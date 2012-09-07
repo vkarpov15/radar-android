@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.tabbie.android.radar"
     android:versionCode="5"
-    android:versionName="Beta v1.04" >
+    android:versionName="Debug Beta v1.04" >
 
     <uses-sdk android:minSdkVersion="7"
         android:targetSdkVersion="8" />
