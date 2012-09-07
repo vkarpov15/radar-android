@@ -14,12 +14,26 @@ package com.tabbie.android.radar;
 import java.util.List;
 
 import android.content.Context;
+import android.view.View;
+import android.view.ViewGroup;
 
 public class LineupListAdapter extends EventListAdapter {
+	public static final String TAG = "LineupListAdapter";
 
 	public LineupListAdapter(final Context context, final List<Event> events) {
 		super(context, events);
 		// TODO Auto-generated constructor stub
+	}
+	
+	@Override
+	public View getView(int position, View convertView, ViewGroup parent) {
+		
+		convertView = super.getView(position, convertView, parent);
+		
+		// TODO Code specific to LineupListAdapter
+		
+		
+		return convertView;
 	}
 
 }
