@@ -45,6 +45,8 @@ import com.tabbie.android.radar.MultiSpinner.MultiSpinnerListener;
 import com.tabbie.android.radar.http.ServerGetRequest;
 import com.tabbie.android.radar.http.ServerResponse;
 
+import com.google.android.gcm.GCMRegistrar;
+
 public class RadarActivity extends Activity implements
     OnTabChangeListener,
     OnItemClickListener,
@@ -96,6 +98,16 @@ public class RadarActivity extends Activity implements
     super.onCreate(savedInstanceState);
     setContentView(R.layout.main);
     Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
+    
+    GCMRegistrar.checkDevice(this);
+    GCMRegistrar.checkManifest(this);
+    final String regId = GCMRegistrar.getRegistrationId(this);
+    if (regId.equals("")) {
+      GCMRegistrar.register(this, getString(R.string.sender_id));
+    } else {
+      Log.v(TAG, "Already registered");
+    }
+    
     commonController = new RadarCommonController();
 
     // Start Google Analytics
