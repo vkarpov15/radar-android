@@ -13,12 +13,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 public class EventListAdapter extends BaseAdapter {
-	
+
+	private final ImageLoader imageLoader;
 	private final Context context;
 	protected final List<Event> events;
-	
-	
-	public ImageLoader imageLoader; // I don't know why this is public, but it is in the source
 
     public EventListAdapter(Context context, List<Event> events) {
     	
