@@ -40,6 +40,8 @@
 		    <category android:name="com.tabbie.android.radar" />
 		  </intent-filter>
 		</receiver>
+		
+        <service android:name=".GCMIntentService" />
         
         <activity
             android:name=".RadarActivity"
