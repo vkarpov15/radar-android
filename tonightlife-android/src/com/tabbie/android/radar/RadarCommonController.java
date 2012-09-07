@@ -183,6 +183,7 @@ public class RadarCommonController implements Parcelable {
    */
   public List<Event> findListById(final int id) {
 	  switch(id) {
+	  // TODO Abstractify
 	  case R.id.featured_event_list:
 		  return featuredEventsList;
 	  case R.id.all_event_list:
