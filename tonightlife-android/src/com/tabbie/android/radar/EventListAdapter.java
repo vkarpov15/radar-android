@@ -19,7 +19,6 @@ public class EventListAdapter extends BaseAdapter {
 	protected final List<Event> events;
 
     public EventListAdapter(Context context, List<Event> events) {
-    	
     	this.events = events;
     	this.context = context;
     	imageLoader = new ImageLoader(context);
