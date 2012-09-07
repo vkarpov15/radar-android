@@ -99,6 +99,7 @@ public class RadarActivity extends Activity implements
     setContentView(R.layout.main);
     Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
     
+    // Google told me to do this so I did
     GCMRegistrar.checkDevice(this);
     GCMRegistrar.checkManifest(this);
     final String regId = GCMRegistrar.getRegistrationId(this);
