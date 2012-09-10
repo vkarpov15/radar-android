@@ -13,6 +13,7 @@
 	<string name="age_title">Age restriction</string>
 	<string name="cost_title">Price point</string>
 	<string name="energy_title">Energy level</string>
+	<!-- This is the ID used for GCM -->
 	<string name="sender_id">453820866760</string>
 	
 	<string-array name="age_array">
