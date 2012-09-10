@@ -421,7 +421,7 @@ public class RadarActivity extends Activity implements
 	                                    obj.getString("description"),
 	                                    obj.getString("location"),
 	                                    obj.getString("street_address"),
-	                                    new URL("http://tonight-life.com" + obj.getString("image_url")),
+	                                    new URL(getString(R.string.tabbie_server) + obj.getString("image_url")),
 	                                    obj.getDouble("latitude"),
 	                                    obj.getDouble("longitude"),
 	                                    radarCount,
