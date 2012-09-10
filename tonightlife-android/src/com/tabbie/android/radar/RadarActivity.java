@@ -66,6 +66,11 @@ public class RadarActivity extends Activity implements
   // Often-used views
   private TabHost tabHost;
   private ListView[] listViews = new ListView[3];
+  
+  public static final short FEATURED = 0;
+  public static final short ALL = 1;
+  public static final short LINEUP = 2;
+  
   private TextView myNameView;
   private ProgressDialog loadingDialog;
 
@@ -115,9 +120,9 @@ public class RadarActivity extends Activity implements
     googleAnalyticsTracker = GoogleAnalyticsTracker.getInstance();
     
     // Instantiate list views
-    listViews[RadarCommonController.FEATURED] = (ListView) findViewById(R.id.featured_event_list);
-    listViews[RadarCommonController.ALL] = (ListView) findViewById(R.id.all_event_list);
-    listViews[RadarCommonController.LINEUP] = (ListView) findViewById(R.id.lineup_event_list);
+    listViews[FEATURED] = (ListView) findViewById(R.id.featured_event_list);
+    listViews[ALL] = (ListView) findViewById(R.id.all_event_list);
+    listViews[LINEUP] = (ListView) findViewById(R.id.lineup_event_list);
     
     myNameView = (TextView) findViewById(R.id.user_name);
     tabHost = (FlingableTabHost) findViewById(android.R.id.tabhost);

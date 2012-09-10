@@ -26,10 +26,6 @@ public class RadarCommonController implements Parcelable {
 	
   public static final int REQUEST_RETRIEVE_INSTANCE = 1;
   public static final String TAG = "RadarCommonController";
-  
-  public static final short FEATURED = 0;
-  public static final short ALL = 1;
-  public static final short LINEUP = 2;
 
   private final Map<String, Event> featuredEventsMap;
   private final Map<String, Event> masterEventsMap;
@@ -81,14 +77,14 @@ public class RadarCommonController implements Parcelable {
    * controller indices
    */
   public void sort(final short index) {
-	  switch(index) {
-	  case FEATURED:
+	  switch(index) { // TODO Delete or modify this method
+	  case 0:
 		  Collections.sort(featuredEventsList, new DefaultComparator());
 		  break;
-	  case ALL:
+	  case 1:
 		  Collections.sort(masterEventsList, new DefaultComparator());
 		  break;
-	  case LINEUP:
+	  case 2:
 		  Collections.sort(lineupEventsList, new ChronologicalComparator());
 		  break;
 	  default:
@@ -197,13 +193,14 @@ public class RadarCommonController implements Parcelable {
 	  }
   }
   
+  // TODO Delete or Modify this method
   public boolean hasNoEvents(final short index) {
 	  switch(index) {
-	  case FEATURED:
+	  case 0:
 		  return featuredEventsList.isEmpty();
-	  case ALL:
+	  case 1:
 		  return masterEventsMap.isEmpty();
-	  case LINEUP:
+	  case 2:
 		  return lineupEventsList.isEmpty();
 	  default:
 		  return true;
