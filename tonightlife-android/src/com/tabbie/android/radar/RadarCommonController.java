@@ -26,23 +26,16 @@ public class RadarCommonController implements Parcelable {
 	
   public static final int REQUEST_RETRIEVE_INSTANCE = 1;
   public static final String TAG = "RadarCommonController";
-
-  private final Map<String, Event> featuredEventsMap;
-  private final Map<String, Event> masterEventsMap;
-  private final Map<String, Event> lineupEventsMap;
   
   private final List<Event> featuredEventsList;
   private final List<Event> masterEventsList;
   private final List<Event> lineupEventsList;
   
   public RadarCommonController() {
-	  masterEventsMap = new LinkedHashMap<String, Event>();
 	  masterEventsList = new ArrayList<Event>();
 	  
-	  featuredEventsMap = new LinkedHashMap<String, Event>();
 	  featuredEventsList = new ArrayList<Event>();
 	  
-	  lineupEventsMap = new LinkedHashMap<String, Event>();
 	  lineupEventsList = new ArrayList<Event>();
   }
 
@@ -100,16 +93,13 @@ public class RadarCommonController implements Parcelable {
    * @param e The newly instantiated event
    */
   public void addEvent(final Event e) {
-    masterEventsMap.put(e.getTag(), e);
     masterEventsList.add(e);
     			
     if (e.isFeatured()) {
-      featuredEventsMap.put(e.getTag(), e);
       featuredEventsList.add(e);
     }
     
     if (e.isOnLineup()) {
-    	lineupEventsMap.put(e.getTag(), e);
     	lineupEventsList.add(e);
     }
   }
@@ -122,19 +112,6 @@ public class RadarCommonController implements Parcelable {
     featuredEventsList.clear();
     masterEventsList.clear();
     lineupEventsList.clear();
-    
-    featuredEventsMap.clear();
-    masterEventsMap.clear();
-    lineupEventsMap.clear();
-  }
-  
-  /** Find an event by its tag
-   * 
-   * @param tag The tag corresponding to this event
-   * @return The event
-   */
-  public Event findEventByTag(final String tag) {
-    return masterEventsMap.get(tag);
   }
 
   /** Add the event to the lineup and keep
@@ -145,11 +122,6 @@ public class RadarCommonController implements Parcelable {
    * added to the lineup or not
    */
   public boolean addToLineup(final Event e) {
-    if (lineupEventsMap.containsKey(e.getTag())) {
-      Log.e("RadarCommonController", "Add to Lineup Failed");
-      return false;
-    }
-    lineupEventsMap.put(e.getTag(), e);
     lineupEventsList.add(e);
     ++e.lineupCount;
     e.setOnLineup(true);
@@ -162,15 +134,10 @@ public class RadarCommonController implements Parcelable {
    * @return Whether the event was removed or not
    */
   public boolean removeFromLineup(final Event e) {
-    if (lineupEventsMap.containsKey(e.getTag())) {
-	    lineupEventsMap.remove(e.getTag());
 	    lineupEventsList.remove(e);
 	    --e.lineupCount;
 	    e.setOnLineup(false);
 	    return true;
-    } else {
-    	return false;
-    }
   }
   
   /** Find the appropriate list based on the ID
@@ -199,12 +166,21 @@ public class RadarCommonController implements Parcelable {
 	  case 0:
 		  return featuredEventsList.isEmpty();
 	  case 1:
-		  return masterEventsMap.isEmpty();
+		  return masterEventsList.isEmpty();
 	  case 2:
 		  return lineupEventsList.isEmpty();
 	  default:
 		  return true;
 	  }
+  }
+  
+  public Event findEventByTag(final String id) {
+  	for(final Event e : masterEventsList) {
+  		if(e.getTag().compareTo(id)==0) {
+  			return e;
+  		}
+  	}
+  	return null;
   }
   
   /** Retrieve the master events list.
