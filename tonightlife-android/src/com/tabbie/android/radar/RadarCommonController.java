@@ -53,24 +53,26 @@ public class RadarCommonController implements Parcelable {
   /** Sort by the number of people who have added
    * the event to their radar in REVERSE order
    */
-  private static final Comparator<Event> defaultOrdering = new Comparator<Event>() {
-    public int compare(Event e1, Event e2) {
+  private final class DefaultComparator implements Comparator<Event> {
+		@Override
+		public int compare(Event e1, Event e2) {
       if (e1.lineupCount > e2.lineupCount) {
         return -1;
       } else if (e1.lineupCount < e2.lineupCount) {
         return 1;
       }
       return 0;
-    }
-  };
- 
+		}
+  }
+  
   /** Sort by the start time of the event 
    */
-  private static final Comparator<Event> chronoOrdering = new Comparator<Event>() {
-	  public int compare(final Event e1, final Event e2) {
+  private final class ChronologicalComparator implements Comparator<Event> {
+		@Override
+		public int compare(Event e1, Event e2) {
 		  return e1.getTime().compareTo(e2.getTime());
-	  }
-  };
+		}
+  }
   
   /** Sort the specified list according
    * to its pre-coded ordering
@@ -81,13 +83,13 @@ public class RadarCommonController implements Parcelable {
   public void sort(final short index) {
 	  switch(index) {
 	  case FEATURED:
-		  Collections.sort(featuredEventsList, defaultOrdering);
+		  Collections.sort(featuredEventsList, new DefaultComparator());
 		  break;
 	  case ALL:
-		  Collections.sort(masterEventsList, defaultOrdering);
+		  Collections.sort(masterEventsList, new DefaultComparator());
 		  break;
 	  case LINEUP:
-		  Collections.sort(lineupEventsList, chronoOrdering);
+		  Collections.sort(lineupEventsList, new ChronologicalComparator());
 		  break;
 	  default:
 		  break;
