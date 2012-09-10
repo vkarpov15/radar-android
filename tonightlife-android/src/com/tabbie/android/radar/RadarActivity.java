@@ -410,6 +410,7 @@ public class RadarActivity extends Activity implements
 				serverRadarIds.add(tmpRadarList.getString(i));
 			}
 			commonController.clear();
+			final String domain = getString(R.string.tabbie_server);
 			for(int i = 0; i < list.length() - 1; ++i) {
 				final JSONObject obj = list.getJSONObject(i);
 				final String radarCountStr = obj.getString("user_count");
@@ -421,7 +422,7 @@ public class RadarActivity extends Activity implements
 	                                    obj.getString("description"),
 	                                    obj.getString("location"),
 	                                    obj.getString("street_address"),
-	                                    new URL(getString(R.string.tabbie_server) + obj.getString("image_url")),
+	                                    new URL(domain + obj.getString("image_url")),
 	                                    obj.getDouble("latitude"),
 	                                    obj.getDouble("longitude"),
 	                                    radarCount,
