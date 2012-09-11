@@ -155,6 +155,6 @@ public class EventDetailsActivity extends Activity implements
 
 	@Override
 	public void onPageChanged(Event e) {
-  	googleAnalyticsTracker.trackPageView(e.getName());
+  	googleAnalyticsTracker.trackPageView(e.name);
 	}
 }

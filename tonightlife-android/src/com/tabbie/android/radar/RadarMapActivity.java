@@ -84,7 +84,7 @@ public class RadarMapActivity extends MapActivity
     mapView.postInvalidate();
 
     if (null != selected) {
-      mapController.setLatLon(selected.getLatitude(), selected.getLongitude());
+      mapController.setLatLon(selected.lat, selected.lon);
       mapController.setZoom(16);
     }
   }

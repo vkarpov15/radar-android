@@ -370,10 +370,10 @@ public class RadarActivity extends Activity implements
 		
 		final Event e = (Event) parent.getItemAtPosition(position);
 		
-		googleAnalyticsTracker.trackEvent("Event", "Click", e.getName(), 1);
+		googleAnalyticsTracker.trackEvent("Event", "Click", e.name, 1);
 		googleAnalyticsTracker.dispatch();
 		
-		Log.d("OnItemClick", "Event is " + e.getName());
+		Log.d("OnItemClick", "Event is " + e.name);
 		
 	    if (null != e) {
 	        currentViewPosition = position;
@@ -457,7 +457,7 @@ public class RadarActivity extends Activity implements
 	                                    obj.getString("start_time"),
 	                                    serverRadarIds.contains(obj.getString("id")));
 				commonController.masterEventsList.add(e);
-				if(e.isFeatured()) {
+				if(e.isFeatured) {
 					commonController.featuredEventsList.add(e);
 				}
 				if(e.isOnLineup()) {

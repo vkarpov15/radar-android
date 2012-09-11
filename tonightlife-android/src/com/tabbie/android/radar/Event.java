@@ -8,18 +8,17 @@ import android.os.Parcelable;
 
 public class Event implements Parcelable {
   public final String id;
-  private final String name;
-  private final String description;
-  private final String venue;
-  private final String address;
-  private final URL imageUrl;
-  private final double lat;
-  private final double lon;
-  private final boolean isFeatured;
-  private final TonightlifeDatetime time; 
-
+  public final String name;
+  public final String description;
+  public final String venue;
+  public final String address;
+  public final URL imageUrl;
+  public final double lat;
+  public final double lon;
+  public final boolean isFeatured;
+  public final TonightlifeDatetime time; 
   public int lineupCount;
-  private boolean onLineup;
+  public boolean onLineup;
 
   public Event(final String id,
 		  	final String name,
@@ -45,42 +44,6 @@ public class Event implements Parcelable {
     this.isFeatured = featured;
     this.time = new TonightlifeDatetime(time);
     this.onLineup = onRadar;
-  }
-  
-  public URL getUrl() {
-	  return imageUrl;
-  }
-  
-  public String getName() {
-	  return name;
-  }
-
-  public TonightlifeDatetime getTime() {
-	  return time;
-  }
-  
-  public String getVenueName() {
-	  return venue;
-  }
-  
-  public String getAddress() {
-	  return address;
-  }
-  
-  public String getDescription() {
-	  return description;
-  }
-  
-  public boolean isFeatured() {
-	  return isFeatured;
-  }
-  
-  public double getLatitude() {
-	  return lat;
-  }
-  
-  public double getLongitude() {
-	  return lon;
   }
   
   public boolean isOnLineup() {

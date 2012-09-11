@@ -53,7 +53,7 @@ public class EventsListController implements Parcelable {
   public static final class ChronologicalComparator implements Comparator<Event> {
 		@Override
 		public int compare(Event e1, Event e2) {
-		  return e1.getTime().compareTo(e2.getTime());
+		  return e1.time.compareTo(e2.time);
 		}
   }
 
@@ -161,7 +161,7 @@ public class EventsListController implements Parcelable {
       final EventsListController c = new EventsListController();
       for (final Event e : events) {
         c.masterEventsList.add(e);
-        if(e.isFeatured()) {
+        if(e.isFeatured) {
         	c.masterEventsList.add(e);
         }
         if(e.isOnLineup()) {
