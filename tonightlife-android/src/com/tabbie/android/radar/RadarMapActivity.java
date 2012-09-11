@@ -22,7 +22,7 @@ import com.tabbie.android.radar.core.BundleChecker;
 public class RadarMapActivity extends MapActivity
 	implements OnClickListener {
 	
-  private EventsListController commonController;
+  private EventListController commonController;
   private RadarMapController mapController;
   private Event selected = null;
 
@@ -33,7 +33,7 @@ public class RadarMapActivity extends MapActivity
   @SuppressWarnings("unchecked")
   private static final List<Pair<String, Class<?> > >
       REQUIRED_INTENT_PARAMS = Arrays.asList(
-          new Pair<String, Class<?> >("controller", EventsListController.class),
+          new Pair<String, Class<?> >("controller", EventListController.class),
           new Pair<String, Class<?> >("token", String.class)
       );
 
@@ -69,7 +69,7 @@ public class RadarMapActivity extends MapActivity
 
     myLocationOverlay = new MyLocationOverlay(this, mapView);
 
-    for (final Event e : commonController.getMasterList()) {
+    for (final Event e : commonController.events) {
       if (null != selected && 0 == e.id.compareTo(selected.id)) {
         mapController.addEventMarker(e,
             getResources().getDrawable(R.drawable.marker_highlight));

@@ -40,7 +40,7 @@ public class EventDetailsActivity extends Activity implements
   private final Handler upstreamHandler;
 	
   private Event e;
-  private EventsListController commonController;
+  private EventListController eventsController;
   private String token;
   private GoogleAnalyticsTracker googleAnalyticsTracker;
   
@@ -56,7 +56,7 @@ public class EventDetailsActivity extends Activity implements
   private static final List<Pair<String, Class<?> > >
       REQUIRED_INTENT_PARAMS = Arrays.asList(
           new Pair<String, Class<?> >("eventId", String.class),
-          new Pair<String, Class<?> >("controller", EventsListController.class),
+          new Pair<String, Class<?> >("controller", EventListController.class),
           new Pair<String, Class<?> >("token", String.class)
       );
 
@@ -75,13 +75,13 @@ public class EventDetailsActivity extends Activity implements
     }
     
     final String eventId = starter.getString("eventId");
-    commonController = starter.getParcelable("controller");
-    e = commonController.findEventByTag(eventId);
+    eventsController = starter.getParcelable("controller");
+    e = eventsController.eventsMap.get(eventId);
     token = starter.getString("token");
     
     final ViewPager pager = (ViewPager) findViewById(R.id.details_event_pager);
-		pager.setAdapter(new EventDetailsPagerAdapter(this, commonController, R.layout.event_details_element, this));
-    pager.setCurrentItem(commonController.getMasterList().indexOf(e));
+		pager.setAdapter(new EventDetailsPagerAdapter(this, eventsController, R.layout.event_details_element, this));
+    pager.setCurrentItem(eventsController.events.indexOf(e));
 
   }
   
@@ -101,7 +101,7 @@ public class EventDetailsActivity extends Activity implements
   @Override
   public void onBackPressed() {
     Intent intent = new Intent();
-    intent.putExtra("controller", commonController);
+    intent.putExtra("controller", eventsController);
     setResult(RESULT_OK, intent);
     super.onBackPressed();
   }
@@ -117,7 +117,7 @@ public class EventDetailsActivity extends Activity implements
 	case R.id.location_image:
 		Log.d(TAG, "Location Image Selected");
 		final Intent intent = new Intent(this, RadarMapActivity.class);
-		intent.putExtra("controller", commonController);
+		intent.putExtra("controller", eventsController);
 		intent.putExtra("event", e);
 		intent.putExtra("token", token);
 		startActivity(intent);
@@ -126,7 +126,7 @@ public class EventDetailsActivity extends Activity implements
 	case R.id.add_to_radar_image:
 		Log.d(TAG, "Lineup Button Selected");
 	    final ImageView radarButton = (ImageView) v.findViewById(R.id.add_to_radar_image);
-        if (e.onLineup && commonController.removeFromLineup(e)) {
+        if (e.onLineup && eventsController.removeFromLineup(e)) {
           radarButton.setSelected(false);
           final ServerDeleteRequest req = new ServerDeleteRequest(
               getString(R.string.tabbie_server) + "/mobile/radar/" + e.id
@@ -135,7 +135,7 @@ public class EventDetailsActivity extends Activity implements
           message.obj = req;
           upstreamHandler.sendMessage(message);
         } else if (!e.onLineup) {
-          if (commonController.addToLineup(e)) {
+          if (eventsController.addToLineup(e)) {
             radarButton.setSelected(true);
             ServerPostRequest req = new ServerPostRequest(
             		getString(R.string.tabbie_server) + "/mobile/radar/" + e.id + ".json",

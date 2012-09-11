@@ -44,11 +44,10 @@ import android.widget.Toast;
 
 import com.facebook.android.Facebook;
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
+import com.google.android.gcm.GCMRegistrar;
 import com.tabbie.android.radar.MultiSpinner.MultiSpinnerListener;
 import com.tabbie.android.radar.http.ServerGetRequest;
 import com.tabbie.android.radar.http.ServerResponse;
-
-import com.google.android.gcm.GCMRegistrar;
 
 public class RadarActivity extends Activity implements
     OnTabChangeListener,
@@ -60,6 +59,10 @@ public class RadarActivity extends Activity implements
   
   private final Handler upstreamHandler;
   private final HandlerThread serverThread;
+  
+  private static final short FEATURED = 0;
+  private static final short ALL = 1;
+  private static final short LINEUP = 2;
 
   // Intent constants
   private static final String[] FOUNDERS_EMAIL = {"founders@tonight-life.com"};
@@ -69,11 +72,6 @@ public class RadarActivity extends Activity implements
   // Often-used views
   private TabHost tabHost;
   private ListView[] listViews = new ListView[3];
-  
-  public static final short FEATURED = 0;
-  public static final short ALL = 1;
-  public static final short LINEUP = 2;
-  
   private TextView myNameView;
   private ProgressDialog loadingDialog;
 
@@ -83,7 +81,7 @@ public class RadarActivity extends Activity implements
   private short currentTabIndex = 0;
 
   // Controllers and adapters
-  private EventsListController commonController;
+  private EventListController eventsController;
 
   // FB junk
   private final Facebook facebook = new Facebook("217386331697217");
@@ -117,15 +115,18 @@ public class RadarActivity extends Activity implements
       Log.v(TAG, "Already registered");
     }
     
-    commonController = new EventsListController();
+    eventsController = new EventListController();
 
     // Start Google Analytics
     googleAnalyticsTracker = GoogleAnalyticsTracker.getInstance();
     
     // Instantiate list views
     listViews[FEATURED] = (ListView) findViewById(R.id.featured_event_list);
+    listViews[FEATURED].setAdapter(new EventListAdapter(this, eventsController.featured));
     listViews[ALL] = (ListView) findViewById(R.id.all_event_list);
+    listViews[ALL].setAdapter(new EventListAdapter(this, eventsController.events));
     listViews[LINEUP] = (ListView) findViewById(R.id.lineup_event_list);
+    listViews[LINEUP].setAdapter(new EventListAdapter(this, eventsController.lineup));
     
     myNameView = (TextView) findViewById(R.id.user_name);
     tabHost = (FlingableTabHost) findViewById(android.R.id.tabhost);
@@ -133,7 +134,7 @@ public class RadarActivity extends Activity implements
     findViewById(R.id.map_button).setOnClickListener(new OnClickListener() {
         public void onClick(View v) {
             Intent intent = new Intent(RadarActivity.this, RadarMapActivity.class);
-            intent.putExtra("controller", commonController);
+            intent.putExtra("controller", eventsController);
             intent.putExtra("token", tabbieAccessToken);
             startActivity(intent);
         }
@@ -142,9 +143,8 @@ public class RadarActivity extends Activity implements
     // Set up the Tab Host
     tabHost.setup();
     tabHost.setOnTabChangedListener(this);
+    
     for(final ListView v : listViews) {
-    	v.setAdapter(new EventListAdapter(this,
-    			commonController.findListById(v.getId())));
     	v.setFastScrollEnabled(true);
     	v.setOnItemClickListener(this);
     	v.setOnItemLongClickListener(this);
@@ -183,16 +183,16 @@ public class RadarActivity extends Activity implements
 	  final Comparator<Event> listComparator;
 	  switch(currentTabIndex) {
 	  case FEATURED:
-	  	listReference = commonController.featuredEventsList;
-	  	listComparator = new EventsListController.DefaultComparator();
+	  	listReference = eventsController.featured;
+	  	listComparator = new EventListController.DefaultComparator();
 	  	break;
 	  case ALL:
-	  	listReference = commonController.masterEventsList;
-	  	listComparator = new EventsListController.DefaultComparator();
+	  	listReference = eventsController.events;
+	  	listComparator = new EventListController.DefaultComparator();
 	  	break;
 	  case LINEUP:
-	  	listReference = commonController.lineupEventsList;
-	  	listComparator = new EventsListController.ChronologicalComparator();
+	  	listReference = eventsController.lineup;
+	  	listComparator = new EventListController.ChronologicalComparator();
 	  	break;
 	  	default:
 	  		Log.e(TAG, "currentTabIndex not enumerated");
@@ -247,17 +247,17 @@ public class RadarActivity extends Activity implements
       	
       	break;
     	
-      case EventsListController.REQUEST_RETRIEVE_INSTANCE:
+      case EventListController.REQUEST_RETRIEVE_INSTANCE:
         final Bundle controller = data.getExtras();
         
-        commonController = controller.getParcelable("controller");
+        eventsController = controller.getParcelable("controller");
         
         tabHost.setCurrentTab(currentTabIndex);
 
-        for(final ListView v : listViews) {
-        	v.setAdapter(new EventListAdapter(this,
-        			commonController.findListById(v.getId())));
-        }
+        listViews[FEATURED].setAdapter(new EventListAdapter(this, eventsController.featured));
+        listViews[ALL].setAdapter(new EventListAdapter(this, eventsController.events));
+        listViews[LINEUP].setAdapter(new EventListAdapter(this, eventsController.lineup));
+
         listViews[currentTabIndex].setSelection(currentViewPosition);
         
         // TODO Use this paradigm (in more robust form) for other instances of this view
@@ -396,7 +396,7 @@ public class RadarActivity extends Activity implements
 	            Intent intent = new Intent(RadarActivity.this,
 	                EventDetailsActivity.class);
 	            intent.putExtra("eventId", e.id);
-	            intent.putExtra("controller", commonController);
+	            intent.putExtra("controller", eventsController);
 	            intent.putExtra("token", tabbieAccessToken);
 	            return intent;
 	          }
@@ -404,7 +404,7 @@ public class RadarActivity extends Activity implements
 	          @Override
 	          protected void onPostExecute(Intent result) {
 	            startActivityForResult(result,
-	                EventsListController.REQUEST_RETRIEVE_INSTANCE);
+	                EventListController.REQUEST_RETRIEVE_INSTANCE);
 	            dialog.dismiss();
 
 	          };
@@ -436,7 +436,7 @@ public class RadarActivity extends Activity implements
 			for(int i = 0; i < tmpRadarList.length(); ++i) {
 				serverRadarIds.add(tmpRadarList.getString(i));
 			}
-			commonController.clear();
+			eventsController.clear();
 			final String domain = getString(R.string.tabbie_server);
 			for(int i = 0; i < list.length() - 1; ++i) {
 				final JSONObject obj = list.getJSONObject(i);
@@ -456,13 +456,7 @@ public class RadarActivity extends Activity implements
 	                                    obj.getBoolean("featured"),
 	                                    obj.getString("start_time"),
 	                                    serverRadarIds.contains(obj.getString("id")));
-				commonController.masterEventsList.add(e);
-				if(e.isFeatured) {
-					commonController.featuredEventsList.add(e);
-				}
-				if(e.onLineup) {
-					commonController.lineupEventsList.add(e);
-				}
+				eventsController.add(e);
 			}
         } catch (final JSONException e) {
         	Toast.makeText(this, "Fatal Error: Failed to Parse JSON",
@@ -477,22 +471,37 @@ public class RadarActivity extends Activity implements
 	    this.runOnUiThread(new Runnable() {
 		  public void run() {
 
-		  for(final ListView v : listViews) {
-      		final BaseAdapter adapter = (BaseAdapter) v.getAdapter();
-      		if(adapter!=null) {
-      			adapter.notifyDataSetChanged();
-      		}
-      	  }
-        
-      	  if(commonController.hasNoEvents(currentTabIndex)) {
-      		findViewById(R.id.radar_list_empty_text).setVisibility(View.VISIBLE);
-      	  } else {
-      		findViewById(R.id.radar_list_empty_text).setVisibility(View.GONE);
-       	  }
-      	
-      	  tabHost.setCurrentTab(currentTabIndex);
-        }
-      });
+			  for(final ListView v : listViews) {
+	      		final BaseAdapter adapter = (BaseAdapter) v.getAdapter();
+	      		if(adapter!=null) {
+	      			adapter.notifyDataSetChanged();
+	      		}
+	      }
+			  final List<Event> currentList;
+			  switch(currentTabIndex) {
+			  case FEATURED:
+			  	currentList = eventsController.featured;
+			  	break;
+			  case ALL:
+			  	currentList = eventsController.events;
+			  	break;
+			  case LINEUP:
+			  	currentList = eventsController.lineup;
+			  	break;
+			  	default:
+			  		Log.e(TAG, "Non-enumerated Tab Index");
+			  		throw new RuntimeException();
+			  }
+	        
+	    	if(currentList.isEmpty()) {
+	    		findViewById(R.id.radar_list_empty_text).setVisibility(View.VISIBLE);
+	    	} else {
+	    		findViewById(R.id.radar_list_empty_text).setVisibility(View.GONE);
+	     	}
+	    	
+	    	tabHost.setCurrentTab(currentTabIndex);
+      }
+    });
     
 	  if(loadingDialog!=null && loadingDialog.isShowing()) {
 		loadingDialog.dismiss();

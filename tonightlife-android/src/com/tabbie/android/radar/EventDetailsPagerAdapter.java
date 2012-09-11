@@ -26,13 +26,13 @@ public class EventDetailsPagerAdapter
 	
 	private final ImageLoader imageLoader;
 	private final Context context;
-	private final EventsListController controller;
+	private final EventListController controller;
 	private final int pageLayout;
 	private final OnClickListener clickListener;
 	private final OnPageChangeListener pageListener;
 	
 	public EventDetailsPagerAdapter(final Context context,
-	                                final EventsListController controller,
+	                                final EventListController controller,
 	                                final int pageLayout,
 	                                final OnClickListener listener) {
 		
@@ -47,7 +47,7 @@ public class EventDetailsPagerAdapter
 	@Override
 	public Object instantiateItem(android.view.ViewGroup container, int position) {
 		Log.d("EventDetailsPagerAdapter", "Adding View at position " + position);
-		final Event e = controller.getMasterList().get(position);
+		final Event e = controller.events.get(position);
 		final View v = bindEvent(e);
 		container.addView(v);
 		pageListener.onPageChanged(e);
@@ -63,7 +63,7 @@ public class EventDetailsPagerAdapter
 
 	@Override
 	public int getCount() {
-		return controller.getMasterList().size();
+		return controller.events.size();
 	}
 
 	@Override
