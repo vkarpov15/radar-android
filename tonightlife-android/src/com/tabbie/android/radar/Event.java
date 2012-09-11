@@ -45,14 +45,6 @@ public class Event implements Parcelable {
     this.time = new TonightlifeDatetime(time);
     this.onLineup = onRadar;
   }
-  
-  public boolean isOnLineup() {
-    return onLineup;
-  }
-
-  public void setOnLineup(final boolean onLineup) {
-    this.onLineup = onLineup;
-  }
 
   public int describeContents() {
     return 0;

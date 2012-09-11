@@ -104,7 +104,7 @@ public class EventDetailsPagerAdapter
 	    addressView.setOnClickListener(clickListener);
 	    
 	    // Set RadarButton and listener
-	    radarButton.setSelected(e.isOnLineup());
+	    radarButton.setSelected(e.onLineup);
 	    radarButton.setOnClickListener(clickListener);
 	    
 	    

@@ -460,7 +460,7 @@ public class RadarActivity extends Activity implements
 				if(e.isFeatured) {
 					commonController.featuredEventsList.add(e);
 				}
-				if(e.isOnLineup()) {
+				if(e.onLineup) {
 					commonController.lineupEventsList.add(e);
 				}
 			}

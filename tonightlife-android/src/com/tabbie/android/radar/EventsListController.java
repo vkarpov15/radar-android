@@ -77,7 +77,7 @@ public class EventsListController implements Parcelable {
   public boolean addToLineup(final Event e) {
     lineupEventsList.add(e);
     ++e.lineupCount;
-    e.setOnLineup(true);
+    e.onLineup = true;
     return true;
   }
   
@@ -89,7 +89,7 @@ public class EventsListController implements Parcelable {
   public boolean removeFromLineup(final Event e) {
 	    lineupEventsList.remove(e);
 	    --e.lineupCount;
-	    e.setOnLineup(false);
+	    e.onLineup = false;
 	    return true;
   }
   
@@ -164,7 +164,7 @@ public class EventsListController implements Parcelable {
         if(e.isFeatured) {
         	c.masterEventsList.add(e);
         }
-        if(e.isOnLineup()) {
+        if(e.onLineup) {
         	c.lineupEventsList.add(e);
         }
       }

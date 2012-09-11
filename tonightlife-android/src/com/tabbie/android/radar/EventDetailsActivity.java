@@ -126,7 +126,7 @@ public class EventDetailsActivity extends Activity implements
 	case R.id.add_to_radar_image:
 		Log.d(TAG, "Lineup Button Selected");
 	    final ImageView radarButton = (ImageView) v.findViewById(R.id.add_to_radar_image);
-        if (e.isOnLineup() && commonController.removeFromLineup(e)) {
+        if (e.onLineup && commonController.removeFromLineup(e)) {
           radarButton.setSelected(false);
           final ServerDeleteRequest req = new ServerDeleteRequest(
               getString(R.string.tabbie_server) + "/mobile/radar/" + e.id
@@ -134,7 +134,7 @@ public class EventDetailsActivity extends Activity implements
           final Message message = Message.obtain();
           message.obj = req;
           upstreamHandler.sendMessage(message);
-        } else if (!e.isOnLineup()) {
+        } else if (!e.onLineup) {
           if (commonController.addToLineup(e)) {
             radarButton.setSelected(true);
             ServerPostRequest req = new ServerPostRequest(
