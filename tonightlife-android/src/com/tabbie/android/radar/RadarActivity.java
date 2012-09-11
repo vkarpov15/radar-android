@@ -63,9 +63,9 @@ public class RadarActivity extends Activity implements
   private static final short ALL = 1;
   private static final short LINEUP = 2;
   
-  private final ArrayList<Event> events = new ArrayList<Event>();
-	private final ArrayList<Event> featured = new ArrayList<Event>();
-	private final ArrayList<Event> lineup = new ArrayList<Event>();
+  private ArrayList<Event> events = new ArrayList<Event>();
+	private ArrayList<Event> featured = new ArrayList<Event>();
+	private ArrayList<Event> lineup = new ArrayList<Event>();
 
   // Intent constants
   private static final String[] FOUNDERS_EMAIL = {"founders@tonight-life.com"};
@@ -230,8 +230,9 @@ public class RadarActivity extends Activity implements
     	
       case REQUEST_EVENT_DETAILS:
         final Bundle parcelables = data.getExtras();
-        final ArrayList<Event> parceledEvents = parcelables.getParcelableArrayList("events");
-        events.addAll(parceledEvents);
+        events = parcelables.getParcelableArrayList("events");
+        featured = new ArrayList<Event>();
+        lineup = new ArrayList<Event>();
         
         for(final Event e : events) {
         	if(e.isFeatured) {
@@ -426,6 +427,9 @@ public class RadarActivity extends Activity implements
 			for(int i = 0; i < tmpRadarList.length(); ++i) {
 				serverRadarIds.add(tmpRadarList.getString(i));
 			}
+			events.clear();
+			featured.clear();
+			lineup.clear();
 			final String domain = getString(R.string.tabbie_server);
 			for(int i = 0; i < list.length() - 1; ++i) {
 				final JSONObject obj = list.getJSONObject(i);
