@@ -80,7 +80,6 @@ public class RadarActivity extends Activity implements
   // Often-used views
   private TabHost tabHost;
   private ListView[] listViews = new ListView[3];
-  private TextView myNameView;
   private ProgressDialog loadingDialog;
 
   // Internal state for views
@@ -123,8 +122,7 @@ public class RadarActivity extends Activity implements
     // Start Google Analytics
     googleAnalyticsTracker = GoogleAnalyticsTracker.getInstance();
   	
-  	// Grab ahold of some misc. views
-    myNameView = (TextView) findViewById(R.id.user_name);
+  	// Grab a hold of some views
     tabHost = (FlingableTabHost) findViewById(android.R.id.tabhost);
     findViewById(R.id.map_button).setOnClickListener(new OnClickListener() {
         public void onClick(View v) {
@@ -146,9 +144,20 @@ public class RadarActivity extends Activity implements
     listViews[LINEUP] = (ListView) findViewById(R.id.lineup_event_list);
 
     // Set Initial Adapters
-  	listViews[FEATURED].setAdapter(new EventListAdapter(RadarActivity.this, manager.featuredEventsList, new ListManager.DefaultComparator()));
-  	listViews[ALL].setAdapter(new EventListAdapter(RadarActivity.this, manager.allEventsList, new ListManager.DefaultComparator()));
-  	listViews[LINEUP].setAdapter(new EventListAdapter(RadarActivity.this, manager.lineupEventsList, new ListManager.ChronologicalComparator()));
+  	listViews[FEATURED].setAdapter(
+  			new EventListAdapter(RadarActivity.this,
+  					manager.featuredEventsList,
+  					new ListManager.DefaultComparator()));
+  	
+  	listViews[ALL].setAdapter(
+  			new EventListAdapter(RadarActivity.this,
+  					manager.allEventsList,
+  					new ListManager.DefaultComparator()));
+  	
+  	listViews[LINEUP].setAdapter(
+  			new EventListAdapter(RadarActivity.this,
+  					manager.lineupEventsList,
+  					new ListManager.ChronologicalComparator()));
     
   	// Set ListView properties
     for(final ListView v : listViews) {
@@ -194,10 +203,10 @@ public class RadarActivity extends Activity implements
 	  }
 	  final ListView tabView = listViews[currentTabIndex];
 	  ((BaseAdapter) tabView.getAdapter()).notifyDataSetChanged();
-      PlayAnim(tabView, getBaseContext(), android.R.anim.fade_in, 100);
+      playAnimation(tabView, getBaseContext(), android.R.anim.fade_in, 100);
   }
 
-  public Animation PlayAnim(View v, Context con, int animationId,
+  public Animation playAnimation(View v, Context con, int animationId,
       int StartOffset) {
     if (null != v) {
       Animation animation = AnimationUtils.loadAnimation(con, animationId);
@@ -221,7 +230,7 @@ public class RadarActivity extends Activity implements
         editor.commit();
           
       	tabbieAccessToken = data.getStringExtra("tabbieAccessToken");
-      	myNameView.setText(data.getStringExtra("facebookName"));
+      	((TextView) findViewById(R.id.user_name)).setText(data.getStringExtra("facebookName"));
       	
       	final ServerGetRequest req = new ServerGetRequest(
       			getString(R.string.tabbie_server) + "/mobile/all.json?auth_token="
@@ -479,8 +488,8 @@ public class RadarActivity extends Activity implements
     });
     
 	  if(loadingDialog!=null && loadingDialog.isShowing()) {
-		loadingDialog.dismiss();
-		loadingDialog = null;
+			loadingDialog.dismiss();
+			loadingDialog = null;
 	  }
 	  return true;
 	}
