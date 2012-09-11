@@ -129,7 +129,7 @@ public class EventDetailsActivity extends Activity implements
         if (e.isOnLineup() && commonController.removeFromLineup(e)) {
           radarButton.setSelected(false);
           final ServerDeleteRequest req = new ServerDeleteRequest(
-              getString(R.string.tabbie_server) + "/mobile/radar/" + e.getTag()
+              getString(R.string.tabbie_server) + "/mobile/radar/" + e.id
                   + ".json?auth_token=" + token, MessageType.ADD_TO_RADAR);
           final Message message = Message.obtain();
           message.obj = req;
@@ -138,7 +138,7 @@ public class EventDetailsActivity extends Activity implements
           if (commonController.addToLineup(e)) {
             radarButton.setSelected(true);
             ServerPostRequest req = new ServerPostRequest(
-            		getString(R.string.tabbie_server) + "/mobile/radar/" + e.getTag() + ".json",
+            		getString(R.string.tabbie_server) + "/mobile/radar/" + e.id + ".json",
                 MessageType.ADD_TO_RADAR);
             req.params.put("auth_token", token);
             final Message message = Message.obtain();

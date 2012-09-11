@@ -129,7 +129,7 @@ public class EventsListController implements Parcelable {
   
   public Event findEventByTag(final String id) {
   	for(final Event e : masterEventsList) {
-  		if(e.getTag().compareTo(id)==0) {
+  		if(e.id.compareTo(id)==0) {
   			return e;
   		}
   	}

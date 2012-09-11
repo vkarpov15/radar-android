@@ -395,7 +395,7 @@ public class RadarActivity extends Activity implements
 	          protected Intent doInBackground(Void... params) {
 	            Intent intent = new Intent(RadarActivity.this,
 	                EventDetailsActivity.class);
-	            intent.putExtra("eventId", e.getTag());
+	            intent.putExtra("eventId", e.id);
 	            intent.putExtra("controller", commonController);
 	            intent.putExtra("token", tabbieAccessToken);
 	            return intent;

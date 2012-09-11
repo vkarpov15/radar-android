@@ -7,7 +7,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class Event implements Parcelable {
-  private final String id;
+  public final String id;
   private final String name;
   private final String description;
   private final String venue;
@@ -45,10 +45,6 @@ public class Event implements Parcelable {
     this.isFeatured = featured;
     this.time = new TonightlifeDatetime(time);
     this.onLineup = onRadar;
-  }
-  
-  public String getTag() {
-	  return id;
   }
   
   public URL getUrl() {
