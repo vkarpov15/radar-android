@@ -12,11 +12,8 @@ package com.tabbie.android.radar;
  */
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -26,8 +23,6 @@ public class EventsListController implements Parcelable {
   public static final int REQUEST_RETRIEVE_INSTANCE = 1;
   public static final String TAG = "EventsListController";
   
-  public final Map<Integer, ArrayList<Event>> listsMap = new HashMap<Integer, ArrayList<Event>>();
-  
   public final List<Event> featuredEventsList;
   public final List<Event> masterEventsList;
   public final List<Event> lineupEventsList;
@@ -36,16 +31,6 @@ public class EventsListController implements Parcelable {
 	  masterEventsList = new ArrayList<Event>();
 	  featuredEventsList = new ArrayList<Event>();
 	  lineupEventsList = new ArrayList<Event>();
-  }
-  
-  public EventsListController(final int... keys) {
-	  masterEventsList = new ArrayList<Event>();
-	  featuredEventsList = new ArrayList<Event>();
-	  lineupEventsList = new ArrayList<Event>();
-  	
-	  for(final int i : keys) {
-	  	listsMap.put(i, new ArrayList<Event>());
-	  }
   }
 
   /** Sort by the number of people who have added
