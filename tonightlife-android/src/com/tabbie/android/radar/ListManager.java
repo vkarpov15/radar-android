@@ -1,5 +1,16 @@
 package com.tabbie.android.radar;
 
+/**
+ *  ListManager.java
+ *
+ *  Created on: September 11, 2012
+ *      @Author: Justin Knutson
+ *      
+ *  Simple class to replace the old common
+ *  controller. Manages display lists for
+ *  List View adapters.
+ */
+
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
