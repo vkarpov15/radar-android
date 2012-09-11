@@ -2,7 +2,10 @@ package com.tabbie.android.radar;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.json.JSONArray;
@@ -176,13 +179,32 @@ public class RadarActivity extends Activity implements
 			  currentTabIndex = i;
 		  }
 	  }
-	  if(commonController.hasNoEvents(currentTabIndex)) {
+	  final List<Event> listReference;
+	  final Comparator<Event> listComparator;
+	  switch(currentTabIndex) {
+	  case FEATURED:
+	  	listReference = commonController.featuredEventsList;
+	  	listComparator = new EventsListController.DefaultComparator();
+	  	break;
+	  case ALL:
+	  	listReference = commonController.masterEventsList;
+	  	listComparator = new EventsListController.DefaultComparator();
+	  	break;
+	  case LINEUP:
+	  	listReference = commonController.lineupEventsList;
+	  	listComparator = new EventsListController.ChronologicalComparator();
+	  	break;
+	  	default:
+	  		Log.e(TAG, "currentTabIndex not enumerated");
+	  		throw new RuntimeException();
+	  }
+	  if(listReference.isEmpty()) {
 		  findViewById(R.id.radar_list_empty_text).setVisibility(View.VISIBLE);
 		  return;
 	  } else {
 		  findViewById(R.id.radar_list_empty_text).setVisibility(View.GONE);
 	  }
-	  commonController.sort(currentTabIndex);
+	  Collections.sort(listReference, listComparator);
 	  final ListView tabView = listViews[currentTabIndex];
 	  ((BaseAdapter) tabView.getAdapter()).notifyDataSetChanged();
       PlayAnim(tabView, getBaseContext(), android.R.anim.fade_in, 100);

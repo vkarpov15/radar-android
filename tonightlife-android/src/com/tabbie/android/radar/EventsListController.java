@@ -14,7 +14,9 @@ package com.tabbie.android.radar;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -23,6 +25,8 @@ public class EventsListController implements Parcelable {
 	
   public static final int REQUEST_RETRIEVE_INSTANCE = 1;
   public static final String TAG = "EventsListController";
+  
+  public final Map<Integer, ArrayList<Event>> listsMap = new HashMap<Integer, ArrayList<Event>>();
   
   public final List<Event> featuredEventsList;
   public final List<Event> masterEventsList;
@@ -33,11 +37,21 @@ public class EventsListController implements Parcelable {
 	  featuredEventsList = new ArrayList<Event>();
 	  lineupEventsList = new ArrayList<Event>();
   }
+  
+  public EventsListController(final int... keys) {
+	  masterEventsList = new ArrayList<Event>();
+	  featuredEventsList = new ArrayList<Event>();
+	  lineupEventsList = new ArrayList<Event>();
+  	
+	  for(final int i : keys) {
+	  	listsMap.put(i, new ArrayList<Event>());
+	  }
+  }
 
   /** Sort by the number of people who have added
    * the event to their radar in REVERSE order
    */
-  private final class DefaultComparator implements Comparator<Event> {
+  public static final class DefaultComparator implements Comparator<Event> {
 		@Override
 		public int compare(Event e1, Event e2) {
       if (e1.lineupCount > e2.lineupCount) {
@@ -51,33 +65,11 @@ public class EventsListController implements Parcelable {
   
   /** Sort by the start time of the event 
    */
-  private final class ChronologicalComparator implements Comparator<Event> {
+  public static final class ChronologicalComparator implements Comparator<Event> {
 		@Override
 		public int compare(Event e1, Event e2) {
 		  return e1.getTime().compareTo(e2.getTime());
 		}
-  }
-  
-  /** Sort the specified list according
-   * to its pre-coded ordering
-   * 
-   * @param index Use the built in
-   * controller indices
-   */
-  public void sort(final short index) {
-	  switch(index) { // TODO Delete or modify this method
-	  case 0:
-		  Collections.sort(featuredEventsList, new DefaultComparator());
-		  break;
-	  case 1:
-		  Collections.sort(masterEventsList, new DefaultComparator());
-		  break;
-	  case 2:
-		  Collections.sort(lineupEventsList, new ChronologicalComparator());
-		  break;
-	  default:
-		  break;
-	  }
   }
 
   /** Clear the controller. Use this method
