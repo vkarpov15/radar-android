@@ -69,10 +69,8 @@ public class RadarActivity extends Activity implements
   private static final short LINEUP = 2;
   
   // Adapter lists
-  private ListManager manager = new ListManager();
   private ArrayList<Event> events = new ArrayList<Event>();
-	private ArrayList<Event> featured = new ArrayList<Event>();
-	private ArrayList<Event> lineup = new ArrayList<Event>();
+  private ListManager manager = new ListManager();
 
   // Intent constants
   private static final String[] FOUNDERS_EMAIL = {"founders@tonight-life.com"};
@@ -149,9 +147,9 @@ public class RadarActivity extends Activity implements
     listViews[LINEUP] = (ListView) findViewById(R.id.lineup_event_list);
 
     // Set Initial Adapters
-  	listViews[FEATURED].setAdapter(new EventListAdapter(RadarActivity.this, featured, new DefaultComparator()));
-  	listViews[ALL].setAdapter(new EventListAdapter(RadarActivity.this, events, new DefaultComparator()));
-  	listViews[LINEUP].setAdapter(new EventListAdapter(RadarActivity.this, lineup, new ChronologicalComparator()));
+  	listViews[FEATURED].setAdapter(new EventListAdapter(RadarActivity.this, manager.featuredEventsList, new DefaultComparator()));
+  	listViews[ALL].setAdapter(new EventListAdapter(RadarActivity.this, manager.allEventsList, new DefaultComparator()));
+  	listViews[LINEUP].setAdapter(new EventListAdapter(RadarActivity.this, manager.lineupEventsList, new ChronologicalComparator()));
     
   	// Set ListView properties
     for(final ListView v : listViews) {
@@ -240,23 +238,17 @@ public class RadarActivity extends Activity implements
       case REQUEST_EVENT_DETAILS:
         final Bundle parcelables = data.getExtras();
         events = parcelables.getParcelableArrayList("events");
-        featured = new ArrayList<Event>();
-        lineup = new ArrayList<Event>();
-        
-        for(final Event e : events) {
-        	if(e.isFeatured) {
-        		featured.add(e);
-        	}
-        	if(e.onLineup) {
-        		lineup.add(e);
-        	}
-        }
+        manager.clear();
+        manager.addAll(events);
         
         tabHost.setCurrentTab(currentTabIndex);
 
-        listViews[FEATURED].setAdapter(new EventListAdapter(this, featured, new DefaultComparator()));
-        listViews[ALL].setAdapter(new EventListAdapter(this, events, new DefaultComparator()));
-        listViews[LINEUP].setAdapter(new EventListAdapter(this, lineup, new ChronologicalComparator()));
+			  for(final ListView v : listViews) {
+      		final BaseAdapter adapter = (BaseAdapter) v.getAdapter();
+      		if(adapter!=null) {
+      			adapter.notifyDataSetChanged();
+      		}
+			  }
 
         listViews[currentTabIndex].setSelection(currentViewPosition);
         
@@ -437,8 +429,6 @@ public class RadarActivity extends Activity implements
 				serverRadarIds.add(tmpRadarList.getString(i));
 			}
 			events.clear();
-			featured.clear();
-			lineup.clear();
 			final String domain = getString(R.string.tabbie_server);
 			for(int i = 0; i < list.length() - 1; ++i) {
 				final JSONObject obj = list.getJSONObject(i);
@@ -459,13 +449,9 @@ public class RadarActivity extends Activity implements
 	                                    obj.getString("start_time"),
 	                                    serverRadarIds.contains(obj.getString("id")));
 				events.add(e);
-				if(e.isFeatured) {
-					featured.add(e);
-				}
-				if(e.onLineup) {
-					lineup.add(e);
-				}
 			}
+			manager.clear();
+			manager.addAll(events);
     } catch (final JSONException e) {
     	Toast.makeText(this, "Fatal Error: Failed to Parse JSON",
         Toast.LENGTH_SHORT).show();

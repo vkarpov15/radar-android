@@ -1,47 +1,42 @@
 package com.tabbie.android.radar;
 
 import java.util.ArrayList;
+import java.util.List;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
-public class ListManager implements Parcelable {
-	private final ArrayList<Event> events;
+public class ListManager {
+	public ArrayList<Event> allEventsList = new ArrayList<Event>();
+	public ArrayList<Event> featuredEventsList = new ArrayList<Event>();
+	public ArrayList<Event> lineupEventsList = new ArrayList<Event>();
 	
-	public ListManager() {
-		events = new ArrayList<Event>();
-	}
-	
-	public ListManager(ArrayList<Event> c) {
-		events = c;
-	}
-	
-	public void addEvent(final Event e) {
-		events.add(e);
-	}
+	public ListManager() {}
 
-
-	@Override
-	public int describeContents() {
-		return 0;
-	}
-
-
-	@Override
-	public void writeToParcel(Parcel dest, int flags) {
-		dest.writeTypedList(events);
-	}
-	
-  public static final Parcelable.Creator<ListManager> CREATOR
-		  = new Parcelable.Creator<ListManager>() {
-		public ListManager createFromParcel(Parcel in) {
-			final ArrayList<Event> events = new ArrayList<Event>();
-			in.readTypedList(events, Event.CREATOR);
-		  return new ListManager(events);
+	public ListManager(final List<? extends Event> events) {
+		allEventsList.addAll(events);
+		for(final Event e : events) {
+			if(e.isFeatured) {
+				featuredEventsList.add(e);
+			}
+			if(e.onLineup) {
+				lineupEventsList.add(e);
+			}
 		}
-		
-		public ListManager[] newArray(int size) {
-		  return new ListManager[size];
+	}
+	
+	public void addAll(final List<? extends Event> events) {
+		allEventsList.addAll(events);
+		for(final Event e : events) {
+			if(e.isFeatured) {
+				featuredEventsList.add(e);
+			}
+			if(e.onLineup) {
+				lineupEventsList.add(e);
+			}
 		}
-	};
+	}
+	
+	public void clear() {
+		allEventsList.clear();
+		featuredEventsList.clear();
+		lineupEventsList.clear();
+	}
 }
