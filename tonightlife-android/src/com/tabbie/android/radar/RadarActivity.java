@@ -69,6 +69,7 @@ public class RadarActivity extends Activity implements
   private static final short LINEUP = 2;
   
   // Adapter lists
+  private ListManager manager = new ListManager();
   private ArrayList<Event> events = new ArrayList<Event>();
 	private ArrayList<Event> featured = new ArrayList<Event>();
 	private ArrayList<Event> lineup = new ArrayList<Event>();
