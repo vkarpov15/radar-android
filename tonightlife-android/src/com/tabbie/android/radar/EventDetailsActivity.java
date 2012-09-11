@@ -10,8 +10,7 @@ package com.tabbie.android.radar;
  *  All we do is just set a bunch of layout views to match our event model
  */
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.ArrayList;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -21,14 +20,11 @@ import android.os.HandlerThread;
 import android.os.Message;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
-import android.util.Pair;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
-import com.tabbie.android.radar.core.BundleChecker;
 import com.tabbie.android.radar.http.ServerDeleteRequest;
 import com.tabbie.android.radar.http.ServerPostRequest;
 
@@ -38,9 +34,9 @@ public class EventDetailsActivity extends Activity implements
 	
   public final String TAG = "EventDetailsActivity";
   private final Handler upstreamHandler;
+  private ArrayList<Event> events;
 	
   private Event e;
-  private EventListController eventsController;
   private String token;
   private GoogleAnalyticsTracker googleAnalyticsTracker;
   
@@ -50,38 +46,24 @@ public class EventDetailsActivity extends Activity implements
 	  serverThread.start();
 	  upstreamHandler = new ServerThreadHandler(serverThread.getLooper());
   }
-  
-  
-  @SuppressWarnings("unchecked")
-  private static final List<Pair<String, Class<?> > >
-      REQUIRED_INTENT_PARAMS = Arrays.asList(
-          new Pair<String, Class<?> >("eventId", String.class),
-          new Pair<String, Class<?> >("controller", EventListController.class),
-          new Pair<String, Class<?> >("token", String.class)
-      );
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.event_details_activity);
     googleAnalyticsTracker = GoogleAnalyticsTracker.getInstance();
-
-    Bundle starter = getIntent().getExtras();
-    BundleChecker b = new BundleChecker(starter);
-    if (!b.check(REQUIRED_INTENT_PARAMS)) {
-      Log.e("BundleChecker", "Bundle check failed for EventDetailsActivity!");
-      this.finish();
-      return;
-    }
     
-    final String eventId = starter.getString("eventId");
-    eventsController = starter.getParcelable("controller");
-    e = eventsController.eventsMap.get(eventId);
+    final Bundle starter = getIntent().getExtras();
+    
+    final int eventIndex = starter.getInt("eventIndex");
+    events = starter.getParcelableArrayList("events");
+    
+    e = events.get(eventIndex);
     token = starter.getString("token");
     
     final ViewPager pager = (ViewPager) findViewById(R.id.details_event_pager);
-		pager.setAdapter(new EventDetailsPagerAdapter(this, eventsController, R.layout.event_details_element, this));
-    pager.setCurrentItem(eventsController.events.indexOf(e));
+		pager.setAdapter(new EventDetailsPagerAdapter(this, events, R.layout.event_details_element, this));
+    pager.setCurrentItem(events.indexOf(e));
 
   }
   
@@ -101,7 +83,7 @@ public class EventDetailsActivity extends Activity implements
   @Override
   public void onBackPressed() {
     Intent intent = new Intent();
-    intent.putExtra("controller", eventsController);
+    intent.putParcelableArrayListExtra("events", events);
     setResult(RESULT_OK, intent);
     super.onBackPressed();
   }
@@ -117,7 +99,7 @@ public class EventDetailsActivity extends Activity implements
 	case R.id.location_image:
 		Log.d(TAG, "Location Image Selected");
 		final Intent intent = new Intent(this, RadarMapActivity.class);
-		intent.putExtra("controller", eventsController);
+		intent.putParcelableArrayListExtra("events", events);
 		intent.putExtra("event", e);
 		intent.putExtra("token", token);
 		startActivity(intent);
@@ -125,32 +107,29 @@ public class EventDetailsActivity extends Activity implements
 		
 	case R.id.add_to_radar_image:
 		Log.d(TAG, "Lineup Button Selected");
-	    final ImageView radarButton = (ImageView) v.findViewById(R.id.add_to_radar_image);
-        if (e.onLineup && eventsController.removeFromLineup(e)) {
-          radarButton.setSelected(false);
-          final ServerDeleteRequest req = new ServerDeleteRequest(
-              getString(R.string.tabbie_server) + "/mobile/radar/" + e.id
-                  + ".json?auth_token=" + token, MessageType.ADD_TO_RADAR);
-          final Message message = Message.obtain();
-          message.obj = req;
-          upstreamHandler.sendMessage(message);
-        } else if (!e.onLineup) {
-          if (eventsController.addToLineup(e)) {
-            radarButton.setSelected(true);
-            ServerPostRequest req = new ServerPostRequest(
-            		getString(R.string.tabbie_server) + "/mobile/radar/" + e.id + ".json",
-                MessageType.ADD_TO_RADAR);
-            req.params.put("auth_token", token);
-            final Message message = Message.obtain();
-            message.obj = req;
-            upstreamHandler.sendMessage(message);
-          } else {
-            Toast.makeText(EventDetailsActivity.this,
-                "Failed to add event to your shortlist!", Toast.LENGTH_SHORT).show();
-          }
-        }
-        break;
-	}
+    final ImageView radarButton = (ImageView) v.findViewById(R.id.add_to_radar_image);
+      if (e.onLineup) {
+      	e.onLineup = false;
+        radarButton.setSelected(false);
+        final ServerDeleteRequest req = new ServerDeleteRequest(
+            getString(R.string.tabbie_server) + "/mobile/radar/" + e.id
+                + ".json?auth_token=" + token, MessageType.ADD_TO_RADAR);
+        final Message message = Message.obtain();
+        message.obj = req;
+        upstreamHandler.sendMessage(message);
+      } else {
+      	e.onLineup = true;
+        radarButton.setSelected(true);
+        ServerPostRequest req = new ServerPostRequest(
+        		getString(R.string.tabbie_server) + "/mobile/radar/" + e.id + ".json",
+            MessageType.ADD_TO_RADAR);
+        req.params.put("auth_token", token);
+        final Message message = Message.obtain();
+        message.obj = req;
+        upstreamHandler.sendMessage(message);
+      }
+      break;
+		}
 	}
 
 	@Override

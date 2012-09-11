@@ -11,6 +11,8 @@ package com.tabbie.android.radar;
  *  unimplemented methods for Tab Bar integration
  */
 
+import java.util.ArrayList;
+
 import android.content.Context;
 import android.text.util.Linkify;
 import android.util.Log;
@@ -26,20 +28,20 @@ public class EventDetailsPagerAdapter
 	
 	private final ImageLoader imageLoader;
 	private final Context context;
-	private final EventListController controller;
+	private final ArrayList<Event> events;
 	private final int pageLayout;
 	private final OnClickListener clickListener;
 	private final OnPageChangeListener pageListener;
 	
 	public EventDetailsPagerAdapter(final Context context,
-	                                final EventListController controller,
+	                                final ArrayList<Event> events,
 	                                final int pageLayout,
 	                                final OnClickListener listener) {
 		
 		this.context = context;
 		this.clickListener = listener;
 		imageLoader = new ImageLoader(context);
-		this.controller = controller;
+		this.events = events;
 		this.pageLayout = pageLayout;
 		this.pageListener = (OnPageChangeListener) context;
 	}
@@ -47,7 +49,7 @@ public class EventDetailsPagerAdapter
 	@Override
 	public Object instantiateItem(android.view.ViewGroup container, int position) {
 		Log.d("EventDetailsPagerAdapter", "Adding View at position " + position);
-		final Event e = controller.events.get(position);
+		final Event e = events.get(position);
 		final View v = bindEvent(e);
 		container.addView(v);
 		pageListener.onPageChanged(e);
@@ -63,7 +65,7 @@ public class EventDetailsPagerAdapter
 
 	@Override
 	public int getCount() {
-		return controller.events.size();
+		return events.size();
 	}
 
 	@Override
