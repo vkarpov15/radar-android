@@ -3,7 +3,6 @@ package com.tabbie.android.radar;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -147,9 +146,9 @@ public class RadarActivity extends Activity implements
     listViews[LINEUP] = (ListView) findViewById(R.id.lineup_event_list);
 
     // Set Initial Adapters
-  	listViews[FEATURED].setAdapter(new EventListAdapter(RadarActivity.this, manager.featuredEventsList, new DefaultComparator()));
-  	listViews[ALL].setAdapter(new EventListAdapter(RadarActivity.this, manager.allEventsList, new DefaultComparator()));
-  	listViews[LINEUP].setAdapter(new EventListAdapter(RadarActivity.this, manager.lineupEventsList, new ChronologicalComparator()));
+  	listViews[FEATURED].setAdapter(new EventListAdapter(RadarActivity.this, manager.featuredEventsList, new ListManager.DefaultComparator()));
+  	listViews[ALL].setAdapter(new EventListAdapter(RadarActivity.this, manager.allEventsList, new ListManager.DefaultComparator()));
+  	listViews[LINEUP].setAdapter(new EventListAdapter(RadarActivity.this, manager.lineupEventsList, new ListManager.ChronologicalComparator()));
     
   	// Set ListView properties
     for(final ListView v : listViews) {
@@ -501,28 +500,4 @@ public class RadarActivity extends Activity implements
         	});
         host.addTab(content);
 	}
-	
-	/** Sort by the number of people who have added
-   * the event to their radar in REVERSE order
-   */
-  private final class DefaultComparator implements Comparator<Event> {
-		@Override
-		public int compare(Event e1, Event e2) {
-      if (e1.lineupCount > e2.lineupCount) {
-        return -1;
-      } else if (e1.lineupCount < e2.lineupCount) {
-        return 1;
-      }
-      return 0;
-		}
-  }
-  
-  /** Sort by the start time of the event 
-   */
-  private final class ChronologicalComparator implements Comparator<Event> {
-		@Override
-		public int compare(Event e1, Event e2) {
-		  return e1.time.compareTo(e2.time);
-		}
-  }
 }
