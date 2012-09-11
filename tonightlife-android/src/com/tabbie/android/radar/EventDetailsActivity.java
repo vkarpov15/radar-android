@@ -25,10 +25,6 @@ import android.view.View.OnClickListener;
 import android.widget.ImageView;
 
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
-import com.tabbie.android.radar.R;
-import com.tabbie.android.radar.R.id;
-import com.tabbie.android.radar.R.layout;
-import com.tabbie.android.radar.R.string;
 import com.tabbie.android.radar.adapters.EventDetailsPagerAdapter;
 import com.tabbie.android.radar.http.ServerDeleteRequest;
 import com.tabbie.android.radar.http.ServerPostRequest;
