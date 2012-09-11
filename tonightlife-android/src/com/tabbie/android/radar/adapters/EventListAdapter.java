@@ -1,7 +1,14 @@
-package com.tabbie.android.radar;
+package com.tabbie.android.radar.adapters;
 
 import java.util.Comparator;
 import java.util.List;
+
+import com.tabbie.android.radar.Event;
+import com.tabbie.android.radar.ImageLoader;
+import com.tabbie.android.radar.R;
+import com.tabbie.android.radar.R.anim;
+import com.tabbie.android.radar.R.id;
+import com.tabbie.android.radar.R.layout;
 
 import android.content.Context;
 import android.util.Log;

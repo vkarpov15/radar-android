@@ -23,6 +23,7 @@ import android.os.HandlerThread;
 import android.os.Message;
 import android.os.Vibrator;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -38,6 +39,7 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TabHost;
 import android.widget.TabHost.OnTabChangeListener;
+import android.widget.TabHost.TabSpec;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,6 +47,7 @@ import com.facebook.android.Facebook;
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 import com.google.android.gcm.GCMRegistrar;
 import com.tabbie.android.radar.MultiSpinner.MultiSpinnerListener;
+import com.tabbie.android.radar.adapters.EventListAdapter;
 import com.tabbie.android.radar.http.ServerGetRequest;
 import com.tabbie.android.radar.http.ServerResponse;
 
@@ -148,7 +151,7 @@ public class RadarActivity extends Activity implements
     	v.setFastScrollEnabled(true);
     	v.setOnItemClickListener(this);
     	v.setOnItemLongClickListener(this);
-    	ListViewTabFactory.createTabView(tabHost, v); 
+    	createTabView(tabHost, v); 
     }
     tabHost.setCurrentTab(currentTabIndex);
     
@@ -491,6 +494,21 @@ public class RadarActivity extends Activity implements
 	  return true;
 	}
 	
+	private static final void createTabView(final TabHost host, final ListView view) {
+		final String tag = view.getTag().toString();
+		final View tabIndicatorView = LayoutInflater.from(host.getContext())
+				.inflate(R.layout.tabs_bg, null); 
+		((TextView) tabIndicatorView.findViewById(R.id.tabs_text)).setText(tag);
+		
+        final TabSpec content = host.newTabSpec(tag)
+        		.setIndicator(tabIndicatorView)
+        		.setContent(new TabHost.TabContentFactory() {
+        			public View createTabContent(final String tag) {
+        				return view;
+        			}
+        	});
+        host.addTab(content);
+	}
 	
 	/** Sort by the number of people who have added
    * the event to their radar in REVERSE order

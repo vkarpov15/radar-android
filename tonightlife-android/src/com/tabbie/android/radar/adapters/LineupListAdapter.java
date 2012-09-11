@@ -1,4 +1,4 @@
-package com.tabbie.android.radar;
+package com.tabbie.android.radar.adapters;
 
 /**
  *  LineupListAdapter.java
@@ -12,6 +12,8 @@ package com.tabbie.android.radar;
  */
 
 import java.util.List;
+
+import com.tabbie.android.radar.Event;
 
 import android.content.Context;
 import android.view.View;

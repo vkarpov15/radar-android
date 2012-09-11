@@ -1,4 +1,4 @@
-package com.tabbie.android.radar;
+package com.tabbie.android.radar.adapters;
 
 /**
  *  EventDetailsPagerAdapter.java
@@ -12,6 +12,12 @@ package com.tabbie.android.radar;
  */
 
 import java.util.ArrayList;
+
+import com.tabbie.android.radar.Event;
+import com.tabbie.android.radar.ImageLoader;
+import com.tabbie.android.radar.R;
+import com.tabbie.android.radar.R.anim;
+import com.tabbie.android.radar.R.id;
 
 import android.content.Context;
 import android.text.util.Linkify;
