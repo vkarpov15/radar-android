@@ -110,6 +110,7 @@ public class EventDetailsActivity extends Activity implements
 		Log.d(TAG, "Lineup Button Selected");
     final ImageView radarButton = (ImageView) v.findViewById(R.id.add_to_radar_image);
       if (e.onLineup) {
+      	e.lineupCount--;
       	e.onLineup = false;
         radarButton.setSelected(false);
         final ServerDeleteRequest req = new ServerDeleteRequest(
@@ -119,6 +120,7 @@ public class EventDetailsActivity extends Activity implements
         message.obj = req;
         upstreamHandler.sendMessage(message);
       } else {
+      	e.lineupCount++;
       	e.onLineup = true;
         radarButton.setSelected(true);
         ServerPostRequest req = new ServerPostRequest(

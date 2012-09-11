@@ -59,13 +59,16 @@ public class RadarActivity extends Activity implements
 	
   public static final String TAG = "RadarActivity";
   
+  // Important Server Call and Receive Handlers/Threads
   private final Handler upstreamHandler;
   private final HandlerThread serverThread;
   
+  // Tab View Constants
   private static final short FEATURED = 0;
   private static final short ALL = 1;
   private static final short LINEUP = 2;
   
+  // Adapter lists
   private ArrayList<Event> events = new ArrayList<Event>();
 	private ArrayList<Event> featured = new ArrayList<Event>();
 	private ArrayList<Event> lineup = new ArrayList<Event>();
@@ -96,9 +99,9 @@ public class RadarActivity extends Activity implements
   
   public RadarActivity() {
 	  super();
-  	  serverThread = new HandlerThread(TAG + "Thread");
-  	  serverThread.start();
-  	  upstreamHandler = new ServerThreadHandler(serverThread.getLooper());
+	  serverThread = new HandlerThread(TAG + "Thread");
+	  serverThread.start();
+	  upstreamHandler = new ServerThreadHandler(serverThread.getLooper());
   }
   
   @Override
@@ -121,19 +124,10 @@ public class RadarActivity extends Activity implements
 
     // Start Google Analytics
     googleAnalyticsTracker = GoogleAnalyticsTracker.getInstance();
-    
-    // Instantiate list views
-    listViews[FEATURED] = (ListView) findViewById(R.id.featured_event_list);
-    listViews[ALL] = (ListView) findViewById(R.id.all_event_list);
-    listViews[LINEUP] = (ListView) findViewById(R.id.lineup_event_list);
-
-  	listViews[FEATURED].setAdapter(new EventListAdapter(RadarActivity.this, featured, new DefaultComparator()));
-  	listViews[ALL].setAdapter(new EventListAdapter(RadarActivity.this, events, new DefaultComparator()));
-  	listViews[LINEUP].setAdapter(new EventListAdapter(RadarActivity.this, lineup, new ChronologicalComparator()));
   	
+  	// Grab ahold of some misc. views
     myNameView = (TextView) findViewById(R.id.user_name);
     tabHost = (FlingableTabHost) findViewById(android.R.id.tabhost);
-    
     findViewById(R.id.map_button).setOnClickListener(new OnClickListener() {
         public void onClick(View v) {
             Intent intent = new Intent(RadarActivity.this, RadarMapActivity.class);
@@ -146,14 +140,25 @@ public class RadarActivity extends Activity implements
     // Set up the Tab Host
     tabHost.setup();
     tabHost.setOnTabChangedListener(this);
+    tabHost.setCurrentTab(currentTabIndex);
     
+    // Instantiate list views
+    listViews[FEATURED] = (ListView) findViewById(R.id.featured_event_list);
+    listViews[ALL] = (ListView) findViewById(R.id.all_event_list);
+    listViews[LINEUP] = (ListView) findViewById(R.id.lineup_event_list);
+
+    // Set Initial Adapters
+  	listViews[FEATURED].setAdapter(new EventListAdapter(RadarActivity.this, featured, new DefaultComparator()));
+  	listViews[ALL].setAdapter(new EventListAdapter(RadarActivity.this, events, new DefaultComparator()));
+  	listViews[LINEUP].setAdapter(new EventListAdapter(RadarActivity.this, lineup, new ChronologicalComparator()));
+    
+  	// Set ListView properties
     for(final ListView v : listViews) {
     	v.setFastScrollEnabled(true);
     	v.setOnItemClickListener(this);
     	v.setOnItemLongClickListener(this);
     	createTabView(tabHost, v); 
     }
-    tabHost.setCurrentTab(currentTabIndex);
     
     // Launch Authentication Activity
     preferences = getPreferences(MODE_PRIVATE);

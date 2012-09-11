@@ -1,5 +1,6 @@
 package com.tabbie.android.radar.adapters;
 
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -22,8 +23,7 @@ public class EventListAdapter extends BaseAdapter {
 	private final ImageLoader imageLoader;
 	private final Context context;
 	protected final List<Event> events;
-	// TODO Implement sort
-	private Comparator<? extends Event> comparator;
+	private Comparator<Event> comparator = null;
 
   public EventListAdapter(Context context, List<Event> events) {
   	this.events = events;
@@ -31,11 +31,12 @@ public class EventListAdapter extends BaseAdapter {
   	imageLoader = new ImageLoader(context);
   }
   
-  public EventListAdapter(Context context, List<Event> events, Comparator<? extends Event> c) {
+  public EventListAdapter(Context context, List<Event> events, Comparator<Event> c) {
   	this.events = events;
   	this.context = context;
   	imageLoader = new ImageLoader(context);
   	comparator = c;
+  	Collections.sort(events, comparator);
   }
 
   @Override
@@ -79,7 +80,7 @@ public class EventListAdapter extends BaseAdapter {
     return convertView;
   }
   
-  public void setComparator(final Comparator<? extends Event> c) {
+  public void setComparator(final Comparator<Event> c) {
   	this.comparator = c;
   }
 
@@ -96,5 +97,13 @@ public class EventListAdapter extends BaseAdapter {
 	@Override
 	public long getItemId(int position) {
 		return position;
+	}
+	
+	@Override
+	public void notifyDataSetChanged() {
+		if(comparator!=null) {
+			Collections.sort(events, comparator);
+		}
+		super.notifyDataSetChanged();
 	}
 }
