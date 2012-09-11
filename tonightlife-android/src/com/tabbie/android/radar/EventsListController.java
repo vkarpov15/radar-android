@@ -24,15 +24,13 @@ public class EventsListController implements Parcelable {
   public static final int REQUEST_RETRIEVE_INSTANCE = 1;
   public static final String TAG = "EventsListController";
   
-  private final List<Event> featuredEventsList;
-  private final List<Event> masterEventsList;
-  private final List<Event> lineupEventsList;
+  public final List<Event> featuredEventsList;
+  public final List<Event> masterEventsList;
+  public final List<Event> lineupEventsList;
   
   public EventsListController() {
 	  masterEventsList = new ArrayList<Event>();
-	  
 	  featuredEventsList = new ArrayList<Event>();
-	  
 	  lineupEventsList = new ArrayList<Event>();
   }
 
@@ -80,25 +78,6 @@ public class EventsListController implements Parcelable {
 	  default:
 		  break;
 	  }
-  }
-  
-  /** Add an event to the appropriate lists. These
-   * will not be garbage collected until the controller
-   * is destroyed.
-   * 
-   * 
-   * @param e The newly instantiated event
-   */
-  public void addEvent(final Event e) {
-    masterEventsList.add(e);
-    			
-    if (e.isFeatured()) {
-      featuredEventsList.add(e);
-    }
-    
-    if (e.isOnLineup()) {
-    	lineupEventsList.add(e);
-    }
   }
 
   /** Clear the controller. Use this method
@@ -204,7 +183,13 @@ public class EventsListController implements Parcelable {
       in.readTypedList(events, Event.CREATOR);
       final EventsListController c = new EventsListController();
       for (final Event e : events) {
-        c.addEvent(e);
+        c.masterEventsList.add(e);
+        if(e.isFeatured()) {
+        	c.masterEventsList.add(e);
+        }
+        if(e.isOnLineup()) {
+        	c.lineupEventsList.add(e);
+        }
       }
       return c;
     }

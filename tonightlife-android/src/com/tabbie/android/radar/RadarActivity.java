@@ -434,7 +434,13 @@ public class RadarActivity extends Activity implements
 	                                    obj.getBoolean("featured"),
 	                                    obj.getString("start_time"),
 	                                    serverRadarIds.contains(obj.getString("id")));
-				commonController.addEvent(e);
+				commonController.masterEventsList.add(e);
+				if(e.isFeatured()) {
+					commonController.featuredEventsList.add(e);
+				}
+				if(e.isOnLineup()) {
+					commonController.lineupEventsList.add(e);
+				}
 			}
         } catch (final JSONException e) {
         	Toast.makeText(this, "Fatal Error: Failed to Parse JSON",
