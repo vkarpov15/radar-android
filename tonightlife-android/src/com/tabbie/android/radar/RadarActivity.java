@@ -440,6 +440,7 @@ public class RadarActivity extends Activity implements
 			final String domain = getString(R.string.tabbie_server);
 			for(int i = 0; i < list.length() - 1; ++i) {
 				final JSONObject obj = list.getJSONObject(i);
+				Log.i(TAG, "Event information: " + obj.toString());
 				final String radarCountStr = obj.getString("user_count");
 				int radarCount = 0;
 				if (null != radarCountStr && 0 != radarCountStr.compareTo("null"))
