@@ -22,7 +22,7 @@ import com.tabbie.android.radar.core.BundleChecker;
 public class RadarMapActivity extends MapActivity
 	implements OnClickListener {
 	
-  private RadarCommonController commonController;
+  private EventsListController commonController;
   private RadarMapController mapController;
   private Event selected = null;
 
@@ -33,7 +33,7 @@ public class RadarMapActivity extends MapActivity
   @SuppressWarnings("unchecked")
   private static final List<Pair<String, Class<?> > >
       REQUIRED_INTENT_PARAMS = Arrays.asList(
-          new Pair<String, Class<?> >("controller", RadarCommonController.class),
+          new Pair<String, Class<?> >("controller", EventsListController.class),
           new Pair<String, Class<?> >("token", String.class)
       );
 

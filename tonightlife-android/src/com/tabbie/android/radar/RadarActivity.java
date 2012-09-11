@@ -80,7 +80,7 @@ public class RadarActivity extends Activity implements
   private short currentTabIndex = 0;
 
   // Controllers and adapters
-  private RadarCommonController commonController;
+  private EventsListController commonController;
 
   // FB junk
   private final Facebook facebook = new Facebook("217386331697217");
@@ -114,7 +114,7 @@ public class RadarActivity extends Activity implements
       Log.v(TAG, "Already registered");
     }
     
-    commonController = new RadarCommonController();
+    commonController = new EventsListController();
 
     // Start Google Analytics
     googleAnalyticsTracker = GoogleAnalyticsTracker.getInstance();
@@ -225,7 +225,7 @@ public class RadarActivity extends Activity implements
       	
       	break;
     	
-      case RadarCommonController.REQUEST_RETRIEVE_INSTANCE:
+      case EventsListController.REQUEST_RETRIEVE_INSTANCE:
         final Bundle controller = data.getExtras();
         
         commonController = controller.getParcelable("controller");
@@ -382,7 +382,7 @@ public class RadarActivity extends Activity implements
 	          @Override
 	          protected void onPostExecute(Intent result) {
 	            startActivityForResult(result,
-	                RadarCommonController.REQUEST_RETRIEVE_INSTANCE);
+	                EventsListController.REQUEST_RETRIEVE_INSTANCE);
 	            dialog.dismiss();
 
 	          };

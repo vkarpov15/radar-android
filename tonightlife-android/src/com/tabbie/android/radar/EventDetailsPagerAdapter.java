@@ -26,13 +26,13 @@ public class EventDetailsPagerAdapter
 	
 	private final ImageLoader imageLoader;
 	private final Context context;
-	private final RadarCommonController controller;
+	private final EventsListController controller;
 	private final int pageLayout;
 	private final OnClickListener clickListener;
 	private final OnPageChangeListener pageListener;
 	
 	public EventDetailsPagerAdapter(final Context context,
-	                                final RadarCommonController controller,
+	                                final EventsListController controller,
 	                                final int pageLayout,
 	                                final OnClickListener listener) {
 		

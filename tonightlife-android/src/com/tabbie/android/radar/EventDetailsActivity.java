@@ -40,7 +40,7 @@ public class EventDetailsActivity extends Activity implements
   private final Handler upstreamHandler;
 	
   private Event e;
-  private RadarCommonController commonController;
+  private EventsListController commonController;
   private String token;
   private GoogleAnalyticsTracker googleAnalyticsTracker;
   
@@ -56,7 +56,7 @@ public class EventDetailsActivity extends Activity implements
   private static final List<Pair<String, Class<?> > >
       REQUIRED_INTENT_PARAMS = Arrays.asList(
           new Pair<String, Class<?> >("eventId", String.class),
-          new Pair<String, Class<?> >("controller", RadarCommonController.class),
+          new Pair<String, Class<?> >("controller", EventsListController.class),
           new Pair<String, Class<?> >("token", String.class)
       );
 
