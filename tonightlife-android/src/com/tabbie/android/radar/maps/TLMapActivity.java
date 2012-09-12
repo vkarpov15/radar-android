@@ -18,10 +18,6 @@ import com.google.android.maps.Overlay;
 import com.tabbie.android.radar.Event;
 import com.tabbie.android.radar.EventDetailsActivity;
 import com.tabbie.android.radar.R;
-import com.tabbie.android.radar.R.drawable;
-import com.tabbie.android.radar.R.id;
-import com.tabbie.android.radar.R.layout;
-import com.tabbie.android.radar.R.menu;
 
 public class TLMapActivity extends MapActivity
 	implements OnClickListener {
