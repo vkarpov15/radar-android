@@ -46,9 +46,8 @@ public class RadarMapController {
     public int size() {
       return markers.size();
     }
-
+    
     protected boolean onTap(int index) {
-    	
     	// TODO Launch eventdetails intents here when the drawables shit is fixed
     	Log.d("ASDF", "I clicked " + index);
     	mapView.removeView(popUp);
@@ -74,6 +73,7 @@ public class RadarMapController {
       return boundCenterBottom(drawable);
     }
 
+    @Override
     public boolean onTouchEvent(MotionEvent event, MapView mapView) {
       if (MotionEvent.ACTION_DOWN == event.getAction()) {
         // Double click handler
@@ -82,6 +82,7 @@ public class RadarMapController {
         }
         lastClickTime = System.currentTimeMillis();
       }
+      if(mapView==null) Log.d("MapController", "MapView is null");
       return super.onTouchEvent(event, mapView);
     }
   }
