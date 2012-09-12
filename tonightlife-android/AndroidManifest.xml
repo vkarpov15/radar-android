@@ -63,7 +63,7 @@
             android:screenOrientation="portrait" />
         
         <activity
-            android:name=".RadarMapActivity"
+            android:name=".TLMapActivity"
             android:screenOrientation="portrait" />
         
     </application>

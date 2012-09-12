@@ -126,7 +126,7 @@ public class MainActivity extends Activity implements
     tabHost = (FlingableTabHost) findViewById(android.R.id.tabhost);
     findViewById(R.id.map_button).setOnClickListener(new OnClickListener() {
         public void onClick(View v) {
-            Intent intent = new Intent(MainActivity.this, RadarMapActivity.class);
+            Intent intent = new Intent(MainActivity.this, TLMapActivity.class);
             intent.putParcelableArrayListExtra("events", events);
             intent.putExtra("token", tabbieAccessToken);
             startActivity(intent);
