@@ -17,6 +17,7 @@ import com.tabbie.android.radar.Event;
 import com.tabbie.android.radar.R;
 
 public final class TLItemizedOverlay extends ItemizedOverlay<TLEventMarker> {
+	public static final String TAG = "TLItemizedOverlay";
 	protected final ArrayList<TLEventMarker> markers = new ArrayList<TLEventMarker>();
   private long lastClickTime = -1;
   private final MapView mapView;
@@ -69,9 +70,9 @@ public final class TLItemizedOverlay extends ItemizedOverlay<TLEventMarker> {
         mapView.getController().zoomIn();
       }
       lastClickTime = System.currentTimeMillis();
+      return true;
     }
-    if(mapView==null) Log.d("MapController", "MapView is null");
-    return super.onTouchEvent(event, mapView);
+    return false;
   }
 
   public void addEventMarker(Event e, Drawable markerImg) {
