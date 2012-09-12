@@ -421,7 +421,7 @@ public class MainActivity extends Activity implements
 	}
 
 	@Override
-	public boolean handleMessage(final Message msg) {
+	public synchronized boolean handleMessage(final Message msg) {
 		Log.d(TAG, "Received message response");
 		if(!(msg.obj instanceof ServerResponse)) {
 			Log.e(TAG, "Message is not a Server Response");
