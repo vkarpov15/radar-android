@@ -20,7 +20,7 @@ public class TLMapActivity extends MapActivity
 	implements OnClickListener {
 	
   private ArrayList<Event> events;
-  private RadarMapController mapController;
+  private MapController mapController;
   private Event selected = null;
 
   private MapView mapView;
@@ -40,7 +40,7 @@ public class TLMapActivity extends MapActivity
     mapView = (MapView) findViewById(R.id.my_map_view);
     mapView.setBuiltInZoomControls(true);
 
-    mapController = new RadarMapController(mapView, this);
+    mapController = new MapController(mapView, this);
     mapController.setOnClickListener(this);
 
     if (starter.containsKey("event")) {
