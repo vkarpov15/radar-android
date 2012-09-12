@@ -60,7 +60,6 @@ public class MainActivity extends Activity implements
   
   // Important Server Call and Receive Handlers/Threads
   private final Handler upstreamHandler;
-  private final HandlerThread serverThread;
   
   // Tab View Constants
   private static final short FEATURED = 0;
@@ -96,7 +95,7 @@ public class MainActivity extends Activity implements
   
   public MainActivity() {
 	  super();
-	  serverThread = new HandlerThread(TAG + "Thread");
+	  final HandlerThread serverThread = new HandlerThread(TAG + "Thread");
 	  serverThread.start();
 	  upstreamHandler = new ServerThreadHandler(serverThread.getLooper());
   }
