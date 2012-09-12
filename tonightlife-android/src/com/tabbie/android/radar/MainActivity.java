@@ -235,7 +235,7 @@ public class MainActivity extends Activity implements
       			getString(R.string.tabbie_server) + "/mobile/all.json?auth_token="
       			+ tabbieAccessToken, MessageType.LOAD_EVENTS);
       	loadingDialog = ProgressDialog.show(this, null, "Loading... Please wait");
-      	req.setResponseHandler(new Handler(this));
+      	req.responseHandler = new Handler(this);
       	final Message message = Message.obtain();
       	message.obj = req;
       	upstreamHandler.sendMessage(message);
@@ -281,7 +281,7 @@ public class MainActivity extends Activity implements
         ServerGetRequest req = new ServerGetRequest(
             getString(R.string.tabbie_server) + "/mobile/all.json?auth_token="
                 + tabbieAccessToken, MessageType.LOAD_EVENTS);
-        req.setResponseHandler(new Handler(this));
+      	req.responseHandler = new Handler(this);
         final Message message = Message.obtain();
         message.obj = req;
         upstreamHandler.sendMessage(message);
@@ -302,7 +302,7 @@ public class MainActivity extends Activity implements
     	  ServerGetRequest req = new ServerGetRequest(
     			  getString(R.string.tabbie_server) + "/mobile/all.json?auth_token="
     					  + tabbieAccessToken, MessageType.LOAD_EVENTS);
-    	  req.setResponseHandler(new Handler(this));
+      	req.responseHandler = new Handler(this);
     	  final Message message = Message.obtain();
     	  message.obj = req;
     	  upstreamHandler.sendMessage(message);

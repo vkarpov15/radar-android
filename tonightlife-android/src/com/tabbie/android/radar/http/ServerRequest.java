@@ -21,7 +21,7 @@ public abstract class ServerRequest {
 	private final MessageType type;
 	private final LinkedHashMap<String, String> httpParams = new LinkedHashMap<String, String>();
 	
-	private Handler responseHandler = null;
+	public Handler responseHandler = null;
 	
 	public ServerRequest(final String url,
 			final String reqMethod,
@@ -46,14 +46,6 @@ public abstract class ServerRequest {
 	
 	public LinkedHashMap<String, String> getHttpParams() {
 		return httpParams;
-	}
-	
-	public void setResponseHandler(final Handler responseHandler) {
-		this.responseHandler = responseHandler;
-	}
-	
-	public Handler getResponseHandler() {
-		return responseHandler;
 	}
 	
  	protected void put(final String key, final String value) {

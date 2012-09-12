@@ -41,8 +41,6 @@ public class ServerThreadHandler extends Handler {
 			return;
 		}
 		final ServerRequest req = (ServerRequest) msg.obj;
-		final Handler responseHandler = req.getResponseHandler();
-		
 		try {
 			final HttpURLConnection conn = (HttpURLConnection) new URL(req.getUrl()).openConnection();
 			conn.setRequestMethod(req.getReqMethod());
@@ -58,7 +56,7 @@ public class ServerThreadHandler extends Handler {
 		      conn.connect();
 		    }
 	        if (conn.getResponseCode() < 200 || conn.getResponseCode() >= 300) {
-	          // TODO I don't know what this is for #Val
+	          // TODO Handle this #404# error
 	        }
 			final BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 			final StringBuilder sb = new StringBuilder();
@@ -67,10 +65,10 @@ public class ServerThreadHandler extends Handler {
 			while ((y = reader.readLine())!=null) {
 				sb.append(y);
 			}
-			if(responseHandler!=null) {
+			if(req.responseHandler!=null) {
 				final Message responseMessage = Message.obtain();
 				responseMessage.obj = new ServerResponse(0, sb.toString(), req.getType());
-				responseHandler.sendMessage(responseMessage);
+				req.responseHandler.sendMessage(responseMessage);
 			} else {
 				Log.i(TAG, "No response handler available");
 				return;

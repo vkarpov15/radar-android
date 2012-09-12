@@ -78,7 +78,7 @@ public class AuthenticateActivity extends Activity implements Handler.Callback{
       final ServerGetRequest req = new ServerGetRequest(
           "https://graph.facebook.com/me/?access_token="
               + facebook.getAccessToken(), MessageType.FACEBOOK_LOGIN);
-      req.setResponseHandler(new Handler(this));
+    	req.responseHandler = new Handler(this);
       final Message message = Message.obtain();
       message.obj = req;
       upstreamHandler.sendMessage(message);
@@ -88,7 +88,7 @@ public class AuthenticateActivity extends Activity implements Handler.Callback{
             final ServerGetRequest req = new ServerGetRequest(
                     "https://graph.facebook.com/me/?access_token="
                         + facebook.getAccessToken(), MessageType.FACEBOOK_LOGIN);
-            req.setResponseHandler(new Handler(AuthenticateActivity.this));
+          	req.responseHandler = new Handler(AuthenticateActivity.this);
             final Message message = Message.obtain();
             message.obj = req;
             upstreamHandler.sendMessage(message);
@@ -142,8 +142,8 @@ public class AuthenticateActivity extends Activity implements Handler.Callback{
 	            getString(R.string.tabbie_server) + "/mobile/auth.json",
 	            MessageType.TABBIE_LOGIN);
 	
-	        	req.params.put("fb_token", facebook.getAccessToken());
-	          	req.setResponseHandler(new Handler(this));
+	        		req.params.put("fb_token", facebook.getAccessToken());
+	        		req.responseHandler = new Handler(this);
 	          	final Message message = Message.obtain();
 	          	message.obj = req;
 	          	upstreamHandler.sendMessage(message);
