@@ -11,7 +11,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 
+import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapActivity;
+import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
 import com.google.android.maps.MyLocationOverlay;
 import com.google.android.maps.Overlay;
@@ -23,7 +25,8 @@ public class TLMapActivity extends MapActivity
 	implements OnClickListener {
 	
   private ArrayList<Event> events;
-  private TLMapController mapController;
+  private MapController mapController;
+  private TLItemizedOverlay mapOverlay;
   private Event selected = null;
   private MapView mapView;
   private MyLocationOverlay myLocationOverlay;
@@ -43,9 +46,12 @@ public class TLMapActivity extends MapActivity
     // Obtain and set properties for our MapView
     mapView = (MapView) findViewById(R.id.my_map_view);
     mapView.setBuiltInZoomControls(true);
+    mapController = mapView.getController();
+    mapController.setZoom(14);
+    mapController.animateTo(new GeoPoint((int) 40.736968, (int) -73.989183));
 
-    mapController = new TLMapController(mapView, this);
-    mapController.setOnClickListener(this);
+    mapOverlay = new TLItemizedOverlay(mapView, this);
+    mapOverlay.popUp.setOnClickListener(this);
 
     if (starter.containsKey("event")) {
       selected = starter.getParcelable("event");
@@ -58,20 +64,20 @@ public class TLMapActivity extends MapActivity
 
     for (final Event e : events) {
       if (null != selected && 0 == e.id.compareTo(selected.id)) {
-        mapController.addEventMarker(e,
+        mapOverlay.addEventMarker(e,
             getResources().getDrawable(R.drawable.marker_highlight));
       } else {
-        mapController.addEventMarker(e,
+        mapOverlay.addEventMarker(e,
             getResources().getDrawable(R.drawable.marker));
       }
     }
 
     overlays.add(myLocationOverlay);
-    overlays.add(mapController.getItemizedOverlay());
+    overlays.add(mapOverlay);
     mapView.postInvalidate();
 
     if (null != selected) {
-      mapController.setLatLon(selected.lat, selected.lon);
+      mapController.animateTo(new GeoPoint((int) (selected.lat * 1E6), (int) (selected.lon * 1E6)));
       mapController.setZoom(16);
     }
   }
@@ -106,8 +112,8 @@ public class TLMapActivity extends MapActivity
   public boolean onOptionsItemSelected(MenuItem item) {
     int itemId = item.getItemId();
 	if (itemId == R.id.zoom_to_me) {
-		mapController.setLatLon(myLocationOverlay.getMyLocation());
 		mapController.setZoom(16);
+		mapController.animateTo(myLocationOverlay.getMyLocation());
 		return true;
 	} else {
 		return super.onOptionsItemSelected(item);
