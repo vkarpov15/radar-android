@@ -3,6 +3,8 @@ package com.tabbie.android.radar;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import com.google.android.maps.GeoPoint;
+
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -13,12 +15,11 @@ public class Event implements Parcelable {
   public final String venue;
   public final String address;
   public final URL imageUrl;
-  public final double lat;
-  public final double lon;
   public final boolean isFeatured;
   public final TonightlifeDatetime time; 
   public int lineupCount;
   public boolean onLineup;
+  public final GeoPoint location;
 
   public Event(final String id,
 		  	final String name,
@@ -26,8 +27,8 @@ public class Event implements Parcelable {
 		  	final String venueName,
 		  	final String address,
 		  	final URL image,
-		  	final double lat,
-		  	final double lon,
+		  	final int latE6,
+		  	final int lonE6,
 		  	final int radarCount,
 		  	final boolean featured,
 		  	final String time,
@@ -38,12 +39,11 @@ public class Event implements Parcelable {
     this.venue = venueName;
     this.address = address;
     this.imageUrl = image;
-    this.lat = lat;
-    this.lon = lon;
     this.lineupCount = radarCount;
     this.isFeatured = featured;
     this.time = new TonightlifeDatetime(time);
     this.onLineup = onRadar;
+    this.location = new GeoPoint(latE6, lonE6); 
   }
 
   public int describeContents() {
@@ -61,8 +61,8 @@ public class Event implements Parcelable {
     dest.writeString(description);
     dest.writeString(venue);
     dest.writeString(address);
-    dest.writeDouble(lat);
-    dest.writeDouble(lon);
+    dest.writeInt(location.getLatitudeE6());
+    dest.writeInt(location.getLongitudeE6());
     dest.writeInt(lineupCount);
     dest.writeInt(isFeatured ? 1 : 0);
     dest.writeString(time.initializer);
@@ -79,8 +79,8 @@ public class Event implements Parcelable {
                           in.readString(),
                           in.readString(),
                           new URL(url),
-                          in.readDouble(),
-                          in.readDouble(),
+                          in.readInt(),
+                          in.readInt(),
                           in.readInt(),
                           in.readInt() == 1,
                           in.readString(),

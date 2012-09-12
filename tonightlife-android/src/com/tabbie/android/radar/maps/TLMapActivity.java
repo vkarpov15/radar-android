@@ -23,6 +23,9 @@ import com.tabbie.android.radar.R;
 
 public class TLMapActivity extends MapActivity
 	implements OnClickListener {
+	private final int DEFAULT_ZOOM = 14;
+	private final int OVERLAY_ZOOM = 16;
+	private final GeoPoint DEFAULT_LOCATION = new GeoPoint((int) (40.736968 * 1E6), (int) (-73.989183 * 1E6));
 	
   private ArrayList<Event> events;
   private MapController mapController;
@@ -47,8 +50,8 @@ public class TLMapActivity extends MapActivity
     mapView = (MapView) findViewById(R.id.my_map_view);
     mapView.setBuiltInZoomControls(true);
     mapController = mapView.getController();
-    mapController.setZoom(14);
-    mapController.animateTo(new GeoPoint((int) 40.736968, (int) -73.989183));
+    mapController.setZoom(OVERLAY_ZOOM);
+    mapController.animateTo(DEFAULT_LOCATION);
 
     mapOverlay = new TLItemizedOverlay(mapView, this);
     mapOverlay.popUp.setOnClickListener(this);
@@ -77,8 +80,8 @@ public class TLMapActivity extends MapActivity
     mapView.postInvalidate();
 
     if (null != selected) {
-      mapController.animateTo(new GeoPoint((int) (selected.lat * 1E6), (int) (selected.lon * 1E6)));
-      mapController.setZoom(16);
+      mapController.animateTo(selected.location);
+      mapController.setZoom(DEFAULT_ZOOM);
     }
   }
   
@@ -112,7 +115,7 @@ public class TLMapActivity extends MapActivity
   public boolean onOptionsItemSelected(MenuItem item) {
     int itemId = item.getItemId();
 	if (itemId == R.id.zoom_to_me) {
-		mapController.setZoom(16);
+		mapController.setZoom(DEFAULT_ZOOM);
 		mapController.animateTo(myLocationOverlay.getMyLocation());
 		return true;
 	} else {

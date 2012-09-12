@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.google.android.maps.GeoPoint;
 import com.google.android.maps.ItemizedOverlay;
 import com.google.android.maps.MapView;
 import com.tabbie.android.radar.Event;
@@ -54,8 +53,7 @@ public final class TLItemizedOverlay extends ItemizedOverlay<TLEventMarker> {
   		  MapView.LayoutParams.BOTTOM_CENTER);
     ((TextView) popUp.findViewById(R.id.map_event_title)).setText(e.name);
     ((TextView) popUp.findViewById(R.id.map_event_time)).setText(e.time.makeYourTime());
-    mapView.getController().animateTo(
-        new GeoPoint((int) (e.lat * 1E6), (int) (e.lon * 1E6)));
+    mapView.getController().animateTo(e.location);
     
     popUp.setTag(e);
     
