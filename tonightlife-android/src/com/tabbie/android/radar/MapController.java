@@ -23,8 +23,51 @@ public class MapController {
 
   private final MapView mapView;
   private final View popUp;
+  private TabbieEventMarkerCollection markersCollection;
+  private ItemizedOverlay<EventMarker> markersCollectionNew;
+
+  public MapController(MapView mapView, Context context) {
+    this.mapView = mapView;
+    this.setLatLon(40.736968, -73.989183);
+    this.setZoom(14);
+    this.markersCollection = new TabbieEventMarkerCollection();
+    popUp = LayoutInflater.from(context).inflate(R.layout.popup, null);
+  }
   
-  private class TabbieEventMarkerCollection extends ItemizedOverlay<EventMarker> {
+  public void setOnClickListener(final OnClickListener listener) {
+  	popUp.setOnClickListener(listener);
+  }
+
+  public void setZoom(int zoom) {
+    this.mapView.getController().setZoom(zoom);
+  }
+
+  public void setLatLon(double lat, double lon) {
+    this.mapView.getController().animateTo(
+        new GeoPoint((int) (lat * 1E6), (int) (lon * 1E6)));
+  }
+
+  public void setLatLon(GeoPoint p) {
+    if (null == p) {
+      return;
+    }
+    this.mapView.getController().setCenter(p);
+  }
+
+  public void addEventMarker(Event e, Drawable markerImg) {
+	  Log.d(TAG, "Adding drawable marker");
+    EventMarker marker = new EventMarker(e);
+    markerImg.setBounds(0, 0, markerImg.getIntrinsicWidth(),
+        markerImg.getIntrinsicHeight());
+    marker.setMarker(markersCollection.boundDrawable(markerImg));
+    this.markersCollection.addOverlay(marker);
+  }
+
+  public ItemizedOverlay<EventMarker> getItemizedOverlay() {
+    return markersCollection;
+  }
+  
+  private final class TabbieEventMarkerCollection extends ItemizedOverlay<EventMarker> {
     private final List<EventMarker> markers = new ArrayList<EventMarker>();
     private long lastClickTime = -1;
 
@@ -85,48 +128,5 @@ public class MapController {
       if(mapView==null) Log.d("MapController", "MapView is null");
       return super.onTouchEvent(event, mapView);
     }
-  }
-
-  private TabbieEventMarkerCollection markersCollection;
-
-  public MapController(MapView mapView, Context context) {
-    this.mapView = mapView;
-    this.setLatLon(40.736968, -73.989183);
-    this.setZoom(14);
-    this.markersCollection = new TabbieEventMarkerCollection();
-    popUp = LayoutInflater.from(context).inflate(R.layout.popup, null);
-  }
-  
-  public void setOnClickListener(final OnClickListener listener) {
-  	popUp.setOnClickListener(listener);
-  }
-
-  public void setZoom(int zoom) {
-    this.mapView.getController().setZoom(zoom);
-  }
-
-  public void setLatLon(double lat, double lon) {
-    this.mapView.getController().animateTo(
-        new GeoPoint((int) (lat * 1E6), (int) (lon * 1E6)));
-  }
-
-  public void setLatLon(GeoPoint p) {
-    if (null == p) {
-      return;
-    }
-    this.mapView.getController().setCenter(p);
-  }
-
-  public void addEventMarker(Event e, Drawable markerImg) {
-	  Log.d(TAG, "Adding drawable marker");
-    EventMarker marker = new EventMarker(e);
-    markerImg.setBounds(0, 0, markerImg.getIntrinsicWidth(),
-        markerImg.getIntrinsicHeight());
-    marker.setMarker(markersCollection.boundDrawable(markerImg));
-    this.markersCollection.addOverlay(marker);
-  }
-
-  public ItemizedOverlay<EventMarker> getItemizedOverlay() {
-    return markersCollection;
   }
 }

@@ -22,21 +22,22 @@ public class TLMapActivity extends MapActivity
   private ArrayList<Event> events;
   private MapController mapController;
   private Event selected = null;
-
   private MapView mapView;
   private MyLocationOverlay myLocationOverlay;
   private String token;
 
   @Override
-  public void onCreate(Bundle saved) {
-    super.onCreate(saved);
+  public void onCreate(final Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
     setContentView(R.layout.map_activity);
 
-    Bundle starter = getIntent().getExtras();
+    final Bundle starter = getIntent().getExtras();
     
+    // Re-instantiate our events list and token
     events = starter.getParcelableArrayList("events");
     token = starter.getString("token");
 
+    // Obtain and set properties for our MapView
     mapView = (MapView) findViewById(R.id.my_map_view);
     mapView.setBuiltInZoomControls(true);
 
