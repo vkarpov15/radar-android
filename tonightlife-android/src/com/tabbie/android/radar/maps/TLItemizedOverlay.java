@@ -4,29 +4,20 @@ import java.util.ArrayList;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.MotionEvent;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.google.android.maps.ItemizedOverlay;
 import com.google.android.maps.MapView;
 import com.tabbie.android.radar.Event;
-import com.tabbie.android.radar.R;
 
 public final class TLItemizedOverlay extends ItemizedOverlay<TLEventMarker> {
 	public static final String TAG = "TLItemizedOverlay";
 	protected final ArrayList<TLEventMarker> markers = new ArrayList<TLEventMarker>();
   private long lastClickTime = -1;
-  private final MapView mapView;
-  protected final View popUp;
+  private OnTapListener listener;
 
-	public TLItemizedOverlay(final MapView mapView, final Context context) {
+	public TLItemizedOverlay(final Context context) {
 		super(null);
-		this.mapView = mapView;
-    this.popUp = LayoutInflater.from(context).inflate(R.layout.popup, null);
 	}
 
   @Override
@@ -41,25 +32,12 @@ public final class TLItemizedOverlay extends ItemizedOverlay<TLEventMarker> {
 	
 	@Override
 	protected boolean onTap(int index) {
-  	// TODO Launch eventdetails intents here when the drawables shit is fixed
-  	Log.d("ASDF", "I clicked " + index);
-  	mapView.removeView(popUp);
-    final TLEventMarker m = markers.get(index);
-    final Event e = m.event;
-    final MapView.LayoutParams mapParams = new MapView.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
-  		  ViewGroup.LayoutParams.WRAP_CONTENT,
-  		  m.getPoint(),
-  		  0,
-  		  -35, // TODO Probably shouldn't be hard-coded, but I don't quite know how this works anyways
-  		  MapView.LayoutParams.BOTTOM_CENTER);
-    ((TextView) popUp.findViewById(R.id.map_event_title)).setText(e.name);
-    ((TextView) popUp.findViewById(R.id.map_event_time)).setText(e.time.makeYourTime());
-    mapView.getController().animateTo(e.location);
-    
-    popUp.setTag(e);
-    
-    mapView.addView(popUp, mapParams);
-    return true;
+		if(listener!=null) {
+			listener.onTap(index);
+			return true;
+		} else {
+			return false;
+		}
 	}
 	
 	@Override
@@ -70,10 +48,13 @@ public final class TLItemizedOverlay extends ItemizedOverlay<TLEventMarker> {
         mapView.getController().zoomIn();
       }
       lastClickTime = System.currentTimeMillis();
-      return true;
     }
     return false;
   }
+	
+	public void setOnTapListener(final OnTapListener listener) {
+		this.listener = listener;
+	}
 
   public void addEventMarker(Event e, Drawable markerImg) {
     TLEventMarker marker = new TLEventMarker(e);
@@ -90,5 +71,9 @@ public final class TLItemizedOverlay extends ItemizedOverlay<TLEventMarker> {
 
   private Drawable boundDrawable(Drawable drawable) {
     return boundCenterBottom(drawable);
+  }
+  
+  protected interface OnTapListener {
+  	abstract void onTap(final int index);
   }
 }
