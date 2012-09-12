@@ -61,7 +61,7 @@ public class TLMapActivity extends MapActivity
     mapController.setZoom(OVERLAY_ZOOM);
     mapController.animateTo(DEFAULT_LOCATION);
 
-    mapOverlay = new TLItemizedOverlay(this);
+    mapOverlay = new TLItemizedOverlay();
     mapOverlay.setOnTapListener(this);
     popUp.setOnClickListener(this);
 

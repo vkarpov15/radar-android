@@ -2,7 +2,6 @@ package com.tabbie.android.radar.maps;
 
 import java.util.ArrayList;
 
-import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.view.MotionEvent;
 
@@ -13,14 +12,13 @@ import com.tabbie.android.radar.Event;
 
 public final class TLItemizedOverlay extends ItemizedOverlay<OverlayItem> {
 	public static final String TAG = "TLItemizedOverlay";
-	
 	private final ArrayList<OverlayItem> markers = new ArrayList<OverlayItem>();
   private long lastClickTime = -1;
   private OnTapListener listener;
-
-	public TLItemizedOverlay(final Context context) {
-		super(null);
-	}
+  
+  public TLItemizedOverlay() {
+  	super(null);
+  }
 
   @Override
   protected OverlayItem createItem(int i) {
