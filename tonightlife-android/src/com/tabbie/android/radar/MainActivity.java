@@ -49,6 +49,7 @@ import com.tabbie.android.radar.MultiSpinner.MultiSpinnerListener;
 import com.tabbie.android.radar.adapters.EventListAdapter;
 import com.tabbie.android.radar.http.ServerGetRequest;
 import com.tabbie.android.radar.http.ServerResponse;
+import com.tabbie.android.radar.maps.TLMapActivity;
 
 public class MainActivity extends Activity implements
     OnTabChangeListener,

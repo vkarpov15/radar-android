@@ -28,6 +28,7 @@ import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 import com.tabbie.android.radar.adapters.EventDetailsPagerAdapter;
 import com.tabbie.android.radar.http.ServerDeleteRequest;
 import com.tabbie.android.radar.http.ServerPostRequest;
+import com.tabbie.android.radar.maps.TLMapActivity;
 
 public class EventDetailsActivity extends Activity implements
 	OnClickListener,
