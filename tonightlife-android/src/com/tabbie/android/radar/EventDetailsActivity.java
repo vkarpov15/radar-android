@@ -102,7 +102,7 @@ public class EventDetailsActivity extends Activity implements
 		Log.d(TAG, "Location Image Selected");
 		final Intent intent = new Intent(this, TLMapActivity.class);
 		intent.putParcelableArrayListExtra("events", events);
-		intent.putExtra("event", e);
+		intent.putExtra("eventIndex", events.indexOf(e));
 		intent.putExtra("token", token);
 		startActivity(intent);
 		break;

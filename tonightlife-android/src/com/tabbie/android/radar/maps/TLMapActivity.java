@@ -26,7 +26,7 @@ import com.tabbie.android.radar.R;
 import com.tabbie.android.radar.maps.TLItemizedOverlay.OnTapListener;
 
 public class TLMapActivity extends MapActivity
-	implements OnClickListener, OnTapListener{
+	implements OnTapListener{
 	public static final String TAG = "TLMapActivity";
 	private final int DEFAULT_ZOOM = 14;
 	private final int OVERLAY_ZOOM = 16;
@@ -37,7 +37,6 @@ public class TLMapActivity extends MapActivity
   private ArrayList<Event> events;
   private MapController mapController;
   private TLItemizedOverlay mapOverlay;
-  private Event selected = null;
   private MapView mapView;
   private MyLocationOverlay myLocationOverlay;
   private String token;
@@ -61,12 +60,29 @@ public class TLMapActivity extends MapActivity
     mapController.setZoom(OVERLAY_ZOOM);
     mapController.animateTo(DEFAULT_LOCATION);
 
-    mapOverlay = new TLItemizedOverlay();
+    mapOverlay = new TLItemizedOverlay(events, getResources().getDrawable(R.drawable.marker));
     mapOverlay.setOnTapListener(this);
-    popUp.setOnClickListener(this);
+    popUp.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				final Event e = (Event) v.getTag();
+				Intent intent = new Intent(TLMapActivity.this, EventDetailsActivity.class);
+		    intent.putExtra("eventIndex", events.indexOf(e));
+		    intent.putParcelableArrayListExtra("events", events);
+		    intent.putExtra("token", token);
+		    startActivity(intent);
+			}
+		});
 
-    if (starter.containsKey("event")) {
-      selected = starter.getParcelable("event");
+    if (starter.containsKey("eventIndex")) {
+      final int index = starter.getInt("eventIndex");
+      final Event selected = events.get(index);
+      mapOverlay.changeDrawable(index, getResources().getDrawable(R.drawable.marker_highlight));
+      if (null != selected) {
+        mapController.animateTo(selected.location);
+        mapController.setZoom(DEFAULT_ZOOM);
+      }
     }
 
     List<Overlay> overlays = mapView.getOverlays();
@@ -74,24 +90,9 @@ public class TLMapActivity extends MapActivity
 
     myLocationOverlay = new MyLocationOverlay(this, mapView);
 
-    for (final Event e : events) {
-      if (null != selected && 0 == e.id.compareTo(selected.id)) {
-        mapOverlay.addEventMarker(e,
-            getResources().getDrawable(R.drawable.marker_highlight));
-      } else {
-        mapOverlay.addEventMarker(e,
-            getResources().getDrawable(R.drawable.marker));
-      }
-    }
-
     overlays.add(myLocationOverlay);
     overlays.add(mapOverlay);
     mapView.postInvalidate();
-
-    if (null != selected) {
-      mapController.animateTo(selected.location);
-      mapController.setZoom(DEFAULT_ZOOM);
-    }
   }
   
   @Override
@@ -109,7 +110,6 @@ public class TLMapActivity extends MapActivity
   @Override
   protected boolean isRouteDisplayed()
   {
-    // TODO Auto-generated method stub
     return false;
   }
 
@@ -123,30 +123,19 @@ public class TLMapActivity extends MapActivity
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
     int itemId = item.getItemId();
-	if (itemId == R.id.zoom_to_me) {
-		mapController.setZoom(DEFAULT_ZOOM);
-		final GeoPoint myLocation = myLocationOverlay.getMyLocation();
-		if(myLocation!=null) {
-			mapController.animateTo(myLocationOverlay.getMyLocation());
+		if (itemId == R.id.zoom_to_me) {
+			mapController.setZoom(DEFAULT_ZOOM);
+			final GeoPoint myLocation = myLocationOverlay.getMyLocation();
+			if(myLocation!=null) {
+				mapController.animateTo(myLocationOverlay.getMyLocation());
+			} else {
+				Toast.makeText(this, "Could not retrieve location", Toast.LENGTH_LONG).show();
+			}
+			return true;
 		} else {
-			Toast.makeText(this, "Could not retrieve location", Toast.LENGTH_LONG).show();
+			return super.onOptionsItemSelected(item);
 		}
-		return true;
-	} else {
-		return super.onOptionsItemSelected(item);
-	}
   }
-
-	@Override
-	public void onClick(final View v) {
-		
-		final Event e = (Event) v.getTag();
-		Intent intent = new Intent(this, EventDetailsActivity.class);
-	    intent.putExtra("eventId", e.id);
-	    intent.putParcelableArrayListExtra("events", events);
-	    intent.putExtra("token", token);
-	    startActivity(intent);
-	}
 
 	@Override
 	public void onTap(int index) {
