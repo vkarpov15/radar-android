@@ -42,10 +42,10 @@ public class ServerThreadHandler extends Handler {
 		}
 		final ServerRequest req = (ServerRequest) msg.obj;
 		try {
-			final HttpURLConnection conn = (HttpURLConnection) new URL(req.getUrl()).openConnection();
-			conn.setRequestMethod(req.getReqMethod());
-			for (final String key : req.getHttpParams().keySet()) {
-			  conn.setRequestProperty(key, req.getHttpParams().get(key));
+			final HttpURLConnection conn = (HttpURLConnection) new URL(req.url).openConnection();
+			conn.setRequestMethod(req.reqMethod);
+			for (final String key : req.httpParams.keySet()) {
+			  conn.setRequestProperty(key, req.httpParams.get(key));
 			}
 			if (req.hasOutput()) {
 			  conn.setDoOutput(true);
@@ -67,7 +67,7 @@ public class ServerThreadHandler extends Handler {
 			}
 			if(req.responseHandler!=null) {
 				final Message responseMessage = Message.obtain();
-				responseMessage.obj = new ServerResponse(0, sb.toString(), req.getType());
+				responseMessage.obj = new ServerResponse(0, sb.toString(), req.type);
 				req.responseHandler.sendMessage(responseMessage);
 			} else {
 				Log.i(TAG, "No response handler available");

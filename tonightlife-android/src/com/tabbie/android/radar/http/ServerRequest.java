@@ -16,11 +16,10 @@ import android.os.Handler;
 import com.tabbie.android.radar.MessageType;
 
 public abstract class ServerRequest {
-	private final String url;
-	private final String reqMethod;
-	private final MessageType type;
-	private final LinkedHashMap<String, String> httpParams = new LinkedHashMap<String, String>();
-	
+	public final String url;
+	public final String reqMethod;
+	public final MessageType type;
+	public final LinkedHashMap<String, String> httpParams = new LinkedHashMap<String, String>();
 	public Handler responseHandler = null;
 	
 	public ServerRequest(final String url,
@@ -30,26 +29,6 @@ public abstract class ServerRequest {
 		this.url = url;
 		this.reqMethod = reqMethod;
 		this.type = type;
-	}
-	
-	public String getUrl() {
-		return url;
-	}
-	
-	public String getReqMethod() {
-		return reqMethod;
-	}
-	
-	public MessageType getType() {
-		return type;
-	}
-	
-	public LinkedHashMap<String, String> getHttpParams() {
-		return httpParams;
-	}
-	
- 	protected void put(final String key, final String value) {
-		this.httpParams.put(key, value);
 	}
 	
 	public abstract boolean hasOutput();
