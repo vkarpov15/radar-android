@@ -10,6 +10,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.Toast;
 
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapActivity;
@@ -116,7 +117,12 @@ public class TLMapActivity extends MapActivity
     int itemId = item.getItemId();
 	if (itemId == R.id.zoom_to_me) {
 		mapController.setZoom(DEFAULT_ZOOM);
-		mapController.animateTo(myLocationOverlay.getMyLocation());
+		final GeoPoint myLocation = myLocationOverlay.getMyLocation();
+		if(myLocation!=null) {
+			mapController.animateTo(myLocationOverlay.getMyLocation());
+		} else {
+			Toast.makeText(this, "Could not retrieve location", Toast.LENGTH_LONG).show();
+		}
 		return true;
 	} else {
 		return super.onOptionsItemSelected(item);
