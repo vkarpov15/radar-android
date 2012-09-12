@@ -8,11 +8,13 @@ import android.view.MotionEvent;
 
 import com.google.android.maps.ItemizedOverlay;
 import com.google.android.maps.MapView;
+import com.google.android.maps.OverlayItem;
 import com.tabbie.android.radar.Event;
 
-public final class TLItemizedOverlay extends ItemizedOverlay<TLEventMarker> {
+public final class TLItemizedOverlay extends ItemizedOverlay<OverlayItem> {
 	public static final String TAG = "TLItemizedOverlay";
-	protected final ArrayList<TLEventMarker> markers = new ArrayList<TLEventMarker>();
+	
+	private final ArrayList<OverlayItem> markers = new ArrayList<OverlayItem>();
   private long lastClickTime = -1;
   private OnTapListener listener;
 
@@ -21,7 +23,7 @@ public final class TLItemizedOverlay extends ItemizedOverlay<TLEventMarker> {
 	}
 
   @Override
-  protected TLEventMarker createItem(int i) {
+  protected OverlayItem createItem(int i) {
     return markers.get(i);
   }
 
@@ -57,14 +59,14 @@ public final class TLItemizedOverlay extends ItemizedOverlay<TLEventMarker> {
 	}
 
   public void addEventMarker(Event e, Drawable markerImg) {
-    TLEventMarker marker = new TLEventMarker(e);
+  	OverlayItem marker = new OverlayItem(e.location, e.name, e.description);
     markerImg.setBounds(0, 0, markerImg.getIntrinsicWidth(),
         markerImg.getIntrinsicHeight());
     marker.setMarker(boundDrawable(markerImg));
     addOverlay(marker);
   }
 
-  private void addOverlay(TLEventMarker overlay) {
+  private void addOverlay(OverlayItem overlay) {
     markers.add(overlay);
     populate();
   }
