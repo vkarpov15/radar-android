@@ -14,9 +14,9 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.tabbie.android.radar.Event;
 import com.tabbie.android.radar.ImageLoader;
 import com.tabbie.android.radar.R;
+import com.tabbie.android.radar.model.Event;
 
 public class EventListAdapter extends BaseAdapter {
 

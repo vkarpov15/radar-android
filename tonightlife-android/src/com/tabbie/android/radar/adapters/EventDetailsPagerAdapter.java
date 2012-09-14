@@ -13,11 +13,11 @@ package com.tabbie.android.radar.adapters;
 
 import java.util.ArrayList;
 
-import com.tabbie.android.radar.Event;
 import com.tabbie.android.radar.ImageLoader;
 import com.tabbie.android.radar.R;
 import com.tabbie.android.radar.R.anim;
 import com.tabbie.android.radar.R.id;
+import com.tabbie.android.radar.model.Event;
 
 import android.content.Context;
 import android.text.util.Linkify;
