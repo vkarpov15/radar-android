@@ -23,6 +23,16 @@ public class ListManager {
 
   public ListManager() {}
 
+  public boolean addToLineup(Event e) {
+    if (e.onLineup) {
+      return false;
+    }
+    e.lineupCount++;
+    e.onLineup = true;
+    lineupEventsList.add(e);
+    return true;
+  }
+  
   public void add(Event e) {
     allEventsList.add(e);
     if (e.isFeatured) {

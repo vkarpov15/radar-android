@@ -44,7 +44,7 @@ public class EventListAdapter extends BaseAdapter {
   		View convertView, final ViewGroup parent) {
   	
     if (null == convertView) {
-  	Log.i("EventListAdapter", "Instantiating a new list view element");
+      Log.i("EventListAdapter", "Instantiating a new list view element");
       convertView = LayoutInflater.from(context).inflate(R.layout.event_list_element, null);
     }
     

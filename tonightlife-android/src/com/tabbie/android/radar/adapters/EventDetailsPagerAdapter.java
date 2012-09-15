@@ -12,12 +12,7 @@ package com.tabbie.android.radar.adapters;
  */
 
 import java.util.ArrayList;
-
-import com.tabbie.android.radar.ImageLoader;
-import com.tabbie.android.radar.R;
-import com.tabbie.android.radar.R.anim;
-import com.tabbie.android.radar.R.id;
-import com.tabbie.android.radar.model.Event;
+import java.util.List;
 
 import android.content.Context;
 import android.text.util.Linkify;
@@ -29,15 +24,19 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.tabbie.android.radar.ImageLoader;
+import com.tabbie.android.radar.R;
+import com.tabbie.android.radar.model.Event;
+
 public class EventDetailsPagerAdapter
-	extends android.support.v4.view.PagerAdapter {
+	extends android.support.v4.view.PagerAdapter implements TLAdapter {
 	
 	private final ImageLoader imageLoader;
 	private final Context context;
-	private final ArrayList<Event> events;
 	private final int pageLayout;
 	private final OnClickListener clickListener;
 	private final OnPageChangeListener pageListener;
+	private ArrayList<Event> events;
 	
 	public EventDetailsPagerAdapter(final Context context,
 	                                final ArrayList<Event> events,
@@ -126,4 +125,10 @@ public class EventDetailsPagerAdapter
 	public interface OnPageChangeListener {
 		public abstract void onPageChanged(final Event e);
 	}
+
+  @Override
+  public boolean initializeWithList(List<? extends Event> e) {
+    // TODO Auto-generated method stub
+    return false;
+  }
 }
