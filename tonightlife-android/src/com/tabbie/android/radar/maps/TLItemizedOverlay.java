@@ -9,7 +9,7 @@ import android.view.MotionEvent;
 import com.google.android.maps.ItemizedOverlay;
 import com.google.android.maps.MapView;
 import com.google.android.maps.OverlayItem;
-import com.tabbie.android.radar.Event;
+import com.tabbie.android.radar.model.Event;
 
 public final class TLItemizedOverlay extends ItemizedOverlay<OverlayItem> {
 	public static final String TAG = "TLItemizedOverlay";

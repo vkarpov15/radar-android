@@ -13,7 +13,7 @@ package com.tabbie.android.radar.adapters;
 
 import java.util.List;
 
-import com.tabbie.android.radar.Event;
+import com.tabbie.android.radar.model.Event;
 
 import android.content.Context;
 import android.view.View;

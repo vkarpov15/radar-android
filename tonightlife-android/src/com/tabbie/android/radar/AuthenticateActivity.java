@@ -35,7 +35,7 @@ import com.tabbie.android.radar.http.ServerGetRequest;
 import com.tabbie.android.radar.http.ServerPostRequest;
 import com.tabbie.android.radar.http.ServerResponse;
 
-public class AuthenticateActivity extends Activity implements Handler.Callback{
+public class AuthenticateActivity extends Activity implements Handler.Callback {
   public final String TAG = "Authenticate Activity";
   private final Handler upstreamHandler;
   

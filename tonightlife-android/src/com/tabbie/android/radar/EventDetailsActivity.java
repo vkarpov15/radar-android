@@ -29,6 +29,7 @@ import com.tabbie.android.radar.adapters.EventDetailsPagerAdapter;
 import com.tabbie.android.radar.http.ServerDeleteRequest;
 import com.tabbie.android.radar.http.ServerPostRequest;
 import com.tabbie.android.radar.maps.TLMapActivity;
+import com.tabbie.android.radar.model.Event;
 
 public class EventDetailsActivity extends Activity implements
 	OnClickListener,

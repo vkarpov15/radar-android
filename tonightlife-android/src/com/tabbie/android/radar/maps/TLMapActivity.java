@@ -20,10 +20,10 @@ import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
 import com.google.android.maps.MyLocationOverlay;
 import com.google.android.maps.Overlay;
-import com.tabbie.android.radar.Event;
 import com.tabbie.android.radar.EventDetailsActivity;
 import com.tabbie.android.radar.R;
 import com.tabbie.android.radar.maps.TLItemizedOverlay.OnTapListener;
+import com.tabbie.android.radar.model.Event;
 
 public class TLMapActivity extends MapActivity
 	implements OnTapListener{

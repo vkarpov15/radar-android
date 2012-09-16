@@ -1,9 +1,10 @@
-package com.tabbie.android.radar;
+package com.tabbie.android.radar.model;
 
 import java.net.MalformedURLException;
 import java.net.URL;
 
 import com.google.android.maps.GeoPoint;
+import com.tabbie.android.radar.TonightlifeDatetime;
 
 import android.os.Parcel;
 import android.os.Parcelable;

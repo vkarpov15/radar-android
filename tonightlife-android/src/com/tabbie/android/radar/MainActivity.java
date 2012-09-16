@@ -50,6 +50,8 @@ import com.tabbie.android.radar.adapters.EventListAdapter;
 import com.tabbie.android.radar.http.ServerGetRequest;
 import com.tabbie.android.radar.http.ServerResponse;
 import com.tabbie.android.radar.maps.TLMapActivity;
+import com.tabbie.android.radar.model.Event;
+import com.tabbie.android.radar.model.ListManager;
 
 public class MainActivity extends Activity implements
     OnTabChangeListener,
