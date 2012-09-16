@@ -1,10 +1,10 @@
 package com.tabbie.android.radar;
 
 /**
- * AuthenticateActivity.java
+ *  AuthenticateActivity.java
  * 
- * Created on: August 17, 2012
- * Author: Justin Knutson
+ *  Created on: August 17, 2012
+ *      Author: Justin Knutson
  * 
  * 
  * Launch this activity to authenticate

@@ -1,12 +1,12 @@
 package com.tabbie.android.radar;
 
 /**
- * MessageType.java
+ *  MessageType.java
  * 
- * Created on: June 21, 2012
- * Author: vkarpov
+ *  Created on: June 21, 2012
+ *      Author: Valeri Karpov
  * 
- * An enum of all of the different messages I can send to the server
+ *  An enum of all of the different messages I can send to the server
  */
 
 public enum MessageType {
