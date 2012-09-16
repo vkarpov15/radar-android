@@ -78,7 +78,6 @@ public class MainActivity extends Activity implements
   // Intent constants
   private static final String[] FOUNDERS_EMAIL = {"founders@tonight-life.com"};
   private static final String APP_FEEDBACK_SUBJECT = "TonightLife Application Feedback";
-  private static final int REQUEST_LOGIN = 42;
   private static final int REQUEST_EVENT_DETAILS = 43;
 
   // Often-used views
