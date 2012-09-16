@@ -91,6 +91,7 @@ public class MainActivity extends Activity implements
 
   // FB junk
   private final Facebook facebook = new Facebook("217386331697217");
+  private static final int FACEBOOK_AUTH_ACTIVITY_CODE = 32665;
   private FacebookAuthenticator facebookAuthenticator;
   private FacebookUserRemoteResource facebookUserRemoteResource;
   
@@ -268,30 +269,33 @@ public class MainActivity extends Activity implements
     super.onActivityResult(requestCode, resultCode, data);
     
     switch (requestCode) {
-      case REQUEST_EVENT_DETAILS:
-        final Bundle parcelables = data.getExtras();
-        events = parcelables.getParcelableArrayList("events");
-        manager.clear();
-        manager.addAll(events);
+    case FACEBOOK_AUTH_ACTIVITY_CODE:
+      facebook.authorizeCallback(requestCode, resultCode, data);
+      break;
+    case REQUEST_EVENT_DETAILS:
+      final Bundle parcelables = data.getExtras();
+      events = parcelables.getParcelableArrayList("events");
+      manager.clear();
+      manager.addAll(events);
         
-        tabHost.setCurrentTab(currentTabIndex);
+      tabHost.setCurrentTab(currentTabIndex);
 
-			  for(final ListView v : listViews) {
-      		final BaseAdapter adapter = (BaseAdapter) v.getAdapter();
-      		if(adapter!=null) {
-      			adapter.notifyDataSetChanged();
-      		}
-			  }
-
-        listViews[currentTabIndex].setSelection(currentViewPosition);
-        
-        // TODO Use this paradigm (in more robust form) for other instances of this view
-        if(listViews[currentTabIndex].getAdapter().isEmpty()) {
-        	findViewById(R.id.radar_list_empty_text).setVisibility(View.VISIBLE);
-        } else {
-        	findViewById(R.id.radar_list_empty_text).setVisibility(View.GONE);
+      for (final ListView v : listViews) {
+        final BaseAdapter adapter = (BaseAdapter) v.getAdapter();
+        if (adapter != null) {
+          adapter.notifyDataSetChanged();
         }
-        break;
+      }
+
+      listViews[currentTabIndex].setSelection(currentViewPosition);
+        
+      // TODO Use this paradigm (in more robust form) for other instances of this view
+      if(listViews[currentTabIndex].getAdapter().isEmpty()) {
+        findViewById(R.id.radar_list_empty_text).setVisibility(View.VISIBLE);
+      } else {
+        findViewById(R.id.radar_list_empty_text).setVisibility(View.GONE);
+      }
+      break;
     }
   }
 
