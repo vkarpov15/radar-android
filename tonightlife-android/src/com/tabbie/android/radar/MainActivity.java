@@ -127,6 +127,7 @@ public class MainActivity extends Activity implements
     // Start Google Analytics
     googleAnalyticsTracker = GoogleAnalyticsTracker.getInstance();
     
+    // Throw some d's on that bitch
     ((ImageView) findViewById(R.id.loading_spin)).startAnimation(AnimationUtils
         .loadAnimation(this, R.anim.rotate));
   	
