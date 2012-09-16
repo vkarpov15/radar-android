@@ -108,8 +108,7 @@ public class TLMapActivity extends MapActivity
   }
 
   @Override
-  protected boolean isRouteDisplayed()
-  {
+  protected boolean isRouteDisplayed() {
     return false;
   }
 
