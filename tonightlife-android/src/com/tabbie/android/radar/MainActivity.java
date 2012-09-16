@@ -14,7 +14,6 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -35,6 +34,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TabHost;
 import android.widget.TabHost.OnTabChangeListener;
@@ -47,7 +47,9 @@ import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 import com.google.android.gcm.GCMRegistrar;
 import com.tabbie.android.radar.MultiSpinner.MultiSpinnerListener;
 import com.tabbie.android.radar.adapters.EventListAdapter;
+import com.tabbie.android.radar.core.BasicCallback;
 import com.tabbie.android.radar.http.ServerGetRequest;
+import com.tabbie.android.radar.http.ServerPostRequest;
 import com.tabbie.android.radar.http.ServerResponse;
 import com.tabbie.android.radar.maps.TLMapActivity;
 import com.tabbie.android.radar.model.Event;
@@ -82,16 +84,17 @@ public class MainActivity extends Activity implements
   // Often-used views
   private TabHost tabHost;
   private ListView[] listViews = new ListView[3];
-  private ProgressDialog loadingDialog;
 
   // Internal state for views
-  private String tabbieAccessToken = null;
   private int currentViewPosition = 0;
   private short currentTabIndex = 0;
 
   // FB junk
   private final Facebook facebook = new Facebook("217386331697217");
-  private SharedPreferences preferences;
+  private FacebookAuthenticator facebookAuthenticator;
+  private FacebookUserRemoteResource facebookUserRemoteResource;
+  
+  private String tabbieAccessToken = null;
   
   // Google analytics
   private GoogleAnalyticsTracker googleAnalyticsTracker;
@@ -106,7 +109,7 @@ public class MainActivity extends Activity implements
   @Override
   public void onCreate(final Bundle savedInstanceState) {
 	  
-	// Set initial conditions
+    // Set initial conditions
     super.onCreate(savedInstanceState);
     setContentView(R.layout.main);
     Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
@@ -123,6 +126,9 @@ public class MainActivity extends Activity implements
 
     // Start Google Analytics
     googleAnalyticsTracker = GoogleAnalyticsTracker.getInstance();
+    
+    ((ImageView) findViewById(R.id.loading_spin)).startAnimation(AnimationUtils
+        .loadAnimation(this, R.anim.rotate));
   	
   	// Grab a hold of some views
     tabHost = (FlingableTabHost) findViewById(android.R.id.tabhost);
@@ -169,12 +175,49 @@ public class MainActivity extends Activity implements
     	createTabView(tabHost, v); 
     }
     
-    // Launch Authentication Activity
-    preferences = getPreferences(MODE_PRIVATE);
-    final Intent authenticate = new Intent(this, AuthenticateActivity.class);
-    authenticate.putExtra("token", preferences.getString("access_token", null));
-    authenticate.putExtra("expires", preferences.getLong("access_expires", 0));
-    startActivityForResult(authenticate, REQUEST_LOGIN);
+    // Start our authentication chain. First authenticate against facebook
+    facebookAuthenticator = new FacebookAuthenticator(facebook, getPreferences(MODE_PRIVATE));
+    facebookUserRemoteResource = new FacebookUserRemoteResource(getPreferences(MODE_PRIVATE));
+    
+    ((TextView) findViewById(R.id.loading_text)).setText("Checking Facebook credentials...");
+    facebookAuthenticator.authenticate(this, new BasicCallback<String>() {
+      @Override
+      public void onFail(String reason) {
+        Log.e(this.getClass().getName(), "Facebook auth failed because '" + reason + "'");
+        ((TextView) findViewById(R.id.loading_text)).setText("Checking facebook credentials FAILED!");
+        throw new RuntimeException(reason);
+      }
+      
+      @Override
+      public void onDone(String response) {
+        ((TextView) findViewById(R.id.loading_text)).setText("Loading Facebook user information...");
+        
+        facebookUserRemoteResource.load(upstreamHandler, response, new BasicCallback<String>() {
+          @Override
+          public void onFail(String reason) {
+            Log.e(this.getClass().getName(), "Facebook user info load failed because '" + reason + "'");
+            ((TextView) findViewById(R.id.loading_text)).setText("Loading Facebook user information FAILED!");
+            throw new RuntimeException(reason);
+          }
+          
+          @Override
+          public void onDone(String response) {
+            ((TextView) findViewById(R.id.user_name)).setText(response);
+            
+            ((TextView) findViewById(R.id.loading_text)).setText("Retrieving events...");
+            final ServerPostRequest req = new ServerPostRequest(
+                getString(R.string.tabbie_server) + "/mobile/auth.json",
+                MessageType.TABBIE_LOGIN);
+
+            req.params.put("fb_token", facebook.getAccessToken());
+            req.responseHandler = new Handler(MainActivity.this);
+            final Message message = Message.obtain();
+            message.obj = req;
+            upstreamHandler.sendMessage(message);
+          }
+        });
+      }
+    });
   }
   
   @Override
@@ -225,26 +268,6 @@ public class MainActivity extends Activity implements
     super.onActivityResult(requestCode, resultCode, data);
     
     switch (requestCode) {
-      case REQUEST_LOGIN:
-        final SharedPreferences.Editor editor = preferences.edit();
-        editor.putString("access_token", data.getStringExtra("fbAccessToken"));
-        editor.putLong("access_expires", data.getLongExtra("expires", 0));
-        editor.commit();
-          
-      	tabbieAccessToken = data.getStringExtra("tabbieAccessToken");
-      	((TextView) findViewById(R.id.user_name)).setText(data.getStringExtra("facebookName"));
-      	
-      	final ServerGetRequest req = new ServerGetRequest(
-      			getString(R.string.tabbie_server) + "/mobile/all.json?auth_token="
-      			+ tabbieAccessToken, MessageType.LOAD_EVENTS);
-      	loadingDialog = ProgressDialog.show(this, null, "Loading... Please wait");
-      	req.responseHandler = new Handler(this);
-      	final Message message = Message.obtain();
-      	message.obj = req;
-      	upstreamHandler.sendMessage(message);
-      	
-      	break;
-    	
       case REQUEST_EVENT_DETAILS:
         final Bundle parcelables = data.getExtras();
         events = parcelables.getParcelableArrayList("events");
@@ -281,13 +304,13 @@ public class MainActivity extends Activity implements
   @Override
 	protected void onRestart() {
 		super.onRestart();
-        ServerGetRequest req = new ServerGetRequest(
-            getString(R.string.tabbie_server) + "/mobile/all.json?auth_token="
-                + tabbieAccessToken, MessageType.LOAD_EVENTS);
-      	req.responseHandler = new Handler(this);
-        final Message message = Message.obtain();
-        message.obj = req;
-        upstreamHandler.sendMessage(message);
+	  ServerGetRequest req = new ServerGetRequest(
+	      getString(R.string.tabbie_server) + "/mobile/all.json?auth_token="
+	      + tabbieAccessToken, MessageType.LOAD_EVENTS);
+	  req.responseHandler = new Handler(this);
+	  final Message message = Message.obtain();
+	  message.obj = req;
+	  upstreamHandler.sendMessage(message);
 	}
 
   @Override
@@ -377,48 +400,45 @@ public class MainActivity extends Activity implements
 		
 		Log.d("OnItemClick", "Event is " + e.name);
 		
-	    if (null != e) {
-	        currentViewPosition = position;
-	        ((Vibrator) getSystemService(Context.VIBRATOR_SERVICE))
-	            .vibrate(30);
+	  if (null != e) {
+	    currentViewPosition = position;
+	    ((Vibrator) getSystemService(Context.VIBRATOR_SERVICE)).vibrate(30);
 
-	        new AsyncTask<Void, Void, Intent>() {
+	    new AsyncTask<Void, Void, Intent>() {
+	      private ProgressDialog dialog;
 
-	          private ProgressDialog dialog;
-
-	          @Override
-	          protected void onPreExecute() {
-	            dialog = ProgressDialog.show(MainActivity.this, "",
-	                "Loading, please wait...");
-	            super.onPreExecute();
-	          }
-
-	          @Override
-	          protected Intent doInBackground(Void... params) {
-	            Intent intent = new Intent(MainActivity.this,
-	                EventDetailsActivity.class);
-	            intent.putExtra("eventIndex", events.indexOf(e));
-	            intent.putParcelableArrayListExtra("events", events);
-	            intent.putExtra("token", tabbieAccessToken);
-	            return intent;
-	          }
-
-	          @Override
-	          protected void onPostExecute(Intent result) {
-	            startActivityForResult(result,
-	                REQUEST_EVENT_DETAILS);
-	            dialog.dismiss();
-
-	          };
-	        }.execute();
+	      @Override
+	      protected void onPreExecute() {
+	        dialog = ProgressDialog.show(MainActivity.this, "",
+	            "Loading, please wait...");
+	        super.onPreExecute();
 	      }
+
+	      @Override
+	      protected Intent doInBackground(Void... params) {
+	        Intent intent = new Intent(MainActivity.this,
+	            EventDetailsActivity.class);
+	        intent.putExtra("eventIndex", events.indexOf(e));
+	        intent.putParcelableArrayListExtra("events", events);
+	        intent.putExtra("token", tabbieAccessToken);
+	        return intent;
+	      }
+
+	      @Override
+	      protected void onPostExecute(Intent result) {
+	        startActivityForResult(result,
+	            REQUEST_EVENT_DETAILS);
+	        dialog.dismiss();
+	      }
+	    }.execute();
+	  }
 	}
 
 	@Override
 	public boolean onItemLongClick(AdapterView<?> parent, View v, int position,
 			long rowId) {
 		// TODO Pop up a dialog here
-		Toast.makeText(this, "Long click!", Toast.LENGTH_SHORT).show();
+		//Toast.makeText(this, "Long click!", Toast.LENGTH_SHORT).show();
 		return true;
 	}
 
@@ -430,70 +450,102 @@ public class MainActivity extends Activity implements
 			return false;
 		}
 		final ServerResponse resp = (ServerResponse) msg.obj;
-		final JSONArray list = resp.parseJsonArray();
-		final Set<String> serverRadarIds = new LinkedHashSet<String>();
-		try {
-			final JSONObject radarObj = list.getJSONObject(list.length() - 1);
-			JSONArray tmpRadarList = radarObj.getJSONArray("radar");
-			for(int i = 0; i < tmpRadarList.length(); ++i) {
-				serverRadarIds.add(tmpRadarList.getString(i));
-			}
-			events.clear();
-			final String domain = getString(R.string.tabbie_server);
-			for(int i = 0; i < list.length() - 1; ++i) {
-				final JSONObject obj = list.getJSONObject(i);
-				Log.i(TAG, "Event information: " + obj.toString());
-				final String radarCountStr = obj.getString("user_count");
-				int radarCount = 0;
-				if (null != radarCountStr && 0 != radarCountStr.compareTo("null"))
-					radarCount = Integer.parseInt(radarCountStr);
-				final Event e = new Event(  obj.getString("id"),
-	                                    obj.getString("name"),
-	                                    obj.getString("description"),
-	                                    obj.getString("location"),
-	                                    obj.getString("street_address"),
-	                                    new URL(domain + obj.getString("image_url")),
-	                                    (int) (obj.getDouble("latitude")*1E6),
-	                                    (int) (obj.getDouble("longitude")*1E6),
-	                                    radarCount,
-	                                    obj.getBoolean("featured"),
-	                                    obj.getString("start_time"),
-	                                    serverRadarIds.contains(obj.getString("id")));
-				events.add(e);
-			}
-			manager.clear();
-			manager.addAll(events);
-    } catch (final JSONException e) {
-    	Toast.makeText(this, "Fatal Error: Failed to Parse JSON",
-        Toast.LENGTH_SHORT).show();
-    	e.printStackTrace();
-    	return false;
-    } catch (final MalformedURLException e) {
-    	Log.e(TAG, "Malformed URL during Event creation");
-    	Toast.makeText(this, "Error occurred during boot", Toast.LENGTH_LONG).show();
-    	return false;
-    }
-	  this.runOnUiThread(new Runnable() {
-		  public void run() {
-			  for(final ListView v : listViews) {
-	      		final BaseAdapter adapter = (BaseAdapter) v.getAdapter();
-	      		if(adapter!=null) {
-	      			adapter.notifyDataSetChanged();
-	      		}
-	      }
-	    	if(listViews[currentTabIndex].getAdapter().isEmpty()) {
-	    		findViewById(R.id.radar_list_empty_text).setVisibility(View.VISIBLE);
-	    	} else {
-	    		findViewById(R.id.radar_list_empty_text).setVisibility(View.GONE);
-	     	}
-	    	tabHost.setCurrentTab(currentTabIndex);
+		
+		switch (resp.responseTo) {
+    case TABBIE_LOGIN: {
+      final JSONObject json = resp.parseJsonContent();
+      if (json.has("token")) {
+        try {
+          tabbieAccessToken = json.getString("token");
+        } catch (final JSONException e) {
+          e.printStackTrace();
+          return false;
+        } finally {
+          
+          final ServerGetRequest req = new ServerGetRequest(
+              getString(R.string.tabbie_server) + "/mobile/all.json?auth_token="
+              + tabbieAccessToken, MessageType.LOAD_EVENTS);
+          req.responseHandler = new Handler(this);
+          final Message message = Message.obtain();
+          message.obj = req;
+          upstreamHandler.sendMessage(message);
+        }
+      } else {
+      Log.e(TAG, "Tabbie Log-in JSON does not have a token!");
+        throw new RuntimeException();
       }
-    });
-    
-	  if(loadingDialog!=null && loadingDialog.isShowing()) {
-			loadingDialog.dismiss();
-			loadingDialog = null;
-	  }
+      break;
+    }
+		case LOAD_EVENTS:
+  		final JSONArray list = resp.parseJsonArray();
+  		final Set<String> serverRadarIds = new LinkedHashSet<String>();
+  		try {
+  			final JSONObject radarObj = list.getJSONObject(list.length() - 1);
+  			JSONArray tmpRadarList = radarObj.getJSONArray("radar");
+  			for(int i = 0; i < tmpRadarList.length(); ++i) {
+  				serverRadarIds.add(tmpRadarList.getString(i));
+  			}
+  			events.clear();
+  			final String domain = getString(R.string.tabbie_server);
+  			for(int i = 0; i < list.length() - 1; ++i) {
+  				final JSONObject obj = list.getJSONObject(i);
+  				Log.i(TAG, "Event information: " + obj.toString());
+  				final String radarCountStr = obj.getString("user_count");
+  				int radarCount = 0;
+  				if (null != radarCountStr && 0 != radarCountStr.compareTo("null"))
+  					radarCount = Integer.parseInt(radarCountStr);
+  				final Event e = new Event(  obj.getString("id"),
+  	                                    obj.getString("name"),
+  	                                    obj.getString("description"),
+  	                                    obj.getString("location"),
+  	                                    obj.getString("street_address"),
+  	                                    new URL(domain + obj.getString("image_url")),
+  	                                    (int) (obj.getDouble("latitude")*1E6),
+  	                                    (int) (obj.getDouble("longitude")*1E6),
+  	                                    radarCount,
+  	                                    obj.getBoolean("featured"),
+  	                                    obj.getString("start_time"),
+  	                                    serverRadarIds.contains(obj.getString("id")));
+  				events.add(e);
+  			}
+  			manager.clear();
+  			manager.addAll(events);
+      } catch (final JSONException e) {
+      	Toast.makeText(this, "Fatal Error: Failed to Parse JSON",
+          Toast.LENGTH_SHORT).show();
+      	e.printStackTrace();
+      	return false;
+      } catch (final MalformedURLException e) {
+      	Log.e(TAG, "Malformed URL during Event creation");
+      	Toast.makeText(this, "Error occurred during boot", Toast.LENGTH_LONG).show();
+      	return false;
+      }
+  	  this.runOnUiThread(new Runnable() {
+  		  public void run() {
+  			  for(final ListView v : listViews) {
+  	      		final BaseAdapter adapter = (BaseAdapter) v.getAdapter();
+  	      		if(adapter!=null) {
+  	      			adapter.notifyDataSetChanged();
+  	      		}
+  	      }
+  	    	if(listViews[currentTabIndex].getAdapter().isEmpty()) {
+  	    		findViewById(R.id.radar_list_empty_text).setVisibility(View.VISIBLE);
+  	    	} else {
+  	    		findViewById(R.id.radar_list_empty_text).setVisibility(View.GONE);
+  	     	}
+  	    	tabHost.setCurrentTab(currentTabIndex);
+        }
+      });
+  	  
+  	  ((ImageView) findViewById(R.id.loading_spin)).clearAnimation();
+  	  findViewById(R.id.loading_screen).setVisibility(View.GONE);
+  	  findViewById(R.id.tonightlife_layout).setVisibility(View.VISIBLE);
+  	  tabHost.setVisibility(View.VISIBLE);
+  	  
+  	  break;
+  	default:
+  	  break;  
+		}
 	  return true;
 	}
 	
@@ -503,13 +555,13 @@ public class MainActivity extends Activity implements
 				.inflate(R.layout.tabs_bg, null); 
 		((TextView) tabIndicatorView.findViewById(R.id.tabs_text)).setText(tag);
 		
-        final TabSpec content = host.newTabSpec(tag)
-        		.setIndicator(tabIndicatorView)
-        		.setContent(new TabHost.TabContentFactory() {
-        			public View createTabContent(final String tag) {
-        				return view;
-        			}
-        	});
-        host.addTab(content);
+	  final TabSpec content = host.newTabSpec(tag)
+	      .setIndicator(tabIndicatorView)
+	      .setContent(new TabHost.TabContentFactory() {
+	        public View createTabContent(final String tag) {
+	          return view;
+	        }
+	      });
+	  host.addTab(content);
 	}
 }

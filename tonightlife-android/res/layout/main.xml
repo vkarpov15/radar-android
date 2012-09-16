@@ -3,8 +3,41 @@
     android:layout_width="fill_parent" android:layout_height="fill_parent" xmlns:android="http://schemas.android.com/apk/res/android">
     
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+		android:id="@+id/loading_screen"
+		android:layout_height="fill_parent"
+		android:visibility="visible"
+		android:layout_width="fill_parent">
+	    
+		<ImageView
+			android:layout_width="fill_parent"
+			android:layout_height="fill_parent"
+			android:id="@+id/loading_screen_image"
+			android:src="@drawable/launch_screen" />
+		 
+		<TextView
+			android:id="@+id/loading_text"
+			android:layout_margin="10dp"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_centerHorizontal="true"
+			android:layout_alignParentBottom="true"
+			android:text="Loading..."
+			android:textColor="@color/WHITE"
+			android:textSize="12dp" />
+		 
+		<ImageView  
+			android:id="@+id/loading_spin"  
+			android:layout_width="20dp"  
+			android:layout_height="20dp"
+			android:layout_centerHorizontal="true"
+			android:layout_above="@id/loading_text"
+			android:src="@drawable/refresh"/>
+	</RelativeLayout>
+    
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="fill_parent"
         android:layout_height="43dp"
+        android:visibility="gone"
         android:id="@+id/tonightlife_layout"
         android:background="@drawable/app_header_background">
         
@@ -42,94 +75,95 @@
         
     </RelativeLayout>
     
-<com.tabbie.android.radar.FlingableTabHost xmlns:android="http://schemas.android.com/apk/res/android"
-    class="com.tabbie.android.radar.FlingableTabHost"
-    android:id="@android:id/tabhost"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content">
-        
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-		android:padding="0dp">
-		
-        <TabWidget
-            android:id="@android:id/tabs"
-            android:layout_width="fill_parent"
-            android:layout_height="44dp"
-       		android:background="@drawable/app_header_background"/>
-        
-        <FrameLayout
-            android:id="@android:id/tabcontent"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-           	android:background="@drawable/velvet_rope_background">
-            
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:id="@+id/main_tab_content">
-                
-                <ListView
-                    android:id="@+id/featured_event_list"
-                    android:tag="Short List"
-                    android:visibility="gone"
-                    android:layout_width="fill_parent"
-                    android:layout_height="0dip"
-                    android:layout_weight="1"
-                    android:cacheColorHint="@color/transparent" />
-                
-            </LinearLayout>
-            
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:id="@+id/all_events_tab_content">
-                
-                <ListView
-                    android:id="@+id/all_event_list"
-                    android:tag="All Events"
-                    android:visibility="gone"
-                    android:layout_width="fill_parent"
-                    android:layout_height="0dip"
-                    android:layout_weight="1"
-                    android:cacheColorHint="@color/transparent" />
-                
-            </LinearLayout>
-            
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:id="@+id/radar_tab_content">
-                
-                <ListView
-                    android:id="@+id/lineup_event_list"
-                    android:tag="My Lineup"
-                    android:visibility="gone"
-                    android:layout_width="fill_parent"
-                    android:layout_height="0dip"
-                    android:layout_weight="1"
-                    android:cacheColorHint="@color/transparent" />
-                
-            </LinearLayout>
-            
-            <TextView 
-                android:id="@+id/radar_list_empty_text"
-                android:visibility="gone"
-                android:gravity="center"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:text="@string/radar_empty_message"
-                android:textColor="@color/WHITE"
-                android:padding="30dp"
-                android:lineSpacingExtra="5dp" />
-            
-        </FrameLayout>
-    </LinearLayout>
-</com.tabbie.android.radar.FlingableTabHost>
+	<com.tabbie.android.radar.FlingableTabHost xmlns:android="http://schemas.android.com/apk/res/android"
+	    class="com.tabbie.android.radar.FlingableTabHost"
+	    android:id="@android:id/tabhost"
+	    android:visibility="gone"
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content">
+	        
+	    <LinearLayout
+	        android:orientation="vertical"
+	        android:layout_width="fill_parent"
+	        android:layout_height="fill_parent"
+			android:padding="0dp">
+			
+	        <TabWidget
+	            android:id="@android:id/tabs"
+	            android:layout_width="fill_parent"
+	            android:layout_height="44dp"
+	       		android:background="@drawable/app_header_background"/>
+	        
+	        <FrameLayout
+	            android:id="@android:id/tabcontent"
+	            android:layout_width="fill_parent"
+	            android:layout_height="fill_parent"
+	           	android:background="@drawable/velvet_rope_background">
+	            
+	            <LinearLayout
+	                android:orientation="vertical"
+	                android:layout_width="fill_parent"
+	                android:layout_height="fill_parent"
+	                android:id="@+id/main_tab_content">
+	                
+	                <ListView
+	                    android:id="@+id/featured_event_list"
+	                    android:tag="Short List"
+	                    android:visibility="gone"
+	                    android:layout_width="fill_parent"
+	                    android:layout_height="0dip"
+	                    android:layout_weight="1"
+	                    android:cacheColorHint="@color/transparent" />
+	                
+	            </LinearLayout>
+	            
+	            <LinearLayout
+	                android:orientation="vertical"
+	                android:layout_width="fill_parent"
+	                android:layout_height="fill_parent"
+	                android:id="@+id/all_events_tab_content">
+	                
+	                <ListView
+	                    android:id="@+id/all_event_list"
+	                    android:tag="All Events"
+	                    android:visibility="gone"
+	                    android:layout_width="fill_parent"
+	                    android:layout_height="0dip"
+	                    android:layout_weight="1"
+	                    android:cacheColorHint="@color/transparent" />
+	                
+	            </LinearLayout>
+	            
+	            <LinearLayout
+	                android:orientation="vertical"
+	                android:layout_width="fill_parent"
+	                android:layout_height="fill_parent"
+	                android:id="@+id/radar_tab_content">
+	                
+	                <ListView
+	                    android:id="@+id/lineup_event_list"
+	                    android:tag="My Lineup"
+	                    android:visibility="gone"
+	                    android:layout_width="fill_parent"
+	                    android:layout_height="0dip"
+	                    android:layout_weight="1"
+	                    android:cacheColorHint="@color/transparent" />
+	                
+	            </LinearLayout>
+	            
+	            <TextView 
+	                android:id="@+id/radar_list_empty_text"
+	                android:visibility="gone"
+	                android:gravity="center"
+	                android:layout_width="fill_parent"
+	                android:layout_height="fill_parent"
+	                android:text="@string/radar_empty_message"
+	                android:textColor="@color/WHITE"
+	                android:padding="30dp"
+	                android:lineSpacingExtra="5dp" />
+	            
+	        </FrameLayout>
+	    </LinearLayout>
+	</com.tabbie.android.radar.FlingableTabHost>
 
 </LinearLayout>
