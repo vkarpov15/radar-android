@@ -12,6 +12,7 @@ package com.tabbie.android.radar;
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import com.facebook.android.DialogError;
 import com.facebook.android.Facebook;
@@ -34,7 +35,7 @@ public class FacebookAuthenticator {
     this.preferences = preferences;
   }
 
-  public void authenticate(Activity parent, final BasicCallback<String> callback) {
+  public void authenticate(final Activity parent, final BasicCallback<String> callback) {
     fbAccessToken = preferences.getString("access_token", null);
     expires = preferences.getLong("access_expires", 0);
     
@@ -63,14 +64,17 @@ public class FacebookAuthenticator {
         }
 
         public void onFacebookError(final FacebookError e) {
+          Toast.makeText(parent, "FACEBOOK ERROR", 5000).show();
           callback.onFail("Facebook error");
         }
 
         public void onError(final DialogError e) {
+          Toast.makeText(parent, "DIALOG ERROR", 5000).show();
           callback.onFail("DialogError");
         }
 
         public void onCancel() {
+          Toast.makeText(parent, "CANCEL ERROR", 5000).show();
           callback.onFail("Canceled");
         }
       });
