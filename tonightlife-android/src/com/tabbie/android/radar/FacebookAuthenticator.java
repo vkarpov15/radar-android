@@ -64,17 +64,18 @@ public class FacebookAuthenticator {
         }
 
         public void onFacebookError(final FacebookError e) {
-          Toast.makeText(parent, "FACEBOOK ERROR", 5000).show();
+          Toast.makeText(parent, "FACEBOOK ERROR", Toast.LENGTH_LONG).show();
+          e.printStackTrace();
           callback.onFail("Facebook error");
         }
 
         public void onError(final DialogError e) {
-          Toast.makeText(parent, "DIALOG ERROR", 5000).show();
+          Toast.makeText(parent, "DIALOG ERROR", Toast.LENGTH_LONG).show();
           callback.onFail("DialogError");
         }
 
         public void onCancel() {
-          Toast.makeText(parent, "CANCEL ERROR", 5000).show();
+          Toast.makeText(parent, "CANCEL ERROR", Toast.LENGTH_LONG).show();
           callback.onFail("Canceled");
         }
       });
