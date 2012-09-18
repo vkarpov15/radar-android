@@ -75,7 +75,7 @@ public class FacebookUserRemoteResource implements Handler.Callback {
         facebookName = json.getString("first_name") + " "
             + json.getString("last_name").substring(0, 1) + ".";
         
-        expires = System.currentTimeMillis() + (48 * 60 * 60 * 1000);
+        expires = System.currentTimeMillis() + (7 * 24 * 60 * 60 * 1000);
         final SharedPreferences.Editor editor = preferences.edit();
         editor.putString("fb_name", facebookName);
         editor.putLong("fb_name_expires", expires);

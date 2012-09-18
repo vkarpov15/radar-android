@@ -21,6 +21,7 @@ import android.os.HandlerThread;
 import android.os.Message;
 import android.os.Vibrator;
 import android.util.Log;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -497,6 +498,16 @@ public class MainActivity extends Activity implements
   				int radarCount = 0;
   				if (null != radarCountStr && 0 != radarCountStr.compareTo("null"))
   					radarCount = Integer.parseInt(radarCountStr);
+  				final JSONObject rsvpObj = obj.getJSONObject("rsvp");
+  				
+  				Pair<String, String> rsvp = null;
+  				if (rsvpObj.has("url")) {
+  					rsvp = new Pair<String, String>("url", rsvpObj.getString("url"));
+  				} else if (rsvpObj.has("email")) {
+  					rsvp = new Pair<String, String>("email", rsvpObj.getString("email"));
+  				} else {
+  					rsvp = new Pair<String, String>("", "");
+  				}
   				final Event e = new Event(  obj.getString("id"),
   	                                    obj.getString("name"),
   	                                    obj.getString("description"),
@@ -508,7 +519,8 @@ public class MainActivity extends Activity implements
   	                                    radarCount,
   	                                    obj.getBoolean("featured"),
   	                                    obj.getString("start_time"),
-  	                                    serverRadarIds.contains(obj.getString("id")));
+  	                                    serverRadarIds.contains(obj.getString("id")),
+  	                                    rsvp);
   				events.add(e);
   			}
   			manager.clear();

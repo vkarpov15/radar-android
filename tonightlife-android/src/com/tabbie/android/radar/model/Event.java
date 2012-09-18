@@ -8,6 +8,7 @@ import com.tabbie.android.radar.TonightlifeDatetime;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Pair;
 
 public class Event implements Parcelable {
   public final String id;
@@ -21,6 +22,7 @@ public class Event implements Parcelable {
   public int lineupCount;
   public boolean onLineup;
   public final GeoPoint location;
+  public final Pair<String, String> rsvp;
 
   public Event(final String id,
 		  	final String name,
@@ -33,7 +35,8 @@ public class Event implements Parcelable {
 		  	final int radarCount,
 		  	final boolean featured,
 		  	final String time,
-		  	final boolean onRadar) {
+		  	final boolean onRadar,
+		  	final Pair<String, String> rsvp) {
     this.id = id;
     this.name = name;
     this.description = description;
@@ -44,7 +47,8 @@ public class Event implements Parcelable {
     this.isFeatured = featured;
     this.time = new TonightlifeDatetime(time);
     this.onLineup = onRadar;
-    this.location = new GeoPoint(latE6, lonE6); 
+    this.location = new GeoPoint(latE6, lonE6);
+    this.rsvp = rsvp;
   }
 
   public int describeContents() {
@@ -68,6 +72,8 @@ public class Event implements Parcelable {
     dest.writeInt(isFeatured ? 1 : 0);
     dest.writeString(time.initializer);
     dest.writeInt(onLineup ? 1 : 0);
+    dest.writeString(rsvp.first);
+    dest.writeString(rsvp.second);
   }
 
   public static final Parcelable.Creator<Event> CREATOR = new Parcelable.Creator<Event>() {
@@ -85,7 +91,8 @@ public class Event implements Parcelable {
                           in.readInt(),
                           in.readInt() == 1,
                           in.readString(),
-                          in.readInt() == 1);
+                          in.readInt() == 1,
+                          new Pair<String, String> (in.readString(), in.readString()));
       } catch (final MalformedURLException e) {
         e.printStackTrace();
         return null;
