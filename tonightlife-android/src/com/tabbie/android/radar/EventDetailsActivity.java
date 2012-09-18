@@ -61,12 +61,11 @@ public class EventDetailsActivity extends Activity implements
     final int eventIndex = starter.getInt("eventIndex");
     events = starter.getParcelableArrayList("events");
     
-    final Event e = events.get(eventIndex);
     token = starter.getString("token");
     
     final ViewPager pager = (ViewPager) findViewById(R.id.details_event_pager);
 		pager.setAdapter(new EventDetailsPagerAdapter(this, events, R.layout.event_details_element, this));
-    pager.setCurrentItem(events.indexOf(e));
+    pager.setCurrentItem(eventIndex);
 
   }
   
@@ -95,6 +94,7 @@ public class EventDetailsActivity extends Activity implements
   public void onClick(View v) {
 	
 	final Event e = (Event) ((View) v.getParent()).getTag();
+	Log.d(TAG, "Event clicked is: " + e.name);
 	
 	switch(v.getId()) {
 	case R.id.details_event_address:
