@@ -60,7 +60,6 @@ public class EventDetailsActivity extends Activity implements
     
     final int eventIndex = starter.getInt("eventIndex");
     events = starter.getParcelableArrayList("events");
-    
     token = starter.getString("token");
     
     final ViewPager pager = (ViewPager) findViewById(R.id.details_event_pager);
