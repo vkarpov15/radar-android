@@ -13,7 +13,6 @@ package com.tabbie.android.radar;
 import java.util.ArrayList;
 
 import android.app.Activity;
-import android.app.SearchManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -21,13 +20,9 @@ import android.os.HandlerThread;
 import android.os.Message;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 import com.tabbie.android.radar.adapters.EventDetailsPagerAdapter;
@@ -45,7 +40,6 @@ public class EventDetailsActivity extends Activity implements
   private final Handler upstreamHandler;
   private ArrayList<Event> events;
 	
-  private Event e;
   private String token;
   private GoogleAnalyticsTracker googleAnalyticsTracker;
   
@@ -67,7 +61,7 @@ public class EventDetailsActivity extends Activity implements
     final int eventIndex = starter.getInt("eventIndex");
     events = starter.getParcelableArrayList("events");
     
-    e = events.get(eventIndex);
+    final Event e = events.get(eventIndex);
     token = starter.getString("token");
     
     final ViewPager pager = (ViewPager) findViewById(R.id.details_event_pager);
@@ -100,7 +94,7 @@ public class EventDetailsActivity extends Activity implements
   @Override
   public void onClick(View v) {
 	
-	// final Event e = (Event) ((View) v.getParent()).getTag();
+	final Event e = (Event) ((View) v.getParent()).getTag();
 	
 	switch(v.getId()) {
 	case R.id.details_event_address:
@@ -145,44 +139,6 @@ public class EventDetailsActivity extends Activity implements
 
 	@Override
 	public void onPageChanged(Event e) {
-		this.e = e;
   	googleAnalyticsTracker.trackPageView(e.name);
 	}
-	
-  @Override
-  public boolean onCreateOptionsMenu(final Menu menu) {
-    final MenuInflater inflater = getMenuInflater();
-    inflater.inflate(R.menu.event_details_menu, menu);
-    return true;
-  }
-  
-  @Override
-  public boolean onOptionsItemSelected(MenuItem item) {
-  	final Intent intent;
-  	switch(item.getItemId()) {
-  	case R.id.details_menu_rsvp:
-  		if(e.rsvp.first.contentEquals("url")) {
-  			intent = new Intent(android.content.Intent.ACTION_WEB_SEARCH);
-    		intent.putExtra(SearchManager.QUERY, e.rsvp.second);
-  		} else if(e.rsvp.first.contentEquals("email")) {
-  			intent = new Intent(android.content.Intent.ACTION_SEND);
-    		intent.setType("plain/text");
-    		intent.putExtra(android.content.Intent.EXTRA_EMAIL, e.rsvp.second);
-    		intent.putExtra(android.content.Intent.EXTRA_SUBJECT, "RSVP" + " " + e.name);
-  		} else {
-  			Toast.makeText(this, "No RSVP Necessary!", Toast.LENGTH_LONG).show();
-  			intent = null;
-  		}
-  		if(intent!=null) {
-  			startActivityForResult(intent, REQEUST_RSVP);
-  		}
-  		break;
-  	case R.id.details_menu_lineup:
-  		
-  	case R.id.details_menu_map:
-  		default:
-  			
-  	}
-  	return super.onOptionsItemSelected(item);
-  }
 }
