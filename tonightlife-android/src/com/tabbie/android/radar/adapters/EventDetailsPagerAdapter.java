@@ -4,7 +4,7 @@ package com.tabbie.android.radar.adapters;
  *  EventDetailsPagerAdapter.java
  * 
  *  Created on: Aug 12, 2012
- *      Author: Justin Knutson
+ *      @author Justin Knutson
  * 
  *  Custom adapter to scroll through multiple
  *  events from the EventDetailsActivity with
@@ -29,14 +29,17 @@ import com.tabbie.android.radar.R;
 import com.tabbie.android.radar.model.Event;
 
 public class EventDetailsPagerAdapter
-	extends android.support.v4.view.PagerAdapter implements TLAdapter {
+	extends android.support.v4.view.PagerAdapter
+	implements TLAdapter {
 	
+	public static final String TAG = "EventDetailsPagerAdapter";
+	private final boolean DEBUG = false;
 	private final ImageLoader imageLoader;
 	private final Context context;
 	private final int pageLayout;
 	private final OnClickListener clickListener;
 	private final OnPageChangeListener pageListener;
-	private ArrayList<Event> events;
+	private final ArrayList<Event> events;
 	
 	public EventDetailsPagerAdapter(final Context context,
 	                                final ArrayList<Event> events,
@@ -44,16 +47,16 @@ public class EventDetailsPagerAdapter
 	                                final OnClickListener listener) {
 		
 		this.context = context;
+		this.events = events;
 		this.clickListener = listener;
 		imageLoader = new ImageLoader(context);
-		this.events = events;
 		this.pageLayout = pageLayout;
 		this.pageListener = (OnPageChangeListener) context;
 	}
 	
 	@Override
 	public Object instantiateItem(android.view.ViewGroup container, int position) {
-		Log.d("EventDetailsPagerAdapter", "Adding View at position " + position);
+		if(DEBUG) Log.d(TAG, "Adding View at position " + position);
 		final Event e = events.get(position);
 		final View v = bindEvent(e);
 		container.addView(v);
