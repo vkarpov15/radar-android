@@ -63,6 +63,8 @@ public class MainActivity extends Activity implements
     Handler.Callback {
 	
   public static final String TAG = "RadarActivity";
+  public static final int REQUEST_EVENT_DETAILS = 40;
+  public static final int REQUEST_FACEBOOK = 41;
   
   // Important Server Call and Receive Handlers/Threads
   private final Handler upstreamHandler;
@@ -76,9 +78,6 @@ public class MainActivity extends Activity implements
   private ArrayList<Event> events = new ArrayList<Event>();
   private ListManager manager = new ListManager();
 
-  // Intent constants
-  private static final int REQUEST_EVENT_DETAILS = 43;
-
   // Often-used views
   private TabHost tabHost;
   private ListView[] listViews = new ListView[3];
@@ -89,7 +88,6 @@ public class MainActivity extends Activity implements
 
   // FB junk
   private final Facebook facebook = new Facebook("217386331697217");
-  private static final int FACEBOOK_AUTH_ACTIVITY_CODE = 32665;
   private FacebookAuthenticator facebookAuthenticator;
   private FacebookUserRemoteResource facebookUserRemoteResource;
   
@@ -268,7 +266,7 @@ public class MainActivity extends Activity implements
     super.onActivityResult(requestCode, resultCode, data);
     
     switch (requestCode) {
-    case FACEBOOK_AUTH_ACTIVITY_CODE:
+    case REQUEST_FACEBOOK:
       facebook.authorizeCallback(requestCode, resultCode, data);
       break;
     case REQUEST_EVENT_DETAILS:
