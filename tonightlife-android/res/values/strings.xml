@@ -17,6 +17,7 @@
 	<string name="energy_title">Energy level</string>
 	<!-- This is the ID used for GCM -->
 	<string name="sender_id">453820866760</string>
+	<string name="feedback_subject">TonightLife Application Feedback</string>
 	
 	<string-array name="age_array">
         <item>All</item>

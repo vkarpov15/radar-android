@@ -77,7 +77,6 @@ public class MainActivity extends Activity implements
   private ListManager manager = new ListManager();
 
   // Intent constants
-  private static final String APP_FEEDBACK_SUBJECT = "TonightLife Application Feedback";
   private static final int REQUEST_EVENT_DETAILS = 43;
 
   // Often-used views
@@ -341,7 +340,7 @@ public class MainActivity extends Activity implements
     		Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);
     		emailIntent.setType("plain/text");
     		emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL, getString(R.array.founders_email));
-    		emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, APP_FEEDBACK_SUBJECT);
+    		emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, getString(R.string.feedback_subject));
     		startActivity(Intent.createChooser(emailIntent, "Send feedback..."));
     		break;
 		
