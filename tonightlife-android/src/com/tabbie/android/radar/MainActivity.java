@@ -77,7 +77,6 @@ public class MainActivity extends Activity implements
   private ListManager manager = new ListManager();
 
   // Intent constants
-  private static final String[] FOUNDERS_EMAIL = {"founders@tonight-life.com"};
   private static final String APP_FEEDBACK_SUBJECT = "TonightLife Application Feedback";
   private static final int REQUEST_EVENT_DETAILS = 43;
 
@@ -341,7 +340,7 @@ public class MainActivity extends Activity implements
       case R.id.report_me:
     		Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);
     		emailIntent.setType("plain/text");
-    		emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL, FOUNDERS_EMAIL);
+    		emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL, getString(R.array.founders_email));
     		emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, APP_FEEDBACK_SUBJECT);
     		startActivity(Intent.createChooser(emailIntent, "Send feedback..."));
     		break;

@@ -38,4 +38,8 @@
 	    <item>Rage</item>
 	</string-array>
 	
+	<string-array name="founders_email">
+	    <item>founders@tonight-life.com</item>
+	</string-array>
+	
 </resources>
