@@ -68,9 +68,9 @@ public class MainActivity extends Activity implements
   private final Handler upstreamHandler;
   
   // Tab View Constants
-  private static final short FEATURED = 0;
-  private static final short ALL = 1;
-  private static final short LINEUP = 2;
+  private final short FEATURED = 0;
+  private final short ALL = 1;
+  private final short LINEUP = 2;
   
   // Adapter lists
   private ArrayList<Event> events = new ArrayList<Event>();

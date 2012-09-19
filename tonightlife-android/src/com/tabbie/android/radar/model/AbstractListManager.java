@@ -67,8 +67,5 @@ public class AbstractListManager<T> {
     } else {
       return false;
     }
-  }
-  
-  
-  
+  } 
 }

@@ -33,6 +33,7 @@ public class EventDetailsPagerAdapter
 	implements TLAdapter {
 	
 	public static final String TAG = "EventDetailsPagerAdapter";
+	
 	private final boolean DEBUG = false;
 	private final ImageLoader imageLoader;
 	private final Context context;
@@ -85,44 +86,45 @@ public class EventDetailsPagerAdapter
 		
 		// Acquire references to all of our views
 		final View v = LayoutInflater.from(context).inflate(pageLayout, null);
-		final View loaderView = v.findViewById(R.id.element_loader);
+		
 		final TextView titleView = (TextView) v.findViewById(R.id.details_event_title);
 		final TextView timeView = (TextView) v.findViewById(R.id.details_event_time);
 		final TextView locationView = (TextView) v.findViewById(R.id.details_event_location);
-	    final TextView addressView = (TextView) v.findViewById(R.id.details_event_address);
-	    final TextView descriptionView = (TextView) v.findViewById(R.id.details_event_description);
-	    final ImageView radarButton = (ImageView) v.findViewById(R.id.add_to_radar_image);
-	    final ImageView locationLinkView = (ImageView) v.findViewById(R.id.location_image);
-	    final ImageView imageView = (ImageView) v.findViewById(R.id.details_event_img);
+    final TextView addressView = (TextView) v.findViewById(R.id.details_event_address);
+    final TextView descriptionView = (TextView) v.findViewById(R.id.details_event_description);
 
-	    // Begin loading image into display
-		imageLoader.displayImage(e.imageUrl.toString(), imageView);
-	    loaderView.startAnimation(AnimationUtils.loadAnimation(context, R.anim.rotate));
-	    
-	    // Set string values
-	    titleView.setText(e.name);
-	    timeView.setText(e.time.makeYourTime());
-	    locationView.setText(e.venue);
-	    addressView.setText(e.address);
-	    descriptionView.setText(e.description);
-	    
-	    // Make sure hyper-links are in place
-	    Linkify.addLinks(descriptionView, Linkify.WEB_URLS);
-	    
-	    // MapView link listeners
-	    locationLinkView.setOnClickListener(clickListener);
-	    addressView.setOnClickListener(clickListener);
-	    
-	    // Set RadarButton and listener
-	    radarButton.setSelected(e.onLineup);
-	    radarButton.setOnClickListener(clickListener);
-	    
-	    
-	    // Make sure our main view has a reference
-	    // to the event that's populating it
-	    v.setTag(e);
-	    
-	    return v;
+		final ImageView loaderView = (ImageView) v.findViewById(R.id.element_loader);
+    final ImageView radarButton = (ImageView) v.findViewById(R.id.add_to_radar_image);
+    final ImageView locationLinkView = (ImageView) v.findViewById(R.id.location_image);
+    final ImageView imageView = (ImageView) v.findViewById(R.id.details_event_img);
+
+    // Begin loading image into display
+    imageLoader.displayImage(e.imageUrl.toString(), imageView);
+    loaderView.startAnimation(AnimationUtils.loadAnimation(context, R.anim.rotate));
+    
+    // Set string values
+    titleView.setText(e.name);
+    timeView.setText(e.time.makeYourTime()); // You have no chance to survive
+    locationView.setText(e.venue);
+    addressView.setText(e.address);
+    descriptionView.setText(e.description);
+    
+    // Make sure hyper-links are in place
+    Linkify.addLinks(descriptionView, Linkify.WEB_URLS);
+    
+    // MapView link listeners
+    locationLinkView.setOnClickListener(clickListener);
+    addressView.setOnClickListener(clickListener);
+    
+    // Set RadarButton and listener
+    radarButton.setSelected(e.onLineup);
+    radarButton.setOnClickListener(clickListener);
+    
+    // Make sure our main view has a reference
+    // to the event that's populating it
+    v.setTag(e);
+    
+    return v;
 	}
 	
 	public interface OnPageChangeListener {
