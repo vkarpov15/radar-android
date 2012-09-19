@@ -220,14 +220,18 @@ public class MainActivity extends Activity implements
   
   @Override
   protected void onStart() {
-  	googleAnalyticsTracker.startNewSession("UA-34193317-1", 20, this);
-  	googleAnalyticsTracker.trackPageView(TAG);
+  	if(googleAnalyticsTracker!=null) {
+	  	googleAnalyticsTracker.startNewSession("UA-34193317-1", 20, this);
+	  	googleAnalyticsTracker.trackPageView(TAG);
+  	}
   	super.onStart();
   }
   
   @Override
   protected void onStop() {
-  	googleAnalyticsTracker.stopSession();
+  	if(googleAnalyticsTracker!=null) {
+  		googleAnalyticsTracker.stopSession();
+  	}
   	super.onStop();
   }
 

@@ -6,13 +6,15 @@
 		android:id="@+id/loading_screen"
 		android:layout_height="fill_parent"
 		android:visibility="visible"
+		android:background="@drawable/launch_screen_texture"
 		android:layout_width="fill_parent">
 	    
 		<ImageView
 			android:layout_width="fill_parent"
 			android:layout_height="fill_parent"
 			android:id="@+id/loading_screen_image"
-			android:src="@drawable/launch_screen" />
+			android:src="@drawable/launch_screen_text"
+			android:layout_centerInParent="true" />
 		 
 		<TextView
 			android:id="@+id/loading_text"
