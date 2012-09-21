@@ -1,7 +1,5 @@
 package com.tabbie.android.radar;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -21,7 +19,6 @@ import android.os.HandlerThread;
 import android.os.Message;
 import android.os.Vibrator;
 import android.util.Log;
-import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -545,10 +542,7 @@ public class MainActivity extends Activity implements
   	  findViewById(R.id.loading_screen).setVisibility(View.GONE);
   	  findViewById(R.id.tonightlife_layout).setVisibility(View.VISIBLE);
   	  tabHost.setVisibility(View.VISIBLE);
-  	  
   	  break;
-  	default:
-  	  break;  
 		}
 	  return true;
 	}
