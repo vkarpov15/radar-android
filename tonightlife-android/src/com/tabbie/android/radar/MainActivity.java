@@ -483,104 +483,47 @@ public class MainActivity extends Activity implements
 		case LOAD_EVENTS:
   		final JSONArray list = resp.parseJsonArray();
   		final Set<String> serverRadarIds = new LinkedHashSet<String>();
+  		final JSONArray tmpRadarList;
+  		
   		try {
   			final JSONObject radarObj = list.getJSONObject(list.length() - 1);
-  			JSONArray tmpRadarList = radarObj.getJSONArray("radar");
-  			for(int i = 0; i < tmpRadarList.length(); ++i) {
-  				serverRadarIds.add(tmpRadarList.getString(i));
-  			}
-  			events.clear();
-  			final String domain = getString(R.string.tabbie_server);
-  			
-  			for(int i = 0; i < list.length() - 1; ++i) {
-  				final JSONObject obj = list.getJSONObject(i);
-  				
-  				/*
-  				Log.i(TAG, "Event information: " + obj.toString());
-  				final String radarCountStr = obj.getString("user_count");
-  				int radarCount = 0;
-  				if (null != radarCountStr && 0 != radarCountStr.compareTo("null"))
-  					radarCount = Integer.parseInt(radarCountStr);
-  				final JSONObject rsvpObj = obj.getJSONObject("rsvp");
-  				
-  				Pair<String, String> rsvp = null;
-  				if (rsvpObj.has("url")) {
-  					rsvp = new Pair<String, String>("url", rsvpObj.getString("url"));
-  				} else if (rsvpObj.has("email")) {
-  					rsvp = new Pair<String, String>("email", rsvpObj.getString("email"));
-  				} else {
-  					rsvp = new Pair<String, String>("", "");
+  			tmpRadarList = radarObj.getJSONArray("radar");
+  		} catch(JSONException e) {
+  			Log.e(TAG, "WHAT A TERRIBLE FAILURE!");
+  			Toast.makeText(this, "Critical error: Unable to build events list", Toast.LENGTH_LONG).show();
+  			return false;
+  		}
+  		
+			for(int i = 0; i < tmpRadarList.length(); ++i) {
+				try {
+					serverRadarIds.add(tmpRadarList.getString(i));
+				} catch(JSONException e) {
+					Log.e(TAG, "Non-fatal error: Could not get lineup ID of item " + i);
+				}
+			}
+			
+			events.clear();
+			for(int i = 0; i < list.length() - 1; ++i) {
+				final Event event;
+				try {
+					final JSONObject obj = list.getJSONObject(i);
+					event = Event.buildFromJson(this, obj);
+				} catch(JSONException e) {
+					Log.e(TAG, "Critical error: Unable to retrieve Event at index " + i);
+					continue;
+				}
+				if(event != null) {
+  				if(serverRadarIds.contains(event.id)) {
+  					event.onLineup = true;
   				}
-  				
-  				// TODO ################################################
-  				final int energy = 0;
-  				final Event.Energy energyLevel;
-  				switch(energy) {
-  				case 0:
-  					energyLevel = Event.Energy.LOW;
-  					break;
-  				case 1:
-  					energyLevel = Event.Energy.MODERATE;
-  					break;
-  				case 2:
-  					energyLevel = Event.Energy.HIGH;
-  					break;
-  					default:
-  						energyLevel = Event.Energy.MODERATE;
-  				}
-  				
-  				final int price = 0;
-  				final Event.Price priceLevel;
-  				switch(price) {
-  				case 0:
-  					priceLevel = Event.Price.FREE;
-  					break;
-  				case 1:
-  					priceLevel = Event.Price.CHEAP;
-  					break;
-  				case 2:
-  					priceLevel = Event.Price.EXPENSIVE;
-  					break;
-  					default:
-  						priceLevel = Event.Price.CHEAP;
-  				}
-  				// TODO ################################
-  				final Event e = new Event(  obj.getString("id"),
-  	                                    obj.getString("name"),
-  	                                    obj.getString("description"),
-  	                                    obj.getString("location"),
-  	                                    obj.getString("street_address"),
-  	                                    new URL(domain + obj.getString("image_url")),
-  	                                    (int) (obj.getDouble("latitude")*1E6),
-  	                                    (int) (obj.getDouble("longitude")*1E6),
-  	                                    radarCount,
-  	                                    obj.getBoolean("featured"),
-  	                                    obj.getString("start_time"),
-  	                                    serverRadarIds.contains(obj.getString("id")),
-  	                                    rsvp); */
-  				final Event e = Event.buildFromJson(this, obj);
-  				if(e != null) {
-    				if(serverRadarIds.contains(e.id)) {
-    					e.onLineup = true;
-    				}
-    				events.add(e);
-  				} else {
-  					Log.e(TAG, "Skipping event at index " + i + " due to an instantiation error");
-  					continue;
-  				}
-  			}
-  			manager.clear();
-  			manager.addAll(events);
-      } catch (final JSONException e) {
-      	Toast.makeText(this, "Fatal Error: Failed to Parse JSON",
-          Toast.LENGTH_SHORT).show();
-      	e.printStackTrace();
-      	return false;
-      } /*catch (final MalformedURLException e) {
-      	Log.e(TAG, "Malformed URL during Event creation");
-      	Toast.makeText(this, "Error occurred during boot", Toast.LENGTH_LONG).show();
-      	return false;
-      }*/
+  				events.add(event);
+				} else {
+					Log.e(TAG, "Skipping event at index " + i + " due to an instantiation error");
+					continue;
+				}
+			}
+			manager.clear();
+			manager.addAll(events);
   	  this.runOnUiThread(new Runnable() {
   		  public void run() {
   			  for(final ListView v : listViews) {
