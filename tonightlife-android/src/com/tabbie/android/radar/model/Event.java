@@ -1,5 +1,14 @@
 package com.tabbie.android.radar.model;
 
+/**
+ * Ass ass ass ass
+ * 
+ * ASS ASS ASS ASS
+ * 
+ * Stop.
+ * 
+ * Now make that motherfucker Hammertime
+ */
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -18,10 +27,13 @@ import com.tabbie.android.radar.R;
 import com.tabbie.android.radar.TLDatetime;
 
 public class Event implements Parcelable {
+	
+	// Static field constants
 	public static final String TAG = "Event";
 	public static final int HIGH_ENERGY = 2, MODERATE_ENERGY = 1, LOW_ENERGY = 0;
 	public static final int EXPENSIVE = 2, CHEAP = 1, FREE = 0;
 	
+	// Public-facing final constants
   public final String id;
   public final String name;
   public final String description;
@@ -35,9 +47,12 @@ public class Event implements Parcelable {
   public final int energyLevel;
   public final int priceLevel;
   public final int minAge;
+  
+  // Mutable lineup variables
   public int lineupCount;
   public boolean onLineup = false;
   
+  // Parcelable data bundle
   private final Bundle data;
   
   private Event(final Bundle data) {
@@ -68,6 +83,21 @@ public class Event implements Parcelable {
   	}
   }
   
+  /**
+   * Builder method for Event. Events can
+   * be instantiated two ways - the first
+   * is to pass JSON through buildFromJson
+   * and capture the result. The other is
+   * through parceling the event.
+   * 
+   * @param context Necessary to
+   * obtain String resources
+   * 
+   * @param eventJson The JSON to be parsed
+   * 
+   * @return A new Event object or NULL if
+   * a critical parse failure was encountered
+   */
   public static Event buildFromJson(Context context, JSONObject eventJson) {
 		final Bundle data = new Bundle();
   	/* Try to coerce user lineup count from JSON Object
@@ -166,6 +196,15 @@ public class Event implements Parcelable {
 		return new Event(data);
   }
   
+  /**
+   * Build a simple pair from the RSVP JSONObject
+   * 
+   * @param j The JSONObject to be parsed
+   * 
+   * @return A Pair representing the appropriate fields
+   * 
+   * @throws JSONException Go fuck yourself
+   */
   private static Pair<String, String> getRSVP(JSONObject j) throws JSONException {
 		if (j.has("url")) {
 			return new Pair<String, String>("url", j.getString("url"));
@@ -176,33 +215,71 @@ public class Event implements Parcelable {
 		}
   }
   
+  /**
+   * TODO Implement method
+   * @return
+   */
   private static int getEnergyLevel() {
   	return MODERATE_ENERGY;
   }
   
+  /**
+   * TODO Implement method
+   * @return
+   */
   private static int getPriceLevel() {
   	return CHEAP;
   }
 
+  /**
+   * Build a simple GeoPoint from double
+   * latitude and longitude. This should
+   * arguably be a Pair<int, int> for
+   * efficiency's sake
+   * 
+   * @param j The JSON to be parsed
+   * 
+   * @return A GeoPoint with int values
+   * 
+   * @throws JSONException Ballscock McWilliams
+   */
   private static GeoPoint buildGeoPoint(final JSONObject j) throws JSONException {
   	final int lat = (int) (j.getDouble("latitude")*1E6);
   	final int lon = (int) (j.getDouble("longitude")*1E6);
   	return new GeoPoint(lat, lon);
   }
   
+  /**
+   * Nobody actually knows what this
+   * method is useful for
+   */
   public int describeContents() {
     return 0;
   }
   
+  /**
+   * Where objects go to die...
+   */
   public String toString() {
     return "'" + this.name + "' radarCount=" + lineupCount + " onRadar=" + onLineup;
   }
 
+  /**
+   * The only fancy thing to do here
+   * is make sure we remember whether
+   * this event is on radar or not.
+   * Technically this can be handled
+   * outside of the Event class because
+   * onLineup is a public member
+   */
   public void writeToParcel(Parcel dest, int flags) {
   	data.putBoolean("onLineup", onLineup);
   	dest.writeBundle(data);
   }
 
+  /**
+   * Now that was easy.
+   */
   public static final Parcelable.Creator<Event> CREATOR = new Parcelable.Creator<Event>() {
     public Event createFromParcel(Parcel in) {
     	return new Event(in.readBundle());
