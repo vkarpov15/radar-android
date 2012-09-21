@@ -2,6 +2,7 @@ package com.tabbie.android.radar;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.json.JSONArray;
@@ -62,6 +63,7 @@ public class MainActivity extends Activity implements
   public static final String TAG = "RadarActivity";
   public static final int REQUEST_EVENT_DETAILS = 40;
   public static final int REQUEST_FACEBOOK = 41;
+  private final boolean DEBUG = false;
   
   // Important Server Call and Receive Handlers/Threads
   private final Handler upstreamHandler;
@@ -445,7 +447,7 @@ public class MainActivity extends Activity implements
 
 	@Override
 	public synchronized boolean handleMessage(final Message msg) {
-		Log.d(TAG, "Received message response");
+		if(DEBUG) Log.d(TAG, "Received message response");
 		if(!(msg.obj instanceof ServerResponse)) {
 			Log.e(TAG, "Message is not a Server Response");
 			return false;
@@ -478,48 +480,9 @@ public class MainActivity extends Activity implements
       break;
     }
 		case LOAD_EVENTS:
-  		final JSONArray list = resp.parseJsonArray();
-  		final Set<String> serverRadarIds = new LinkedHashSet<String>();
-  		final JSONArray tmpRadarList;
-  		
-  		try {
-  			final JSONObject radarObj = list.getJSONObject(list.length() - 1);
-  			tmpRadarList = radarObj.getJSONArray("radar");
-  		} catch(JSONException e) {
-  			Log.e(TAG, "WHAT A TERRIBLE FAILURE!");
-  			Toast.makeText(this, "Critical error: Unable to build events list", Toast.LENGTH_LONG).show();
-  			return false;
-  		}
-  		
-			for(int i = 0; i < tmpRadarList.length(); ++i) {
-				try {
-					serverRadarIds.add(tmpRadarList.getString(i));
-				} catch(JSONException e) {
-					Log.e(TAG, "Non-fatal error: Could not get lineup ID of item " + i);
-				}
-			}
-			
 			events.clear();
-			for(int i = 0; i < list.length() - 1; ++i) {
-				final Event event;
-				try {
-					final JSONObject obj = list.getJSONObject(i);
-					event = Event.buildFromJson(this, obj);
-				} catch(JSONException e) {
-					Log.e(TAG, "Critical error: Unable to retrieve Event at index " + i);
-					continue;
-				}
-				if(event != null) {
-  				if(serverRadarIds.contains(event.id)) {
-  					event.onLineup = true;
-  				}
-  				events.add(event);
-				} else {
-					Log.e(TAG, "Skipping event at index " + i + " due to an instantiation error");
-					continue;
-				}
-			}
 			manager.clear();
+			events.addAll(buildEvents(resp.parseJsonArray()));
 			manager.addAll(events);
   	  this.runOnUiThread(new Runnable() {
   		  public void run() {
@@ -561,5 +524,48 @@ public class MainActivity extends Activity implements
 	        }
 	      });
 	  host.addTab(content);
+	}
+	
+	private List<Event> buildEvents(JSONArray list) {
+		final List<Event> eventsList= new ArrayList<Event>();
+		final Set<String> serverRadarIds = new LinkedHashSet<String>();
+		final JSONArray tmpRadarList;
+		
+		try {
+			final JSONObject radarObj = list.getJSONObject(list.length() - 1);
+			tmpRadarList = radarObj.getJSONArray("radar");
+		} catch(JSONException e) {
+			Log.e(TAG, "WHAT A TERRIBLE FAILURE!");
+			Toast.makeText(this, "Critical error: Unable to build events list", Toast.LENGTH_LONG).show();
+			return null;
+		}
+		
+		for(int i = 0; i < tmpRadarList.length(); ++i) {
+			try {
+				serverRadarIds.add(tmpRadarList.getString(i));
+			} catch(JSONException e) {
+				Log.e(TAG, "Non-fatal error: Could not get lineup ID of item " + i);
+			}
+		}
+		for(int i = 0; i < list.length() - 1; ++i) {
+			final Event event;
+			try {
+				final JSONObject obj = list.getJSONObject(i);
+				event = Event.buildFromJson(this, obj);
+			} catch(JSONException e) {
+				Log.e(TAG, "Critical error: Unable to retrieve Event at index " + i);
+				continue;
+			}
+			if(event != null) {
+				if(serverRadarIds.contains(event.id)) {
+					event.onLineup = true;
+				}
+				eventsList.add(event);
+			} else {
+				Log.e(TAG, "Skipping event at index " + i + " due to an instantiation error");
+				continue;
+			}
+		}
+		return eventsList;
 	}
 }
