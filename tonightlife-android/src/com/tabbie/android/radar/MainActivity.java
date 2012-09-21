@@ -508,6 +508,40 @@ public class MainActivity extends Activity implements
   				} else {
   					rsvp = new Pair<String, String>("", "");
   				}
+  				
+  				// TODO ################################################
+  				final int energy = 0;
+  				final Event.Energy energyLevel;
+  				switch(energy) {
+  				case 0:
+  					energyLevel = Event.Energy.LOW;
+  					break;
+  				case 1:
+  					energyLevel = Event.Energy.MODERATE;
+  					break;
+  				case 2:
+  					energyLevel = Event.Energy.HIGH;
+  					break;
+  					default:
+  						energyLevel = Event.Energy.MODERATE;
+  				}
+  				
+  				final int price = 0;
+  				final Event.Price priceLevel;
+  				switch(price) {
+  				case 0:
+  					priceLevel = Event.Price.FREE;
+  					break;
+  				case 1:
+  					priceLevel = Event.Price.CHEAP;
+  					break;
+  				case 2:
+  					priceLevel = Event.Price.EXPENSIVE;
+  					break;
+  					default:
+  						priceLevel = Event.Price.CHEAP;
+  				}
+  				// TODO ################################
   				final Event e = new Event(  obj.getString("id"),
   	                                    obj.getString("name"),
   	                                    obj.getString("description"),
