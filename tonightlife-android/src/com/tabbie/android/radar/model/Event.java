@@ -11,6 +11,16 @@ import android.os.Parcelable;
 import android.util.Pair;
 
 public class Event implements Parcelable {
+	public enum Energy {
+		HIGH,
+		MODERATE,
+		LOW
+	}
+	public enum Price {
+		FREE,
+		CHEAP,
+		EXPENSIVE
+	}
   public final String id;
   public final String name;
   public final String description;
