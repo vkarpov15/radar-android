@@ -19,9 +19,17 @@ import com.tabbie.android.radar.TLDatetime;
 
 public class Event implements Parcelable {
 	public static final String TAG = "Event";
-	public static final int HIGH_ENERGY = 2, MODERATE_ENERGY = 1, LOW_ENERGY = 0;
-	public static final int EXPENSIVE = 2, CHEAP = 1, FREE = 0;
 	
+	public enum Energy {
+		HIGH,
+		MODERATE,
+		LOW
+	}
+	public enum Price {
+		FREE,
+		CHEAP,
+		EXPENSIVE
+	}
   public final String id;
   public final String name;
   public final String description;
@@ -32,9 +40,6 @@ public class Event implements Parcelable {
   public final TLDatetime time;
   public final GeoPoint location;
   public final Pair<String, String> rsvp; 
-  public final int energyLevel;
-  public final int priceLevel;
-  public final int minAge;
   public int lineupCount;
   public boolean onLineup = false;
   
@@ -45,8 +50,8 @@ public class Event implements Parcelable {
   		final boolean isFeatured,
   		final TLDatetime time,
   		final Pair<String, String> rsvp,
-  		final int energyLevel,
-  		final int priceLevel,
+  		final Energy energyLevel,
+  		final Price priceLevel,
   		final int minimumAge) {
   	this.id = strings.getString("id");
   	this.name = strings.getString("name");
@@ -59,9 +64,33 @@ public class Event implements Parcelable {
   	this.isFeatured = isFeatured;
   	this.time = time;
   	this.rsvp = rsvp;
-  	this.energyLevel = energyLevel;
-  	this.priceLevel = priceLevel;
-  	this.minAge = minimumAge;
+  }
+
+  public Event(final String id,
+		  	final String name,
+		  	final String description,
+		  	final String venueName,
+		  	final String address,
+		  	final URL image,
+		  	final int latE6,
+		  	final int lonE6,
+		  	final int radarCount,
+		  	final boolean featured,
+		  	final String time,
+		  	final boolean onRadar,
+		  	final Pair<String, String> rsvp) {
+    this.id = id;
+    this.name = name;
+    this.description = description;
+    this.venue = venueName;
+    this.address = address;
+    this.imageUrl = image;
+    this.lineupCount = radarCount;
+    this.isFeatured = featured;
+    this.time = new TLDatetime(time);
+    this.onLineup = onRadar;
+    this.location = new GeoPoint(latE6, lonE6);
+    this.rsvp = rsvp;
   }
   
   public static Event buildFromJson(Context context, JSONObject eventJson) {
@@ -92,8 +121,8 @@ public class Event implements Parcelable {
   	}
   	
   	// TODO Legitimize these fields
-		final int energyLevel = getEnergyLevel();
-		final int priceLevel = getPriceLevel();
+		final Energy energyLevel = getEnergyLevel();
+		final Price priceLevel = getPriceLevel();
 		
 		/*
 		 * Attempt to retrieve critical event components
@@ -173,12 +202,12 @@ public class Event implements Parcelable {
 		}
   }
   
-  private static int getEnergyLevel() {
-  	return MODERATE_ENERGY;
+  private static Energy getEnergyLevel() {
+  	return Energy.MODERATE;
   }
   
-  private static int getPriceLevel() {
-  	return CHEAP;
+  private static Price getPriceLevel() {
+  	return Price.CHEAP;
   }
 
   private static GeoPoint buildGeoPoint(final JSONObject j) throws JSONException {
@@ -196,15 +225,12 @@ public class Event implements Parcelable {
   }
 
   public void writeToParcel(Parcel dest, int flags) {
-  	final Bundle strings = new Bundle();
-  	strings.putString("id", id);
-  	strings.putString("name", name);
-  	strings.putString("description", description);
-  	strings.putString("venue", venue);
-  	strings.putString("address", address);
-  	
-  	dest.writeBundle(strings);
     dest.writeString(imageUrl.toString());
+    dest.writeString(id);
+    dest.writeString(name);
+    dest.writeString(description);
+    dest.writeString(venue);
+    dest.writeString(address);
     dest.writeInt(location.getLatitudeE6());
     dest.writeInt(location.getLongitudeE6());
     dest.writeInt(lineupCount);
@@ -213,31 +239,29 @@ public class Event implements Parcelable {
     dest.writeInt(onLineup ? 1 : 0);
     dest.writeString(rsvp.first);
     dest.writeString(rsvp.second);
-    dest.writeInt(energyLevel);
-    dest.writeInt(priceLevel);
-    dest.writeInt(minAge);
   }
 
   public static final Parcelable.Creator<Event> CREATOR = new Parcelable.Creator<Event>() {
     public Event createFromParcel(Parcel in) {
-    	final Bundle strings = in.readBundle();
-    	final URL imageUrl;
-    	try {
-    		imageUrl = new URL(in.readString());
-    	} catch(MalformedURLException e) {
-    		Log.e(TAG, "WHAT A TERRIBLE FAILURE: Unable to recreate event from parcel");
-    		throw new RuntimeException();
-    	}
-    	return new Event(strings,
-    			imageUrl,
-    			new GeoPoint((int) (in.readInt()*1E6), (int) (in.readInt()*1E6)),
-    			in.readInt(),
-    			in.readInt() == 1,
-    			new TLDatetime(in.readString()),
-    			new Pair<String, String> (in.readString(), in.readString()),
-    			in.readInt(),
-    			in.readInt(),
-    			in.readInt());
+      final String url = in.readString();
+      try {
+        return new Event( in.readString(),
+                          in.readString(),
+                          in.readString(),
+                          in.readString(),
+                          in.readString(),
+                          new URL(url),
+                          in.readInt(),
+                          in.readInt(),
+                          in.readInt(),
+                          in.readInt() == 1,
+                          in.readString(),
+                          in.readInt() == 1,
+                          new Pair<String, String> (in.readString(), in.readString()));
+      } catch (final MalformedURLException e) {
+        e.printStackTrace();
+        return null;
+      }
     }
 
     public Event[] newArray(int size) {
