@@ -38,38 +38,34 @@ public class Event implements Parcelable {
   public int lineupCount;
   public boolean onLineup = false;
   
-  private final Bundle data;
-  
-  private Event(final Bundle data) {
-  	this.data = data;
-  	this.id = data.getString("id");
-  	this.name = data.getString("name");
-  	this.description = data.getString("description");
-  	this.venue = data.getString("venue");
-  	this.address = data.getString("address");
-  	URL testUrl = null;
-  	try {
-  		testUrl = new URL(data.getString("imageUrl"));
-  	} catch(MalformedURLException e) {
-  		Log.e(TAG, "Non-critical error: Unable to construct event image URL");
-  	} finally {
-  		this.imageUrl = testUrl;
-  	}
-  	this.location = new GeoPoint(data.getInt("lat"), data.getInt("lon"));
-  	this.lineupCount = data.getInt("lineupCount");
-  	this.isFeatured = data.getBoolean("isFeatured");
-  	this.time = new TLDatetime(data.getString("time"));
-  	this.rsvp = new Pair<String, String>(data.getString("first"), data.getString("second"));
-  	this.energyLevel = data.getInt("energyLevel");
-  	this.priceLevel = data.getInt("priceLevel");
-  	this.minAge = data.getInt("minAge");
-  	if(data.containsKey("onLineup")) {
-  		onLineup = data.getBoolean("onLineup");
-  	}
+  private Event(final Bundle strings,
+  		final URL imageUrl,
+  		final GeoPoint location,
+  		final int lineupCount,
+  		final boolean isFeatured,
+  		final TLDatetime time,
+  		final Pair<String, String> rsvp,
+  		final int energyLevel,
+  		final int priceLevel,
+  		final int minimumAge) {
+  	this.id = strings.getString("id");
+  	this.name = strings.getString("name");
+  	this.description = strings.getString("description");
+  	this.venue = strings.getString("venue");
+  	this.address = strings.getString("address");
+  	this.imageUrl = imageUrl;
+  	this.location = location;
+  	this.lineupCount = lineupCount;
+  	this.isFeatured = isFeatured;
+  	this.time = time;
+  	this.rsvp = rsvp;
+  	this.energyLevel = energyLevel;
+  	this.priceLevel = priceLevel;
+  	this.minAge = minimumAge;
   }
   
   public static Event buildFromJson(Context context, JSONObject eventJson) {
-		final Bundle data = new Bundle();
+		
   	/* Try to coerce user lineup count from JSON Object
   	* and resort to default value (0) on failure
   	*/
@@ -82,7 +78,6 @@ public class Event implements Parcelable {
   	} catch(JSONException e) {
   		Log.e(TAG, "Non-fatal Error: Could not coerce user_count");
   	}
-  	data.putInt("lineupCount", lineupCount);
   	
   	/*
   	 * Try to coerce the RSVP field and pass
@@ -95,29 +90,32 @@ public class Event implements Parcelable {
   		Log.e(TAG, "Non-fatal Error: RSVP could not be coerced");
   		rsvp = null;
   	}
-  	data.putString("first", rsvp.first);
-  	data.putString("second", rsvp.second);
   	
   	// TODO Legitimize these fields
-		data.putInt("energyLevel", getEnergyLevel());
-		data.putInt("priceLevel", getPriceLevel());
+		final int energyLevel = getEnergyLevel();
+		final int priceLevel = getPriceLevel();
 		
 		/*
 		 * Attempt to retrieve critical event components
 		 * Fail slightly less gracefully if the event
 		 * cannot be built from these components
 		 */
+		final Bundle strings = new Bundle();
+		final URL imageUrl;
 		try {
-			data.putString("id", eventJson.getString("id"));
-			data.putString("name", eventJson.getString("name"));
-			data.putString("description", eventJson.getString("description"));
-			data.putString("venue", eventJson.getString("location"));
-			data.putString("address", eventJson.getString("street_address"));
-			data.putString("imageUrl", context.getString(R.string.tabbie_server) + eventJson.getString("image_url"));
+			strings.putString("id", eventJson.getString("id"));
+			strings.putString("name", eventJson.getString("name"));
+			strings.putString("description", eventJson.getString("description"));
+			strings.putString("venue", eventJson.getString("location"));
+			strings.putString("address", eventJson.getString("street_address"));
+			imageUrl = new URL(context.getString(R.string.tabbie_server) + eventJson.getString("image_url"));
 			
 		} catch(JSONException e) {
 			Log.e(TAG, "Critical error instantiating event");
 			Log.v("Failed JSON Parse", eventJson.toString());
+			return null;
+		} catch(MalformedURLException e) {
+			Log.e(TAG, "Critical error: Could not parse event image URL");
 			return null;
 		}
 		
@@ -134,36 +132,35 @@ public class Event implements Parcelable {
 			Log.e(TAG, "Non-fatal error: Unable to build GeoPoint");
 			location = null;
 		}
-		data.putInt("lat", location.getLatitudeE6());
-		data.putInt("lon", location.getLongitudeE6());
 		
 		/*
 		 * Attempt to coerce the boolean value
 		 * whether this event is featured or not
 		 */
-		boolean isFeatured;
+		boolean featured;
 		try {
-			isFeatured = eventJson.getBoolean("featured");
+			featured = eventJson.getBoolean("featured");
 		} catch(JSONException e) {
 			Log.e(TAG, "Non-fatal error: Unable to coerce boolean featured");
-			isFeatured = false;
+			featured = false;
 		}
-		data.putBoolean("isFeatured", isFeatured);
 		
 		/*
 		 * Attempt to coerce a TLDatetime from
 		 * the String time value in the event
 		 * JSON Object. This is a critical value
 		 */
+		final TLDatetime time;
 		try {
-			data.putString("time", eventJson.getString("start_time"));
+			time = new TLDatetime(eventJson.getString("start_time"));
 		} catch(JSONException e) {
 			Log.e(TAG, "Critical error: Could not parse TLDatetime");
 			return null;
 		}
 		
 		// TODO Pass actual minimum age
-		return new Event(data);
+		return new Event(strings, imageUrl, location, lineupCount,
+				featured, time, rsvp, energyLevel, priceLevel, 0);
   }
   
   private static Pair<String, String> getRSVP(JSONObject j) throws JSONException {
@@ -199,13 +196,48 @@ public class Event implements Parcelable {
   }
 
   public void writeToParcel(Parcel dest, int flags) {
-  	data.putBoolean("onLineup", onLineup);
-  	dest.writeBundle(data);
+  	final Bundle strings = new Bundle();
+  	strings.putString("id", id);
+  	strings.putString("name", name);
+  	strings.putString("description", description);
+  	strings.putString("venue", venue);
+  	strings.putString("address", address);
+  	
+  	dest.writeBundle(strings);
+    dest.writeString(imageUrl.toString());
+    dest.writeInt(location.getLatitudeE6());
+    dest.writeInt(location.getLongitudeE6());
+    dest.writeInt(lineupCount);
+    dest.writeInt(isFeatured ? 1 : 0);
+    dest.writeString(time.initializer);
+    dest.writeInt(onLineup ? 1 : 0);
+    dest.writeString(rsvp.first);
+    dest.writeString(rsvp.second);
+    dest.writeInt(energyLevel);
+    dest.writeInt(priceLevel);
+    dest.writeInt(minAge);
   }
 
   public static final Parcelable.Creator<Event> CREATOR = new Parcelable.Creator<Event>() {
     public Event createFromParcel(Parcel in) {
-    	return new Event(in.readBundle());
+    	final Bundle strings = in.readBundle();
+    	final URL imageUrl;
+    	try {
+    		imageUrl = new URL(in.readString());
+    	} catch(MalformedURLException e) {
+    		Log.e(TAG, "WHAT A TERRIBLE FAILURE: Unable to recreate event from parcel");
+    		throw new RuntimeException();
+    	}
+    	return new Event(strings,
+    			imageUrl,
+    			new GeoPoint((int) (in.readInt()*1E6), (int) (in.readInt()*1E6)),
+    			in.readInt(),
+    			in.readInt() == 1,
+    			new TLDatetime(in.readString()),
+    			new Pair<String, String> (in.readString(), in.readString()),
+    			in.readInt(),
+    			in.readInt(),
+    			in.readInt());
     }
 
     public Event[] newArray(int size) {
