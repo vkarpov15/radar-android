@@ -4,7 +4,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import com.google.android.maps.GeoPoint;
-import com.tabbie.android.radar.TonightlifeDatetime;
+import com.tabbie.android.radar.TLDatetime;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -28,7 +28,7 @@ public class Event implements Parcelable {
   public final String address;
   public final URL imageUrl;
   public final boolean isFeatured;
-  public final TonightlifeDatetime time; 
+  public final TLDatetime time; 
   public int lineupCount;
   public boolean onLineup;
   public final GeoPoint location;
@@ -55,7 +55,7 @@ public class Event implements Parcelable {
     this.imageUrl = image;
     this.lineupCount = radarCount;
     this.isFeatured = featured;
-    this.time = new TonightlifeDatetime(time);
+    this.time = new TLDatetime(time);
     this.onLineup = onRadar;
     this.location = new GeoPoint(latE6, lonE6);
     this.rsvp = rsvp;

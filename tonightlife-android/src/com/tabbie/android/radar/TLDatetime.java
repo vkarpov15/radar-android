@@ -5,7 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- *  TonightlifeDatetime.java
+ *  TLDatetime.java
  * 
  *  Created on: Aug 3, 2012
  *      Author: Valeri Karpov
@@ -13,7 +13,7 @@ import java.util.Date;
  *  Wrapper around Datetime classes for convenience
  */
 
-public class TonightlifeDatetime implements Comparable<TonightlifeDatetime> {
+public class TLDatetime implements Comparable<TLDatetime> {
   protected Date d;
   public final String initializer;
 
@@ -30,7 +30,7 @@ public class TonightlifeDatetime implements Comparable<TonightlifeDatetime> {
     }
   }
   
-  public TonightlifeDatetime(String datestring) {
+  public TLDatetime(String datestring) {
     this.initializer = datestring;
     Date d = new Date();
 
@@ -87,7 +87,7 @@ public class TonightlifeDatetime implements Comparable<TonightlifeDatetime> {
   }
 
   @Override
-  public int compareTo(TonightlifeDatetime arg0) {
+  public int compareTo(TLDatetime arg0) {
     return this.d.compareTo(arg0.d);
   }
 }
