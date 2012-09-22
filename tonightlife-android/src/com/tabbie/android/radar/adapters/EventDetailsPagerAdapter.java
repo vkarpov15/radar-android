@@ -58,10 +58,9 @@ public class EventDetailsPagerAdapter
 	@Override
 	public Object instantiateItem(android.view.ViewGroup container, int position) {
 		if(DEBUG) Log.d(TAG, "Adding View at position " + position);
-		final Event e = events.get(position);
-		final View v = bindEvent(e);
+		final View v = bindEvent(position);
 		container.addView(v);
-		pageListener.onPageChanged(e);
+		pageListener.onPageChanged(position);
 		return v;
 	};
 	
@@ -82,8 +81,10 @@ public class EventDetailsPagerAdapter
 		return view == object;
 	}
 	
-	private View bindEvent(final Event e) {
+	private View bindEvent(final int position) {
 		
+	  final Event e = events.get(position);
+	  
 		// Acquire references to all of our views
 		final View v = LayoutInflater.from(context).inflate(pageLayout, null);
 		
@@ -122,13 +123,13 @@ public class EventDetailsPagerAdapter
     
     // Make sure our main view has a reference
     // to the event that's populating it
-    v.setTag(e);
+    v.setTag(position);
     
     return v;
 	}
 	
 	public interface OnPageChangeListener {
-		public abstract void onPageChanged(final Event e);
+		public abstract void onPageChanged(final int position);
 	}
 
   @Override

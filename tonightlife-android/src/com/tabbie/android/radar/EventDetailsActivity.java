@@ -36,7 +36,7 @@ public class EventDetailsActivity extends Activity implements
 	EventDetailsPagerAdapter.OnPageChangeListener {
 	
   public static final String TAG = "EventDetailsActivity";
-  public static final int REQEUST_RSVP = 666; 
+  public static final int REQUEST_RSVP = 666; 
   private final Handler upstreamHandler;
   private ArrayList<Event> events;
 	
@@ -91,28 +91,27 @@ public class EventDetailsActivity extends Activity implements
   
   @Override
   public void onClick(View v) {
-	
-	final Event e = (Event) ((View) v.getParent()).getTag();
-	Log.d(TAG, "Event clicked is: " + e.name);
-	
-	switch(v.getId()) {
-	case R.id.details_event_address:
-		Log.d(TAG, "Event Address Selected");
-	case R.id.location_image:
-		Log.d(TAG, "Location Image Selected");
-		final Intent intent = new Intent(this, TLMapActivity.class);
-		intent.putParcelableArrayListExtra("events", events);
-		intent.putExtra("eventIndex", events.indexOf(e));
-		intent.putExtra("token", token);
-		startActivity(intent);
-		break;
-		
-	case R.id.add_to_radar_image:
-		Log.d(TAG, "Lineup Button Selected");
-    final ImageView radarButton = (ImageView) v.findViewById(R.id.add_to_radar_image);
+    final Event e = events.get((Integer) ((View) v.getParent()).getTag());
+  	Log.d(TAG, "Event clicked is: " + e.name);
+  	
+  	switch(v.getId()) {
+  	case R.id.details_event_address:
+  		Log.d(TAG, "Event Address Selected");
+  	case R.id.location_image:
+  		Log.d(TAG, "Location Image Selected");
+  		final Intent intent = new Intent(this, TLMapActivity.class);
+  		intent.putParcelableArrayListExtra("events", events);
+  		intent.putExtra("eventIndex", events.indexOf(e));
+  		intent.putExtra("token", token);
+  		startActivity(intent);
+  		break;
+  		
+  	case R.id.add_to_radar_image:
+  		Log.d(TAG, "Lineup Button Selected");
+      final ImageView radarButton = (ImageView) v.findViewById(R.id.add_to_radar_image);
       if (e.onLineup) {
       	e.lineupCount--;
-      	e.onLineup = false;
+       	e.onLineup = false;
         radarButton.setSelected(false);
         final ServerDeleteRequest req = new ServerDeleteRequest(
             getString(R.string.tabbie_server) + "/mobile/radar/" + e.id
@@ -122,10 +121,10 @@ public class EventDetailsActivity extends Activity implements
         upstreamHandler.sendMessage(message);
       } else {
       	e.lineupCount++;
-      	e.onLineup = true;
+       	e.onLineup = true;
         radarButton.setSelected(true);
         ServerPostRequest req = new ServerPostRequest(
-        		getString(R.string.tabbie_server) + "/mobile/radar/" + e.id + ".json",
+         		getString(R.string.tabbie_server) + "/mobile/radar/" + e.id + ".json",
             MessageType.ADD_TO_RADAR);
         req.params.put("auth_token", token);
         final Message message = Message.obtain();
@@ -133,11 +132,12 @@ public class EventDetailsActivity extends Activity implements
         upstreamHandler.sendMessage(message);
       }
       break;
-		}
+  	}
 	}
 
 	@Override
-	public void onPageChanged(Event e) {
+	public void onPageChanged(int position) {
+	  final Event e = events.get(position);
   	googleAnalyticsTracker.trackPageView(e.name);
 	}
 }
