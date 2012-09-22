@@ -491,11 +491,8 @@ public class MainActivity extends Activity implements
   			}
   			events.clear();
   			final String domain = getString(R.string.tabbie_server);
-  			
   			for(int i = 0; i < list.length() - 1; ++i) {
   				final JSONObject obj = list.getJSONObject(i);
-  				
-  				/*
   				Log.i(TAG, "Event information: " + obj.toString());
   				final String radarCountStr = obj.getString("user_count");
   				int radarCount = 0;
@@ -557,17 +554,8 @@ public class MainActivity extends Activity implements
   	                                    obj.getBoolean("featured"),
   	                                    obj.getString("start_time"),
   	                                    serverRadarIds.contains(obj.getString("id")),
-  	                                    rsvp); */
-  				final Event e = Event.buildFromJson(this, obj);
-  				if(e != null) {
-    				if(serverRadarIds.contains(e.id)) {
-    					e.onLineup = true;
-    				}
-    				events.add(e);
-  				} else {
-  					Log.e(TAG, "Skipping event at index " + i + " due to an instantiation error");
-  					continue;
-  				}
+  	                                    rsvp);
+  				events.add(e);
   			}
   			manager.clear();
   			manager.addAll(events);
@@ -576,11 +564,11 @@ public class MainActivity extends Activity implements
           Toast.LENGTH_SHORT).show();
       	e.printStackTrace();
       	return false;
-      } /*catch (final MalformedURLException e) {
+      } catch (final MalformedURLException e) {
       	Log.e(TAG, "Malformed URL during Event creation");
       	Toast.makeText(this, "Error occurred during boot", Toast.LENGTH_LONG).show();
       	return false;
-      }*/
+      }
   	  this.runOnUiThread(new Runnable() {
   		  public void run() {
   			  for(final ListView v : listViews) {
