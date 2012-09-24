@@ -1,4 +1,4 @@
-package com.tabbie.android.radar;
+package com.tabbie.android.radar.model;
 
 /**
  *  ShareMessage.java

@@ -13,21 +13,20 @@ public class TLListAdapter extends BaseAdapter {
 	}
 
 	@Override
-	public Object getItem(int arg0) {
+	public Object getItem(int position) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public long getItemId(int arg0) {
+	public long getItemId(int id) {
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
-	public View getView(int arg0, View arg1, ViewGroup arg2) {
+	public View getView(int position, View v, ViewGroup parent) {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
 }
