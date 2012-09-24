@@ -11,7 +11,6 @@ package com.tabbie.android.radar;
  *  to build message feeds.
  */
 
-
 public class ShareMessage {
 	public final static String TAG = "ShareMessage";
 	public final String message;
