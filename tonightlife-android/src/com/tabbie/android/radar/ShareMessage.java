@@ -11,9 +11,6 @@ package com.tabbie.android.radar;
  *  to build message feeds.
  */
 
-import org.json.JSONObject;
-
-import android.util.Log;
 
 public class ShareMessage {
 	public final static String TAG = "ShareMessage";
@@ -25,11 +22,5 @@ public class ShareMessage {
 		this.userFirstName = firstName;
 		this.userLastName = lastName;
 		this.message = message;
-	}
-	
-	public static ShareMessage createFromJson(final JSONObject source) {
-		// TODO Code me
-		Log.i(TAG, "This method has not been coded");
-		return null;
 	}
 }
