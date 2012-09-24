@@ -50,7 +50,6 @@ public class EventListAdapter extends BaseAdapter {
     
     final Event e = (Event) getItem(position);
     
-    
     // Populate TextViews with data
     ((TextView) convertView
   		  .findViewById(R.id.event_text))
@@ -68,7 +67,6 @@ public class EventListAdapter extends BaseAdapter {
     viewHolder.findViewById(R.id.element_loader).startAnimation(AnimationUtils.loadAnimation(context, R.anim.rotate));
     imageLoader.displayImage(e.imageUrl.toString(),
   		  (ImageView) viewHolder.findViewById(R.id.event_image));
-    
     
     /* If this view is clickable then
      * OnItemClickListener will NEVER
