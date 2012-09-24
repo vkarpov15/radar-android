@@ -13,22 +13,34 @@ import com.tabbie.android.radar.model.Event;
 public abstract class AbstractEventListAdapter<T extends Event> extends BaseAdapter {
 	private final int mResource;
 	private final Context mContext;
-	private final List<T> mListManager;
+	private final List<T> mEventList;
 	
 	public AbstractEventListAdapter(Context context, List<T> listManager, int resource) {
 		this.mResource = resource;
 		this.mContext = context;
-		this.mListManager = listManager;
+		this.mEventList = listManager;
 	}
 
 	@Override
 	public int getCount() {
-		return mListManager.size();
+		return mEventList.size();
 	}
 
 	@Override
 	public Object getItem(int position) {
-		return mListManager.get(position);
+		return mEventList.get(position);
+	}
+
+	@Override
+	public long getItemId(int position) {
+		final T item = mEventList.get(position);
+		try {
+			final long id = Long.valueOf(item.id);
+			return id;
+		} catch(NumberFormatException e) {
+			e.printStackTrace();
+			return 0;
+		}
 	}
 
 	@Override
@@ -37,10 +49,19 @@ public abstract class AbstractEventListAdapter<T extends Event> extends BaseAdap
 			v = LayoutInflater.from(mContext).inflate(mResource, null);
 			v.setClickable(false);
 		}
-		buildView(mListManager.get(position));
+		buildView(mEventList.get(position), v);
 		parent.addView(v);
 		return v;
 	}
 	
-	public abstract void buildView(T source);
+	/**
+	 * Implement this method to bind
+	 * data from source to the View v
+	 * 
+	 * @param source The Event that is
+	 * being displayed to the user
+	 * @param v The View the adapter will
+	 * pass to its parent ListView
+	 */
+	public abstract void buildView(T source, View v);
 }

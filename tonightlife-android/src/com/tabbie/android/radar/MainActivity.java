@@ -47,6 +47,7 @@ import com.facebook.android.Facebook;
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 import com.google.android.gcm.GCMRegistrar;
 import com.tabbie.android.radar.MultiSpinner.MultiSpinnerListener;
+import com.tabbie.android.radar.adapters.AbstractEventListAdapter;
 import com.tabbie.android.radar.adapters.EventListAdapter;
 import com.tabbie.android.radar.core.BasicCallback;
 import com.tabbie.android.radar.http.ServerGetRequest;
