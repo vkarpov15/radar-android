@@ -4,6 +4,6 @@ import java.util.List;
 
 import com.tabbie.android.radar.model.Event;
 
-public interface TLPagerAdapter {
+public interface TLAdapter {
   public boolean initializeWithList(List<? extends Event> e);
 }

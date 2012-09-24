@@ -30,7 +30,7 @@ import com.tabbie.android.radar.model.Event;
 
 public class EventDetailsPagerAdapter
 	extends android.support.v4.view.PagerAdapter
-	implements TLPagerAdapter {
+	implements TLAdapter {
 	
 	public static final String TAG = "EventDetailsPagerAdapter";
 	
