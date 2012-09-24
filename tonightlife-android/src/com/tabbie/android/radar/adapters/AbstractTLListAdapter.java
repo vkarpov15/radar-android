@@ -6,10 +6,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
-public abstract class TLListAdapter<T> extends BaseAdapter {
+public abstract class AbstractTLListAdapter<T> extends BaseAdapter {
 	final AbstractListManager<T> mListManager;
 	
-	public TLListAdapter(final AbstractListManager<T> listManager) {
+	public AbstractTLListAdapter(final AbstractListManager<T> listManager) {
 		this.mListManager = listManager;
 	}
 
