@@ -1,40 +1,33 @@
 package com.tabbie.android.radar.adapters;
 
-import com.tabbie.android.radar.model.AbstractListManager;
+import java.util.List;
 
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
 public abstract class AbstractTLListAdapter<T> extends BaseAdapter {
-	final AbstractListManager<T> mListManager;
+	private final List<T> mListManager;
 	
-	public AbstractTLListAdapter(final AbstractListManager<T> listManager) {
+	public AbstractTLListAdapter(final List<T> listManager) {
 		this.mListManager = listManager;
 	}
 
 	@Override
 	public int getCount() {
-		// TODO Auto-generated method stub
-		return 0;
+		return mListManager.size();
 	}
 
 	@Override
 	public Object getItem(int position) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public long getItemId(int id) {
-		// TODO Auto-generated method stub
-		return 0;
+		return mListManager.get(position);
 	}
 
 	@Override
 	public View getView(int position, View v, ViewGroup parent) {
-		// TODO Auto-generated method stub
-		return null;
+		v = buildView(mListManager.get(position));
+		parent.addView(v);
+		return v;
 	}
 	
 	public abstract View buildView(final T source);
