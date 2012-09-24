@@ -1,10 +1,17 @@
 package com.tabbie.android.radar.adapters;
 
+import com.tabbie.android.radar.model.AbstractListManager;
+
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
-public class TLListAdapter extends BaseAdapter {
+public abstract class TLListAdapter<T> extends BaseAdapter {
+	final AbstractListManager<T> mListManager;
+	
+	public TLListAdapter(final AbstractListManager<T> listManager) {
+		this.mListManager = listManager;
+	}
 
 	@Override
 	public int getCount() {
@@ -29,4 +36,6 @@ public class TLListAdapter extends BaseAdapter {
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+	public abstract View buildView(final T source);
 }
