@@ -54,8 +54,10 @@ import com.tabbie.android.radar.http.ServerGetRequest;
 import com.tabbie.android.radar.http.ServerPostRequest;
 import com.tabbie.android.radar.http.ServerResponse;
 import com.tabbie.android.radar.maps.TLMapActivity;
+import com.tabbie.android.radar.model.AbstractViewInflater;
 import com.tabbie.android.radar.model.Event;
 import com.tabbie.android.radar.model.ListManager;
+import com.tabbie.android.radar.model.ShareMessage;
 
 public class MainActivity extends Activity implements
     OnTabChangeListener,
@@ -155,6 +157,45 @@ public class MainActivity extends Activity implements
   			new EventListAdapter(MainActivity.this,
   					manager.featuredEventsList,
   					new ListManager.DefaultComparator()));
+  	
+  	
+  	// TODO #####################################################
+  	final ImageLoader imageLoader = new ImageLoader(this);
+  	final AbstractViewInflater<Event> eventInflater = new AbstractViewInflater<Event>(this, R.layout.event_list_element) {
+  		
+			@Override
+			protected View bindView(Event data, View v) {
+		    ((TextView) v
+		  		  .findViewById(R.id.event_text))
+		  		  .setText(data.name);
+
+		    ((TextView) v
+		  		  .findViewById(R.id.event_list_time))
+		  		  .setText(data.time.makeYourTime());
+
+		    ((TextView) v
+		        .findViewById(R.id.event_location))
+		        .setText(data.venue);
+		    
+		    final View viewHolder = v.findViewById(R.id.image_holder);
+		    viewHolder.findViewById(R.id.element_loader).startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.rotate));
+		    imageLoader.displayImage(data.imageUrl.toString(),
+		  		  (ImageView) viewHolder.findViewById(R.id.event_image));
+		    
+				return null;
+			}
+		};
+		
+		final AbstractViewInflater<ShareMessage> smsInflater = new AbstractViewInflater<ShareMessage>(this, R.layout.event_list_element) {
+
+			@Override
+			protected View bindView(ShareMessage data, View v) {
+				// TODO Auto-generated method stub
+				return null;
+			}
+		};
+		
+		// TODO ###################################################
   	
   	listViews[ALL].setAdapter(
   			new EventListAdapter(MainActivity.this,

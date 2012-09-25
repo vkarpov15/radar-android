@@ -5,7 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 
 public abstract class AbstractViewInflater<T> {
-	private final Context mContext;
+	protected final Context mContext;
 	private final int mResource;
 	
 	public AbstractViewInflater(Context context, int resource) {
@@ -21,5 +21,13 @@ public abstract class AbstractViewInflater<T> {
 		return bindView(data, v);
 	}
 
+	/**
+	 * Override this method to bind the data
+	 * stored in T to the View v
+	 * 
+	 * @param data The data to populate
+	 * @param v The View to populate
+	 * @return The populated View
+	 */
 	protected abstract View bindView(T data, View v);
 }
