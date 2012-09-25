@@ -195,6 +195,14 @@ public class MainActivity extends Activity implements
 			}
 		};
 		
+		final AbstractEventListAdapter myAdapter = new AbstractEventListAdapter<Event>(this, manager.featuredEventsList, R.layout.event_list_element) {
+
+			@Override
+			public void buildView(Event source, View v) {
+				v = eventInflater.getView(source, v);
+			}
+		};
+		
 		// TODO ###################################################
   	
   	listViews[ALL].setAdapter(
