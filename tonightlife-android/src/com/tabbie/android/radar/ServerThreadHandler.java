@@ -18,19 +18,22 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import com.tabbie.android.radar.http.ServerRequest;
-import com.tabbie.android.radar.http.ServerResponse;
-
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
+
+import com.tabbie.android.radar.http.ServerRequest;
+import com.tabbie.android.radar.http.ServerResponse;
 
 public class ServerThreadHandler extends Handler {
 	public static final String TAG = "ServerThreadHandler";
 	
 	public ServerThreadHandler(final Looper looper) {
 		super(looper);
+		// Java occasionally includes HTTP headers in response. This prevents that from happening. Don't ask me why.
+		// DO NOT FOR THE LOVE OF GOD EVER EVER DELETE THIS.
+    System.setProperty("http.keepAlive", "false");
 	}
 	
 	@Override
@@ -47,17 +50,20 @@ public class ServerThreadHandler extends Handler {
 			for (final String key : req.httpParams.keySet()) {
 			  conn.setRequestProperty(key, req.httpParams.get(key));
 			}
+			
 			if (req.hasOutput()) {
 			  conn.setDoOutput(true);
-	          OutputStream stream = conn.getOutputStream();
-	          stream.write(req.getOutput().getBytes());
-	          stream.flush();
-		    } else {
-		      conn.connect();
-		    }
-	        if (conn.getResponseCode() < 200 || conn.getResponseCode() >= 300) {
-	          // TODO Handle this #404# error
-	        }
+	      OutputStream stream = conn.getOutputStream();
+	      stream.write(req.getOutput().getBytes());
+	      stream.flush();
+			} else {
+		    conn.connect();
+		  }
+			
+	    if (conn.getResponseCode() < 200 || conn.getResponseCode() >= 300) {
+	      // TODO Connection failed
+	    }
+	        
 			final BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 			final StringBuilder sb = new StringBuilder();
 			
@@ -65,7 +71,8 @@ public class ServerThreadHandler extends Handler {
 			while ((y = reader.readLine())!=null) {
 				sb.append(y);
 			}
-			if(req.responseHandler!=null) {
+			
+			if (req.responseHandler != null) {
 				final Message responseMessage = Message.obtain();
 				responseMessage.obj = new ServerResponse(0, sb.toString(), req.type);
 				req.responseHandler.sendMessage(responseMessage);
