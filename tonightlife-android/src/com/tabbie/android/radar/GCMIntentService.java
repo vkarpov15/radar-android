@@ -6,6 +6,16 @@ import android.util.Log;
 
 public class GCMIntentService extends com.google.android.gcm.GCMBaseIntentService {
 	public static final String TAG = "GCMIntentService";
+	
+	public GCMIntentService() {
+		super("453820866760");
+		Log.d(TAG, "Default Constructor");
+	}
+	
+	public GCMIntentService(String... senderID) {
+		super(senderID);
+		Log.d(TAG, "String Parameter Constructor");
+	}
 
 	@Override
 	protected void onError(Context arg0, String arg1) {
