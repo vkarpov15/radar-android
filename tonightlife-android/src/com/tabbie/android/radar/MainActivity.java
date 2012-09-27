@@ -123,6 +123,7 @@ public class MainActivity extends Activity implements
       GCMRegistrar.register(this, getString(R.string.sender_id));
     } else {
       Log.d(TAG, "Already registered");
+      Log.d(TAG, "RegistrationID is: " + regId);
     }
     
 
