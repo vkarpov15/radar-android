@@ -116,19 +116,13 @@ public class MainActivity extends Activity implements
     Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
     
     // Google told me to do this so I did
-    Intent registrationIntent = new Intent("com.google.android.c2dm.intent.REGISTER");
- 	  // sets the app name in the intent
-	  registrationIntent.putExtra("app", PendingIntent.getBroadcast(this, 0, new Intent(), 0));
-	  registrationIntent.putExtra("sender", R.string.sender_id);
-	  startService(registrationIntent);
-	  
-    GCMRegistrar.checkDevice(this);
+	  GCMRegistrar.checkDevice(this);
     GCMRegistrar.checkManifest(this);
     final String regId = GCMRegistrar.getRegistrationId(this);
     if (regId.equals("")) {
       GCMRegistrar.register(this, getString(R.string.sender_id));
     } else {
-      Log.v(TAG, "Already registered");
+      Log.d(TAG, "Already registered");
     }
     
 
@@ -512,7 +506,7 @@ public class MainActivity extends Activity implements
 			return false;
 		}
 		final ServerResponse resp = (ServerResponse) msg.obj;
-		Log.d(TAG, resp.content);
+		Log.v(TAG, resp.content);
 		
 		switch (resp.responseTo) {
     case TABBIE_LOGIN: {
