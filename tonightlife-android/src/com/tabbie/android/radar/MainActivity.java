@@ -11,6 +11,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -65,7 +66,7 @@ public class MainActivity extends Activity implements
     OnItemLongClickListener,
     Handler.Callback {
 	
-  public static final String TAG = "RadarActivity";
+  public static final String TAG = "MainActivity";
   public static final int REQUEST_EVENT_DETAILS = 40;
   public static final int REQUEST_FACEBOOK = 41;
   
@@ -115,6 +116,12 @@ public class MainActivity extends Activity implements
     Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
     
     // Google told me to do this so I did
+    Intent registrationIntent = new Intent("com.google.android.c2dm.intent.REGISTER");
+ 	  // sets the app name in the intent
+	  registrationIntent.putExtra("app", PendingIntent.getBroadcast(this, 0, new Intent(), 0));
+	  registrationIntent.putExtra("sender", R.string.sender_id);
+	  startService(registrationIntent);
+	  
     GCMRegistrar.checkDevice(this);
     GCMRegistrar.checkManifest(this);
     final String regId = GCMRegistrar.getRegistrationId(this);
@@ -123,6 +130,7 @@ public class MainActivity extends Activity implements
     } else {
       Log.v(TAG, "Already registered");
     }
+    
 
     // Start Google Analytics
     googleAnalyticsTracker = GoogleAnalyticsTracker.getInstance();
@@ -504,6 +512,7 @@ public class MainActivity extends Activity implements
 			return false;
 		}
 		final ServerResponse resp = (ServerResponse) msg.obj;
+		Log.d(TAG, resp.content);
 		
 		switch (resp.responseTo) {
     case TABBIE_LOGIN: {
@@ -543,7 +552,6 @@ public class MainActivity extends Activity implements
   			final String domain = getString(R.string.tabbie_server);
   			for(int i = 0; i < list.length() - 1; ++i) {
   				final JSONObject obj = list.getJSONObject(i);
-  				Log.i(TAG, "Event information: " + obj.toString());
   				final String radarCountStr = obj.getString("user_count");
   				int radarCount = 0;
   				if (null != radarCountStr && 0 != radarCountStr.compareTo("null"))
