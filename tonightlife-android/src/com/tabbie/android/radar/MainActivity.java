@@ -496,6 +496,10 @@ public class MainActivity extends Activity implements
 	public boolean onItemLongClick(AdapterView<?> parent, View v, int position,
 			long rowId) {
 		// TODO Pop up a dialog here
+		
+		GCMRegistrar.unregister(this);
+		Log.d(TAG, "Registration ID: " + GCMRegistrar.getRegistrationId(this));
+		
 		return true;
 	}
 
