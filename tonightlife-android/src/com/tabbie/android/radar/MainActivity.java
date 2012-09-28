@@ -79,6 +79,10 @@ public class MainActivity extends Activity implements
   private final short ALL = 1;
   private final short LINEUP = 2;
   
+  // Inflater objects for adapters
+  private final AbstractViewInflater<Event> eventInflater;
+  private final AbstractViewInflater<ShareMessage> messageInflater;
+  
   // Adapter lists
   private ArrayList<Event> events = new ArrayList<Event>();
   private ListManager manager = new ListManager();
@@ -103,6 +107,41 @@ public class MainActivity extends Activity implements
   
   public MainActivity() {
 	  super();
+	  
+	  eventInflater = new AbstractViewInflater<Event>(this, R.layout.event_list_element) {
+	  	private final ImageLoader mLoader = new ImageLoader(mContext);
+
+			@Override
+			protected View bindView(Event data, View v) {
+		    ((TextView) v.findViewById(R.id.event_text))
+		  		  .setText(data.name);
+		
+		    ((TextView) v
+		  		  .findViewById(R.id.event_list_time))
+		  		  .setText(data.time.makeYourTime());
+		
+		    ((TextView) v
+		        .findViewById(R.id.event_location))
+		        .setText(data.venue);
+		    
+		    final View viewHolder = v.findViewById(R.id.image_holder);
+		    viewHolder.findViewById(R.id.element_loader).startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.rotate));
+		    mLoader.displayImage(data.imageUrl.toString(),
+		  		  (ImageView) viewHolder.findViewById(R.id.event_image));
+				return v;
+			}
+		};
+		
+	  messageInflater = new AbstractViewInflater<ShareMessage>(this, R.layout.event_list_element) {
+		  // TODO This layout is currently a placeholder for future xml ---------------^
+			@Override
+			protected View bindView(ShareMessage data, View v) {
+				// TODO Auto-generated method stub
+				return null;
+			}
+	  	
+	  };
+	  
 	  final HandlerThread serverThread = new HandlerThread(TAG + "Thread");
 	  serverThread.start();
 	  upstreamHandler = new ServerThreadHandler(serverThread.getLooper());
@@ -671,49 +710,5 @@ public class MainActivity extends Activity implements
 	        }
 	      });
 	  host.addTab(content);
-	}
-	
-	private class EventViewInflater extends AbstractViewInflater<Event> {
-		private final ImageLoader mLoader;
-
-		public EventViewInflater(Context context, int resource) {
-			super(context, resource);
-			mLoader = new ImageLoader(context);
-		}
-
-		@Override
-		protected View bindView(Event data, View v) {
-	    ((TextView) v.findViewById(R.id.event_text))
-	  		  .setText(data.name);
-
-	    ((TextView) v
-	  		  .findViewById(R.id.event_list_time))
-	  		  .setText(data.time.makeYourTime());
-
-	    ((TextView) v
-	        .findViewById(R.id.event_location))
-	        .setText(data.venue);
-	    
-	    final View viewHolder = v.findViewById(R.id.image_holder);
-	    viewHolder.findViewById(R.id.element_loader).startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.rotate));
-	    mLoader.displayImage(data.imageUrl.toString(),
-	  		  (ImageView) viewHolder.findViewById(R.id.event_image));
-			return v;
-		}
-	}
-	
-	private class ShareMessageViewInflater extends AbstractViewInflater<ShareMessage> {
-
-		public ShareMessageViewInflater(Context context, int resource) {
-			super(context, resource);
-			// TODO Auto-generated constructor stub
-		}
-
-		@Override
-		protected View bindView(ShareMessage data, View v) {
-			// TODO Auto-generated method stub
-			return null;
-		}
-		
 	}
 }
