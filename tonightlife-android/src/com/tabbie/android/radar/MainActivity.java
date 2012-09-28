@@ -83,8 +83,8 @@ public class MainActivity extends Activity implements
   private final short LINEUP = 2;
   
   // Inflater objects for adapters
-  private AbstractViewInflater<Event> eventInflater;
-  private AbstractViewInflater<ShareMessage> messageInflater;
+  private final AbstractViewInflater<Event> eventInflater;
+  private final AbstractViewInflater<ShareMessage> messageInflater;
   
   // Adapter lists
   private ArrayList<Event> events = new ArrayList<Event>();
@@ -110,19 +110,6 @@ public class MainActivity extends Activity implements
   
   public MainActivity() {
 	  super();
-	  
-	  final HandlerThread serverThread = new HandlerThread(TAG + "Thread");
-	  serverThread.start();
-	  upstreamHandler = new ServerThreadHandler(serverThread.getLooper());
-  }
-  
-  @Override
-  public void onCreate(final Bundle savedInstanceState) {
-	  
-    // Set initial conditions
-    super.onCreate(savedInstanceState);
-    setContentView(R.layout.main);
-    Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
     
 	  /*
 	   * Builder object for displaying views
@@ -165,6 +152,19 @@ public class MainActivity extends Activity implements
 			}
 	  	
 	  };
+	  
+	  final HandlerThread serverThread = new HandlerThread(TAG + "Thread");
+	  serverThread.start();
+	  upstreamHandler = new ServerThreadHandler(serverThread.getLooper());
+  }
+  
+  @Override
+  public void onCreate(final Bundle savedInstanceState) {
+	  
+    // Set initial conditions
+    super.onCreate(savedInstanceState);
+    setContentView(R.layout.main);
+    Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
     
     // Google told me to do this so I did
 	  GCMRegistrar.checkDevice(this);
