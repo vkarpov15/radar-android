@@ -4,6 +4,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.json.JSONArray;
@@ -670,5 +671,49 @@ public class MainActivity extends Activity implements
 	        }
 	      });
 	  host.addTab(content);
+	}
+	
+	private class EventViewInflater extends AbstractViewInflater<Event> {
+		private final ImageLoader mLoader;
+
+		public EventViewInflater(Context context, int resource) {
+			super(context, resource);
+			mLoader = new ImageLoader(context);
+		}
+
+		@Override
+		protected View bindView(Event data, View v) {
+	    ((TextView) v.findViewById(R.id.event_text))
+	  		  .setText(data.name);
+
+	    ((TextView) v
+	  		  .findViewById(R.id.event_list_time))
+	  		  .setText(data.time.makeYourTime());
+
+	    ((TextView) v
+	        .findViewById(R.id.event_location))
+	        .setText(data.venue);
+	    
+	    final View viewHolder = v.findViewById(R.id.image_holder);
+	    viewHolder.findViewById(R.id.element_loader).startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.rotate));
+	    mLoader.displayImage(data.imageUrl.toString(),
+	  		  (ImageView) viewHolder.findViewById(R.id.event_image));
+			return v;
+		}
+	}
+	
+	private class ShareMessageViewInflater extends AbstractViewInflater<ShareMessage> {
+
+		public ShareMessageViewInflater(Context context, int resource) {
+			super(context, resource);
+			// TODO Auto-generated constructor stub
+		}
+
+		@Override
+		protected View bindView(ShareMessage data, View v) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+		
 	}
 }
