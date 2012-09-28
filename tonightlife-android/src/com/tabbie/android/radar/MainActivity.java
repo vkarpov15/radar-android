@@ -12,6 +12,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.app.LocalActivityManager;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -175,12 +176,6 @@ public class MainActivity extends Activity implements
       Log.d(TAG, "Already registered");
       Log.d(TAG, "RegistrationID is: " + regId);
     }
-    
-    /*
-    Notification notification = new Notification(R.drawable.ic_launcher, "Hey. Hey you. Fuck you", System.currentTimeMillis());
-    NotificationManager mNM = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-    mNM.notify(R.string.age_title, notification); */
-    
 
     // Start Google Analytics
     googleAnalyticsTracker = GoogleAnalyticsTracker.getInstance();

@@ -33,6 +33,19 @@ public class GCMIntentService extends com.google.android.gcm.GCMBaseIntentServic
 	@Override
 	protected void onMessage(Context arg0, Intent arg1) {
 		// TODO Auto-generated method stub
+		
+
+	   
+    // ########################### Sample Code for Notifications 
+    /*
+    Notification notification = new Notification(R.drawable.ic_launcher, "Hey. Hey you. Fuck you", System.currentTimeMillis());
+    PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
+            new Intent(this, EventDetailsActivity.class), 0);
+    notification.setLatestEventInfo(this, "Tabbie Push Notification", "Hey Cesar, Go Fuck Yourself", contentIntent);
+    NotificationManager mNM = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+    mNM.notify(R.string.age_title, notification);
+    */
+		
 		Log.d(TAG, "onMessage");
 	}
 
