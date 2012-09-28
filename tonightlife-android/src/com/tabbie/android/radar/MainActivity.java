@@ -108,6 +108,10 @@ public class MainActivity extends Activity implements
   public MainActivity() {
 	  super();
 	  
+	  /*
+	   * Builder object for displaying views
+	   * in the user's Event feed
+	   */
 	  eventInflater = new AbstractViewInflater<Event>(this, R.layout.event_list_element) {
 	  	private final ImageLoader mLoader = new ImageLoader(mContext);
 
@@ -132,6 +136,10 @@ public class MainActivity extends Activity implements
 			}
 		};
 		
+		/*
+		 * Builder object for displaying views
+		 * in the user's message feed
+		 */
 	  messageInflater = new AbstractViewInflater<ShareMessage>(this, R.layout.event_list_element) {
 		  // TODO This layout is currently a placeholder for future xml ---------------^
 			@Override
