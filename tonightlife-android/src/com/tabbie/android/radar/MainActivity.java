@@ -446,6 +446,7 @@ public class MainActivity extends Activity implements
   public void onDestroy() {
     super.onDestroy();
     googleAnalyticsTracker.stopSession();
+    GCMRegistrar.onDestroy(this);
   }
   
 	@Override
