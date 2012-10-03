@@ -186,8 +186,11 @@ public class MainActivity extends Activity implements
 
 			@Override
 			public boolean apply(Event o) {
-				// TODO Auto-generated method stub
-				return true;
+				if(o.isFeatured) {
+					return true;
+				} else {
+					return false;
+				}
 			}
     	
     }, new Comparator<Event>() {
@@ -203,8 +206,7 @@ public class MainActivity extends Activity implements
 
 			@Override
 			public boolean apply(Event o) {
-				// TODO Auto-generated method stub
-				return false;
+				return true;
 			}
     	
     }, new Comparator<Event>() {
@@ -221,8 +223,11 @@ public class MainActivity extends Activity implements
 
 			@Override
 			public boolean apply(Event o) {
-				// TODO Auto-generated method stub
-				return false;
+				if(o.onLineup) {
+					return true;
+				} else {
+					return false;
+				}
 			}
     	
     }, new Comparator<Event>() {
