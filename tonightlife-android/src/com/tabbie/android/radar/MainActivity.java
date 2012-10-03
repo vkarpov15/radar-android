@@ -54,6 +54,7 @@ import com.tabbie.android.radar.http.ServerGetRequest;
 import com.tabbie.android.radar.http.ServerPostRequest;
 import com.tabbie.android.radar.http.ServerResponse;
 import com.tabbie.android.radar.maps.TLMapActivity;
+import com.tabbie.android.radar.model.AbstractListManager;
 import com.tabbie.android.radar.model.AbstractViewInflater;
 import com.tabbie.android.radar.model.Event;
 import com.tabbie.android.radar.model.ListManager;
@@ -83,6 +84,7 @@ public class MainActivity extends Activity implements
   
   // Adapter lists
   private ArrayList<Event> events = new ArrayList<Event>();
+  private AbstractListManager NEWmanager = new AbstractListManager<Event>();
   private ListManager manager = new ListManager();
 
   // Often-used views
