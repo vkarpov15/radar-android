@@ -11,8 +11,8 @@ import com.tabbie.android.radar.core.AbstractFilter;
 
 public class AbstractListManager<T> {
   public final ArrayList<T> master = new ArrayList<T>();
-  private final Map<String, OrderedSubList> lists = new LinkedHashMap<String, OrderedSubList>();
   
+  private final Map<String, OrderedSubList> lists = new LinkedHashMap<String, OrderedSubList>();
   
   private final class OrderedSubList {
     public final List<T> myList = new ArrayList<T>();
