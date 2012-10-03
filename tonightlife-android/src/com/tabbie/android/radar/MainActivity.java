@@ -56,7 +56,6 @@ import com.tabbie.android.radar.maps.TLMapActivity;
 import com.tabbie.android.radar.model.AbstractListManager;
 import com.tabbie.android.radar.model.AbstractViewInflater;
 import com.tabbie.android.radar.model.Event;
-import com.tabbie.android.radar.model.ListManager;
 import com.tabbie.android.radar.model.ShareMessage;
 
 public class MainActivity extends Activity implements
@@ -283,17 +282,17 @@ public class MainActivity extends Activity implements
   	listViews[Lists.FEATURED.index].setAdapter(
   			new EventListAdapter(MainActivity.this,
   					listManager.get(Lists.FEATURED.id),
-  					new ListManager.DefaultComparator()));
+  					new DefaultComparator()));
   	
   	listViews[Lists.ALL.index].setAdapter(
   			new EventListAdapter(MainActivity.this,
   					listManager.get(Lists.ALL.id),
-  					new ListManager.DefaultComparator()));
+  					new DefaultComparator()));
   	
   	listViews[Lists.LINEUP.index].setAdapter(
   			new EventListAdapter(MainActivity.this,
   					listManager.get(Lists.LINEUP.id),
-  					new ListManager.ChronologicalComparator()));
+  					new ChronologicalComparator()));
     
   	// Set ListView properties
     for(final ListView v : listViews) {
