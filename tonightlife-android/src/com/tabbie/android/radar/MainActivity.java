@@ -70,6 +70,8 @@ public class MainActivity extends Activity implements
     Handler.Callback {
 	
   public static final String TAG = "MainActivity";
+  
+  // Request codes
   public static final int REQUEST_EVENT_DETAILS = 40;
   public static final int REQUEST_FACEBOOK = 32665;
   
@@ -90,7 +92,7 @@ public class MainActivity extends Activity implements
   private ListView[] listViews = new ListView[3];
 
   // Internal state for views
-  private int currentViewPosition = 0;
+  private int currentViewPosition = Lists.FEATURED.index;
   private Lists currentList = Lists.ALL;
 
   // FB junk
