@@ -6,24 +6,25 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.tabbie.android.radar.core.Filter;
+import com.tabbie.android.radar.core.AbstractFilter;
 
 public class AbstractListManager<T> {
   private final List<T> master = new ArrayList<T>();
   private final Map<String, OrderedSubList> lists = new LinkedHashMap<String, OrderedSubList>();
   
+  
   private final class OrderedSubList {
     public final List<T> myList = new ArrayList<T>();
-    public final Filter<T> filter;
+    public final AbstractFilter<T> filter;
     public final Comparator<T> ordering;
     
-    public OrderedSubList(Filter<T> filter, Comparator<T> ordering) {
+    public OrderedSubList(AbstractFilter<T> filter, Comparator<T> ordering) {
       this.filter = filter;
       this.ordering = ordering;
     }
   }
   
-  public void createList(String name, Filter<T> filter, Comparator<T> ordering) {
+  public void createList(String name, AbstractFilter<T> filter, Comparator<T> ordering) {
     lists.put(name, new OrderedSubList(filter, ordering));
   }
   
