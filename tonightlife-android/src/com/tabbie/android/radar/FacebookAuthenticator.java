@@ -12,6 +12,7 @@ package com.tabbie.android.radar;
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.facebook.android.DialogError;
@@ -21,6 +22,7 @@ import com.facebook.android.FacebookError;
 import com.tabbie.android.radar.core.BasicCallback;
 
 public class FacebookAuthenticator {
+	public static final String TAG = "FacebookAuthenticator";
   private final Facebook facebook;
   private final SharedPreferences preferences;
   
@@ -34,25 +36,32 @@ public class FacebookAuthenticator {
     this.facebook = facebook;
     this.preferences = preferences;
   }
-
+  
   public void authenticate(final Activity parent, final BasicCallback<String> callback) {
+  	Log.d(TAG, "Attempting to retrieve Access Token");
     fbAccessToken = preferences.getString("access_token", null);
+    Log.d(TAG, "Attempting to get expiry");
     expires = preferences.getLong("access_expires", 0);
     
     if (fbAccessToken != null) {
+    	Log.d(TAG, "Access token is non-null");
       facebook.setAccessToken(fbAccessToken);
     }
 
     if (expires != 0) {
+    	Log.d(TAG, "Expiration is non-zero");
       facebook.setAccessExpires(expires);
     }
     
     if (facebook.isSessionValid()) {
+    	Log.d(TAG, "Session Valid");
       callback.onDone(fbAccessToken);
     } else {
       facebook.authorize(parent, new String[] { "email" }, new DialogListener() {
         public void onComplete(final Bundle values) {
+        	Log.d(TAG, "Getting fb Access Token");
           fbAccessToken = facebook.getAccessToken();
+          Log.d(TAG, "Getting facebook Acess Expires");
           expires = facebook.getAccessExpires();
           
           SharedPreferences.Editor editor = preferences.edit();
@@ -71,11 +80,13 @@ public class FacebookAuthenticator {
 
         public void onError(final DialogError e) {
           Toast.makeText(parent, "DIALOG ERROR", Toast.LENGTH_LONG).show();
+          e.printStackTrace();
           callback.onFail("DialogError");
         }
 
         public void onCancel() {
           Toast.makeText(parent, "CANCEL ERROR", Toast.LENGTH_LONG).show();
+          Log.d(TAG, "FB Canceled");
           callback.onFail("Canceled");
         }
       });

@@ -39,6 +39,7 @@ import android.os.Message;
 import android.os.Messenger;
 import android.os.RemoteException;
 import android.text.TextUtils;
+import android.util.Log;
 import android.webkit.CookieSyncManager;
 
 /**
@@ -52,6 +53,7 @@ import android.webkit.CookieSyncManager;
  *          Luke Shepard (lshepard@facebook.com)
  */
 public class Facebook {
+	public static final String TAG = "Facebook";
 
     // Strings used in the authorization flow
     public static final String REDIRECT_URI = "fbconnect://success";
@@ -198,11 +200,13 @@ public class Facebook {
 
         // Prefer single sign-on, where available.
         if (activityCode >= 0) {
+        	Log.d(TAG, "Single Sing On");
             singleSignOnStarted = startSingleSignOn(activity, mAppId,
                     permissions, activityCode);
         }
         // Otherwise fall back to traditional dialog.
         if (!singleSignOnStarted) {
+        	Log.d(TAG, "No Single Sign On");
             startDialogAuth(activity, permissions);
         }
     }

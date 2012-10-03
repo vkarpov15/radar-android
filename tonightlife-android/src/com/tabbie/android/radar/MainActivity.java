@@ -68,7 +68,7 @@ public class MainActivity extends Activity implements
 	
   public static final String TAG = "MainActivity";
   public static final int REQUEST_EVENT_DETAILS = 40;
-  public static final int REQUEST_FACEBOOK = 41;
+  public static final int REQUEST_FACEBOOK = 32665;
   
   // Important Server Call and Receive Handlers/Threads
   private final Handler upstreamHandler;
@@ -368,9 +368,11 @@ public class MainActivity extends Activity implements
   @Override
   public void onActivityResult(int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
+    Log.d(TAG, "onActivityResult");
     
     switch (requestCode) {
     case REQUEST_FACEBOOK:
+    	Log.d(TAG, "REQUEST_FACEBOOK");
       facebook.authorizeCallback(requestCode, resultCode, data);
       break;
     case REQUEST_EVENT_DETAILS:
@@ -397,6 +399,9 @@ public class MainActivity extends Activity implements
         findViewById(R.id.radar_list_empty_text).setVisibility(View.GONE);
       }
       break;
+      
+      default:
+      	Log.d(TAG, "Fell through to Default");
     }
   }
 
@@ -587,16 +592,28 @@ public class MainActivity extends Activity implements
       break;
     }
 		case LOAD_EVENTS:
+			// Full data list
   		final JSONArray list = resp.parseJsonArray();
+
   		final Set<String> serverRadarIds = new LinkedHashSet<String>();
   		try {
+  			
+  			// Final entry in data array is a set of lineup ids
   			final JSONObject radarObj = list.getJSONObject(list.length() - 1);
+  			
+  			// Array of lineup ids from data object
   			JSONArray tmpRadarList = radarObj.getJSONArray("radar");
+  			
+  			// Create a set of lineup ids
   			for(int i = 0; i < tmpRadarList.length(); ++i) {
   				serverRadarIds.add(tmpRadarList.getString(i));
   			}
+  			
   			events.clear();
+  			
   			final String domain = getString(R.string.tabbie_server);
+  			
+  			
   			for(int i = 0; i < list.length() - 1; ++i) {
   				final JSONObject obj = list.getJSONObject(i);
   				final String radarCountStr = obj.getString("user_count");
@@ -667,6 +684,7 @@ public class MainActivity extends Activity implements
   			manager.addAll(events);
       } catch (final JSONException e) {
       	Toast.makeText(this, "Fatal Error: Failed to Parse JSON",
+      			
           Toast.LENGTH_SHORT).show();
       	e.printStackTrace();
       	return false;
