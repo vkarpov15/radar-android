@@ -4,7 +4,7 @@ package com.tabbie.android.radar.core;
  *  Filter.java
  *
  *  Created on: July 23, 2012
- *      Author: Valeri Karpov
+ *      @author: Valeri Karpov
  *      
  *  A simple interface for creating filters for lists
  */
