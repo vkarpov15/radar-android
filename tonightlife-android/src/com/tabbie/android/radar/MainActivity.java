@@ -79,7 +79,7 @@ public class MainActivity extends Activity implements
   private AbstractViewInflater<ShareMessage> messageInflater;
   
   // Adapter lists
-  private AbstractListManager<Event> NEWmanager = new AbstractListManager<Event>();
+  private AbstractListManager<Event> listManager = new AbstractListManager<Event>();
 
   // Often-used views
   private TabHost tabHost;
@@ -176,7 +176,7 @@ public class MainActivity extends Activity implements
         .loadAnimation(this, R.anim.rotate));
   	
     // TODO New Manager Test Stuff
-    NEWmanager.createList(Lists.FEATURED.id, new AbstractFilter<Event>() {
+    listManager.createList(Lists.FEATURED.id, new AbstractFilter<Event>() {
 
 			@Override
 			public boolean apply(Event o) {
@@ -189,7 +189,7 @@ public class MainActivity extends Activity implements
     	
     }, null);
     
-    NEWmanager.createList(Lists.ALL.id, new AbstractFilter<Event>() {
+    listManager.createList(Lists.ALL.id, new AbstractFilter<Event>() {
 
 			@Override
 			public boolean apply(Event o) {
@@ -198,7 +198,7 @@ public class MainActivity extends Activity implements
     	
     }, null);
     
-    NEWmanager.createList(Lists.LINEUP.id, new AbstractFilter<Event>() {
+    listManager.createList(Lists.LINEUP.id, new AbstractFilter<Event>() {
 
 			@Override
 			public boolean apply(Event o) {
@@ -217,7 +217,7 @@ public class MainActivity extends Activity implements
     findViewById(R.id.map_button).setOnClickListener(new OnClickListener() {
         public void onClick(View v) {
             Intent intent = new Intent(MainActivity.this, TLMapActivity.class);
-            intent.putParcelableArrayListExtra("events", NEWmanager.master);
+            intent.putParcelableArrayListExtra("events", listManager.master);
             intent.putExtra("token", tabbieAccessToken);
             startActivity(intent);
         }
@@ -269,7 +269,7 @@ public class MainActivity extends Activity implements
 			}
 		};
 		
-		final AbstractEventListAdapter myAdapter = new AbstractEventListAdapter<Event>(this, NEWmanager.get(Lists.FEATURED.id), R.layout.event_list_element) {
+		final AbstractEventListAdapter myAdapter = new AbstractEventListAdapter<Event>(this, listManager.get(Lists.FEATURED.id), R.layout.event_list_element) {
 
 			@Override
 			public void buildView(Event source, View v) {
@@ -282,17 +282,17 @@ public class MainActivity extends Activity implements
     // Set Initial Adapters
   	listViews[Lists.FEATURED.index].setAdapter(
   			new EventListAdapter(MainActivity.this,
-  					NEWmanager.get(Lists.FEATURED.id),
+  					listManager.get(Lists.FEATURED.id),
   					new ListManager.DefaultComparator()));
   	
   	listViews[Lists.ALL.index].setAdapter(
   			new EventListAdapter(MainActivity.this,
-  					NEWmanager.get(Lists.ALL.id),
+  					listManager.get(Lists.ALL.id),
   					new ListManager.DefaultComparator()));
   	
   	listViews[Lists.LINEUP.index].setAdapter(
   			new EventListAdapter(MainActivity.this,
-  					NEWmanager.get(Lists.LINEUP.id),
+  					listManager.get(Lists.LINEUP.id),
   					new ListManager.ChronologicalComparator()));
     
   	// Set ListView properties
@@ -411,8 +411,8 @@ public class MainActivity extends Activity implements
       final Bundle parcelables = data.getExtras();
       
       final ArrayList<Event> events = parcelables.getParcelableArrayList("events");
-      NEWmanager.clear();
-      NEWmanager.addAll(events);
+      listManager.clear();
+      listManager.addAll(events);
         
       tabHost.setCurrentTab(currentList.index);
 
@@ -562,8 +562,8 @@ public class MainActivity extends Activity implements
 	      protected Intent doInBackground(Void... params) {
 	        Intent intent = new Intent(MainActivity.this,
 	            EventDetailsActivity.class);
-	        intent.putExtra("eventIndex", NEWmanager.master.indexOf(e));
-	        intent.putParcelableArrayListExtra("events", NEWmanager.master);
+	        intent.putExtra("eventIndex", listManager.master.indexOf(e));
+	        intent.putParcelableArrayListExtra("events", listManager.master);
 	        intent.putExtra("token", tabbieAccessToken);
 	        return intent;
 	      }
@@ -629,10 +629,10 @@ public class MainActivity extends Activity implements
   		try {
   			final Set<String> serverLineupIds = 
   					TLJSONParser.parseLineupIds(list.getJSONObject(list.length() - 1));
-        NEWmanager.clear();
+        listManager.clear();
   			for(int i = 0; i < list.length() - 1; ++i) {
   				Event e = TLJSONParser.parseEvent(list.getJSONObject(i), this, serverLineupIds);
-  				NEWmanager.add(e);
+  				listManager.add(e);
   			}
       } catch (final JSONException e) {
       	Toast.makeText(this, "Fatal Error: Failed to Parse JSON",
