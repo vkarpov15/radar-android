@@ -5,6 +5,7 @@ import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.tabbie.android.radar.core.AbstractFilter;
 
@@ -33,6 +34,8 @@ public class AbstractListManager<T> {
     for (String key : lists.keySet()) {
       OrderedSubList ls = lists.get(key);
       if (ls.filter.apply(obj)) {
+      	ls.myList.add(obj);
+      	/* TODO This is probably unnecessary if the comparator is outside AbstratListManager
         int index = 0;
         // Insertion sort on elements
         for (T el : ls.myList) {
@@ -41,9 +44,15 @@ public class AbstractListManager<T> {
             break;
           }
           ++index;
-        }
+        } */
       }
     }
+  }
+  
+  public void addAll(List<T> obj) {
+  	for(T item : obj) {
+  		add(item);
+  	}
   }
   
   public boolean addToList(String listName, T obj) {
@@ -68,5 +77,17 @@ public class AbstractListManager<T> {
     } else {
       return false;
     }
-  } 
+  }
+  
+  public void clear() {
+  	master.clear();
+  	Set<String> keySet = lists.keySet();
+  	for(String key : keySet) {
+  		lists.get(key).myList.clear();
+  	}
+  }
+  
+  public List<T> get(String listId) {
+  	return lists.get(listId).myList;
+  }
 }

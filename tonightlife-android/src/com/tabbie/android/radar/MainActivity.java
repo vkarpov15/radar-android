@@ -85,7 +85,6 @@ public class MainActivity extends Activity implements
   // Adapter lists
   private ArrayList<Event> events = new ArrayList<Event>();
   private AbstractListManager<Event> NEWmanager = new AbstractListManager<Event>();
-  private ListManager manager = new ListManager();
 
   // Often-used views
   private TabHost tabHost;
@@ -193,14 +192,7 @@ public class MainActivity extends Activity implements
 				}
 			}
     	
-    }, new Comparator<Event>() {
-			
-			@Override
-			public int compare(Event lhs, Event rhs) {
-				// TODO Auto-generated method stub
-				return 0;
-			}
-		});
+    }, null);
     
     NEWmanager.createList(Lists.ALL.id, new AbstractFilter<Event>() {
 
@@ -209,15 +201,7 @@ public class MainActivity extends Activity implements
 				return true;
 			}
     	
-    }, new Comparator<Event>() {
-
-			@Override
-			public int compare(Event lhs, Event rhs) {
-				// TODO Auto-generated method stub
-				return 0;
-			}
-    	
-    });
+    }, null);
     
     NEWmanager.createList(Lists.LINEUP.id, new AbstractFilter<Event>() {
 
@@ -230,15 +214,7 @@ public class MainActivity extends Activity implements
 				}
 			}
     	
-    }, new Comparator<Event>() {
-
-			@Override
-			public int compare(Event lhs, Event rhs) {
-				// TODO Auto-generated method stub
-				return 0;
-			}
-    	
-    });
+    }, null);
     
     
   	// Grab a hold of some views
@@ -298,7 +274,7 @@ public class MainActivity extends Activity implements
 			}
 		};
 		
-		final AbstractEventListAdapter myAdapter = new AbstractEventListAdapter<Event>(this, manager.featuredEventsList, R.layout.event_list_element) {
+		final AbstractEventListAdapter myAdapter = new AbstractEventListAdapter<Event>(this, NEWmanager.get(Lists.FEATURED.id), R.layout.event_list_element) {
 
 			@Override
 			public void buildView(Event source, View v) {
@@ -311,17 +287,17 @@ public class MainActivity extends Activity implements
     // Set Initial Adapters
   	listViews[Lists.FEATURED.index].setAdapter(
   			new EventListAdapter(MainActivity.this,
-  					manager.featuredEventsList,
+  					NEWmanager.get(Lists.FEATURED.id),
   					new ListManager.DefaultComparator()));
   	
   	listViews[Lists.ALL.index].setAdapter(
   			new EventListAdapter(MainActivity.this,
-  					manager.allEventsList,
+  					NEWmanager.get(Lists.ALL.id),
   					new ListManager.DefaultComparator()));
   	
   	listViews[Lists.LINEUP.index].setAdapter(
   			new EventListAdapter(MainActivity.this,
-  					manager.lineupEventsList,
+  					NEWmanager.get(Lists.LINEUP.id),
   					new ListManager.ChronologicalComparator()));
     
   	// Set ListView properties
@@ -439,8 +415,9 @@ public class MainActivity extends Activity implements
     case REQUEST_EVENT_DETAILS:
       final Bundle parcelables = data.getExtras();
       events = parcelables.getParcelableArrayList("events");
-      manager.clear();
-      manager.addAll(events);
+      
+      NEWmanager.clear();
+      NEWmanager.addAll(events);
         
       tabHost.setCurrentTab(currentList.index);
 
@@ -664,8 +641,6 @@ public class MainActivity extends Activity implements
   				NEWmanager.add(e);
   				events.add(e);
   			}
-  			manager.clear();
-  			manager.addAll(events);
       } catch (final JSONException e) {
       	Toast.makeText(this, "Fatal Error: Failed to Parse JSON",
       			
