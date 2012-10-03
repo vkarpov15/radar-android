@@ -3,6 +3,7 @@ package com.tabbie.android.radar;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -49,6 +50,7 @@ import com.google.android.gcm.GCMRegistrar;
 import com.tabbie.android.radar.MultiSpinner.MultiSpinnerListener;
 import com.tabbie.android.radar.adapters.AbstractEventListAdapter;
 import com.tabbie.android.radar.adapters.EventListAdapter;
+import com.tabbie.android.radar.core.AbstractFilter;
 import com.tabbie.android.radar.core.BasicCallback;
 import com.tabbie.android.radar.core.TLJSONParser;
 import com.tabbie.android.radar.http.ServerGetRequest;
@@ -78,6 +80,20 @@ public class MainActivity extends Activity implements
   private final short FEATURED = 0;
   private final short ALL = 1;
   private final short LINEUP = 2;
+  
+  private enum Lists {
+  	FEATURED(0, "Featured"),
+  	ALL(1, "All"),
+  	LINEUP(2, "Lineup");
+  	
+  	public String id;
+  	public int index;
+  	
+  	Lists(int index, String id) {
+  		this.id = id;
+  		this.index = index;
+  	}
+  }
   
   // Inflater objects for adapters
   private AbstractViewInflater<Event> eventInflater;
@@ -182,6 +198,25 @@ public class MainActivity extends Activity implements
     ((ImageView) findViewById(R.id.loading_spin)).startAnimation(AnimationUtils
         .loadAnimation(this, R.anim.rotate));
   	
+    // TODO New Manager Test Stuff
+    NEWmanager.createList("Test", new AbstractFilter<Event>() {
+
+			@Override
+			public boolean apply(Event o) {
+				// TODO Auto-generated method stub
+				return false;
+			}
+    	
+    }, new Comparator<Event>() {
+			
+			@Override
+			public int compare(Event lhs, Event rhs) {
+				// TODO Auto-generated method stub
+				return 0;
+			}
+		});
+    
+    
   	// Grab a hold of some views
     tabHost = (FlingableTabHost) findViewById(android.R.id.tabhost);
     findViewById(R.id.map_button).setOnClickListener(new OnClickListener() {
@@ -199,9 +234,9 @@ public class MainActivity extends Activity implements
     tabHost.setCurrentTab(currentTabIndex);
     
     // Instantiate list views
-    listViews[FEATURED] = (ListView) findViewById(R.id.featured_event_list);
-    listViews[ALL] = (ListView) findViewById(R.id.all_event_list);
-    listViews[LINEUP] = (ListView) findViewById(R.id.lineup_event_list);
+    listViews[Lists.FEATURED.index] = (ListView) findViewById(R.id.featured_event_list);
+    listViews[Lists.ALL.index] = (ListView) findViewById(R.id.all_event_list);
+    listViews[Lists.LINEUP.index] = (ListView) findViewById(R.id.lineup_event_list);
 
     // Set Initial Adapters
   	listViews[FEATURED].setAdapter(
