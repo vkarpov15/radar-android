@@ -35,16 +35,6 @@ public class AbstractListManager<T> {
       OrderedSubList ls = lists.get(key);
       if (ls.filter.apply(obj)) {
       	ls.myList.add(obj);
-      	/* TODO This is probably unnecessary if the comparator is outside AbstratListManager
-        int index = 0;
-        // Insertion sort on elements
-        for (T el : ls.myList) {
-          if (ls.ordering.compare(obj, el) <= 0) {
-            ls.myList.add(index, obj);
-            break;
-          }
-          ++index;
-        } */
       }
     }
   }

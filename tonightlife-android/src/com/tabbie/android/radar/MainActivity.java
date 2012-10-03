@@ -58,11 +58,12 @@ import com.tabbie.android.radar.model.AbstractViewInflater;
 import com.tabbie.android.radar.model.Event;
 import com.tabbie.android.radar.model.ShareMessage;
 
-public class MainActivity extends Activity implements
-    OnTabChangeListener,
-    OnItemClickListener,
-    OnItemLongClickListener,
-    Handler.Callback {
+public class MainActivity
+	extends Activity
+	implements OnTabChangeListener,
+						 OnItemClickListener,
+						 OnItemLongClickListener,
+						 Handler.Callback {
 	
   public static final String TAG = "MainActivity";
   
