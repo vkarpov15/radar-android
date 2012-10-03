@@ -84,7 +84,7 @@ public class MainActivity extends Activity implements
   
   // Adapter lists
   private ArrayList<Event> events = new ArrayList<Event>();
-  private AbstractListManager NEWmanager = new AbstractListManager<Event>();
+  private AbstractListManager<Event> NEWmanager = new AbstractListManager<Event>();
   private ListManager manager = new ListManager();
 
   // Often-used views
@@ -660,6 +660,7 @@ public class MainActivity extends Activity implements
   	                                    obj.getString("start_time"),
   	                                    serverRadarIds.contains(obj.getString("id")),
   	                                    rsvp);
+  				NEWmanager.add(e);
   				events.add(e);
   			}
   			manager.clear();
