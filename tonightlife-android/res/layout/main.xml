@@ -111,7 +111,7 @@
 	                
 	                <ListView
 	                    android:id="@+id/featured_event_list"
-	                    android:tag="Short List"
+	                    android:tag="@string/list_featured"
 	                    android:visibility="gone"
 	                    android:layout_width="fill_parent"
 	                    android:layout_height="0dip"
@@ -128,7 +128,7 @@
 	                
 	                <ListView
 	                    android:id="@+id/all_event_list"
-	                    android:tag="All Events"
+	                    android:tag="@string/list_all"
 	                    android:visibility="gone"
 	                    android:layout_width="fill_parent"
 	                    android:layout_height="0dip"
@@ -145,7 +145,7 @@
 	                
 	                <ListView
 	                    android:id="@+id/lineup_event_list"
-	                    android:tag="My Lineup"
+	                    android:tag="@string/list_lineup"
 	                    android:visibility="gone"
 	                    android:layout_width="fill_parent"
 	                    android:layout_height="0dip"

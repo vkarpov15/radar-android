@@ -76,25 +76,6 @@ public class MainActivity extends Activity implements
   // Important Server Call and Receive Handlers/Threads
   private final Handler upstreamHandler;
   
-  // Tab View Constants
-  private final short FEATURED = 0;
-  private final short ALL = 1;
-  private final short LINEUP = 2;
-  
-  private enum Lists {
-  	FEATURED(0, "Featured"),
-  	ALL(1, "All"),
-  	LINEUP(2, "Lineup");
-  	
-  	public String id;
-  	public int index;
-  	
-  	Lists(int index, String id) {
-  		this.id = id;
-  		this.index = index;
-  	}
-  }
-  
   // Inflater objects for adapters
   private AbstractViewInflater<Event> eventInflater;
   private AbstractViewInflater<ShareMessage> messageInflater;
@@ -110,7 +91,7 @@ public class MainActivity extends Activity implements
 
   // Internal state for views
   private int currentViewPosition = 0;
-  private short currentTabIndex = 0;
+  private Lists currentList = Lists.ALL;
 
   // FB junk
   private final Facebook facebook = new Facebook("217386331697217");
@@ -166,7 +147,7 @@ public class MainActivity extends Activity implements
 			}
 		};
 		
-		/*
+		/* TODO
 		 * Builder object for displaying views
 		 * in the user's message feed
 		 */
@@ -231,19 +212,12 @@ public class MainActivity extends Activity implements
     // Set up the Tab Host
     tabHost.setup();
     tabHost.setOnTabChangedListener(this);
-    tabHost.setCurrentTab(currentTabIndex);
+    tabHost.setCurrentTab(currentList.index);
     
     // Instantiate list views
     listViews[Lists.FEATURED.index] = (ListView) findViewById(R.id.featured_event_list);
     listViews[Lists.ALL.index] = (ListView) findViewById(R.id.all_event_list);
     listViews[Lists.LINEUP.index] = (ListView) findViewById(R.id.lineup_event_list);
-
-    // Set Initial Adapters
-  	listViews[FEATURED].setAdapter(
-  			new EventListAdapter(MainActivity.this,
-  					manager.featuredEventsList,
-  					new ListManager.DefaultComparator()));
-  	
   	
   	// TODO #####################################################
   	final ImageLoader imageLoader = new ImageLoader(this);
@@ -290,13 +264,19 @@ public class MainActivity extends Activity implements
 		};
 		
 		// TODO ###################################################
+
+    // Set Initial Adapters
+  	listViews[Lists.FEATURED.index].setAdapter(
+  			new EventListAdapter(MainActivity.this,
+  					manager.featuredEventsList,
+  					new ListManager.DefaultComparator()));
   	
-  	listViews[ALL].setAdapter(
+  	listViews[Lists.ALL.index].setAdapter(
   			new EventListAdapter(MainActivity.this,
   					manager.allEventsList,
   					new ListManager.DefaultComparator()));
   	
-  	listViews[LINEUP].setAdapter(
+  	listViews[Lists.LINEUP.index].setAdapter(
   			new EventListAdapter(MainActivity.this,
   					manager.lineupEventsList,
   					new ListManager.ChronologicalComparator()));
@@ -372,19 +352,21 @@ public class MainActivity extends Activity implements
   }
 
   public void onTabChanged(final String tabName) {
-	  for(short i = 0; i < listViews.length; i++) {
-		  if(tabName.equals(listViews[i].getTag())) {
-			  currentTabIndex = i;
-		  }
-	  }
+  	if(tabName.equals(getString(R.string.list_all))) {
+  		currentList = Lists.ALL;
+  	} else if(tabName.equals(getString(R.string.list_featured))) {
+  		currentList = Lists.FEATURED;
+  	} else {
+  		currentList = Lists.LINEUP;
+  	}
 	  
-	  if(listViews[currentTabIndex].getAdapter().isEmpty()) {
+	  if(listViews[currentList.index].getAdapter().isEmpty()) {
 		  findViewById(R.id.radar_list_empty_text).setVisibility(View.VISIBLE);
 		  return;
 	  } else {
 		  findViewById(R.id.radar_list_empty_text).setVisibility(View.GONE);
 	  }
-	  final ListView tabView = listViews[currentTabIndex];
+	  final ListView tabView = listViews[currentList.index];
 	  ((BaseAdapter) tabView.getAdapter()).notifyDataSetChanged();
       playAnimation(tabView, getBaseContext(), android.R.anim.fade_in, 100);
   }
@@ -417,7 +399,7 @@ public class MainActivity extends Activity implements
       manager.clear();
       manager.addAll(events);
         
-      tabHost.setCurrentTab(currentTabIndex);
+      tabHost.setCurrentTab(currentList.index);
 
       for (final ListView v : listViews) {
         final BaseAdapter adapter = (BaseAdapter) v.getAdapter();
@@ -426,10 +408,10 @@ public class MainActivity extends Activity implements
         }
       }
 
-      listViews[currentTabIndex].setSelection(currentViewPosition);
+      listViews[currentList.index].setSelection(currentViewPosition);
         
       // TODO Use this paradigm (in more robust form) for other instances of this view
-      if(listViews[currentTabIndex].getAdapter().isEmpty()) {
+      if(listViews[currentList.index].getAdapter().isEmpty()) {
         findViewById(R.id.radar_list_empty_text).setVisibility(View.VISIBLE);
       } else {
         findViewById(R.id.radar_list_empty_text).setVisibility(View.GONE);
@@ -660,12 +642,12 @@ public class MainActivity extends Activity implements
   	      			adapter.notifyDataSetChanged();
   	      		}
   	      }
-  	    	if(listViews[currentTabIndex].getAdapter().isEmpty()) {
+  	    	if(listViews[currentList.index].getAdapter().isEmpty()) {
   	    		findViewById(R.id.radar_list_empty_text).setVisibility(View.VISIBLE);
   	    	} else {
   	    		findViewById(R.id.radar_list_empty_text).setVisibility(View.GONE);
   	     	}
-  	    	tabHost.setCurrentTab(currentTabIndex);
+  	    	tabHost.setCurrentTab(currentList.index);
         }
       });
   	  

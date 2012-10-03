@@ -18,6 +18,9 @@
 	<!-- This is the ID used for GCM -->
 	<string name="sender_id">453820866760</string>
 	<string name="feedback_subject">TonightLife Application Feedback</string>
+	<string name="list_featured">Short List</string>
+	<string name="list_all">All Events</string>
+	<string name="list_lineup">My Lineup</string>
 	
 	<string-array name="age_array">
         <item>All</item>
