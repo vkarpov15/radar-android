@@ -1,10 +1,7 @@
 package com.tabbie.android.radar;
 
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.LinkedHashSet;
 import java.util.Set;
 
 import org.json.JSONArray;
@@ -22,7 +19,6 @@ import android.os.HandlerThread;
 import android.os.Message;
 import android.os.Vibrator;
 import android.util.Log;
-import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -83,7 +79,6 @@ public class MainActivity extends Activity implements
   private AbstractViewInflater<ShareMessage> messageInflater;
   
   // Adapter lists
-  private ArrayList<Event> events = new ArrayList<Event>();
   private AbstractListManager<Event> NEWmanager = new AbstractListManager<Event>();
 
   // Often-used views
@@ -222,7 +217,7 @@ public class MainActivity extends Activity implements
     findViewById(R.id.map_button).setOnClickListener(new OnClickListener() {
         public void onClick(View v) {
             Intent intent = new Intent(MainActivity.this, TLMapActivity.class);
-            intent.putParcelableArrayListExtra("events", events);
+            intent.putParcelableArrayListExtra("events", NEWmanager.master);
             intent.putExtra("token", tabbieAccessToken);
             startActivity(intent);
         }
@@ -414,8 +409,8 @@ public class MainActivity extends Activity implements
       break;
     case REQUEST_EVENT_DETAILS:
       final Bundle parcelables = data.getExtras();
-      events = parcelables.getParcelableArrayList("events");
       
+      final ArrayList<Event> events = parcelables.getParcelableArrayList("events");
       NEWmanager.clear();
       NEWmanager.addAll(events);
         
@@ -567,8 +562,8 @@ public class MainActivity extends Activity implements
 	      protected Intent doInBackground(Void... params) {
 	        Intent intent = new Intent(MainActivity.this,
 	            EventDetailsActivity.class);
-	        intent.putExtra("eventIndex", events.indexOf(e));
-	        intent.putParcelableArrayListExtra("events", events);
+	        intent.putExtra("eventIndex", NEWmanager.master.indexOf(e));
+	        intent.putParcelableArrayListExtra("events", NEWmanager.master);
 	        intent.putExtra("token", tabbieAccessToken);
 	        return intent;
 	      }
@@ -634,12 +629,10 @@ public class MainActivity extends Activity implements
   		try {
   			final Set<String> serverLineupIds = 
   					TLJSONParser.parseLineupIds(list.getJSONObject(list.length() - 1));
-  			
-  			events.clear();
+        NEWmanager.clear();
   			for(int i = 0; i < list.length() - 1; ++i) {
   				Event e = TLJSONParser.parseEvent(list.getJSONObject(i), this, serverLineupIds);
   				NEWmanager.add(e);
-  				events.add(e);
   			}
       } catch (final JSONException e) {
       	Toast.makeText(this, "Fatal Error: Failed to Parse JSON",

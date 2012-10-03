@@ -10,7 +10,7 @@ import java.util.Set;
 import com.tabbie.android.radar.core.AbstractFilter;
 
 public class AbstractListManager<T> {
-  private final List<T> master = new ArrayList<T>();
+  public final ArrayList<T> master = new ArrayList<T>();
   private final Map<String, OrderedSubList> lists = new LinkedHashMap<String, OrderedSubList>();
   
   
