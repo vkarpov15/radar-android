@@ -100,6 +100,7 @@ public class MainActivity extends Activity implements
   private FacebookAuthenticator facebookAuthenticator;
   private FacebookUserRemoteResource facebookUserRemoteResource;
   
+  // Tabbie Junk
   private String tabbieAccessToken = null;
   
   // Google analytics
@@ -107,7 +108,6 @@ public class MainActivity extends Activity implements
   
   public MainActivity() {
 	  super();
-	  
 	  final HandlerThread serverThread = new HandlerThread(TAG + "Thread");
 	  serverThread.start();
 	  upstreamHandler = new ServerThreadHandler(serverThread.getLooper());
@@ -182,12 +182,12 @@ public class MainActivity extends Activity implements
         .loadAnimation(this, R.anim.rotate));
   	
     // TODO New Manager Test Stuff
-    NEWmanager.createList("Test", new AbstractFilter<Event>() {
+    NEWmanager.createList(Lists.FEATURED.id, new AbstractFilter<Event>() {
 
 			@Override
 			public boolean apply(Event o) {
 				// TODO Auto-generated method stub
-				return false;
+				return true;
 			}
     	
     }, new Comparator<Event>() {
@@ -198,6 +198,42 @@ public class MainActivity extends Activity implements
 				return 0;
 			}
 		});
+    
+    NEWmanager.createList(Lists.ALL.id, new AbstractFilter<Event>() {
+
+			@Override
+			public boolean apply(Event o) {
+				// TODO Auto-generated method stub
+				return false;
+			}
+    	
+    }, new Comparator<Event>() {
+
+			@Override
+			public int compare(Event lhs, Event rhs) {
+				// TODO Auto-generated method stub
+				return 0;
+			}
+    	
+    });
+    
+    NEWmanager.createList(Lists.LINEUP.id, new AbstractFilter<Event>() {
+
+			@Override
+			public boolean apply(Event o) {
+				// TODO Auto-generated method stub
+				return false;
+			}
+    	
+    }, new Comparator<Event>() {
+
+			@Override
+			public int compare(Event lhs, Event rhs) {
+				// TODO Auto-generated method stub
+				return 0;
+			}
+    	
+    });
     
     
   	// Grab a hold of some views
