@@ -50,6 +50,7 @@ import com.tabbie.android.radar.MultiSpinner.MultiSpinnerListener;
 import com.tabbie.android.radar.adapters.AbstractEventListAdapter;
 import com.tabbie.android.radar.adapters.EventListAdapter;
 import com.tabbie.android.radar.core.BasicCallback;
+import com.tabbie.android.radar.core.TLJSONParser;
 import com.tabbie.android.radar.http.ServerGetRequest;
 import com.tabbie.android.radar.http.ServerPostRequest;
 import com.tabbie.android.radar.http.ServerResponse;
@@ -592,91 +593,14 @@ public class MainActivity extends Activity implements
       break;
     }
 		case LOAD_EVENTS:
-			// Full data list
   		final JSONArray list = resp.parseJsonArray();
-
-  		final Set<String> serverRadarIds = new LinkedHashSet<String>();
   		try {
-  			
-  			// Final entry in data array is a set of lineup ids
-  			final JSONObject radarObj = list.getJSONObject(list.length() - 1);
-  			
-  			// Array of lineup ids from data object
-  			JSONArray tmpRadarList = radarObj.getJSONArray("radar");
-  			
-  			// Create a set of lineup ids
-  			for(int i = 0; i < tmpRadarList.length(); ++i) {
-  				serverRadarIds.add(tmpRadarList.getString(i));
-  			}
+  			final Set<String> serverLineupIds = 
+  					TLJSONParser.parseLineupIds(list.getJSONObject(list.length() - 1));
   			
   			events.clear();
-  			
-  			final String domain = getString(R.string.tabbie_server);
-  			
-  			
   			for(int i = 0; i < list.length() - 1; ++i) {
-  				final JSONObject obj = list.getJSONObject(i);
-  				final String radarCountStr = obj.getString("user_count");
-  				int radarCount = 0;
-  				if (null != radarCountStr && 0 != radarCountStr.compareTo("null"))
-  					radarCount = Integer.parseInt(radarCountStr);
-  				final JSONObject rsvpObj = obj.getJSONObject("rsvp");
-  				
-  				Pair<String, String> rsvp = null;
-  				if (rsvpObj.has("url")) {
-  					rsvp = new Pair<String, String>("url", rsvpObj.getString("url"));
-  				} else if (rsvpObj.has("email")) {
-  					rsvp = new Pair<String, String>("email", rsvpObj.getString("email"));
-  				} else {
-  					rsvp = new Pair<String, String>("", "");
-  				}
-  				
-  				// TODO ################################################
-  				final int energy = 0;
-  				final Event.Energy energyLevel;
-  				switch(energy) {
-  				case 0:
-  					energyLevel = Event.Energy.LOW;
-  					break;
-  				case 1:
-  					energyLevel = Event.Energy.MODERATE;
-  					break;
-  				case 2:
-  					energyLevel = Event.Energy.HIGH;
-  					break;
-  					default:
-  						energyLevel = Event.Energy.MODERATE;
-  				}
-  				
-  				final int price = 0;
-  				final Event.Price priceLevel;
-  				switch(price) {
-  				case 0:
-  					priceLevel = Event.Price.FREE;
-  					break;
-  				case 1:
-  					priceLevel = Event.Price.CHEAP;
-  					break;
-  				case 2:
-  					priceLevel = Event.Price.EXPENSIVE;
-  					break;
-  					default:
-  						priceLevel = Event.Price.CHEAP;
-  				}
-  				// TODO ################################
-  				final Event e = new Event(  obj.getString("id"),
-  	                                    obj.getString("name"),
-  	                                    obj.getString("description"),
-  	                                    obj.getString("location"),
-  	                                    obj.getString("street_address"),
-  	                                    new URL(domain + obj.getString("image_url")),
-  	                                    (int) (obj.getDouble("latitude")*1E6),
-  	                                    (int) (obj.getDouble("longitude")*1E6),
-  	                                    radarCount,
-  	                                    obj.getBoolean("featured"),
-  	                                    obj.getString("start_time"),
-  	                                    serverRadarIds.contains(obj.getString("id")),
-  	                                    rsvp);
+  				Event e = TLJSONParser.parseEvent(list.getJSONObject(i), this, serverLineupIds);
   				NEWmanager.add(e);
   				events.add(e);
   			}
