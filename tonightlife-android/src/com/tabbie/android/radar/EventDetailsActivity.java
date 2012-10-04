@@ -12,7 +12,6 @@ package com.tabbie.android.radar;
 
 import java.util.ArrayList;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -25,13 +24,14 @@ import android.view.View.OnClickListener;
 import android.widget.ImageView;
 
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
+import com.google.android.apps.analytics.easytracking.TrackedActivity;
 import com.tabbie.android.radar.adapters.EventDetailsPagerAdapter;
 import com.tabbie.android.radar.http.ServerDeleteRequest;
 import com.tabbie.android.radar.http.ServerPostRequest;
 import com.tabbie.android.radar.maps.TLMapActivity;
 import com.tabbie.android.radar.model.Event;
 
-public class EventDetailsActivity extends Activity implements
+public class EventDetailsActivity extends TrackedActivity implements
 	OnClickListener,
 	EventDetailsPagerAdapter.OnPageChangeListener {
 	

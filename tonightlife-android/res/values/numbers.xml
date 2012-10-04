@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <bool name="ga_debug">true</bool>
+    <bool name="ga_dryRun">true</bool>
+    <bool name="ga_anonymizeIp">false</bool>
+    <bool name="ga_auto_activity_tracking">true</bool>
+    
+    <integer name="ga_sampleRate">100</integer>
+    <integer name="ga_dispatchPeriod">20</integer>
+</resources>

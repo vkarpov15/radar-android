@@ -21,6 +21,7 @@
 	<string name="list_featured">Short List</string>
 	<string name="list_all">All Events</string>
 	<string name="list_lineup">My Lineup</string>
+	<string name="ga_api_key">UA-34193317-1</string>
 	
 	<string-array name="age_array">
         <item>All</item>

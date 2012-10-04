@@ -17,7 +17,6 @@ package com.tabbie.android.radar;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -31,11 +30,12 @@ import com.facebook.android.DialogError;
 import com.facebook.android.Facebook;
 import com.facebook.android.Facebook.DialogListener;
 import com.facebook.android.FacebookError;
+import com.google.android.apps.analytics.easytracking.TrackedActivity;
 import com.tabbie.android.radar.http.ServerGetRequest;
 import com.tabbie.android.radar.http.ServerPostRequest;
 import com.tabbie.android.radar.http.ServerResponse;
 
-public class AuthenticateActivity extends Activity implements Handler.Callback {
+public class AuthenticateActivity extends TrackedActivity implements Handler.Callback {
   public final String TAG = "Authenticate Activity";
   private final Handler upstreamHandler;
   
