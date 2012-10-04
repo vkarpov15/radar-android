@@ -23,8 +23,8 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.tabbie.android.radar.ImageLoader;
 import com.tabbie.android.radar.R;
+import com.tabbie.android.radar.core.cache.ImageLoader;
 import com.tabbie.android.radar.model.Event;
 
 public class EventDetailsPagerAdapter

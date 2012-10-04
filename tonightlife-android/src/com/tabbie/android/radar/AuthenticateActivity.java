@@ -35,6 +35,7 @@ import com.tabbie.android.radar.enums.MessageType;
 import com.tabbie.android.radar.http.ServerGetRequest;
 import com.tabbie.android.radar.http.ServerPostRequest;
 import com.tabbie.android.radar.http.ServerResponse;
+import com.tabbie.android.radar.http.ServerThreadHandler;
 
 public class AuthenticateActivity extends Activity implements Handler.Callback {
   public final String TAG = "Authenticate Activity";

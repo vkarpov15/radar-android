@@ -20,7 +20,8 @@ import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
-import com.tabbie.android.radar.MultiSpinner.MultiSpinnerListener;
+import com.tabbie.android.radar.core.MultiSpinner;
+import com.tabbie.android.radar.core.MultiSpinner.MultiSpinnerListener;
 
 
 public class PreferencesDialog extends Dialog {

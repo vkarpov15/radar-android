@@ -1,4 +1,4 @@
-package com.tabbie.android.radar;
+package com.tabbie.android.radar.core;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -9,6 +9,8 @@ import android.view.ViewConfiguration;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.TabHost;
+
+import com.tabbie.android.radar.R;
 
 public class FlingableTabHost extends TabHost {
   GestureDetector gestureDetector;

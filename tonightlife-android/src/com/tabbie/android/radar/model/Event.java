@@ -4,7 +4,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import com.google.android.maps.GeoPoint;
-import com.tabbie.android.radar.TLDatetime;
 
 import android.os.Parcel;
 import android.os.Parcelable;

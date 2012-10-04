@@ -30,6 +30,7 @@ import com.tabbie.android.radar.adapters.EventDetailsPagerAdapter;
 import com.tabbie.android.radar.enums.MessageType;
 import com.tabbie.android.radar.http.ServerDeleteRequest;
 import com.tabbie.android.radar.http.ServerPostRequest;
+import com.tabbie.android.radar.http.ServerThreadHandler;
 import com.tabbie.android.radar.maps.TLMapActivity;
 import com.tabbie.android.radar.model.Event;
 

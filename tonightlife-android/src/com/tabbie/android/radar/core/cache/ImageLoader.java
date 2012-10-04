@@ -1,4 +1,4 @@
-package com.tabbie.android.radar;
+package com.tabbie.android.radar.core.cache;
 
 /**
  *  FileCache.java
@@ -31,6 +31,8 @@ import android.graphics.BitmapFactory;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+
+import com.tabbie.android.radar.R;
 
 public class ImageLoader {
     
