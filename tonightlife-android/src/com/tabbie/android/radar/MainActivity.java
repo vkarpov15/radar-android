@@ -571,11 +571,11 @@ public class MainActivity extends TrackedActivity
 							@Override
 							public void buildView(Event source, ViewGroup v) {
 								v.removeAllViews();
-								eventInflater.bindView(source, (ViewGroup) v);
+								eventInflater.bindView(source, v);
 								ArrayList<ShareMessage> messageList = messageFeed.get(source.id);
 								if(messageList!=null) {
 									for(ShareMessage m : messageList) {
-										messageInflater.bindView(m, (ViewGroup) v, v.findViewWithTag(m.mMessageId));
+										messageInflater.bindView(m, v);
 									}
 								}
 							}
