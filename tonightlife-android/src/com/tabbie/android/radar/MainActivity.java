@@ -48,8 +48,8 @@ import com.tabbie.android.radar.adapters.DefaultComparator;
 import com.tabbie.android.radar.core.AbstractFilter;
 import com.tabbie.android.radar.core.BasicCallback;
 import com.tabbie.android.radar.core.FlingableTabHost;
-import com.tabbie.android.radar.core.TLJSONParser;
 import com.tabbie.android.radar.core.MultiSpinner.MultiSpinnerListener;
+import com.tabbie.android.radar.core.TLJSONParser;
 import com.tabbie.android.radar.core.cache.ImageLoader;
 import com.tabbie.android.radar.enums.Lists;
 import com.tabbie.android.radar.enums.MessageType;
@@ -426,7 +426,7 @@ public class MainActivity extends TrackedActivity
 	   * Builder object for displaying views
 	   * in the user's Event feed
 	   */
-	  eventInflater = new AbstractViewInflater<Event>(this, R.layout.event_list_element) {
+	  eventInflater = new AbstractViewInflater<Event>(this, R.layout.list_event) {
 	  	private final ImageLoader mLoader = new ImageLoader(mContext);
 
 			@Override
@@ -454,7 +454,7 @@ public class MainActivity extends TrackedActivity
 		 * Builder object for displaying views
 		 * in the user's message feed
 		 */
-	  messageInflater = new AbstractViewInflater<ShareMessage>(this, R.layout.event_list_element) {
+	  messageInflater = new AbstractViewInflater<ShareMessage>(this, R.layout.list_event) {
 		  // TODO This layout is currently a placeholder for future xml ---------------^
 			@Override
 			protected View bindView(ShareMessage data, View v) {
@@ -533,7 +533,7 @@ public class MainActivity extends TrackedActivity
 				new AbstractEventListAdapter<Event>(this,
 						listManager.get(Lists.FEATURED.id),
 						new DefaultComparator(),
-						R.layout.event_list_element) {
+						R.layout.list_event) {
 							@Override
 							public void buildView(Event source, View v) {
 								v = eventInflater.getView(source, v);
@@ -544,7 +544,7 @@ public class MainActivity extends TrackedActivity
 				new AbstractEventListAdapter<Event>(this,
 						listManager.get(Lists.ALL.id),
 						new DefaultComparator(),
-						R.layout.event_list_element) {
+						R.layout.list_event) {
 							@Override
 							public void buildView(Event source, View v) {
 								v = eventInflater.getView(source, v);
@@ -555,7 +555,7 @@ public class MainActivity extends TrackedActivity
 				new AbstractEventListAdapter<Event>(this,
 						listManager.get(Lists.LINEUP.id),
 						new ChronologicalComparator(),
-						R.layout.event_list_element) {
+						R.layout.list_event) {
 
 							@Override
 							public void buildView(Event source, View v) {
