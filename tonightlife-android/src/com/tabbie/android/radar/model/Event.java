@@ -21,18 +21,22 @@ public class Event implements Parcelable {
 		CHEAP,
 		EXPENSIVE
 	}
-  public final String id;
+  
+	// Immutable public constants
+	public final String id;
   public final String name;
   public final String description;
   public final String venue;
   public final String address;
   public final URL imageUrl;
   public final boolean isFeatured;
-  public final TLDatetime time; 
-  public int lineupCount;
-  public boolean onLineup;
+  public final TLDatetime time;
   public final GeoPoint location;
   public final Pair<String, String> rsvp;
+  
+  // Mutable public constants
+  public int lineupCount;
+  public boolean onLineup;
 
   public Event(final String id,
 		  	final String name,
