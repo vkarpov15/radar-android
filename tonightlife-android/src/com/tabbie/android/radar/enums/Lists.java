@@ -1,4 +1,4 @@
-package com.tabbie.android.radar;
+package com.tabbie.android.radar.enums;
 
 public enum Lists {
 	FEATURED(0, "Featured"),

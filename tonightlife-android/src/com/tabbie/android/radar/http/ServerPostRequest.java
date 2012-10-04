@@ -11,7 +11,7 @@ package com.tabbie.android.radar.http;
 
 import java.util.LinkedHashMap;
 
-import com.tabbie.android.radar.MessageType;
+import com.tabbie.android.radar.enums.MessageType;
 
 public class ServerPostRequest extends ServerRequest {
   public final LinkedHashMap<String, String> params = new LinkedHashMap<String, String>();

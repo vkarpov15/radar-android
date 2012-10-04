@@ -18,6 +18,7 @@ import android.os.Handler;
 import android.os.Message;
 
 import com.tabbie.android.radar.core.BasicCallback;
+import com.tabbie.android.radar.enums.MessageType;
 import com.tabbie.android.radar.http.ServerGetRequest;
 import com.tabbie.android.radar.http.ServerResponse;
 

@@ -27,6 +27,7 @@ import android.widget.ImageView;
 import com.google.android.apps.analytics.easytracking.EasyTracker;
 import com.google.android.apps.analytics.easytracking.TrackedActivity;
 import com.tabbie.android.radar.adapters.EventDetailsPagerAdapter;
+import com.tabbie.android.radar.enums.MessageType;
 import com.tabbie.android.radar.http.ServerDeleteRequest;
 import com.tabbie.android.radar.http.ServerPostRequest;
 import com.tabbie.android.radar.maps.TLMapActivity;

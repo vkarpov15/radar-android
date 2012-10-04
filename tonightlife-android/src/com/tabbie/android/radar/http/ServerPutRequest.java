@@ -1,6 +1,6 @@
 package com.tabbie.android.radar.http;
 
-import com.tabbie.android.radar.MessageType;
+import com.tabbie.android.radar.enums.MessageType;
 
 /**
  * ServerPutRequest.java

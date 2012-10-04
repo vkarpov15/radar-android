@@ -13,7 +13,7 @@ import java.util.LinkedHashMap;
 
 import android.os.Handler;
 
-import com.tabbie.android.radar.MessageType;
+import com.tabbie.android.radar.enums.MessageType;
 
 public abstract class ServerRequest {
 	public final String url;

@@ -13,7 +13,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.tabbie.android.radar.MessageType;
+import com.tabbie.android.radar.enums.MessageType;
 
 public class ServerResponse {
 	public static final int NO_INTERNET = -2;
