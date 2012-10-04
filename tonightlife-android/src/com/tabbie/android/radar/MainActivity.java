@@ -24,6 +24,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
@@ -430,7 +431,7 @@ public class MainActivity extends TrackedActivity
 	  	private final ImageLoader mLoader = new ImageLoader(mContext);
 
 			@Override
-			protected View bindView(Event data, View v) {
+			protected View bindData(Event data, View v) {
 		    ((TextView) v.findViewById(R.id.event_text))
 		  		  .setText(data.name);
 		
@@ -457,7 +458,7 @@ public class MainActivity extends TrackedActivity
 	  messageInflater = new AbstractViewInflater<ShareMessage>(this, R.layout.list_event) {
 		  // TODO This layout is currently a placeholder for future xml ---------------^
 			@Override
-			protected View bindView(ShareMessage data, View v) {
+			protected View bindData(ShareMessage data, View v) {
 				// TODO Auto-generated method stub
 				return null;
 			}
@@ -533,10 +534,10 @@ public class MainActivity extends TrackedActivity
 				new AbstractEventListAdapter<Event>(this,
 						listManager.get(Lists.FEATURED.id),
 						new DefaultComparator(),
-						R.layout.list_event) {
+						R.layout.list_container) {
 							@Override
 							public void buildView(Event source, View v) {
-								v = eventInflater.getView(source, v);
+								eventInflater.bindView(source, (ViewGroup) v, v.findViewById(R.id.list_event_container));
 							}
 				});
 		
@@ -544,10 +545,10 @@ public class MainActivity extends TrackedActivity
 				new AbstractEventListAdapter<Event>(this,
 						listManager.get(Lists.ALL.id),
 						new DefaultComparator(),
-						R.layout.list_event) {
+						R.layout.list_container) {
 							@Override
 							public void buildView(Event source, View v) {
-								v = eventInflater.getView(source, v);
+								eventInflater.bindView(source, (ViewGroup) v, v.findViewById(R.id.list_event_container));
 							}
 				});
 		
@@ -555,11 +556,11 @@ public class MainActivity extends TrackedActivity
 				new AbstractEventListAdapter<Event>(this,
 						listManager.get(Lists.LINEUP.id),
 						new ChronologicalComparator(),
-						R.layout.list_event) {
+						R.layout.list_container) {
 
 							@Override
 							public void buildView(Event source, View v) {
-								v = eventInflater.getView(source, v);
+								eventInflater.bindView(source, (ViewGroup) v, v.findViewById(R.id.list_event_container));
 							}
 					
 				});

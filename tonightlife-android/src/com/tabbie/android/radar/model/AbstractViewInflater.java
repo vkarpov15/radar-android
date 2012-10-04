@@ -3,6 +3,7 @@ package com.tabbie.android.radar.model;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 
 public abstract class AbstractViewInflater<T> {
 	protected final Context mContext;
@@ -13,12 +14,13 @@ public abstract class AbstractViewInflater<T> {
 		this.mResource = resource;
 	}
 	
-	public View getView(T data, View v) {
+	public void bindView(T data, ViewGroup parent, View v) {
 		if(v == null) {
 			v = LayoutInflater.from(mContext).inflate(mResource, null);
 			v.setClickable(false);
+			parent.addView(v);
 		}
-		return bindView(data, v);
+		bindData(data, v);
 	}
 
 	/**
@@ -29,5 +31,5 @@ public abstract class AbstractViewInflater<T> {
 	 * @param v The View to populate
 	 * @return The populated View
 	 */
-	protected abstract View bindView(T data, View v);
+	protected abstract View bindData(T data, View v);
 }
