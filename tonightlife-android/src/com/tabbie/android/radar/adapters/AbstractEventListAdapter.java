@@ -1,5 +1,7 @@
 package com.tabbie.android.radar.adapters;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import android.content.Context;
@@ -14,11 +16,13 @@ public abstract class AbstractEventListAdapter<T extends Event> extends BaseAdap
 	private final int mResource;
 	private final Context mContext;
 	private final List<T> mEventList;
+	private Comparator<? super T> mComparator;
 	
-	public AbstractEventListAdapter(Context context, List<T> listManager, int resource) {
+	public AbstractEventListAdapter(Context context, List<T> listManager, Comparator<T> comparator, int resource) {
 		this.mResource = resource;
 		this.mContext = context;
 		this.mEventList = listManager;
+		this.mComparator = comparator;
 	}
 
 	@Override
@@ -50,8 +54,13 @@ public abstract class AbstractEventListAdapter<T extends Event> extends BaseAdap
 			v.setClickable(false);
 		}
 		buildView(mEventList.get(position), v);
-		parent.addView(v);
 		return v;
+	}
+	
+	@Override
+	public void notifyDataSetChanged() {
+		Collections.sort(mEventList, mComparator);
+		super.notifyDataSetChanged();
 	}
 	
 	/**

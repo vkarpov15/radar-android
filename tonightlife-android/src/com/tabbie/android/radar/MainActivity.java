@@ -45,7 +45,6 @@ import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 import com.google.android.gcm.GCMRegistrar;
 import com.tabbie.android.radar.MultiSpinner.MultiSpinnerListener;
 import com.tabbie.android.radar.adapters.AbstractEventListAdapter;
-import com.tabbie.android.radar.adapters.EventListAdapter;
 import com.tabbie.android.radar.core.AbstractFilter;
 import com.tabbie.android.radar.core.BasicCallback;
 import com.tabbie.android.radar.core.TLJSONParser;
@@ -112,9 +111,17 @@ public class MainActivity extends Activity
     // Set initial conditions
     super.onCreate(savedInstanceState);
     Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
+    
+    // Set main XML background
     setContentView(R.layout.main);
+    
+    // Extend AbstractViewInflater
     createViewInflaters();
+    
+    // Make sure all the GCM stuff is in place
     registerGCMContent();
+    
+    // Register the three lists in AbstractLIstManager
     createLists();
 
     // Start Google Analytics
@@ -124,88 +131,16 @@ public class MainActivity extends Activity
     ((ImageView) findViewById(R.id.loading_spin)).startAnimation(AnimationUtils
         .loadAnimation(this, R.anim.rotate));
     
-  	// Grab a hold of some views
-    tabHost = (FlingableTabHost) findViewById(android.R.id.tabhost);
-    findViewById(R.id.map_button).setOnClickListener(new OnClickListener() {
-        public void onClick(View v) {
-            Intent intent = new Intent(MainActivity.this, TLMapActivity.class);
-            intent.putParcelableArrayListExtra("events", listManager.master);
-            intent.putExtra("token", tabbieAccessToken);
-            startActivity(intent);
-        }
-      });
-
-    // Set up the Tab Host
-    tabHost.setup();
-    tabHost.setOnTabChangedListener(this);
-    tabHost.setCurrentTab(currentList.index);
+    // Set initial TabHost conditions
+    setupTabHost();
     
     // Instantiate list views
     listViews[Lists.FEATURED.index] = (ListView) findViewById(R.id.featured_event_list);
     listViews[Lists.ALL.index] = (ListView) findViewById(R.id.all_event_list);
     listViews[Lists.LINEUP.index] = (ListView) findViewById(R.id.lineup_event_list);
-  	
-  	// TODO #####################################################
-  	final ImageLoader imageLoader = new ImageLoader(this);
-  	final AbstractViewInflater<Event> eventInflater = new AbstractViewInflater<Event>(this, R.layout.event_list_element) {
-  		
-			@Override
-			protected View bindView(Event data, View v) {
-		    ((TextView) v
-		  		  .findViewById(R.id.event_text))
-		  		  .setText(data.name);
 
-		    ((TextView) v
-		  		  .findViewById(R.id.event_list_time))
-		  		  .setText(data.time.makeYourTime());
-
-		    ((TextView) v
-		        .findViewById(R.id.event_location))
-		        .setText(data.venue);
-		    
-		    final View viewHolder = v.findViewById(R.id.image_holder);
-		    viewHolder.findViewById(R.id.element_loader).startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.rotate));
-		    imageLoader.displayImage(data.imageUrl.toString(),
-		  		  (ImageView) viewHolder.findViewById(R.id.event_image));
-		    
-				return null;
-			}
-		};
-		
-		final AbstractViewInflater<ShareMessage> smsInflater = new AbstractViewInflater<ShareMessage>(this, R.layout.event_list_element) {
-
-			@Override
-			protected View bindView(ShareMessage data, View v) {
-				// TODO Auto-generated method stub
-				return null;
-			}
-		};
-		
-		final AbstractEventListAdapter myAdapter = new AbstractEventListAdapter<Event>(this, listManager.get(Lists.FEATURED.id), R.layout.event_list_element) {
-
-			@Override
-			public void buildView(Event source, View v) {
-				v = eventInflater.getView(source, v);
-			}
-		};
-		
-		// TODO ###################################################
-
-    // Set Initial Adapters
-  	listViews[Lists.FEATURED.index].setAdapter(
-  			new EventListAdapter(MainActivity.this,
-  					listManager.get(Lists.FEATURED.id),
-  					new DefaultComparator()));
-  	
-  	listViews[Lists.ALL.index].setAdapter(
-  			new EventListAdapter(MainActivity.this,
-  					listManager.get(Lists.ALL.id),
-  					new DefaultComparator()));
-  	
-  	listViews[Lists.LINEUP.index].setAdapter(
-  			new EventListAdapter(MainActivity.this,
-  					listManager.get(Lists.LINEUP.id),
-  					new ChronologicalComparator()));
+    // Create and bind adapters
+    buildAdapters();
     
   	// Set ListView properties
     for(final ListView v : listViews) {
@@ -216,48 +151,7 @@ public class MainActivity extends Activity
     }
     
     // Start our authentication chain. First authenticate against facebook
-    facebookAuthenticator = new FacebookAuthenticator(facebook, getPreferences(MODE_PRIVATE));
-    facebookUserRemoteResource = new FacebookUserRemoteResource(getPreferences(MODE_PRIVATE));
-    
-    ((TextView) findViewById(R.id.loading_text)).setText("Checking Facebook credentials...");
-    facebookAuthenticator.authenticate(this, new BasicCallback<String>() {
-      @Override
-      public void onFail(String reason) {
-        Log.e(this.getClass().getName(), "Facebook auth failed because '" + reason + "'");
-        ((TextView) findViewById(R.id.loading_text)).setText("Checking facebook credentials FAILED!");
-        throw new RuntimeException(reason);
-      }
-      
-      @Override
-      public void onDone(String response) {
-        ((TextView) findViewById(R.id.loading_text)).setText("Loading Facebook user information...");
-        
-        facebookUserRemoteResource.load(upstreamHandler, response, new BasicCallback<String>() {
-          @Override
-          public void onFail(String reason) {
-            Log.e(this.getClass().getName(), "Facebook user info load failed because '" + reason + "'");
-            ((TextView) findViewById(R.id.loading_text)).setText("Loading Facebook user information FAILED!");
-            throw new RuntimeException(reason);
-          }
-          
-          @Override
-          public void onDone(String response) {
-            ((TextView) findViewById(R.id.user_name)).setText(response);
-            
-            ((TextView) findViewById(R.id.loading_text)).setText("Retrieving events...");
-            final ServerPostRequest req = new ServerPostRequest(
-                getString(R.string.tabbie_server) + "/mobile/auth.json",
-                MessageType.TABBIE_LOGIN);
-
-            req.params.put("fb_token", facebook.getAccessToken());
-            req.responseHandler = new Handler(MainActivity.this);
-            final Message message = Message.obtain();
-            message.obj = req;
-            upstreamHandler.sendMessage(message);
-          }
-        });
-      }
-    });
+    authenticateFacebook();
   }
   
   @Override
@@ -654,7 +548,7 @@ public class MainActivity extends Activity
 				}
 			}
     	
-    }, null);
+    });
     
     listManager.createList(Lists.ALL.id, new AbstractFilter<Event>() {
 
@@ -663,7 +557,7 @@ public class MainActivity extends Activity
 				return true;
 			}
     	
-    }, null);
+    });
     
     listManager.createList(Lists.LINEUP.id, new AbstractFilter<Event>() {
 
@@ -676,7 +570,107 @@ public class MainActivity extends Activity
 				}
 			}
     	
-    }, null);
+    });
+	}
+	
+	private void setupTabHost() {
+  	// Grab a hold of some views
+    tabHost = (FlingableTabHost) findViewById(android.R.id.tabhost);
+    findViewById(R.id.map_button).setOnClickListener(new OnClickListener() {
+        public void onClick(View v) {
+            Intent intent = new Intent(MainActivity.this, TLMapActivity.class);
+            intent.putParcelableArrayListExtra("events", listManager.master);
+            intent.putExtra("token", tabbieAccessToken);
+            startActivity(intent);
+        }
+      });
+
+    // Set up the Tab Host
+    tabHost.setup();
+    tabHost.setOnTabChangedListener(this);
+    tabHost.setCurrentTab(currentList.index);
+	}
+	
+	private void buildAdapters() {
+		listViews[Lists.FEATURED.index].setAdapter(
+				new AbstractEventListAdapter<Event>(this,
+						listManager.get(Lists.FEATURED.id),
+						new DefaultComparator(),
+						R.layout.event_list_element) {
+							@Override
+							public void buildView(Event source, View v) {
+								v = eventInflater.getView(source, v);
+							}
+				});
+		
+		listViews[Lists.ALL.index].setAdapter(
+				new AbstractEventListAdapter<Event>(this,
+						listManager.get(Lists.ALL.id),
+						new DefaultComparator(),
+						R.layout.event_list_element) {
+							@Override
+							public void buildView(Event source, View v) {
+								v = eventInflater.getView(source, v);
+							}
+				});
+		
+		listViews[Lists.LINEUP.index].setAdapter(
+				new AbstractEventListAdapter<Event>(this,
+						listManager.get(Lists.LINEUP.id),
+						new ChronologicalComparator(),
+						R.layout.event_list_element) {
+
+							@Override
+							public void buildView(Event source, View v) {
+								v = eventInflater.getView(source, v);
+							}
+					
+				});
+	}
+	
+	private void authenticateFacebook() {
+    ((TextView) findViewById(R.id.loading_text)).setText("Checking Facebook credentials...");
+    
+    facebookAuthenticator = new FacebookAuthenticator(facebook, getPreferences(MODE_PRIVATE));
+    facebookUserRemoteResource = new FacebookUserRemoteResource(getPreferences(MODE_PRIVATE));
+    facebookAuthenticator.authenticate(this, new BasicCallback<String>() {
+      @Override
+      public void onFail(String reason) {
+        Log.e(this.getClass().getName(), "Facebook auth failed because '" + reason + "'");
+        ((TextView) findViewById(R.id.loading_text)).setText("Checking facebook credentials FAILED!");
+        throw new RuntimeException(reason);
+      }
+      
+      @Override
+      public void onDone(String response) {
+        ((TextView) findViewById(R.id.loading_text)).setText("Loading Facebook user information...");
+        
+        facebookUserRemoteResource.load(upstreamHandler, response, new BasicCallback<String>() {
+          @Override
+          public void onFail(String reason) {
+            Log.e(this.getClass().getName(), "Facebook user info load failed because '" + reason + "'");
+            ((TextView) findViewById(R.id.loading_text)).setText("Loading Facebook user information FAILED!");
+            throw new RuntimeException(reason);
+          }
+          
+          @Override
+          public void onDone(String response) {
+            ((TextView) findViewById(R.id.user_name)).setText(response);
+            
+            ((TextView) findViewById(R.id.loading_text)).setText("Retrieving events...");
+            final ServerPostRequest req = new ServerPostRequest(
+                getString(R.string.tabbie_server) + "/mobile/auth.json",
+                MessageType.TABBIE_LOGIN);
+
+            req.params.put("fb_token", facebook.getAccessToken());
+            req.responseHandler = new Handler(MainActivity.this);
+            final Message message = Message.obtain();
+            message.obj = req;
+            upstreamHandler.sendMessage(message);
+          }
+        });
+      }
+    });
 	}
 	
 	private static final void createTabView(final TabHost host, final ListView view) {
