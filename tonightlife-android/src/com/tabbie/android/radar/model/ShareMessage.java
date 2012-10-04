@@ -13,13 +13,18 @@ package com.tabbie.android.radar.model;
 
 public class ShareMessage {
 	public final static String TAG = "ShareMessage";
-	public final String message;
-	public final String userFirstName;
-	public final String userLastName;
 	
-	public ShareMessage(final String firstName, final String lastName, final String message) {
-		this.userFirstName = firstName;
-		this.userLastName = lastName;
-		this.message = message;
+	// Immutable public constants
+	public final String mMessage;
+	public final String mEventId;
+	public final String mUserFirstName;
+	public final String mUserLastName;
+	
+	public ShareMessage(final String userFirstName, final String userLastName,
+			final String message, final String eventId) {
+		this.mUserFirstName = userFirstName;
+		this.mUserLastName = userLastName;
+		this.mMessage = message;
+		this.mEventId = eventId;
 	}
 }
