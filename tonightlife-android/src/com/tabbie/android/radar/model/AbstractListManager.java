@@ -1,7 +1,6 @@
 package com.tabbie.android.radar.model;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,16 +16,14 @@ public class AbstractListManager<T> {
   private final class OrderedSubList {
     public final List<T> myList = new ArrayList<T>();
     public final AbstractFilter<T> filter;
-    public final Comparator<T> ordering;
     
-    public OrderedSubList(AbstractFilter<T> filter, Comparator<T> ordering) {
+    public OrderedSubList(AbstractFilter<T> filter) {
       this.filter = filter;
-      this.ordering = ordering;
     }
   }
   
-  public void createList(String name, AbstractFilter<T> filter, Comparator<T> ordering) {
-    lists.put(name, new OrderedSubList(filter, ordering));
+  public void createList(String name, AbstractFilter<T> filter) {
+    lists.put(name, new OrderedSubList(filter));
   }
   
   public void add(T obj) {
@@ -43,30 +40,6 @@ public class AbstractListManager<T> {
   	for(T item : obj) {
   		add(item);
   	}
-  }
-  
-  public boolean addToList(String listName, T obj) {
-    OrderedSubList ls = lists.get(listName);
-    if (null == ls) {
-      return false;
-    }
-    if (ls.filter.apply(obj)) {
-      int index = 0;
-      // Insertion sort on elements
-      for (T el : ls.myList) {
-        if (ls.ordering.compare(obj, el) <= 0) {
-          ls.myList.add(index, obj);
-          break;
-        }
-        ++index;
-      }
-      if (ls.myList.size() == index) {
-        ls.myList.add(obj);
-      }
-      return true;
-    } else {
-      return false;
-    }
   }
   
   public void clear() {
