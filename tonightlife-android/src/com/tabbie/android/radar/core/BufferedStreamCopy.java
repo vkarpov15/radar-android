@@ -15,12 +15,10 @@ import java.io.OutputStream;
  */
 
 public class BufferedStreamCopy {
-  private final int bufferSize;
   private final byte[] buffer;
   
   public BufferedStreamCopy(int bufferSize) {
     this.buffer = new byte[bufferSize];
-    this.bufferSize = bufferSize;
   }
   
   public boolean copy(InputStream is, OutputStream os) {
