@@ -111,9 +111,11 @@ public class MainActivity extends Activity
 	  
     // Set initial conditions
     super.onCreate(savedInstanceState);
-    setContentView(R.layout.main);
     Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
+    setContentView(R.layout.main);
     createViewInflaters();
+    registerGCMContent();
+    createLists();
 
     // Start Google Analytics
     googleAnalyticsTracker = GoogleAnalyticsTracker.getInstance();
@@ -121,43 +123,6 @@ public class MainActivity extends Activity
     // Throw some d's on that bitch
     ((ImageView) findViewById(R.id.loading_spin)).startAnimation(AnimationUtils
         .loadAnimation(this, R.anim.rotate));
-  	
-    // TODO New Manager Test Stuff
-    listManager.createList(Lists.FEATURED.id, new AbstractFilter<Event>() {
-
-			@Override
-			public boolean apply(Event o) {
-				if(o.isFeatured) {
-					return true;
-				} else {
-					return false;
-				}
-			}
-    	
-    }, null);
-    
-    listManager.createList(Lists.ALL.id, new AbstractFilter<Event>() {
-
-			@Override
-			public boolean apply(Event o) {
-				return true;
-			}
-    	
-    }, null);
-    
-    listManager.createList(Lists.LINEUP.id, new AbstractFilter<Event>() {
-
-			@Override
-			public boolean apply(Event o) {
-				if(o.onLineup) {
-					return true;
-				} else {
-					return false;
-				}
-			}
-    	
-    }, null);
-    
     
   	// Grab a hold of some views
     tabHost = (FlingableTabHost) findViewById(android.R.id.tabhost);
@@ -675,6 +640,43 @@ public class MainActivity extends Activity
       Log.d(TAG, "Already registered");
       Log.d(TAG, "RegistrationID is: " + regId);
     }
+	}
+	
+	private void createLists() {
+    listManager.createList(Lists.FEATURED.id, new AbstractFilter<Event>() {
+
+			@Override
+			public boolean apply(Event o) {
+				if(o.isFeatured) {
+					return true;
+				} else {
+					return false;
+				}
+			}
+    	
+    }, null);
+    
+    listManager.createList(Lists.ALL.id, new AbstractFilter<Event>() {
+
+			@Override
+			public boolean apply(Event o) {
+				return true;
+			}
+    	
+    }, null);
+    
+    listManager.createList(Lists.LINEUP.id, new AbstractFilter<Event>() {
+
+			@Override
+			public boolean apply(Event o) {
+				if(o.onLineup) {
+					return true;
+				} else {
+					return false;
+				}
+			}
+    	
+    }, null);
 	}
 	
 	private static final void createTabView(final TabHost host, final ListView view) {
