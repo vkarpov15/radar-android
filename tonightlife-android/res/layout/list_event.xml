@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/list_list_element_layout"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:padding="10dp"
+    android:clickable="true"
+    android:background="@drawable/event_list_bg_selector"
+    android:orientation="vertical">
+    
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/image_holder"
+        android:layout_width="fill_parent"
+        android:layout_height="120dp">
+        
+        <ImageView
+            android:id="@+id/element_loader"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_gravity="center"
+            android:src="@drawable/refresh" />
+        
+	    <ImageView
+	        android:visibility="gone"
+	        android:scaleType="centerCrop"
+	        android:id="@+id/event_image"
+	        android:layout_width="fill_parent"
+	        android:layout_height="120dp" />
+        
+    </FrameLayout>
+    
+	<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	    android:id="@+id/event_description_layout"
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content">
+	    
+	    <TextView
+	        android:id="@+id/event_text"
+	        android:ellipsize="marquee"
+			android:lines="1"
+			android:scrollHorizontally="true"
+	        android:layout_alignParentTop="true"
+	        android:layout_toRightOf="@id/event_image"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:gravity="left"
+	        android:paddingLeft="5dp"
+	        android:text="This is the event title"
+	        android:textSize="16dp"
+	        android:textColor="@color/WHITE"
+	        android:textStyle="bold" />
+	    
+	    <TextView
+	        android:id="@+id/event_list_time"
+	      	android:layout_width="wrap_content" 
+	      	android:layout_height="wrap_content" 
+	      	android:textSize="12dp"
+	      	android:textColor="@color/WHITE"
+	      	android:text="11:00pm"
+	      	android:paddingLeft="10dp"
+	      	android:layout_below="@id/event_text" />
+	        
+		<ImageView 
+			android:id="@+id/location_image"
+			android:scaleType="fitEnd"
+			android:adjustViewBounds="false"
+			android:layout_width="20dp"
+			android:layout_height="fill_parent"
+			android:layout_alignParentRight="true"
+			android:layout_alignBottom="@id/event_list_time"
+			android:layout_alignTop="@id/event_list_time"
+			android:src="@drawable/location_marker" />
+	    
+	    <TextView
+	        android:id="@+id/event_location"
+	        android:layout_width="fill_parent"
+	        android:layout_height="fill_parent"
+	        android:ellipsize="end"
+	        android:maxLines="1"
+	        android:scrollHorizontally="true"
+	        android:paddingLeft="10dp"
+	        android:gravity="right"
+	        android:layout_toRightOf="@id/event_list_time"
+	        android:layout_alignBottom="@id/location_image"
+	        android:layout_alignTop="@id/location_image"
+	        android:layout_toLeftOf="@id/location_image"
+	        android:textSize="12dp"
+	        android:textColor="@color/WHITE"
+	        android:text="Club Avenue" />
+	  
+	   
+	</RelativeLayout>
+</LinearLayout>
