@@ -37,10 +37,8 @@ import android.widget.TabHost;
 import android.widget.TabHost.OnTabChangeListener;
 import android.widget.TabHost.TabSpec;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.facebook.android.Facebook;
-import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 import com.google.android.apps.analytics.easytracking.EasyTracker;
 import com.google.android.apps.analytics.easytracking.TrackedActivity;
 import com.google.android.gcm.GCMRegistrar;
@@ -150,6 +148,7 @@ public class MainActivity extends TrackedActivity
   }
   
   public void onTabChanged(final String tabName) {
+  	
   	if(tabName.equals(getString(R.string.list_all))) {
   		currentList = Lists.ALL;
   	} else if(tabName.equals(getString(R.string.list_featured))) {
@@ -164,49 +163,41 @@ public class MainActivity extends TrackedActivity
 	  } else {
 		  findViewById(R.id.radar_list_empty_text).setVisibility(View.GONE);
 	  }
+	  
 	  final ListView tabView = listViews[currentList.index];
 	  ((BaseAdapter) tabView.getAdapter()).notifyDataSetChanged();
-      playAnimation(tabView, getBaseContext(), android.R.anim.fade_in, 100);
+    playAnimation(tabView, getBaseContext(), android.R.anim.fade_in, 100);
   }
 
   @Override
   public void onActivityResult(int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
-    Log.d(TAG, "onActivityResult");
     
     switch (requestCode) {
+    
     case REQUEST_FACEBOOK:
-    	Log.d(TAG, "REQUEST_FACEBOOK");
       facebook.authorizeCallback(requestCode, resultCode, data);
       break;
+      
     case REQUEST_EVENT_DETAILS:
       final Bundle parcelables = data.getExtras();
-      
       final ArrayList<Event> events = parcelables.getParcelableArrayList("events");
       listManager.clear();
       listManager.addAll(events);
-        
       tabHost.setCurrentTab(currentList.index);
-
       for (final ListView v : listViews) {
         final BaseAdapter adapter = (BaseAdapter) v.getAdapter();
         if (adapter != null) {
           adapter.notifyDataSetChanged();
         }
       }
-
-      listViews[currentList.index].setSelection(currentViewPosition);
-        
-      // TODO Use this paradigm (in more robust form) for other instances of this view
+      listViews[currentList.index].setSelection(currentViewPosition);      
       if(listViews[currentList.index].getAdapter().isEmpty()) {
         findViewById(R.id.radar_list_empty_text).setVisibility(View.VISIBLE);
       } else {
         findViewById(R.id.radar_list_empty_text).setVisibility(View.GONE);
       }
       break;
-      
-      default:
-      	Log.d(TAG, "Fell through to Default");
     }
   }
 
@@ -237,8 +228,8 @@ public class MainActivity extends TrackedActivity
 
   @Override
   public boolean onOptionsItemSelected(final MenuItem item) {
-
     switch(item.getItemId()) {
+    
       case R.id.refresh_me:
     	  ServerGetRequest req = new ServerGetRequest(
     			  getString(R.string.tabbie_server) + "/mobile/all.json?auth_token="
@@ -248,6 +239,7 @@ public class MainActivity extends TrackedActivity
     	  message.obj = req;
     	  upstreamHandler.sendMessage(message);
     	  break;
+    	  
       case R.id.report_me:
     		Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);
     		emailIntent.setType("plain/text");
@@ -307,13 +299,8 @@ public class MainActivity extends TrackedActivity
   
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position, long rowId) {
-		
 		final Event e = (Event) parent.getItemAtPosition(position);
-		
 		EasyTracker.getTracker().trackEvent("Event", "Click", e.name, 1);
-		
-		Log.d("OnItemClick", "Event is " + e.name);
-		
 	  if (null != e) {
 	    currentViewPosition = position;
 	    ((Vibrator) getSystemService(Context.VIBRATOR_SERVICE)).vibrate(30);
@@ -353,23 +340,17 @@ public class MainActivity extends TrackedActivity
 			long rowId) {
 		// TODO Pop up a dialog here
 		
-		GCMRegistrar.unregister(this);
-		Log.d(TAG, "Registration ID: " + GCMRegistrar.getRegistrationId(this));
-		
 		return true;
 	}
 
 	@Override
 	public synchronized boolean handleMessage(final Message msg) {
-		Log.d(TAG, "Received message response");
 		if(!(msg.obj instanceof ServerResponse)) {
-			Log.e(TAG, "Message is not a Server Response");
 			return false;
 		}
-		final ServerResponse resp = (ServerResponse) msg.obj;
-		Log.v(TAG, resp.content);
-		
+		final ServerResponse resp = (ServerResponse) msg.obj;		
 		switch (resp.responseTo) {
+		
     case TABBIE_LOGIN: {
       final JSONObject json = resp.parseJsonContent();
       if (json.has("token")) {
@@ -379,7 +360,6 @@ public class MainActivity extends TrackedActivity
           e.printStackTrace();
           return false;
         } finally {
-          
           final ServerGetRequest req = new ServerGetRequest(
               getString(R.string.tabbie_server) + "/mobile/all.json?auth_token="
               + tabbieAccessToken, MessageType.LOAD_EVENTS);
@@ -389,11 +369,12 @@ public class MainActivity extends TrackedActivity
           upstreamHandler.sendMessage(message);
         }
       } else {
-      Log.e(TAG, "Tabbie Log-in JSON does not have a token!");
+      	Log.e(TAG, "Tabbie Log-in JSON does not have a token!");
         throw new RuntimeException();
       }
       break;
     }
+    
 		case LOAD_EVENTS:
   		final JSONArray list = resp.parseJsonArray();
   		try {
@@ -405,40 +386,28 @@ public class MainActivity extends TrackedActivity
   				listManager.add(e);
   			}
       } catch (final JSONException e) {
-      	Toast.makeText(this, "Fatal Error: Failed to Parse JSON",
-      			
-          Toast.LENGTH_SHORT).show();
-      	e.printStackTrace();
-      	return false;
+	      	e.printStackTrace();
+	      	return false;
       } catch (final MalformedURLException e) {
-      	Log.e(TAG, "Malformed URL during Event creation");
-      	Toast.makeText(this, "Error occurred during boot", Toast.LENGTH_LONG).show();
-      	return false;
+	      	e.printStackTrace();
+	      	return false;
       }
-  	  this.runOnUiThread(new Runnable() {
-  		  public void run() {
-  			  for(final ListView v : listViews) {
-  	      		final BaseAdapter adapter = (BaseAdapter) v.getAdapter();
-  	      		if(adapter!=null) {
-  	      			adapter.notifyDataSetChanged();
-  	      		}
-  	      }
-  	    	if(listViews[currentList.index].getAdapter().isEmpty()) {
-  	    		findViewById(R.id.radar_list_empty_text).setVisibility(View.VISIBLE);
-  	    	} else {
-  	    		findViewById(R.id.radar_list_empty_text).setVisibility(View.GONE);
-  	     	}
-  	    	tabHost.setCurrentTab(currentList.index);
-        }
-      });
-  	  
+		  for(final ListView v : listViews) {
+      		final BaseAdapter adapter = (BaseAdapter) v.getAdapter();
+      		if(adapter!=null) {
+      			adapter.notifyDataSetChanged();
+      		}
+      }
+    	if(listViews[currentList.index].getAdapter().isEmpty()) {
+    		findViewById(R.id.radar_list_empty_text).setVisibility(View.VISIBLE);
+    	} else {
+    		findViewById(R.id.radar_list_empty_text).setVisibility(View.GONE);
+     	}
+    	tabHost.setCurrentTab(currentList.index);
   	  ((ImageView) findViewById(R.id.loading_spin)).clearAnimation();
   	  findViewById(R.id.loading_screen).setVisibility(View.GONE);
   	  findViewById(R.id.tonightlife_layout).setVisibility(View.VISIBLE);
   	  tabHost.setVisibility(View.VISIBLE);
-  	  
-  	  break;
-  	default:
   	  break;  
 		}
 	  return true;
@@ -538,7 +507,6 @@ public class MainActivity extends TrackedActivity
 	}
 	
 	private void setupTabHost() {
-  	// Grab a hold of some views
     tabHost = (FlingableTabHost) findViewById(android.R.id.tabhost);
     findViewById(R.id.map_button).setOnClickListener(new OnClickListener() {
         public void onClick(View v) {
@@ -548,8 +516,6 @@ public class MainActivity extends TrackedActivity
             startActivity(intent);
         }
       });
-
-    // Set up the Tab Host
     tabHost.setup();
     tabHost.setOnTabChangedListener(this);
     tabHost.setCurrentTab(currentList.index);
@@ -594,10 +560,10 @@ public class MainActivity extends TrackedActivity
 	
 	private void authenticateFacebook() {
     ((TextView) findViewById(R.id.loading_text)).setText("Checking Facebook credentials...");
-    
     facebookAuthenticator = new FacebookAuthenticator(facebook, getPreferences(MODE_PRIVATE));
     facebookUserRemoteResource = new FacebookUserRemoteResource(getPreferences(MODE_PRIVATE));
     facebookAuthenticator.authenticate(this, new BasicCallback<String>() {
+    	
       @Override
       public void onFail(String reason) {
         Log.e(this.getClass().getName(), "Facebook auth failed because '" + reason + "'");
@@ -637,13 +603,12 @@ public class MainActivity extends TrackedActivity
     });
 	}
 	
-  private Animation playAnimation(View v, Context con, int animationId,
+  private static Animation playAnimation(View v, Context con, int animationId,
       int StartOffset) {
     if (null != v) {
       Animation animation = AnimationUtils.loadAnimation(con, animationId);
       animation.setStartOffset(StartOffset);
       v.startAnimation(animation);
-
       return animation;
     }
     return null;
