@@ -113,7 +113,6 @@
 		            android:lineSpacingExtra="5dp"
 		            android:layout_height="wrap_content"
 		            android:layout_width="fill_parent"
-		            android:text="@string/test_paragraph"
 		            android:textColor="@color/WHITE"
 		            android:gravity="center_horizontal" />
 		</ScrollView>
