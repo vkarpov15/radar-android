@@ -14,6 +14,13 @@ public abstract class AbstractViewInflater<T> {
 		this.mResource = resource;
 	}
 	
+	public void bindView(T data, ViewGroup parent) {
+		View v = LayoutInflater.from(mContext).inflate(mResource, null);
+		v.setClickable(false);
+		bindData(data, v);
+		parent.addView(v);
+	}
+	
 	public void bindView(T data, ViewGroup parent, View v) {
 		if(v == null) {
 			v = LayoutInflater.from(mContext).inflate(mResource, null);

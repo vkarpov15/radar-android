@@ -53,7 +53,7 @@ public abstract class AbstractEventListAdapter<T extends Event> extends BaseAdap
 			v = LayoutInflater.from(mContext).inflate(mResource, null);
 			v.setClickable(false);
 		}
-		buildView(mEventList.get(position), v);
+		buildView(mEventList.get(position), (ViewGroup) v);
 		return v;
 	}
 	
@@ -72,5 +72,5 @@ public abstract class AbstractEventListAdapter<T extends Event> extends BaseAdap
 	 * @param v The View the adapter will
 	 * pass to its parent ListView
 	 */
-	public abstract void buildView(T source, View v);
+	public abstract void buildView(T source, ViewGroup v);
 }

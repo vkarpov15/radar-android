@@ -16,15 +16,15 @@ public class ShareMessage {
 	
 	// Immutable public constants
 	public final String mMessage;
-	public final String mEventId;
+	public final String mMessageId;
 	public final String mUserFirstName;
 	public final String mUserLastName;
 	
 	public ShareMessage(final String userFirstName, final String userLastName,
-			final String message, final String eventId) {
+			final String message, final String messageId) {
 		this.mUserFirstName = userFirstName;
 		this.mUserLastName = userLastName;
 		this.mMessage = message;
-		this.mEventId = eventId;
+		this.mMessageId = messageId;
 	}
 }

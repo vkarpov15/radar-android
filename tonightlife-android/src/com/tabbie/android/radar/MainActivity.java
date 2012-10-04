@@ -2,6 +2,7 @@ package com.tabbie.android.radar;
 
 import java.net.MalformedURLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Set;
 
 import org.json.JSONArray;
@@ -85,6 +86,8 @@ public class MainActivity extends TrackedActivity
   
   // Adapter lists
   private AbstractListManager<Event> listManager = new AbstractListManager<Event>();
+  // TODO This is for testing
+  private HashMap<String, ArrayList<ShareMessage>> messageFeed = new HashMap<String, ArrayList<ShareMessage>>();
 
   // Often-used views
   private TabHost tabHost;
@@ -107,6 +110,12 @@ public class MainActivity extends TrackedActivity
 	  final HandlerThread serverThread = new HandlerThread(TAG + "Thread");
 	  serverThread.start();
 	  upstreamHandler = new ServerThreadHandler(serverThread.getLooper());
+
+	  // TODO This is for testing
+	  final ArrayList<ShareMessage> firstEventList = new ArrayList<ShareMessage>();
+	  firstEventList.add(new ShareMessage("Justin", "Knutson", "Holy shit balls there's messaging now this is so cool blah blah blah", "25"));
+	  firstEventList.add(new ShareMessage("Cesar", "Devers", "Oh baby this event is going to be good. Dr. Dre is going to be there rapping with Tupac and Killa Beez ON DA SWARM", "26"));
+	  messageFeed.put("1159", firstEventList);
   }
   
   @Override
@@ -455,12 +464,13 @@ public class MainActivity extends TrackedActivity
 		 * Builder object for displaying views
 		 * in the user's message feed
 		 */
-	  messageInflater = new AbstractViewInflater<ShareMessage>(this, R.layout.list_event) {
-		  // TODO This layout is currently a placeholder for future xml ---------------^
+	  messageInflater = new AbstractViewInflater<ShareMessage>(this, R.layout.list_message) {
 			@Override
 			protected View bindData(ShareMessage data, View v) {
-				// TODO Auto-generated method stub
-				return null;
+				((TextView) v.findViewById(R.id.list_message_name)).setText(data.mUserFirstName + " " + data.mUserLastName + " wrote...");
+				((TextView) v.findViewById(R.id.list_message_text)).setText(data.mMessage);
+				v.setTag(data.mMessageId);
+				return v;
 			}
 	  };
 	}
@@ -536,8 +546,8 @@ public class MainActivity extends TrackedActivity
 						new DefaultComparator(),
 						R.layout.list_container) {
 							@Override
-							public void buildView(Event source, View v) {
-								eventInflater.bindView(source, (ViewGroup) v, v.findViewById(R.id.list_event_container));
+							public void buildView(Event source, ViewGroup v) {
+								eventInflater.bindView(source, v, v.findViewById(R.id.list_event_container));
 							}
 				});
 		
@@ -547,8 +557,8 @@ public class MainActivity extends TrackedActivity
 						new DefaultComparator(),
 						R.layout.list_container) {
 							@Override
-							public void buildView(Event source, View v) {
-								eventInflater.bindView(source, (ViewGroup) v, v.findViewById(R.id.list_event_container));
+							public void buildView(Event source, ViewGroup v) {
+								eventInflater.bindView(source, v, v.findViewById(R.id.list_event_container));
 							}
 				});
 		
@@ -559,10 +569,16 @@ public class MainActivity extends TrackedActivity
 						R.layout.list_container) {
 
 							@Override
-							public void buildView(Event source, View v) {
-								eventInflater.bindView(source, (ViewGroup) v, v.findViewById(R.id.list_event_container));
+							public void buildView(Event source, ViewGroup v) {
+								v.removeAllViews();
+								eventInflater.bindView(source, (ViewGroup) v);
+								ArrayList<ShareMessage> messageList = messageFeed.get(source.id);
+								if(messageList!=null) {
+									for(ShareMessage m : messageList) {
+										messageInflater.bindView(m, (ViewGroup) v, v.findViewWithTag(m.mMessageId));
+									}
+								}
 							}
-					
 				});
 	}
 	
