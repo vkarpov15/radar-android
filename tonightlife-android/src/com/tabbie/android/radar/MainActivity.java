@@ -58,8 +58,7 @@ import com.tabbie.android.radar.model.AbstractViewInflater;
 import com.tabbie.android.radar.model.Event;
 import com.tabbie.android.radar.model.ShareMessage;
 
-public class MainActivity
-	extends Activity
+public class MainActivity extends Activity
 	implements OnTabChangeListener,
 						 OnItemClickListener,
 						 OnItemLongClickListener,
@@ -86,8 +85,8 @@ public class MainActivity
   private ListView[] listViews = new ListView[3];
 
   // Internal state for views
-  private int currentViewPosition = Lists.FEATURED.index;
   private Lists currentList = Lists.ALL;
+  private int currentViewPosition = Lists.FEATURED.index;
 
   // FB junk
   private final Facebook facebook = new Facebook("217386331697217");
@@ -114,59 +113,7 @@ public class MainActivity
     super.onCreate(savedInstanceState);
     setContentView(R.layout.main);
     Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
-    
-	  /*
-	   * Builder object for displaying views
-	   * in the user's Event feed
-	   */
-	  eventInflater = new AbstractViewInflater<Event>(this, R.layout.event_list_element) {
-	  	private final ImageLoader mLoader = new ImageLoader(mContext);
-
-			@Override
-			protected View bindView(Event data, View v) {
-		    ((TextView) v.findViewById(R.id.event_text))
-		  		  .setText(data.name);
-		
-		    ((TextView) v
-		  		  .findViewById(R.id.event_list_time))
-		  		  .setText(data.time.makeYourTime());
-		
-		    ((TextView) v
-		        .findViewById(R.id.event_location))
-		        .setText(data.venue);
-		    
-		    final View viewHolder = v.findViewById(R.id.image_holder);
-		    viewHolder.findViewById(R.id.element_loader).startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.rotate));
-		    mLoader.displayImage(data.imageUrl.toString(),
-		  		  (ImageView) viewHolder.findViewById(R.id.event_image));
-				return v;
-			}
-		};
-		
-		/* TODO
-		 * Builder object for displaying views
-		 * in the user's message feed
-		 */
-	  messageInflater = new AbstractViewInflater<ShareMessage>(this, R.layout.event_list_element) {
-		  // TODO This layout is currently a placeholder for future xml ---------------^
-			@Override
-			protected View bindView(ShareMessage data, View v) {
-				// TODO Auto-generated method stub
-				return null;
-			}
-	  	
-	  };
-    
-    // Google told me to do this so I did
-	  GCMRegistrar.checkDevice(this);
-    GCMRegistrar.checkManifest(this);
-    final String regId = GCMRegistrar.getRegistrationId(this);
-    if (regId.equals("")) {
-      GCMRegistrar.register(this, getString(R.string.sender_id));
-    } else {
-      Log.d(TAG, "Already registered");
-      Log.d(TAG, "RegistrationID is: " + regId);
-    }
+    createViewInflaters();
 
     // Start Google Analytics
     googleAnalyticsTracker = GoogleAnalyticsTracker.getInstance();
@@ -672,6 +619,62 @@ public class MainActivity
   	  break;  
 		}
 	  return true;
+	}
+	
+	private void createViewInflaters() {
+    
+	  /*
+	   * Builder object for displaying views
+	   * in the user's Event feed
+	   */
+	  eventInflater = new AbstractViewInflater<Event>(this, R.layout.event_list_element) {
+	  	private final ImageLoader mLoader = new ImageLoader(mContext);
+
+			@Override
+			protected View bindView(Event data, View v) {
+		    ((TextView) v.findViewById(R.id.event_text))
+		  		  .setText(data.name);
+		
+		    ((TextView) v
+		  		  .findViewById(R.id.event_list_time))
+		  		  .setText(data.time.makeYourTime());
+		
+		    ((TextView) v
+		        .findViewById(R.id.event_location))
+		        .setText(data.venue);
+		    
+		    final View viewHolder = v.findViewById(R.id.image_holder);
+		    viewHolder.findViewById(R.id.element_loader).startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.rotate));
+		    mLoader.displayImage(data.imageUrl.toString(),
+		  		  (ImageView) viewHolder.findViewById(R.id.event_image));
+				return v;
+			}
+		};
+		
+		/*
+		 * Builder object for displaying views
+		 * in the user's message feed
+		 */
+	  messageInflater = new AbstractViewInflater<ShareMessage>(this, R.layout.event_list_element) {
+		  // TODO This layout is currently a placeholder for future xml ---------------^
+			@Override
+			protected View bindView(ShareMessage data, View v) {
+				// TODO Auto-generated method stub
+				return null;
+			}
+	  };
+	}
+	
+	private void registerGCMContent() {
+	  GCMRegistrar.checkDevice(this);
+    GCMRegistrar.checkManifest(this);
+    final String regId = GCMRegistrar.getRegistrationId(this);
+    if (regId.equals("")) {
+      GCMRegistrar.register(this, getString(R.string.sender_id));
+    } else {
+      Log.d(TAG, "Already registered");
+      Log.d(TAG, "RegistrationID is: " + regId);
+    }
 	}
 	
 	private static final void createTabView(final TabHost host, final ListView view) {
