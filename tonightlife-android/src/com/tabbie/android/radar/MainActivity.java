@@ -41,6 +41,7 @@ import android.widget.Toast;
 
 import com.facebook.android.Facebook;
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
+import com.google.android.apps.analytics.easytracking.EasyTracker;
 import com.google.android.apps.analytics.easytracking.TrackedActivity;
 import com.google.android.gcm.GCMRegistrar;
 import com.tabbie.android.radar.MultiSpinner.MultiSpinnerListener;
@@ -95,9 +96,6 @@ public class MainActivity extends TrackedActivity
   // Tabbie Junk
   private String tabbieAccessToken = null;
   
-  // Google analytics
-  private GoogleAnalyticsTracker googleAnalyticsTracker;
-  
   public MainActivity() {
 	  super();
 	  final HandlerThread serverThread = new HandlerThread(TAG + "Thread");
@@ -123,9 +121,6 @@ public class MainActivity extends TrackedActivity
     
     // Register the three lists in AbstractLIstManager
     createLists();
-
-    // Start Google Analytics
-    googleAnalyticsTracker = GoogleAnalyticsTracker.getInstance();
     
     // Throw some d's on that bitch
     ((ImageView) findViewById(R.id.loading_spin)).startAnimation(AnimationUtils
@@ -154,23 +149,6 @@ public class MainActivity extends TrackedActivity
     authenticateFacebook();
   }
   
-  @Override
-  protected void onStart() {
-  	if(googleAnalyticsTracker!=null) {
-	  	googleAnalyticsTracker.startNewSession("UA-34193317-1", 20, this);
-	  	googleAnalyticsTracker.trackPageView(TAG);
-  	}
-  	super.onStart();
-  }
-  
-  @Override
-  protected void onStop() {
-  	if(googleAnalyticsTracker!=null) {
-  		googleAnalyticsTracker.stopSession();
-  	}
-  	super.onStop();
-  }
-
   public void onTabChanged(final String tabName) {
   	if(tabName.equals(getString(R.string.list_all))) {
   		currentList = Lists.ALL;
@@ -324,7 +302,6 @@ public class MainActivity extends TrackedActivity
   @Override
   public void onDestroy() {
     super.onDestroy();
-    googleAnalyticsTracker.stopSession();
     GCMRegistrar.onDestroy(this);
   }
   
@@ -333,8 +310,7 @@ public class MainActivity extends TrackedActivity
 		
 		final Event e = (Event) parent.getItemAtPosition(position);
 		
-		googleAnalyticsTracker.trackEvent("Event", "Click", e.name, 1);
-		googleAnalyticsTracker.dispatch();
+		EasyTracker.getTracker().trackEvent("Event", "Click", e.name, 1);
 		
 		Log.d("OnItemClick", "Event is " + e.name);
 		

@@ -23,7 +23,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
 
-import com.google.android.apps.analytics.GoogleAnalyticsTracker;
+import com.google.android.apps.analytics.easytracking.EasyTracker;
 import com.google.android.apps.analytics.easytracking.TrackedActivity;
 import com.tabbie.android.radar.adapters.EventDetailsPagerAdapter;
 import com.tabbie.android.radar.http.ServerDeleteRequest;
@@ -41,7 +41,6 @@ public class EventDetailsActivity extends TrackedActivity implements
   private ArrayList<Event> events;
 	
   private String token;
-  private GoogleAnalyticsTracker googleAnalyticsTracker;
   
   public EventDetailsActivity() {
 	  super();
@@ -54,7 +53,6 @@ public class EventDetailsActivity extends TrackedActivity implements
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.event_details_activity);
-    googleAnalyticsTracker = GoogleAnalyticsTracker.getInstance();
     
     final Bundle starter = getIntent().getExtras();
     
@@ -66,19 +64,6 @@ public class EventDetailsActivity extends TrackedActivity implements
 		pager.setAdapter(new EventDetailsPagerAdapter(this, events, R.layout.event_details_element, this));
     pager.setCurrentItem(eventIndex);
 
-  }
-  
-  @Override
-  protected void onStart() {
-  	googleAnalyticsTracker.startNewSession("UA-34193317-1", 20, this);
-  	super.onStart();
-  }
-
-  
-  @Override
-  protected void onStop() {
-  	googleAnalyticsTracker.stopSession();
-  	super.onStop();
   }
 
   @Override
@@ -138,6 +123,6 @@ public class EventDetailsActivity extends TrackedActivity implements
 	@Override
 	public void onPageChanged(int position) {
 	  final Event e = events.get(position);
-  	googleAnalyticsTracker.trackPageView(e.name);
+	  EasyTracker.getTracker().trackEvent("Event", "Swipe", e.name, 1);
 	}
 }
