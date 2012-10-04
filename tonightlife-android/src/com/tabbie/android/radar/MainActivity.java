@@ -191,18 +191,6 @@ public class MainActivity extends Activity
       playAnimation(tabView, getBaseContext(), android.R.anim.fade_in, 100);
   }
 
-  public Animation playAnimation(View v, Context con, int animationId,
-      int StartOffset) {
-    if (null != v) {
-      Animation animation = AnimationUtils.loadAnimation(con, animationId);
-      animation.setStartOffset(StartOffset);
-      v.startAnimation(animation);
-
-      return animation;
-    }
-    return null;
-  }
-
   @Override
   public void onActivityResult(int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
@@ -672,6 +660,18 @@ public class MainActivity extends Activity
       }
     });
 	}
+	
+  private Animation playAnimation(View v, Context con, int animationId,
+      int StartOffset) {
+    if (null != v) {
+      Animation animation = AnimationUtils.loadAnimation(con, animationId);
+      animation.setStartOffset(StartOffset);
+      v.startAnimation(animation);
+
+      return animation;
+    }
+    return null;
+  }
 	
 	private static final void createTabView(final TabHost host, final ListView view) {
 		final String tag = view.getTag().toString();
