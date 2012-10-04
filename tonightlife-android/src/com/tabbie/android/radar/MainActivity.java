@@ -44,6 +44,8 @@ import com.google.android.apps.analytics.easytracking.TrackedActivity;
 import com.google.android.gcm.GCMRegistrar;
 import com.tabbie.android.radar.MultiSpinner.MultiSpinnerListener;
 import com.tabbie.android.radar.adapters.AbstractEventListAdapter;
+import com.tabbie.android.radar.adapters.ChronologicalComparator;
+import com.tabbie.android.radar.adapters.DefaultComparator;
 import com.tabbie.android.radar.core.AbstractFilter;
 import com.tabbie.android.radar.core.BasicCallback;
 import com.tabbie.android.radar.core.TLJSONParser;
