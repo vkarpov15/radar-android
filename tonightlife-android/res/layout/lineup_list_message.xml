@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/list_list_element_layout"
+    android:id="@+id/lineup_list_message"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:padding="10dp"
-    android:clickable="true"
-    android:background="@drawable/event_list_bg_selector"
     android:orientation="vertical">
+    
+    <TextView
+        android:id="@+id/lineup_list_message_name"
+        android:text="Justin Knutson"
+        android:layout_gravity="left"
+        android:layout_marginLeft="20dp" />
 </LinearLayout>
