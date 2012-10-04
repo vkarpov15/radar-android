@@ -18,6 +18,7 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Message;
 import android.support.v4.view.ViewPager;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -33,7 +34,7 @@ import com.tabbie.android.radar.model.Event;
 
 public class EventDetailsActivity extends TrackedActivity implements
 	OnClickListener,
-	EventDetailsPagerAdapter.OnPageChangeListener {
+	OnPageChangeListener {
 	
   public static final String TAG = "EventDetailsActivity";
   public static final int REQUEST_RSVP = 666; 
@@ -63,7 +64,7 @@ public class EventDetailsActivity extends TrackedActivity implements
     final ViewPager pager = (ViewPager) findViewById(R.id.details_event_pager);
 		pager.setAdapter(new EventDetailsPagerAdapter(this, events, R.layout.event_details_element, this));
     pager.setCurrentItem(eventIndex);
-
+    pager.setOnPageChangeListener(this);
   }
 
   @Override
@@ -121,7 +122,13 @@ public class EventDetailsActivity extends TrackedActivity implements
 	}
 
 	@Override
-	public void onPageChanged(int position) {
+	public void onPageScrollStateChanged(int arg0) {}
+
+	@Override
+	public void onPageScrolled(int arg0, float arg1, int arg2) {}
+
+	@Override
+	public void onPageSelected(int position) {
 	  final Event e = events.get(position);
 	  EasyTracker.getTracker().trackEvent("Event", "Swipe", e.name, 1);
 	}

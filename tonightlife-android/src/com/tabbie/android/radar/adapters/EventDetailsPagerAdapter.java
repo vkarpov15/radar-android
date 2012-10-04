@@ -37,7 +37,6 @@ public class EventDetailsPagerAdapter
 	private final Context context;
 	private final int pageLayout;
 	private final OnClickListener clickListener;
-	private final OnPageChangeListener pageListener;
 	private final ArrayList<Event> events;
 	
 	public EventDetailsPagerAdapter(final Context context,
@@ -50,7 +49,6 @@ public class EventDetailsPagerAdapter
 		this.clickListener = listener;
 		imageLoader = new ImageLoader(context);
 		this.pageLayout = pageLayout;
-		this.pageListener = (OnPageChangeListener) context;
 	}
 	
 	@Override
@@ -58,7 +56,6 @@ public class EventDetailsPagerAdapter
 		if(DEBUG) Log.d(TAG, "Adding View at position " + position);
 		final View v = bindEvent(position);
 		container.addView(v);
-		pageListener.onPageChanged(position);
 		return v;
 	};
 	
@@ -125,9 +122,5 @@ public class EventDetailsPagerAdapter
     v.setTag(position);
     
     return v;
-	}
-	
-	public interface OnPageChangeListener {
-		public abstract void onPageChanged(final int position);
 	}
 }
