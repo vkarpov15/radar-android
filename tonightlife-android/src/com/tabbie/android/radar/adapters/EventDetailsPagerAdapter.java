@@ -12,7 +12,6 @@ package com.tabbie.android.radar.adapters;
  */
 
 import java.util.ArrayList;
-import java.util.List;
 
 import android.content.Context;
 import android.text.util.Linkify;
@@ -29,8 +28,7 @@ import com.tabbie.android.radar.R;
 import com.tabbie.android.radar.model.Event;
 
 public class EventDetailsPagerAdapter
-	extends android.support.v4.view.PagerAdapter
-	implements TLAdapter {
+	extends android.support.v4.view.PagerAdapter {
 	
 	public static final String TAG = "EventDetailsPagerAdapter";
 	
@@ -63,6 +61,7 @@ public class EventDetailsPagerAdapter
 		pageListener.onPageChanged(position);
 		return v;
 	};
+	
 	
 	
 	@Override
@@ -131,10 +130,4 @@ public class EventDetailsPagerAdapter
 	public interface OnPageChangeListener {
 		public abstract void onPageChanged(final int position);
 	}
-
-  @Override
-  public boolean initializeWithList(List<? extends Event> e) {
-    // TODO Auto-generated method stub
-    return false;
-  }
 }
