@@ -228,7 +228,7 @@ public class MainActivity extends TrackedActivity
 	protected void onRestart() {
 		super.onRestart();
 	  ServerGetRequest req = new ServerGetRequest(
-	      getString(R.string.tabbie_server) + "/mobile/all.json?auth_token="
+	      getString(R.string.tabbie_server) + getString(R.string.tabbie_path) + "all.json?auth_token="
 	      + tabbieAccessToken, MessageType.LOAD_EVENTS);
 	  req.responseHandler = new Handler(this);
 	  final Message message = Message.obtain();
@@ -469,7 +469,6 @@ public class MainActivity extends TrackedActivity
 			protected View bindData(ShareMessage data, View v) {
 				((TextView) v.findViewById(R.id.list_message_name)).setText(data.mUserFirstName + " " + data.mUserLastName + " wrote...");
 				((TextView) v.findViewById(R.id.list_message_text)).setText(data.mMessage);
-				v.setTag(data.mMessageId);
 				return v;
 			}
 	  };

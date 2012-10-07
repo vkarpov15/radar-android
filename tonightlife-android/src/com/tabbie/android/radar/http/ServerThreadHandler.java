@@ -48,6 +48,7 @@ public class ServerThreadHandler extends Handler {
 			for (final String key : req.httpParams.keySet()) {
 			  conn.setRequestProperty(key, req.httpParams.get(key));
 			}
+			Log.d("ServerHandlerThread", conn.toString()); // TODO remove
 			
 			if (req.hasOutput()) {
 			  conn.setDoOutput(true);

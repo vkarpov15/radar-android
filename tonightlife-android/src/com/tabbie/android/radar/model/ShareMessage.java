@@ -16,7 +16,6 @@ public class ShareMessage {
 	
 	// Immutable public constants
 	public final String mMessage;
-	public final String mMessageId;
 	public final String mUserFirstName;
 	public final String mUserLastName;
 	
@@ -25,6 +24,5 @@ public class ShareMessage {
 		this.mUserFirstName = userFirstName;
 		this.mUserLastName = userLastName;
 		this.mMessage = message;
-		this.mMessageId = messageId;
 	}
 }
