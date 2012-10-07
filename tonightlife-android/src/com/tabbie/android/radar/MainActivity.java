@@ -53,8 +53,10 @@ import com.tabbie.android.radar.core.FlingableTabHost;
 import com.tabbie.android.radar.core.MultiSpinner.MultiSpinnerListener;
 import com.tabbie.android.radar.core.TLJSONParser;
 import com.tabbie.android.radar.core.cache.ImageLoader;
+import com.tabbie.android.radar.enums.HTTPRequest;
 import com.tabbie.android.radar.enums.Lists;
 import com.tabbie.android.radar.enums.MessageType;
+import com.tabbie.android.radar.http.GenericServerRequest;
 import com.tabbie.android.radar.http.ServerGetRequest;
 import com.tabbie.android.radar.http.ServerPostRequest;
 import com.tabbie.android.radar.http.ServerResponse;
@@ -227,6 +229,9 @@ public class MainActivity extends TrackedActivity
   @Override
 	protected void onRestart() {
 		super.onRestart();
+		
+		GenericServerRequest request = new GenericServerRequest(HTTPRequest.GET, MessageType.LOAD_EVENTS, tabbieAccessToken);
+		
 	  ServerGetRequest req = new ServerGetRequest(
 	      getString(R.string.tabbie_server) + getString(R.string.tabbie_path) + "all.json?auth_token="
 	      + tabbieAccessToken, MessageType.LOAD_EVENTS);
