@@ -353,7 +353,7 @@ public class MainActivity extends TrackedActivity
 	public boolean onItemLongClick(AdapterView<?> parent, View v, int position,
 			long rowId) {
 		// TODO Pop up a dialog here
-		
+		GCMRegistrar.unregister(this);
 		return true;
 	}
 

@@ -27,6 +27,11 @@ import android.util.Log;
 public class ServerThreadHandler extends Handler {
 	public static final String TAG = "ServerThreadHandler";
 	
+	public ServerThreadHandler() {
+		super();
+    System.setProperty("http.keepAlive", "false");
+	}
+	
 	public ServerThreadHandler(final Looper looper) {
 		super(looper);
 		// Java occasionally includes HTTP headers in response. This prevents that from happening. Don't ask me why.

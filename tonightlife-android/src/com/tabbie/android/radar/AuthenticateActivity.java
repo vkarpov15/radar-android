@@ -32,7 +32,7 @@ import com.facebook.android.Facebook;
 import com.facebook.android.Facebook.DialogListener;
 import com.facebook.android.FacebookError;
 import com.tabbie.android.radar.enums.MessageType;
-import com.tabbie.android.radar.http.ServerGetRequest;
+import com.tabbie.android.radar.http.GenericServerGetRequest;
 import com.tabbie.android.radar.http.ServerPostRequest;
 import com.tabbie.android.radar.http.ServerResponse;
 import com.tabbie.android.radar.http.ServerThreadHandler;
@@ -77,9 +77,7 @@ public class AuthenticateActivity extends Activity implements Handler.Callback {
 
     if (facebook.isSessionValid()) {
       Log.i(TAG, "Session is valid");
-      final ServerGetRequest req = new ServerGetRequest(
-          "https://graph.facebook.com/me/?access_token="
-              + facebook.getAccessToken(), MessageType.FACEBOOK_LOGIN);
+      GenericServerGetRequest req = new GenericServerGetRequest(MessageType.FACEBOOK_LOGIN, facebook.getAccessToken());
     	req.responseHandler = new Handler(this);
       final Message message = Message.obtain();
       message.obj = req;
@@ -87,9 +85,7 @@ public class AuthenticateActivity extends Activity implements Handler.Callback {
     } else {
       facebook.authorize(this, new String[] { "email" }, new DialogListener() {
         public void onComplete(final Bundle values) {
-            final ServerGetRequest req = new ServerGetRequest(
-                    "https://graph.facebook.com/me/?access_token="
-                        + facebook.getAccessToken(), MessageType.FACEBOOK_LOGIN);
+        		GenericServerGetRequest req = new GenericServerGetRequest(MessageType.FACEBOOK_LOGIN, facebook.getAccessToken());
           	req.responseHandler = new Handler(AuthenticateActivity.this);
             final Message message = Message.obtain();
             message.obj = req;
