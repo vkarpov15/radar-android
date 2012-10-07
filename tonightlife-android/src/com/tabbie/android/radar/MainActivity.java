@@ -53,11 +53,9 @@ import com.tabbie.android.radar.core.FlingableTabHost;
 import com.tabbie.android.radar.core.MultiSpinner.MultiSpinnerListener;
 import com.tabbie.android.radar.core.TLJSONParser;
 import com.tabbie.android.radar.core.cache.ImageLoader;
-import com.tabbie.android.radar.enums.HTTPRequest;
 import com.tabbie.android.radar.enums.Lists;
 import com.tabbie.android.radar.enums.MessageType;
-import com.tabbie.android.radar.http.GenericServerRequest;
-import com.tabbie.android.radar.http.ServerGetRequest;
+import com.tabbie.android.radar.http.GenericServerGetRequest;
 import com.tabbie.android.radar.http.ServerPostRequest;
 import com.tabbie.android.radar.http.ServerResponse;
 import com.tabbie.android.radar.http.ServerThreadHandler;
@@ -230,11 +228,7 @@ public class MainActivity extends TrackedActivity
 	protected void onRestart() {
 		super.onRestart();
 		
-		GenericServerRequest request = new GenericServerRequest(HTTPRequest.GET, MessageType.LOAD_EVENTS, tabbieAccessToken);
-		
-	  ServerGetRequest req = new ServerGetRequest(
-	      getString(R.string.tabbie_server) + getString(R.string.tabbie_path) + "all.json?auth_token="
-	      + tabbieAccessToken, MessageType.LOAD_EVENTS);
+		GenericServerGetRequest req = new GenericServerGetRequest(MessageType.LOAD_EVENTS, tabbieAccessToken);
 	  req.responseHandler = new Handler(this);
 	  final Message message = Message.obtain();
 	  message.obj = req;
@@ -253,9 +247,7 @@ public class MainActivity extends TrackedActivity
     switch(item.getItemId()) {
     
       case R.id.refresh_me:
-    	  ServerGetRequest req = new ServerGetRequest(
-    			  getString(R.string.tabbie_server) + "/mobile/all.json?auth_token="
-    					  + tabbieAccessToken, MessageType.LOAD_EVENTS);
+      	GenericServerGetRequest req = new GenericServerGetRequest(MessageType.LOAD_EVENTS, tabbieAccessToken);
       	req.responseHandler = new Handler(this);
     	  final Message message = Message.obtain();
     	  message.obj = req;
@@ -382,9 +374,7 @@ public class MainActivity extends TrackedActivity
           e.printStackTrace();
           return false;
         } finally {
-          final ServerGetRequest req = new ServerGetRequest(
-              getString(R.string.tabbie_server) + "/mobile/all.json?auth_token="
-              + tabbieAccessToken, MessageType.LOAD_EVENTS);
+        	GenericServerGetRequest req = new GenericServerGetRequest(MessageType.LOAD_EVENTS, tabbieAccessToken);
           req.responseHandler = new Handler(this);
           final Message message = Message.obtain();
           message.obj = req;

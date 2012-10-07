@@ -11,8 +11,8 @@ package com.tabbie.android.radar.enums;
 
 public enum MessageType {
   FACEBOOK_LOGIN,
-  TABBIE_LOGIN("http://23.21.40.96/mobile/v1/all.json?auth_token="),
-  LOAD_EVENTS,
+  TABBIE_LOGIN,
+  LOAD_EVENTS("http://23.21.40.96/mobile/v1/all.json?auth_token="),
   ADD_TO_RADAR,
   REMOVE_FROM_RADAR;
   
