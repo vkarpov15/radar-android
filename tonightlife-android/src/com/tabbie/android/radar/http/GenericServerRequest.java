@@ -20,7 +20,7 @@ public abstract class GenericServerRequest {
 	public final String url;
 	public final String reqMethod;
 	public final MessageType type;
-	public LinkedHashMap<String, String> httpParams = new LinkedHashMap<String, String>();
+	public final LinkedHashMap<String, String> params = new LinkedHashMap<String, String>();
 	public Handler responseHandler = null;
 	
 	public GenericServerRequest(String reqMethod,
@@ -29,7 +29,9 @@ public abstract class GenericServerRequest {
 		StringBuilder builder = new StringBuilder();
 		for(int i = 0; i < type.url.length; i++) {
 			builder.append(type.url[i]);
-			builder.append(extras[i]);
+			if(extras.length>i) {
+				builder.append(extras[i]);
+			}
 		}
 		this.url = new String(builder);
 		this.reqMethod = reqMethod;

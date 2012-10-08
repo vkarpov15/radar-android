@@ -56,7 +56,7 @@ import com.tabbie.android.radar.core.cache.ImageLoader;
 import com.tabbie.android.radar.enums.Lists;
 import com.tabbie.android.radar.enums.MessageType;
 import com.tabbie.android.radar.http.GenericServerGetRequest;
-import com.tabbie.android.radar.http.ServerPostRequest;
+import com.tabbie.android.radar.http.GenericServerPostRequest;
 import com.tabbie.android.radar.http.ServerResponse;
 import com.tabbie.android.radar.http.ServerThreadHandler;
 import com.tabbie.android.radar.maps.TLMapActivity;
@@ -359,7 +359,9 @@ public class MainActivity extends TrackedActivity
 
 	@Override
 	public synchronized boolean handleMessage(final Message msg) {
+		Log.d(TAG, "Handling message in Main");
 		if(!(msg.obj instanceof ServerResponse)) {
+			Log.e(TAG, "msg.obj is not an instance of ServerResponse!");
 			return false;
 		}
 		final ServerResponse resp = (ServerResponse) msg.obj;		
@@ -374,6 +376,7 @@ public class MainActivity extends TrackedActivity
           e.printStackTrace();
           return false;
         } finally {
+        	Log.d(TAG, "Dispatching Request for Events");
         	GenericServerGetRequest req = new GenericServerGetRequest(MessageType.LOAD_EVENTS, tabbieAccessToken);
           req.responseHandler = new Handler(this);
           final Message message = Message.obtain();
@@ -606,10 +609,7 @@ public class MainActivity extends TrackedActivity
             ((TextView) findViewById(R.id.user_name)).setText(response);
             
             ((TextView) findViewById(R.id.loading_text)).setText("Retrieving events...");
-            final ServerPostRequest req = new ServerPostRequest(
-                getString(R.string.tabbie_server) + "/mobile/auth.json",
-                MessageType.TABBIE_LOGIN);
-
+            GenericServerPostRequest req = new GenericServerPostRequest(MessageType.TABBIE_LOGIN);
             req.params.put("fb_token", facebook.getAccessToken());
             req.responseHandler = new Handler(MainActivity.this);
             final Message message = Message.obtain();

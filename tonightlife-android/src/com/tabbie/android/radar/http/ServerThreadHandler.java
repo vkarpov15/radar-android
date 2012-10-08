@@ -27,11 +27,6 @@ import android.util.Log;
 public class ServerThreadHandler extends Handler {
 	public static final String TAG = "ServerThreadHandler";
 	
-	public ServerThreadHandler() {
-		super();
-    System.setProperty("http.keepAlive", "false");
-	}
-	
 	public ServerThreadHandler(final Looper looper) {
 		super(looper);
 		// Java occasionally includes HTTP headers in response. This prevents that from happening. Don't ask me why.
@@ -42,104 +37,58 @@ public class ServerThreadHandler extends Handler {
 	@Override
 	public void handleMessage(final Message msg) {
 		super.handleMessage(msg);
-		if(!(msg.obj instanceof ServerRequest || msg.obj instanceof GenericServerRequest)) {
+		if(!(msg.obj instanceof GenericServerRequest)) {
 			Log.e(TAG, "Error: Message is not a ServerRequest");
 			return;
 		}
-		if(msg.obj instanceof ServerRequest) {
-			final ServerRequest req = (ServerRequest) msg.obj;
-			try {
-				final HttpURLConnection conn = (HttpURLConnection) new URL(req.url).openConnection();
-				conn.setRequestMethod(req.reqMethod);
-				for (final String key : req.httpParams.keySet()) {
-				  conn.setRequestProperty(key, req.httpParams.get(key));
-				}
-				Log.d("ServerHandlerThread", conn.toString()); // TODO remove
-				
-				if (req.hasOutput()) {
-				  conn.setDoOutput(true);
-		      OutputStream stream = conn.getOutputStream();
-		      stream.write(req.getOutput().getBytes());
-		      stream.flush();
-				} else {
-			    conn.connect();
-			  }
-				
-		    if (conn.getResponseCode() < 200 || conn.getResponseCode() >= 300) {
-		      // TODO Connection failed
-		    }
-		        
-				final BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-				final StringBuilder sb = new StringBuilder();
-				
-				String y = "";
-				while ((y = reader.readLine())!=null) {
-					sb.append(y);
-				}
-				
-				if (req.responseHandler != null) {
-					final Message responseMessage = Message.obtain();
-					responseMessage.obj = new ServerResponse(0, sb.toString(), req.type);
-					req.responseHandler.sendMessage(responseMessage);
-				} else {
-					Log.i(TAG, "No response handler available");
-					return;
-				}
-			} catch (final MalformedURLException e) {
-				// TODO
-			} catch (final IOException e) {
-				// TODO
+		final GenericServerRequest req = (GenericServerRequest) msg.obj;
+		try {
+			String TAG = "Generic side of ServerThreadHandler";
+			Log.d(TAG, "Made it into the try statement");
+			Log.d(TAG, "URL: " + req.url);
+			final HttpURLConnection conn = (HttpURLConnection) new URL(req.url).openConnection();
+			conn.setRequestMethod(req.reqMethod);
+			for (final String key : req.params.keySet()) {
+				Log.d(TAG, "Putting httpParams");
+			  conn.setRequestProperty(key, req.params.get(key));
 			}
-		} else {
-			final GenericServerRequest req = (GenericServerRequest) msg.obj;
-			try {
-				String TAG = "Generic side of ServerThreadHandler";
-				Log.d(TAG, "Made it into the try statement");
-				Log.d(TAG, "URL: " + req.url);
-				final HttpURLConnection conn = (HttpURLConnection) new URL(req.url).openConnection();
-				conn.setRequestMethod(req.reqMethod);
-				for (final String key : req.httpParams.keySet()) {
-					Log.d(TAG, "Putting httpParams");
-				  conn.setRequestProperty(key, req.httpParams.get(key));
-				}
-				Log.d(TAG, conn.toString()); // TODO remove
-				
-				if (req.hasOutput()) {
-				  conn.setDoOutput(true);
-		      OutputStream stream = conn.getOutputStream();
-		      stream.write(req.getOutput().getBytes());
-		      stream.flush();
-				} else {
-			    conn.connect();
-			  }
-				
-		    if (conn.getResponseCode() < 200 || conn.getResponseCode() >= 300) {
-		      // TODO Connection failed
-		    }
-		        
-				final BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-				final StringBuilder sb = new StringBuilder();
-				
-				String y = "";
-				while ((y = reader.readLine())!=null) {
-					sb.append(y);
-				}
-				
-				if (req.responseHandler != null) {
-					final Message responseMessage = Message.obtain();
-					responseMessage.obj = new ServerResponse(0, sb.toString(), req.type);
-					req.responseHandler.sendMessage(responseMessage);
-				} else {
-					Log.i(TAG, "No response handler available");
-					return;
-				}
-			} catch (final MalformedURLException e) {
-				e.printStackTrace();
-				// TODO Handleme
-			} catch (final IOException e) {
-				e.printStackTrace();
-				// TODO Handleme
+			Log.d(TAG, conn.toString()); // TODO remove
+			
+			if (req.hasOutput()) {
+			  conn.setDoOutput(true);
+	      OutputStream stream = conn.getOutputStream();
+	      stream.write(req.getOutput().getBytes());
+	      stream.flush();
+			} else {
+		    conn.connect();
+		  }
+			
+	    if (conn.getResponseCode() < 200 || conn.getResponseCode() >= 300) {
+	      // TODO Connection failed
+	    }
+	        
+			final BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+			final StringBuilder sb = new StringBuilder();
+			
+			String y = "";
+			while ((y = reader.readLine())!=null) {
+				sb.append(y);
 			}
+			
+			if (req.responseHandler != null) {
+				final Message responseMessage = Message.obtain();
+				responseMessage.obj = new ServerResponse(0, sb.toString(), req.type);
+				req.responseHandler.sendMessage(responseMessage);
+			} else {
+				Log.i(TAG, "No response handler available");
+				return;
+			}
+		} catch (final MalformedURLException e) {
+			e.printStackTrace();
+			// TODO Handleme
+		} catch (final IOException e) {
+			e.printStackTrace();
+			// TODO Handleme
 		}
 	}
 }

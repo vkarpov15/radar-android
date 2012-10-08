@@ -11,11 +11,11 @@ package com.tabbie.android.radar.enums;
 
 public enum MessageType {
   FACEBOOK_LOGIN("https://graph.facebook.com/me/?access_token="),
-  TABBIE_LOGIN,
+  TABBIE_LOGIN("http://23.21.40.96/mobile/v1/auth.json"),
   REGISTER_GCM("http://23.21.40.96/mobile/test/gcm/"),
   LOAD_EVENTS("http://23.21.40.96/mobile/v1/all.json?auth_token="),
-  ADD_TO_RADAR,
-  REMOVE_FROM_RADAR;
+  ADD_TO_RADAR("http://23.21.40.96/mobile/v1/radar/", ".json"),
+  REMOVE_FROM_RADAR("http://23.21.40.96/mobile/v1/radar/", ".json?auth_token=");
   
   public final String[] url;
   private MessageType(String... params) {

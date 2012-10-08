@@ -5,7 +5,7 @@ import com.tabbie.android.radar.enums.MessageType;
 public class GenericServerDeleteRequest extends GenericServerRequest {
 
 	public GenericServerDeleteRequest(MessageType type,
-			String[] extras) {
+			String... extras) {
 		super("DELETE", type, extras);
 	}
 

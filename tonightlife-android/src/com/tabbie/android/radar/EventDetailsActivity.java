@@ -28,8 +28,8 @@ import com.google.android.apps.analytics.easytracking.EasyTracker;
 import com.google.android.apps.analytics.easytracking.TrackedActivity;
 import com.tabbie.android.radar.adapters.EventDetailsPagerAdapter;
 import com.tabbie.android.radar.enums.MessageType;
-import com.tabbie.android.radar.http.ServerDeleteRequest;
-import com.tabbie.android.radar.http.ServerPostRequest;
+import com.tabbie.android.radar.http.GenericServerDeleteRequest;
+import com.tabbie.android.radar.http.GenericServerPostRequest;
 import com.tabbie.android.radar.http.ServerThreadHandler;
 import com.tabbie.android.radar.maps.TLMapActivity;
 import com.tabbie.android.radar.model.Event;
@@ -101,9 +101,7 @@ public class EventDetailsActivity extends TrackedActivity implements
       	e.lineupCount--;
        	e.onLineup = false;
         radarButton.setSelected(false);
-        final ServerDeleteRequest req = new ServerDeleteRequest(
-            getString(R.string.tabbie_server) + "/mobile/radar/" + e.id
-                + ".json?auth_token=" + token, MessageType.ADD_TO_RADAR);
+        GenericServerDeleteRequest req = new GenericServerDeleteRequest(MessageType.REMOVE_FROM_RADAR, e.id, token);
         final Message message = Message.obtain();
         message.obj = req;
         upstreamHandler.sendMessage(message);
@@ -111,9 +109,7 @@ public class EventDetailsActivity extends TrackedActivity implements
       	e.lineupCount++;
        	e.onLineup = true;
         radarButton.setSelected(true);
-        ServerPostRequest req = new ServerPostRequest(
-         		getString(R.string.tabbie_server) + "/mobile/radar/" + e.id + ".json",
-            MessageType.ADD_TO_RADAR);
+        GenericServerPostRequest req = new GenericServerPostRequest(MessageType.ADD_TO_RADAR, e.id);
         req.params.put("auth_token", token);
         final Message message = Message.obtain();
         message.obj = req;

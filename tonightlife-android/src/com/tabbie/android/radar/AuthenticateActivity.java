@@ -33,7 +33,7 @@ import com.facebook.android.Facebook.DialogListener;
 import com.facebook.android.FacebookError;
 import com.tabbie.android.radar.enums.MessageType;
 import com.tabbie.android.radar.http.GenericServerGetRequest;
-import com.tabbie.android.radar.http.ServerPostRequest;
+import com.tabbie.android.radar.http.GenericServerPostRequest;
 import com.tabbie.android.radar.http.ServerResponse;
 import com.tabbie.android.radar.http.ServerThreadHandler;
 
@@ -129,27 +129,24 @@ public class AuthenticateActivity extends Activity implements Handler.Callback {
 	    switch (resp.responseTo) {
 	    case FACEBOOK_LOGIN:
 	      if (json.has("id")) {
-	        try {
+	      	try {
 	          facebookName = json.getString("first_name") + " "
 	              + json.getString("last_name").substring(0, 1) + ".";
 	        } catch (final JSONException e) {
 	          e.printStackTrace();
 	          return false;
 	        }
-	        final ServerPostRequest req = new ServerPostRequest(
-	            getString(R.string.tabbie_server) + "/mobile/auth.json",
-	            MessageType.TABBIE_LOGIN);
-	
-	        		req.params.put("fb_token", facebook.getAccessToken());
-	        		req.responseHandler = new Handler(this);
-	          	final Message message = Message.obtain();
-	          	message.obj = req;
-	          	upstreamHandler.sendMessage(message);
-	      } else {
-	    	Log.e(TAG, "Facebook Log-in JSON does not have an ID!");
-	    	throw new RuntimeException();
-	      }
-	      break;
+	        GenericServerPostRequest req = new GenericServerPostRequest(MessageType.TABBIE_LOGIN);
+      		req.params.put("fb_token", facebook.getAccessToken());
+      		req.responseHandler = new Handler(this);
+        	final Message message = Message.obtain();
+        	message.obj = req;
+        	upstreamHandler.sendMessage(message);
+		    } else {
+		    	Log.e(TAG, "Facebook Log-in JSON does not have an ID!");
+		    	throw new RuntimeException();
+		    }
+		    	break;
 	    case TABBIE_LOGIN:
 	      if (json.has("token")) {
 	        try {
