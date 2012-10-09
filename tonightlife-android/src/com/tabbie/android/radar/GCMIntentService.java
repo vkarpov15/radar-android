@@ -3,16 +3,13 @@ package com.tabbie.android.radar;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
-import android.os.HandlerThread;
 import android.os.Message;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
-
-import com.tabbie.android.radar.enums.MessageType;
-import com.tabbie.android.radar.http.GenericServerPutRequest;
-import com.tabbie.android.radar.http.ServerThreadHandler;
 
 public class GCMIntentService extends com.google.android.gcm.GCMBaseIntentService implements Handler.Callback {
 	public static final String TAG = "GCMIntentService";
+	public static final String ACTION_REGISTER_GCM = "RegisterGCM";
 	
 	public GCMIntentService() {
 		super("486514846150");
@@ -58,7 +55,13 @@ public class GCMIntentService extends com.google.android.gcm.GCMBaseIntentServic
 
 	@Override
 	protected void onRegistered(Context context, String regId) {
+		Intent register = new Intent(ACTION_REGISTER_GCM);
+		register.putExtra("regId", regId);
+		LocalBroadcastManager.getInstance(context).sendBroadcast(register);
 		
+		
+		
+		/*
 		String token = context.getSharedPreferences("MainActivity", MODE_PRIVATE).getString("token", null);
 		token = "MAS7Z7XyfQyECGJgzoz5";
 		HandlerThread registerThread = new HandlerThread("GCM Thread");
@@ -72,6 +75,8 @@ public class GCMIntentService extends com.google.android.gcm.GCMBaseIntentServic
 	  req.responseHandler = new Handler(this);
 	  upstreamHandler.sendMessage(message);
 		// TODO Auto-generated method stub
+		 * 
+		 */
 		Log.d(TAG, "onRegistered");
 	}
 

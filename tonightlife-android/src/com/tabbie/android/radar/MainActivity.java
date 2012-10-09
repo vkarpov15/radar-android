@@ -10,8 +10,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences.Editor;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -19,6 +21,7 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Message;
 import android.os.Vibrator;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -58,6 +61,7 @@ import com.tabbie.android.radar.enums.Lists;
 import com.tabbie.android.radar.enums.MessageType;
 import com.tabbie.android.radar.http.GenericServerGetRequest;
 import com.tabbie.android.radar.http.GenericServerPostRequest;
+import com.tabbie.android.radar.http.GenericServerPutRequest;
 import com.tabbie.android.radar.http.ServerResponse;
 import com.tabbie.android.radar.http.ServerThreadHandler;
 import com.tabbie.android.radar.maps.TLMapActivity;
@@ -77,6 +81,9 @@ public class MainActivity extends TrackedActivity
   // Request codes
   public static final int REQUEST_EVENT_DETAILS = 40;
   public static final int REQUEST_FACEBOOK = 32665;
+  
+  // Broadcast Receivers
+  private final BroadcastReceiver gcmReceiver = new GCMReceiver();
   
   // Important Server Call and Receive Handlers/Threads
   private final Handler upstreamHandler;
@@ -219,7 +226,14 @@ public class MainActivity extends TrackedActivity
   @Override
   public void onResume() {
     super.onResume();
+    LocalBroadcastManager.getInstance(this).registerReceiver(gcmReceiver, new IntentFilter(GCMIntentService.ACTION_REGISTER_GCM));
     facebook.extendAccessTokenIfNeeded(this, null);
+  }
+  
+  @Override
+  protected void onPause() {
+  	super.onPause();
+  	LocalBroadcastManager.getInstance(this).unregisterReceiver(gcmReceiver);
   }
   
   @Override
@@ -376,7 +390,6 @@ public class MainActivity extends TrackedActivity
           e.printStackTrace();
           return false;
         } finally {
-          // Make sure all the GCM stuff is in place
           registerGCMContent();
         	Log.d(TAG, "Dispatching Request for Events");
         	GenericServerGetRequest req = new GenericServerGetRequest(MessageType.LOAD_EVENTS, tabbieAccessToken);
@@ -475,14 +488,23 @@ public class MainActivity extends TrackedActivity
 	}
 	
 	private void registerGCMContent() {
+		Log.d(TAG, "Registering GCM Content");
 	  GCMRegistrar.checkDevice(this);
     GCMRegistrar.checkManifest(this);
     final String regId = GCMRegistrar.getRegistrationId(this);
     if (regId.equals("")) {
       GCMRegistrar.register(this, "486514846150");
     } else {
-      Log.d(TAG, "Already registered");
       Log.d(TAG, "RegistrationID is: " + regId);
+      if(tabbieAccessToken!=null) {
+      	Log.d(TAG, "Putting GCM ID with id " + regId + " and Access Token " + tabbieAccessToken);
+	  		GenericServerPutRequest req = new GenericServerPutRequest(MessageType.REGISTER_GCM, regId, tabbieAccessToken);
+	  	  req.responseHandler = new Handler(this);
+	  	  final Message message = Message.obtain();
+	  	  message.obj = req;
+	  	  req.responseHandler = new Handler(this);
+	  	  upstreamHandler.sendMessage(message);
+      }
     }
 	}
 	
@@ -621,6 +643,18 @@ public class MainActivity extends TrackedActivity
         });
       }
     });
+	}
+	
+	private class GCMReceiver extends BroadcastReceiver {
+		@Override
+		public void onReceive(Context context, Intent data) {
+			// TODO
+			Log.d(TAG, "BroadcastReceiver for GCM Received a message");
+			String regId = data.getStringExtra("regId");
+			if(regId!=null) {
+				Log.d(TAG, "RegID is " + regId + " with tabbie token " + tabbieAccessToken);
+			}
+		}
 	}
 	
   private static Animation playAnimation(View v, Context con, int animationId,
