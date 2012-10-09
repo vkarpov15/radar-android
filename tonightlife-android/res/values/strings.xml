@@ -13,7 +13,6 @@
     <string name="tabbie_server">http://23.21.40.96/</string>
     <string name="tabbie_path">mobile/v1/</string>
     <string name="facebook_app_id">217386331697217</string>
-	<string name="sender_id">453820866760</string>
 	<string name="ga_api_key">UA-34193317-1</string>
 	<string-array name="founders_email">
 	    <item>founders@tonight-life.com</item>

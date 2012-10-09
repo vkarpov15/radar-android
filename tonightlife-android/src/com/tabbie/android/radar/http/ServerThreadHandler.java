@@ -64,6 +64,8 @@ public class ServerThreadHandler extends Handler {
 		  }
 			
 	    if (conn.getResponseCode() < 200 || conn.getResponseCode() >= 300) {
+	    	Log.d(TAG, "Connection failed, less than 200 or greater than 300");
+	    	Log.d(TAG, "Connection response code: " + conn.getResponseCode());
 	      // TODO Connection failed
 	    }
 	        

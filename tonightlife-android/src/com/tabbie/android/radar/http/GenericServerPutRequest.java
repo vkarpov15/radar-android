@@ -11,12 +11,22 @@ public class GenericServerPutRequest extends GenericServerRequest {
 
 	@Override
 	public boolean hasOutput() {
-		return false;
+    return params.size() > 0;
 	}
 
 	@Override
 	public String getOutput() {
-		return null;
+    // TODO: URI encode text
+    if (0 == params.size()) {
+      return null;
+    }
+    String st = "";
+    for (String key : params.keySet()) {
+      if (st.length() > 0) {
+        st += "&";
+      }
+      st += key + "=" + params.get(key);
+    }
+    return st;
 	}
-
 }

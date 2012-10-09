@@ -12,6 +12,7 @@ import org.json.JSONObject;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences.Editor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -130,9 +131,6 @@ public class MainActivity extends TrackedActivity
     
     // Extend AbstractViewInflater
     createViewInflaters();
-    
-    // Make sure all the GCM stuff is in place
-    registerGCMContent();
     
     // Register the three lists in AbstractLIstManager
     createLists();
@@ -372,10 +370,14 @@ public class MainActivity extends TrackedActivity
       if (json.has("token")) {
         try {
           tabbieAccessToken = json.getString("token");
+          Editor prefs = getPreferences(MODE_PRIVATE).edit();
+          prefs.putString("token", tabbieAccessToken);
         } catch (final JSONException e) {
           e.printStackTrace();
           return false;
         } finally {
+          // Make sure all the GCM stuff is in place
+          registerGCMContent();
         	Log.d(TAG, "Dispatching Request for Events");
         	GenericServerGetRequest req = new GenericServerGetRequest(MessageType.LOAD_EVENTS, tabbieAccessToken);
           req.responseHandler = new Handler(this);
@@ -477,7 +479,7 @@ public class MainActivity extends TrackedActivity
     GCMRegistrar.checkManifest(this);
     final String regId = GCMRegistrar.getRegistrationId(this);
     if (regId.equals("")) {
-      GCMRegistrar.register(this, getString(R.string.sender_id));
+      GCMRegistrar.register(this, "486514846150");
     } else {
       Log.d(TAG, "Already registered");
       Log.d(TAG, "RegistrationID is: " + regId);
