@@ -32,7 +32,6 @@ public class EventDetailsPagerAdapter
 	
 	public static final String TAG = "EventDetailsPagerAdapter";
 	
-	private final boolean DEBUG = false;
 	private final ImageLoader imageLoader;
 	private final Context context;
 	private final int pageLayout;
@@ -53,7 +52,7 @@ public class EventDetailsPagerAdapter
 	
 	@Override
 	public Object instantiateItem(android.view.ViewGroup container, int position) {
-		if(DEBUG) Log.d(TAG, "Adding View at position " + position);
+		Log.d(TAG, "Adding View at position " + position);
 		final View v = bindEvent(position);
 		container.addView(v);
 		return v;
@@ -119,7 +118,8 @@ public class EventDetailsPagerAdapter
     
     // Make sure our main view has a reference
     // to the event that's populating it
-    v.setTag(position);
+    // TODO v.setTag(position);
+    v.setTag(e);
     
     return v;
 	}

@@ -347,6 +347,7 @@ public class MainActivity extends TrackedActivity
 	            EventDetailsActivity.class);
 	        intent.putExtra("eventIndex", listManager.master.indexOf(e));
 	        intent.putParcelableArrayListExtra("events", listManager.master);
+	        // TODO Put specific list for display purposes
 	        intent.putExtra("token", tabbieAccessToken);
 	        return intent;
 	      }
