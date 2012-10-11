@@ -345,9 +345,10 @@ public class MainActivity extends TrackedActivity
 	      protected Intent doInBackground(Void... params) {
 	        Intent intent = new Intent(MainActivity.this,
 	            EventDetailsActivity.class);
-	        intent.putExtra("eventIndex", listManager.master.indexOf(e));
+	        // intent.putExtra("eventIndex", listManager.master.indexOf(e));
+	        intent.putExtra("eventIndex", listManager.get(currentList.id).indexOf(e));
 	        intent.putParcelableArrayListExtra("events", listManager.master);
-	        // TODO Put specific list for display purposes
+	        intent.putParcelableArrayListExtra("childList", listManager.get(currentList.id));
 	        intent.putExtra("token", tabbieAccessToken);
 	        return intent;
 	      }

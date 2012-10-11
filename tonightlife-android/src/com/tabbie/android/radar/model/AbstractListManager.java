@@ -14,7 +14,7 @@ public class AbstractListManager<T> {
   private final Map<String, OrderedSubList> lists = new LinkedHashMap<String, OrderedSubList>();
   
   private final class OrderedSubList {
-    public final List<T> myList = new ArrayList<T>();
+    public final ArrayList<T> myList = new ArrayList<T>();
     public final AbstractFilter<T> filter;
     
     public OrderedSubList(AbstractFilter<T> filter) {
@@ -50,7 +50,7 @@ public class AbstractListManager<T> {
   	}
   }
   
-  public List<T> get(String listId) {
+  public ArrayList<T> get(String listId) {
   	return lists.get(listId).myList;
   }
 }

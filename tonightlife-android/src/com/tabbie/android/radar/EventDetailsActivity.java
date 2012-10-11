@@ -42,6 +42,7 @@ public class EventDetailsActivity extends TrackedActivity implements
   public static final int REQUEST_RSVP = 666; 
   private final Handler upstreamHandler;
   private ArrayList<Event> events;
+  private ArrayList<Event> childEventsList;
 	
   private String token;
   
@@ -61,12 +62,12 @@ public class EventDetailsActivity extends TrackedActivity implements
     
     final int eventIndex = starter.getInt("eventIndex");
     events = starter.getParcelableArrayList("events");
-    // childEventsList = starter.getParcelableArrayList("child");
+    childEventsList = starter.getParcelableArrayList("childList");
     token = starter.getString("token");
     
     final ViewPager pager = (ViewPager) findViewById(R.id.details_event_pager);
-    // pager.setAdapter(new EventDetailsPagerAdapter(this, childEventsList, R.layout.event_details_element, this));
-		pager.setAdapter(new EventDetailsPagerAdapter(this, events, R.layout.event_details_element, this));
+    pager.setAdapter(new EventDetailsPagerAdapter(this, childEventsList, R.layout.event_details_element, this));
+		// pager.setAdapter(new EventDetailsPagerAdapter(this, events, R.layout.event_details_element, this));
 		// TODO Switch to indexing by the actual arrayList that should be used by the adapter
 		// pager.setCurrentItem(eventIndex);
     pager.setCurrentItem(eventIndex);
@@ -84,7 +85,12 @@ public class EventDetailsActivity extends TrackedActivity implements
   @Override
   public void onClick(View v) {
   	View parent = (View) v.getParent();
-  	Event e = events.get(events.indexOf(parent.getTag()));
+  	Event e = null;
+  	for(Event event : events) {
+  		if(event.id.contentEquals(((Event) parent.getTag()).id)) {
+  			e = event;
+  		}
+  	}
   	Log.d(TAG, "Event clicked is: " + e.name);
   	
   	switch(v.getId()) {
