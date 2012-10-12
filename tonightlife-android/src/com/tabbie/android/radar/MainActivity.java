@@ -595,7 +595,7 @@ public class MainActivity extends TrackedActivity
 							public void buildView(Event source, ViewGroup v) {
 								v.removeAllViews();
 								eventInflater.bindView(source, v);
-								ArrayList<ShareMessage> messageList = messageFeed.get(source.id);
+								ArrayList<ShareMessage> messageList = messageFeed.get("1159");
 								if(messageList!=null) {
 									for(ShareMessage m : messageList) {
 										messageInflater.bindView(m, v);
@@ -656,6 +656,30 @@ public class MainActivity extends TrackedActivity
 			if(regId!=null) {
 				Log.d(TAG, "RegID is " + regId + " with tabbie token " + tabbieAccessToken);
 			}
+		}
+	}
+	
+	private boolean displayEmptyViews() {
+		switch(currentList) {
+		case ALL:
+		case FEATURED:
+			if(listViews[currentList.index].getAdapter().isEmpty()) {
+				findViewById(R.id.radar_list_empty_text).setVisibility(View.VISIBLE);
+				return true;
+			} else {
+				findViewById(R.id.radar_list_empty_text).setVisibility(View.GONE);
+				return false;
+			}
+		case LINEUP:
+			if(listViews[currentList.index].getAdapter().isEmpty()) {
+				Log.d(TAG, "Lineup is Empty!!!!");
+				return true;
+			} else {
+				findViewById(R.id.radar_list_empty_text).setVisibility(View.GONE);
+				return false;
+			}
+			default:
+				return false;
 		}
 	}
 	
