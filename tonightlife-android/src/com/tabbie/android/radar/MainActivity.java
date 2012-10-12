@@ -179,12 +179,9 @@ public class MainActivity extends TrackedActivity
   		currentList = Lists.LINEUP;
   	}
 	  
-	  if(listViews[currentList.index].getAdapter().isEmpty()) {
-		  findViewById(R.id.radar_list_empty_text).setVisibility(View.VISIBLE);
-		  return;
-	  } else {
-		  findViewById(R.id.radar_list_empty_text).setVisibility(View.GONE);
-	  }
+  	if(displayEmptyViews()) {
+  		return;
+  	}
 	  
 	  final ListView tabView = listViews[currentList.index];
 	  ((BaseAdapter) tabView.getAdapter()).notifyDataSetChanged();
@@ -213,13 +210,12 @@ public class MainActivity extends TrackedActivity
           adapter.notifyDataSetChanged();
         }
       }
-      listViews[currentList.index].setSelection(currentViewPosition);      
-      if(listViews[currentList.index].getAdapter().isEmpty()) {
-        findViewById(R.id.radar_list_empty_text).setVisibility(View.VISIBLE);
+      if(displayEmptyViews()) {
+      	break;
       } else {
-        findViewById(R.id.radar_list_empty_text).setVisibility(View.GONE);
+        listViews[currentList.index].setSelection(currentViewPosition);
+        break;      
       }
-      break;
     }
   }
 
@@ -430,11 +426,7 @@ public class MainActivity extends TrackedActivity
       			adapter.notifyDataSetChanged();
       		}
       }
-    	if(listViews[currentList.index].getAdapter().isEmpty()) {
-    		findViewById(R.id.radar_list_empty_text).setVisibility(View.VISIBLE);
-    	} else {
-    		findViewById(R.id.radar_list_empty_text).setVisibility(View.GONE);
-     	}
+    	displayEmptyViews();
     	tabHost.setCurrentTab(currentList.index);
   	  ((ImageView) findViewById(R.id.loading_spin)).clearAnimation();
   	  findViewById(R.id.loading_screen).setVisibility(View.GONE);
