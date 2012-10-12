@@ -165,6 +165,20 @@
 	                android:src="@drawable/no_events"
 	                />
 	            
+	            <TextView 
+	                android:id="@+id/lineup_list_empty_text"
+	                android:visibility="gone"
+	                android:gravity="center"
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:paddingLeft="20dp"
+	                android:paddingRight="20dp"
+	                android:paddingTop="20dp"
+	                android:text="This is your lineup feed - events you or your friends are interested in will show up here when you select them!"
+	                android:textStyle="italic"
+	                android:textColor="@color/WHITE"
+	                android:textSize="12dp"/>
+	            
 	        </FrameLayout>
 	    </LinearLayout>
 	</com.tabbie.android.radar.core.FlingableTabHost>

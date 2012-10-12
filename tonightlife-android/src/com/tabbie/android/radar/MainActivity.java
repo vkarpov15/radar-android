@@ -45,6 +45,7 @@ import android.widget.TabHost.TabSpec;
 import android.widget.TextView;
 
 import com.facebook.android.Facebook;
+import com.facebook.android.R.id;
 import com.google.android.apps.analytics.easytracking.EasyTracker;
 import com.google.android.apps.analytics.easytracking.TrackedActivity;
 import com.google.android.gcm.GCMRegistrar;
@@ -652,6 +653,8 @@ public class MainActivity extends TrackedActivity
 	}
 	
 	private boolean displayEmptyViews() {
+		findViewById(R.id.radar_list_empty_text).setVisibility(View.GONE);
+		findViewById(R.id.lineup_list_empty_text).setVisibility(View.GONE);
 		switch(currentList) {
 		case ALL:
 		case FEATURED:
@@ -659,15 +662,13 @@ public class MainActivity extends TrackedActivity
 				findViewById(R.id.radar_list_empty_text).setVisibility(View.VISIBLE);
 				return true;
 			} else {
-				findViewById(R.id.radar_list_empty_text).setVisibility(View.GONE);
 				return false;
 			}
 		case LINEUP:
 			if(listViews[currentList.index].getAdapter().isEmpty()) {
-				Log.d(TAG, "Lineup is Empty!!!!");
+				findViewById(R.id.lineup_list_empty_text).setVisibility(View.VISIBLE);
 				return true;
 			} else {
-				findViewById(R.id.radar_list_empty_text).setVisibility(View.GONE);
 				return false;
 			}
 			default:
