@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="300dp"
+    android:layout_height="fill_parent"
+    android:layout_gravity="center"
+    android:gravity="center"
+    android:padding="10dp"
+    android:id="@+id/share_message_root">
+    
+    <EditText 
+        android:id="@+id/share_message_editable"
+        android:gravity="top|left"
+        android:layout_width="fill_parent"
+        android:layout_height="100dp"
+        android:hint="Message"
+        android:inputType="textShortMessage"/>
+    
+    <TextView 
+        android:id="@+id/share_message_notification"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Text must be less than 140 characters"
+        android:visibility="gone"/>
+    
+    <Button
+        android:id="@+id/share_message_send_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:text="Send" />
+</LinearLayout>
