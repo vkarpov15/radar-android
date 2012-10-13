@@ -14,7 +14,7 @@ public enum MessageType {
   TABBIE_LOGIN("http://23.21.40.96/mobile/v1/auth.json"),
   REGISTER_GCM("http://23.21.40.96/mobile/test/gcm_key/", ".json?auth_token="),
   LOAD_EVENTS("http://23.21.40.96/mobile/v1/all.json?auth_token="),
-  LOAD_FRIENDS(),
+  LOAD_FRIENDS("http://23.21.40.96/mobile/test/friends.json"),
   ADD_TO_RADAR("http://23.21.40.96/mobile/v1/radar/", ".json"),
   REMOVE_FROM_RADAR("http://23.21.40.96/mobile/v1/radar/", ".json?auth_token=");
   

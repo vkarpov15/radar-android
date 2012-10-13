@@ -54,6 +54,7 @@ import com.facebook.android.Facebook;
 import com.google.android.apps.analytics.easytracking.EasyTracker;
 import com.google.android.apps.analytics.easytracking.TrackedActivity;
 import com.google.android.gcm.GCMRegistrar;
+import com.tabbie.android.radar.ShareDialogManager.ShareMessageSender;
 import com.tabbie.android.radar.adapters.AbstractEventListAdapter;
 import com.tabbie.android.radar.adapters.ChronologicalComparator;
 import com.tabbie.android.radar.adapters.DefaultComparator;
@@ -83,6 +84,7 @@ public class MainActivity extends TrackedActivity
 	implements OnTabChangeListener,
 						 OnItemClickListener,
 						 OnItemLongClickListener,
+						 ShareMessageSender,
 						 Handler.Callback {
 	
   public static final String TAG = "MainActivity";
@@ -103,7 +105,7 @@ public class MainActivity extends TrackedActivity
   
   // Adapter lists
   private final AbstractListManager<Event> listManager = new AbstractListManager<Event>();
-  private final ShareDialogManager shareManager;
+  private ShareDialogManager shareManager;
   // TODO This is for testing
   private HashMap<String, ArrayList<ShareMessage>> messageFeed = new HashMap<String, ArrayList<ShareMessage>>();
 
@@ -130,7 +132,6 @@ public class MainActivity extends TrackedActivity
   
   public MainActivity() {
 	  super();
-	  shareManager = new ShareDialogManager(this);
 	  final HandlerThread serverThread = new HandlerThread(TAG + "Thread");
 	  serverThread.start();
 	  upstreamHandler = new ServerThreadHandler(serverThread.getLooper());
@@ -148,6 +149,7 @@ public class MainActivity extends TrackedActivity
     // Set initial conditions
     super.onCreate(savedInstanceState);
     Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
+	  shareManager = new ShareDialogManager(this);
     
     // Set main XML background
     setContentView(R.layout.main);
@@ -380,19 +382,21 @@ public class MainActivity extends TrackedActivity
 	public boolean onItemLongClick(AdapterView<?> parent, View v,
 			int position, long rowId) {
 		
-		/*
+		
 		if(tabbieFriendsList==null) {
-			ProgressDialog dialog = new ProgressDialog(this);
-			dialog.setTitle("Loading friends list...");
-			dialog.setCancelable(false);
-			dialog.setIndeterminate(true);
-			dialog.show();
-			currentDialog = dialog;
-			// TODO new GenericServerGetRequest(MessageType.LOAD_EVENTS, null);
+			currentDialog = ProgressDialog.show(MainActivity.this, "",
+          "Loading, please wait...");
+			
+			GenericServerPostRequest req = new GenericServerPostRequest(MessageType.LOAD_FRIENDS);
+			req.params.put("auth_token", tabbieAccessToken);
+			req.params.put("fb_token", facebook.getAccessToken());
+			req.responseHandler = new Handler(this);
+      final Message message = Message.obtain();
+      message.obj = req;
+      upstreamHandler.sendMessage(message);
 		} else {
 			shareManager.getDialog(tabbieFriendsList).show();
 		}
-		*/
 		return true;
 	}
 
@@ -473,7 +477,13 @@ public class MainActivity extends TrackedActivity
   	  break;
   	  
 		case LOAD_FRIENDS:
-			JSONArray friendIds = resp.parseJsonArray();
+			JSONArray friendIds = null;
+			try {
+				friendIds = ((JSONObject) resp.parseJsonContent()).getJSONArray("friends");
+			} catch (JSONException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 			Set<String> tabbieFriendIds = TLJSONParser.parseFacebookIds(friendIds);
 			tabbieFriendsList = new ArrayList<FBPerson>(tabbieFriendIds.size());
 			
@@ -771,5 +781,10 @@ public class MainActivity extends TrackedActivity
 	        }
 	      });
 	  host.addTab(content);
+	}
+
+	@Override
+	public void send(Set<String> ids, String message) {
+		
 	}
 }
