@@ -386,26 +386,11 @@ public class MainActivity extends TrackedActivity
 			dialog.setIndeterminate(true);
 			dialog.show();
 			currentDialog = dialog;
+			// TODO new GenericServerGetRequest(MessageType.LOAD_EVENTS, null);
 		} else {
-			// TODO Show alertdialog
-		}*/
-		
-		// Test routine:
-		/*
-		tabbieFriendsList = new ArrayList<FBPerson>();
-		tabbieFriendsList.add(new FBPerson("Justin Knutson", "1"));
-		tabbieFriendsList.add(new FBPerson("Valeri Karpov", "2"));
-		tabbieFriendsList.add(new FBPerson("Matt Green", "3"));
-		tabbieFriendsList.add(new FBPerson("Cesar Devers", "4"));
-		tabbieFriendsList.add(new FBPerson("William Kelly", "5"));
+			createShareDialogMenu().show();
+		}
 		*/
-		
-		Message testMessage = Message.obtain();
-		testMessage.obj = new ServerResponse(10, getString(R.string.test_json), MessageType.LOAD_FRIENDS);
-		this.handleMessage(testMessage);
-		
-		// createShareDialogMenu().show();
-		
 		return true;
 	}
 
@@ -486,11 +471,10 @@ public class MainActivity extends TrackedActivity
   	  break;
   	  
 		case LOAD_FRIENDS:
-			/*
 			JSONArray friendIds = resp.parseJsonArray();
 			Set<String> tabbieFriendIds = TLJSONParser.parseFacebookIds(friendIds);
 			tabbieFriendsList = new ArrayList<FBPerson>(tabbieFriendIds.size());
-			*/
+			
 			if(facebookFriendsMap==null) {
 				JSONArray friendsArray;
 				try {
@@ -508,16 +492,6 @@ public class MainActivity extends TrackedActivity
 				}
 			}
 			
-			Set<String> keys = facebookFriendsMap.keySet();
-			tabbieFriendsList = new ArrayList<FBPerson>();
-			
-			for(String key : keys) {
-				tabbieFriendsList.add(facebookFriendsMap.get(key));
-			}
-			
-			createShareDialogMenu().show();
-			
-			/*
 			for(String id : tabbieFriendIds) {
 				Log.d(TAG, "Adding Tabbie Friend " + facebookFriendsMap.get(id).name);
 				tabbieFriendsList.add(facebookFriendsMap.get(id));
@@ -525,7 +499,9 @@ public class MainActivity extends TrackedActivity
 			
 			currentDialog.dismiss();
 			currentDialog = null;
-			*/
+			
+			createShareDialogMenu().show();
+			
 			break;
 		}
 	  return true;
