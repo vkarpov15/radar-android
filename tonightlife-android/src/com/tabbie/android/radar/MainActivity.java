@@ -391,8 +391,15 @@ public class MainActivity extends TrackedActivity
 			// TODO Show alertdialog
 		}*/
 		
-		Dialog dialog = new SharingDialog(this);
-		dialog.setTitle("Share this event with...");
+		// Test routine:
+		tabbieFriendsList = new ArrayList<FBPerson>();
+		tabbieFriendsList.add(new FBPerson("Justin Knutson", "1"));
+		tabbieFriendsList.add(new FBPerson("Valeri Karpov", "2"));
+		tabbieFriendsList.add(new FBPerson("Matt Green", "3"));
+		tabbieFriendsList.add(new FBPerson("Cesar Devers", "4"));
+		tabbieFriendsList.add(new FBPerson("William Kelly", "5"));
+		
+		createShareDialogMenu().show();
 		
 		return true;
 	}
@@ -746,16 +753,15 @@ public class MainActivity extends TrackedActivity
 	
 	private AlertDialog createShareDialogMenu() {
 		
-		
-		
 		int length = tabbieFriendsList.size();
 		CharSequence[] adapterIds = new String[length];
 		for(int i = 0; i < length; i++) {
+			Log.d(TAG, "Adding friend to dialog adapter: " + tabbieFriendsList.get(i).name);
 			adapterIds[i] = tabbieFriendsList.get(i).name;
 		}
-		
+		Log.d(TAG, "Building dialog");
 		return new AlertDialog.Builder(this).setTitle("Share with...")
-				.setMultiChoiceItems(adapterIds, new boolean[] {}, new OnMultiChoiceClickListener() {
+				.setMultiChoiceItems(adapterIds, new boolean[5], new OnMultiChoiceClickListener() {
 	
 					@Override
 					public void onClick(DialogInterface dialog, int which, boolean isChecked) {
