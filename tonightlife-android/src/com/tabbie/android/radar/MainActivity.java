@@ -516,6 +516,7 @@ public class MainActivity extends TrackedActivity
 			}
 			
 			createShareDialogMenu().show();
+			
 			/*
 			for(String id : tabbieFriendIds) {
 				Log.d(TAG, "Adding Tabbie Friend " + facebookFriendsMap.get(id).name);
