@@ -71,53 +71,56 @@ public class ShareDialogManager {
 					
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
-						// TODO Make sure the user can't continue without selecting anyone
-						View content = LayoutInflater.from(mContext).inflate(R.layout.share_message, null);
-						
-						notifyTooLong = (TextView) content.findViewById(R.id.share_message_notification);
-						messageText = (EditText) content.findViewById(R.id.share_message_editable);
-						
-						messageText.addTextChangedListener(new TextWatcher() {
+						if(ids.isEmpty()) {
+							// TODO Make sure the user can't continue without selecting anyone
+						} else {
+							View content = LayoutInflater.from(mContext).inflate(R.layout.share_message, null);
 							
-							@Override
-							public void onTextChanged(CharSequence s, int start, int before, int count) {
-								// TODO Auto-generated method stub
+							notifyTooLong = (TextView) content.findViewById(R.id.share_message_notification);
+							messageText = (EditText) content.findViewById(R.id.share_message_editable);
+							
+							messageText.addTextChangedListener(new TextWatcher() {
 								
-							}
-							
-							@Override
-							public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-								// TODO Auto-generated method stub
+								@Override
+								public void onTextChanged(CharSequence s, int start, int before, int count) {
+									// TODO Auto-generated method stub
+									
+								}
 								
-							}
-							
-							@Override
-							public void afterTextChanged(Editable s) {
-								if(s.toString().length() > 140) {
-									tooLong = true;
-									notifyTooLong.setVisibility(View.VISIBLE);
-								} else {
-									tooLong = false;
-									notifyTooLong.setVisibility(View.GONE);
+								@Override
+								public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+									// TODO Auto-generated method stub
+									
 								}
-							}
-						});
-						
-						new AlertDialog.Builder(mContext)
-						.setTitle("Message")
-						.setPositiveButton("Send", new OnClickListener() {
-							
-							@Override
-							public void onClick(DialogInterface dialog, int which) {
-								if(!tooLong) {
-									Log.d("Hooray!", "It sends!");
-									mSender.send(ids, messageText.getText().toString());
+								
+								@Override
+								public void afterTextChanged(Editable s) {
+									if(s.toString().length() > 140) {
+										tooLong = true;
+										notifyTooLong.setVisibility(View.VISIBLE);
+									} else {
+										tooLong = false;
+										notifyTooLong.setVisibility(View.GONE);
+									}
 								}
-							}
-						})
-						.setView(content)
-						.create()
-						.show();
+							});
+							
+							new AlertDialog.Builder(mContext)
+							.setTitle("Message")
+							.setPositiveButton("Send", new OnClickListener() {
+								
+								@Override
+								public void onClick(DialogInterface dialog, int which) {
+									if(!tooLong) {
+										Log.d("Hooray!", "It sends!");
+										mSender.send(ids, messageText.getText().toString());
+									}
+								}
+							})
+							.setView(content)
+							.create()
+							.show();
+						}
 					}
 				});
 		return mBuilder.create();
