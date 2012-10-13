@@ -3,6 +3,8 @@ package com.tabbie.android.radar.core;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -101,18 +103,32 @@ public class TLJSONParser {
 		}
 	}
 	
-	public static ArrayList<FBPerson> parseFacebookFriendsList(JSONArray json) {
+	public static HashMap<String, FBPerson> parseFacebookFriendsList(JSONArray json) {
 		JSONObject currentPerson = null;
 		int length = json.length();
-		ArrayList<FBPerson> friendsList = new ArrayList<FBPerson>(length);
+		HashMap<String, FBPerson> friendsList = new LinkedHashMap<String, FBPerson>(length);
 		for(int i = 0; i < length; i++) {
 			try {
 				currentPerson = (JSONObject) json.getJSONObject(i);
-				friendsList.add(new FBPerson(currentPerson.getString("name"), currentPerson.getString("id")));
+				friendsList.put(currentPerson.getString("id"),
+						new FBPerson(currentPerson.getString("name"), currentPerson.getString("id")));
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
 		}
 		return friendsList;
+	}
+	
+	public static Set<String> parseFacebookIds(JSONArray ids) {
+		int length = ids.length();
+		Set<String> idSet = new LinkedHashSet<String>(length);
+		for(int i = 0; i < length; i++) {
+			try {
+				idSet.add((String) ids.get(i));
+			} catch (JSONException e) {
+				e.printStackTrace();
+			} 
+		}
+		return idSet;
 	}
 }

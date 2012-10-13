@@ -9,11 +9,14 @@ import java.util.Set;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.json.JSONTokener;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnMultiChoiceClickListener;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences.Editor;
@@ -38,6 +41,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -47,7 +51,6 @@ import android.widget.TabHost.TabSpec;
 import android.widget.TextView;
 
 import com.facebook.android.Facebook;
-import com.facebook.android.R.id;
 import com.google.android.apps.analytics.easytracking.EasyTracker;
 import com.google.android.apps.analytics.easytracking.TrackedActivity;
 import com.google.android.gcm.GCMRegistrar;
@@ -115,10 +118,14 @@ public class MainActivity extends TrackedActivity
   private final Facebook facebook = new Facebook("217386331697217");
   private FacebookAuthenticator facebookAuthenticator;
   private FacebookUserRemoteResource facebookUserRemoteResource;
+  private HashMap<String, FBPerson> facebookFriendsMap;
   
   // Tabbie Junk
   private String tabbieAccessToken = null;
   private String gcmKey = null;
+  private ArrayList<FBPerson> tabbieFriendsList;
+  
+  private Dialog currentDialog;
   
   public MainActivity() {
 	  super();
@@ -370,26 +377,23 @@ public class MainActivity extends TrackedActivity
 	@Override
 	public boolean onItemLongClick(AdapterView<?> parent, View v,
 			int position, long rowId) {
-		try {
-			JSONArray friendsArray = new JSONObject(facebook.request("me/friends")).getJSONArray("data");
-			ArrayList<FBPerson> friendsList = TLJSONParser.parseFacebookFriendsList(friendsArray);
-			for(FBPerson p : friendsList) {
-				Log.v(TAG, "" + p.name);
-			}
-		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-			catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		// If the list of friends shit is null then get it here
-		// TODO Server Get Request
+		/*
+		if(tabbieFriendsList==null) {
+			ProgressDialog dialog = new ProgressDialog(this);
+			dialog.setTitle("Loading friends list...");
+			dialog.setCancelable(false);
+			dialog.setIndeterminate(true);
+			dialog.show();
+			currentDialog = dialog;
+			
+			// TODO Server Get Request
+		} else {
+			// TODO Show alertdialog
+		}*/
+		
+		Dialog dialog = new SharingDialog(this);
+		dialog.setTitle("Share this event with...");
+		
 		return true;
 	}
 
@@ -467,7 +471,38 @@ public class MainActivity extends TrackedActivity
   	  findViewById(R.id.loading_screen).setVisibility(View.GONE);
   	  findViewById(R.id.tonightlife_layout).setVisibility(View.VISIBLE);
   	  tabHost.setVisibility(View.VISIBLE);
-  	  break;  
+  	  break;
+  	  
+		case LOAD_FRIENDS:
+			JSONArray friendIds = resp.parseJsonArray();
+			Set<String> tabbieFriendIds = TLJSONParser.parseFacebookIds(friendIds);			
+			tabbieFriendsList = new ArrayList<FBPerson>(tabbieFriendIds.size());
+			
+			if(facebookFriendsMap==null) {
+				JSONArray friendsArray;
+				try {
+					friendsArray = new JSONObject(facebook.request("me/friends")).getJSONArray("data");
+					facebookFriendsMap = TLJSONParser.parseFacebookFriendsList(friendsArray);
+				} catch (MalformedURLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			
+			for(String id : tabbieFriendIds) {
+				Log.d(TAG, "Adding Tabbie Friend " + facebookFriendsMap.get(id).name);
+				tabbieFriendsList.add(facebookFriendsMap.get(id));
+			}
+			
+			currentDialog.dismiss();
+			currentDialog = null;
+			break;
 		}
 	  return true;
 	}
@@ -707,6 +742,37 @@ public class MainActivity extends TrackedActivity
 			default:
 				return false;
 		}
+	}
+	
+	private AlertDialog createShareDialogMenu() {
+		
+		
+		
+		int length = tabbieFriendsList.size();
+		CharSequence[] adapterIds = new String[length];
+		for(int i = 0; i < length; i++) {
+			adapterIds[i] = tabbieFriendsList.get(i).name;
+		}
+		
+		return new AlertDialog.Builder(this).setTitle("Share with...")
+				.setMultiChoiceItems(adapterIds, new boolean[] {}, new OnMultiChoiceClickListener() {
+	
+					@Override
+					public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+						// TODO Auto-generated method stub
+						
+					}
+				})
+				.setCancelable(true)
+				.setPositiveButton("Okay", new DialogInterface.OnClickListener() {
+					
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						// TODO Auto-generated method stub
+						
+					}
+				})
+				.create();
 	}
 	
   private static Animation playAnimation(View v, Context con, int animationId,

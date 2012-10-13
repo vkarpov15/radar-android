@@ -27,6 +27,7 @@ public class ServerResponse {
 		this.responseTo = responseTo;
 	}
 	
+	// TODO At some point these should probably be combined into one robust method call
 	public JSONObject parseJsonContent() {
 		try {
 			return new JSONObject(this.content);
