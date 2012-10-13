@@ -1,5 +1,6 @@
 package com.tabbie.android.radar;
 
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -8,6 +9,7 @@ import java.util.Set;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.json.JSONTokener;
 
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
@@ -58,6 +60,9 @@ import com.tabbie.android.radar.core.FlingableTabHost;
 import com.tabbie.android.radar.core.MultiSpinner.MultiSpinnerListener;
 import com.tabbie.android.radar.core.TLJSONParser;
 import com.tabbie.android.radar.core.cache.ImageLoader;
+import com.tabbie.android.radar.core.facebook.FBPerson;
+import com.tabbie.android.radar.core.facebook.FacebookAuthenticator;
+import com.tabbie.android.radar.core.facebook.FacebookUserRemoteResource;
 import com.tabbie.android.radar.enums.Lists;
 import com.tabbie.android.radar.enums.MessageType;
 import com.tabbie.android.radar.http.GenericServerGetRequest;
@@ -113,6 +118,7 @@ public class MainActivity extends TrackedActivity
   
   // Tabbie Junk
   private String tabbieAccessToken = null;
+  private String gcmKey = null;
   
   public MainActivity() {
 	  super();
@@ -237,6 +243,7 @@ public class MainActivity extends TrackedActivity
 	protected void onRestart() {
 		super.onRestart();
 		
+		// TODO make this a private method call or something
 		GenericServerGetRequest req = new GenericServerGetRequest(MessageType.LOAD_EVENTS, tabbieAccessToken);
 	  req.responseHandler = new Handler(this);
 	  final Message message = Message.obtain();
@@ -361,10 +368,28 @@ public class MainActivity extends TrackedActivity
 	}
 
 	@Override
-	public boolean onItemLongClick(AdapterView<?> parent, View v, int position,
-			long rowId) {
-		// TODO Pop up a dialog here
-		GCMRegistrar.unregister(this);
+	public boolean onItemLongClick(AdapterView<?> parent, View v,
+			int position, long rowId) {
+		try {
+			JSONArray friendsArray = new JSONObject(facebook.request("me/friends")).getJSONArray("data");
+			ArrayList<FBPerson> friendsList = TLJSONParser.parseFacebookFriendsList(friendsArray);
+			for(FBPerson p : friendsList) {
+				Log.v(TAG, "" + p.name);
+			}
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+			catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		// If the list of friends shit is null then get it here
+		// TODO Server Get Request
 		return true;
 	}
 
@@ -389,7 +414,6 @@ public class MainActivity extends TrackedActivity
           e.printStackTrace();
           return false;
         } finally {
-          registerGCMContent();
         	Log.d(TAG, "Dispatching Request for Events");
         	GenericServerGetRequest req = new GenericServerGetRequest(MessageType.LOAD_EVENTS, tabbieAccessToken);
           req.responseHandler = new Handler(this);
@@ -401,6 +425,16 @@ public class MainActivity extends TrackedActivity
       	Log.e(TAG, "Tabbie Log-in JSON does not have a token!");
         throw new RuntimeException();
       }
+      
+      if(json.has("gcm_key")) {
+      	try {
+					gcmKey = json.getString("gcm_key");
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+      }
+      
+      registerGCMContent();
       break;
     }
     
@@ -491,7 +525,7 @@ public class MainActivity extends TrackedActivity
       GCMRegistrar.register(this, "486514846150");
     } else {
       Log.d(TAG, "RegistrationID is: " + regId);
-      if(tabbieAccessToken!=null) {
+      if(tabbieAccessToken!=null && !(regId.contentEquals(gcmKey))) {
       	Log.d(TAG, "Putting GCM ID with id " + regId + " and Access Token " + tabbieAccessToken);
 	  		GenericServerPutRequest req = new GenericServerPutRequest(MessageType.REGISTER_GCM, regId, tabbieAccessToken);
 	  	  req.responseHandler = new Handler(this);
@@ -643,11 +677,10 @@ public class MainActivity extends TrackedActivity
 	private class GCMReceiver extends BroadcastReceiver {
 		@Override
 		public void onReceive(Context context, Intent data) {
-			// TODO
 			Log.d(TAG, "BroadcastReceiver for GCM Received a message");
 			String regId = data.getStringExtra("regId");
 			if(regId!=null) {
-				Log.d(TAG, "RegID is " + regId + " with tabbie token " + tabbieAccessToken);
+				registerGCMContent();
 			}
 		}
 	}

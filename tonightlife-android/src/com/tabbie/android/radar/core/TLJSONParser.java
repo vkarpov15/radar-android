@@ -2,6 +2,7 @@ package com.tabbie.android.radar.core;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -13,6 +14,7 @@ import android.content.Context;
 import android.util.Pair;
 
 import com.tabbie.android.radar.R;
+import com.tabbie.android.radar.core.facebook.FBPerson;
 import com.tabbie.android.radar.model.Event;
 
 
@@ -97,5 +99,20 @@ public class TLJSONParser {
 		default:
 			return Event.Price.CHEAP;
 		}
+	}
+	
+	public static ArrayList<FBPerson> parseFacebookFriendsList(JSONArray json) {
+		JSONObject currentPerson = null;
+		int length = json.length();
+		ArrayList<FBPerson> friendsList = new ArrayList<FBPerson>(length);
+		for(int i = 0; i < length; i++) {
+			try {
+				currentPerson = (JSONObject) json.getJSONObject(i);
+				friendsList.add(new FBPerson(currentPerson.getString("name"), currentPerson.getString("id")));
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+		}
+		return friendsList;
 	}
 }

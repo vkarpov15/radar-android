@@ -35,7 +35,7 @@ public class GCMIntentService extends com.google.android.gcm.GCMBaseIntentServic
 	}
 
 	@Override
-	protected void onMessage(Context arg0, Intent arg1) {
+	protected void onMessage(Context context, Intent data) {
 		// TODO Auto-generated method stub
 		
 
@@ -49,6 +49,10 @@ public class GCMIntentService extends com.google.android.gcm.GCMBaseIntentServic
     NotificationManager mNM = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
     mNM.notify(R.string.age_title, notification);
     */
+		Log.d(TAG, "Received keys: " + data.getExtras().keySet());
+		for(String key : data.getExtras().keySet()) {
+			Log.v(TAG, "Key " + key + " is: " + data.getExtras().getString(key));
+		}
 		
 		Log.d(TAG, "onMessage");
 	}
