@@ -14,7 +14,8 @@
         android:layout_width="fill_parent"
         android:layout_height="100dp"
         android:hint="Message"
-        android:inputType="textShortMessage"/>
+        android:inputType="textMultiLine"
+        android:scrollHorizontally="false"/>
     
     <TextView 
         android:id="@+id/share_message_notification"
@@ -22,11 +23,4 @@
         android:layout_height="wrap_content"
         android:text="Text must be less than 140 characters"
         android:visibility="gone"/>
-    
-    <Button
-        android:id="@+id/share_message_send_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="right"
-        android:text="Send" />
 </LinearLayout>

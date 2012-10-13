@@ -18,11 +18,13 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.content.DialogInterface.OnMultiChoiceClickListener;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -34,6 +36,9 @@ public class ShareDialogManager {
 	private final ShareMessageSender mSender;
 	private final AlertDialog.Builder mBuilder;
 	private final Set<String> ids = new LinkedHashSet<String>();
+	private TextView notifyTooLong;
+	private EditText messageText;
+	boolean tooLong = false;
 	
 	public ShareDialogManager(Context context) {
 		this.mContext = context;
@@ -66,64 +71,56 @@ public class ShareDialogManager {
 					
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
-						new ShareMessageDialog().show();
+						// TODO Make sure the user can't continue without selecting anyone
+						View content = LayoutInflater.from(mContext).inflate(R.layout.share_message, null);
+						
+						notifyTooLong = (TextView) content.findViewById(R.id.share_message_notification);
+						messageText = (EditText) content.findViewById(R.id.share_message_editable);
+						
+						messageText.addTextChangedListener(new TextWatcher() {
+							
+							@Override
+							public void onTextChanged(CharSequence s, int start, int before, int count) {
+								// TODO Auto-generated method stub
+								
+							}
+							
+							@Override
+							public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+								// TODO Auto-generated method stub
+								
+							}
+							
+							@Override
+							public void afterTextChanged(Editable s) {
+								if(s.toString().length() > 140) {
+									tooLong = true;
+									notifyTooLong.setVisibility(View.VISIBLE);
+								} else {
+									tooLong = false;
+									notifyTooLong.setVisibility(View.GONE);
+								}
+							}
+						});
+						
+						new AlertDialog.Builder(mContext)
+						.setTitle("Message")
+						.setPositiveButton("Send", new OnClickListener() {
+							
+							@Override
+							public void onClick(DialogInterface dialog, int which) {
+								if(!tooLong) {
+									Log.d("Hooray!", "It sends!");
+									mSender.send(ids, messageText.getText().toString());
+								}
+							}
+						})
+						.setView(content)
+						.create()
+						.show();
 					}
 				});
 		return mBuilder.create();
-	}
-	
-	private class ShareMessageDialog extends Dialog {
-		TextView tooLongNotifier;
-		EditText messageText;
-		boolean tooLong = false;
-
-		public ShareMessageDialog() {
-			super(mContext);
-		}
-		@Override
-		protected void onCreate(Bundle savedInstanceState) {
-			super.onCreate(savedInstanceState);
-
-			setContentView(R.layout.share_message);
-			tooLongNotifier = (TextView) findViewById(R.id.share_message_notification);
-			messageText = (EditText) findViewById(R.id.share_message_editable);
-			messageText.addTextChangedListener(new TextWatcher() {
-				
-				@Override
-				public void onTextChanged(CharSequence s, int start, int before, int count) {
-					// TODO Auto-generated method stub
-					
-				}
-				
-				@Override
-				public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-					// TODO Auto-generated method stub
-					
-				}
-				
-				@Override
-				public void afterTextChanged(Editable s) {
-					if(s.toString().length() > 140) {
-						tooLong = true;
-						tooLongNotifier.setVisibility(View.VISIBLE);
-					} else {
-						tooLong = false;
-						tooLongNotifier.setVisibility(View.GONE);
-					}
-				}
-			});
-			
-			findViewById(R.id.share_message_send_button).setOnClickListener(new View.OnClickListener() {
-				
-				@Override
-				public void onClick(View v) {
-					if(!tooLong) {
-						Log.d("Hooray!", "It sends!");
-						mSender.send(ids, messageText.getText().toString());
-					}
-				}
-			});
-		}
 	}
 	
 	public interface ShareMessageSender {
