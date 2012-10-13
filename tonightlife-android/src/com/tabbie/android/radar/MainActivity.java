@@ -102,7 +102,8 @@ public class MainActivity extends TrackedActivity
   private AbstractViewInflater<ShareMessage> messageInflater;
   
   // Adapter lists
-  private AbstractListManager<Event> listManager = new AbstractListManager<Event>();
+  private final AbstractListManager<Event> listManager = new AbstractListManager<Event>();
+  private final ShareDialogManager shareManager;
   // TODO This is for testing
   private HashMap<String, ArrayList<ShareMessage>> messageFeed = new HashMap<String, ArrayList<ShareMessage>>();
 
@@ -129,6 +130,7 @@ public class MainActivity extends TrackedActivity
   
   public MainActivity() {
 	  super();
+	  shareManager = new ShareDialogManager(this);
 	  final HandlerThread serverThread = new HandlerThread(TAG + "Thread");
 	  serverThread.start();
 	  upstreamHandler = new ServerThreadHandler(serverThread.getLooper());
@@ -388,7 +390,7 @@ public class MainActivity extends TrackedActivity
 			currentDialog = dialog;
 			// TODO new GenericServerGetRequest(MessageType.LOAD_EVENTS, null);
 		} else {
-			createShareDialogMenu().show();
+			shareManager.getDialog(tabbieFriendsList).show();
 		}
 		*/
 		return true;
@@ -500,7 +502,7 @@ public class MainActivity extends TrackedActivity
 			currentDialog.dismiss();
 			currentDialog = null;
 			
-			createShareDialogMenu().show();
+			shareManager.getDialog(tabbieFriendsList).show();
 			
 			break;
 		}
@@ -742,36 +744,6 @@ public class MainActivity extends TrackedActivity
 			default:
 				return false;
 		}
-	}
-	
-	private AlertDialog createShareDialogMenu() {
-		
-		int length = tabbieFriendsList.size();
-		CharSequence[] adapterIds = new String[length];
-		for(int i = 0; i < length; i++) {
-			Log.d(TAG, "Adding friend to dialog adapter: " + tabbieFriendsList.get(i).name);
-			adapterIds[i] = tabbieFriendsList.get(i).name;
-		}
-		Log.d(TAG, "Building dialog");
-		return new AlertDialog.Builder(this).setTitle("Share with...")
-				.setMultiChoiceItems(adapterIds, new boolean[length], new OnMultiChoiceClickListener() {
-	
-					@Override
-					public void onClick(DialogInterface dialog, int which, boolean isChecked) {
-						// TODO Auto-generated method stub
-						
-					}
-				})
-				.setCancelable(true)
-				.setPositiveButton("Okay", new DialogInterface.OnClickListener() {
-					
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						// TODO Auto-generated method stub
-						
-					}
-				})
-				.create();
 	}
 	
   private static Animation playAnimation(View v, Context con, int animationId,
