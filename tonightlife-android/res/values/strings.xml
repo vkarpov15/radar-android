@@ -8,7 +8,6 @@
     		4. Sign with production key -->
     
     <!-- Important Application Constants -->
-    <string name="test_json">{"ids": "1", "2", "3", "4", "5"}</string>
     <string name="app_name">TonightLife</string>
 	<string name="feedback_subject">TonightLife Application Feedback</string>
     <string name="tabbie_server">http://23.21.40.96/</string>

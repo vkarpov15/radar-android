@@ -1,5 +1,8 @@
 package com.tabbie.android.radar;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
@@ -36,24 +39,18 @@ public class GCMIntentService extends com.google.android.gcm.GCMBaseIntentServic
 
 	@Override
 	protected void onMessage(Context context, Intent data) {
-		// TODO Auto-generated method stub
-		
-
-	   
-    // ########################### Sample Code for Notifications 
-    /*
+		// TODO Debug
     Notification notification = new Notification(R.drawable.ic_launcher, "Hey. Hey you. Fuck you", System.currentTimeMillis());
-    PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
+    PendingIntent contentIntent = PendingIntent.getActivity(context, 0,
             new Intent(this, EventDetailsActivity.class), 0);
     notification.setLatestEventInfo(this, "Tabbie Push Notification", "Hey Cesar, Go Fuck Yourself", contentIntent);
     NotificationManager mNM = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-    mNM.notify(R.string.age_title, notification);
-    */
+    mNM.notify(42, notification);
+    
 		Log.d(TAG, "Received keys: " + data.getExtras().keySet());
 		for(String key : data.getExtras().keySet()) {
 			Log.v(TAG, "Key " + key + " is: " + data.getExtras().getString(key));
 		}
-		
 		Log.d(TAG, "onMessage");
 	}
 
@@ -62,25 +59,6 @@ public class GCMIntentService extends com.google.android.gcm.GCMBaseIntentServic
 		Intent register = new Intent(ACTION_REGISTER_GCM);
 		register.putExtra("regId", regId);
 		LocalBroadcastManager.getInstance(context).sendBroadcast(register);
-		
-		
-		
-		/*
-		String token = context.getSharedPreferences("MainActivity", MODE_PRIVATE).getString("token", null);
-		token = "MAS7Z7XyfQyECGJgzoz5";
-		HandlerThread registerThread = new HandlerThread("GCM Thread");
-		registerThread.start();
-		GenericServerPutRequest req = new GenericServerPutRequest(MessageType.REGISTER_GCM, regId, token);
-		// req.params.put("auth_token", token);
-	  req.responseHandler = new Handler(this);
-		ServerThreadHandler upstreamHandler = new ServerThreadHandler(registerThread.getLooper());
-	  final Message message = Message.obtain();
-	  message.obj = req;
-	  req.responseHandler = new Handler(this);
-	  upstreamHandler.sendMessage(message);
-		// TODO Auto-generated method stub
-		 * 
-		 */
 		Log.d(TAG, "onRegistered");
 	}
 
