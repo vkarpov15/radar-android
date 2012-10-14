@@ -9,14 +9,12 @@ import java.util.Set;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.json.JSONStringer;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnMultiChoiceClickListener;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences.Editor;
@@ -41,7 +39,6 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -360,7 +357,6 @@ public class MainActivity extends TrackedActivity
 	      protected Intent doInBackground(Void... params) {
 	        Intent intent = new Intent(MainActivity.this,
 	            EventDetailsActivity.class);
-	        // intent.putExtra("eventIndex", listManager.master.indexOf(e));
 	        intent.putExtra("eventIndex", listManager.get(currentList.id).indexOf(e));
 	        intent.putParcelableArrayListExtra("events", listManager.master);
 	        intent.putParcelableArrayListExtra("childList", listManager.get(currentList.id));
@@ -382,6 +378,9 @@ public class MainActivity extends TrackedActivity
 	public boolean onItemLongClick(AdapterView<?> parent, View v,
 			int position, long rowId) {
 		
+		Event longClickedEvent = (Event) parent.getAdapter().getItem(position);
+		Log.d(TAG, "Long Clicked Event is " + longClickedEvent.name);
+		shareManager.setEventId(longClickedEvent.id);
 		
 		if(tabbieFriendsList==null) {
 			currentDialog = ProgressDialog.show(MainActivity.this, "",
@@ -784,7 +783,15 @@ public class MainActivity extends TrackedActivity
 	}
 
 	@Override
-	public void send(Set<String> ids, String message) {
-		
+	public void send(Set<String> ids, String shareMessage, String eventId) {
+		GenericServerPostRequest req = new GenericServerPostRequest(MessageType.POST_MESSAGE);
+		req.params.put("auth_token", tabbieAccessToken);
+		req.params.put("ids", ids.toString());
+		req.params.put("message", shareMessage);
+		req.params.put("event_id", eventId);
+		req.responseHandler = new Handler(this);
+    final Message message = Message.obtain();
+    message.obj = req;
+    upstreamHandler.sendMessage(message);
 	}
 }

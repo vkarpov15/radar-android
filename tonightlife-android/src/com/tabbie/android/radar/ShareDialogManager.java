@@ -38,6 +38,7 @@ public class ShareDialogManager {
 	private final ShareMessageSender mSender;
 	private final AlertDialog.Builder mBuilder;
 	private final Set<String> ids = new LinkedHashSet<String>();
+	private String mEventId;
 	private TextView notifyTooLong;
 	private EditText messageText;
 	boolean tooLong = false;
@@ -137,12 +138,7 @@ public class ShareDialogManager {
 		.setPositiveButton("Send", new OnClickListener() {
 			
 			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				if(!tooLong) {
-					Log.d("Hooray!", "It sends!");
-					mSender.send(ids, messageText.getText().toString());
-				}
-			}
+			public void onClick(DialogInterface dialog, int which) {}
 		})
 		.setView(content)
 		.create();
@@ -157,8 +153,8 @@ public class ShareDialogManager {
 					@Override
 					public void onClick(View v) {
 						if(!tooLong && (messageText.getText().length() > 0)) {
-							Log.d("Hooray!", "It sends!");
-							mSender.send(ids, messageText.getText().toString());
+							Log.d("Hooray!", "Event Id is " + mEventId);
+							mSender.send(ids, messageText.getText().toString(), mEventId);
 							messageDialog.dismiss();
 							friendsDialog.dismiss();
 						}
@@ -170,7 +166,12 @@ public class ShareDialogManager {
 		d.show();
 	}
 	
+	public void setEventId(String eventId) {
+		this.mEventId = eventId;
+		Log.d("Set Event Id", "Event ID is " + mEventId);
+	}
+	
 	public interface ShareMessageSender {
-		abstract void send(Set<String> ids, String message);
+		abstract void send(Set<String> ids, String message, String eventId);
 	}
 }
