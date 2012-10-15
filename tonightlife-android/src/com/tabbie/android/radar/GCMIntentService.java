@@ -61,16 +61,17 @@ public class GCMIntentService extends com.google.android.gcm.GCMBaseIntentServic
 	@Override
 	protected void onRegistered(Context context, String regId) {
 		
-
+		Intent resultIntent = new Intent();
+		resultIntent.putExtra("event_id", "TEST");
+		resultIntent.putExtra("user_name", "TEST TEST");
+		resultIntent.putExtra("message", "TEST TEST TEST TEST TEST TEST TEST");
+		resultIntent.setClass(this, EventDetailsActivity.class);
 		
 		NotificationCompat.Builder mBuilder =
         new NotificationCompat.Builder(this)
         .setSmallIcon(R.drawable.ic_launcher)
         .setContentTitle("My notification")
         .setContentText("Hello World!");
-		// Creates an explicit intent for an Activity in your app
-		Intent resultIntent = new Intent(this, EventDetailsActivity.class);
-		// TODO Put Extras
 		
 		// The stack builder object will contain an artificial back stack for the
 		// started Activity.
