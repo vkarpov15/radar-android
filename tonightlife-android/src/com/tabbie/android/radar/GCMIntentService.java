@@ -38,7 +38,7 @@ public class GCMIntentService extends com.google.android.gcm.GCMBaseIntentServic
 
 	@Override
 	protected void onMessage(Context context, Intent data) {
-		
+		/*
 		NotificationCompat.Builder mBuilder =
         new NotificationCompat.Builder(this)
         .setSmallIcon(R.drawable.ic_launcher)
@@ -66,7 +66,7 @@ public class GCMIntentService extends com.google.android.gcm.GCMBaseIntentServic
 		    (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 		// mId allows you to update the notification later on.
 		mNotificationManager.notify(42, mBuilder.getNotification());
-		
+		*/
 		
 		// TODO Debug
 		/*
