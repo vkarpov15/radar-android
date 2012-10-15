@@ -3,11 +3,11 @@ package com.tabbie.android.radar.model;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import com.google.android.maps.GeoPoint;
-
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Pair;
+
+import com.google.android.maps.GeoPoint;
 
 public class Event implements Parcelable {
 	public enum Energy {
@@ -32,6 +32,7 @@ public class Event implements Parcelable {
   public final TLDatetime time;
   public final GeoPoint location;
   public final Pair<String, String> rsvp;
+  public final String cost;
   
   // Mutable public constants
   public int lineupCount;
@@ -49,7 +50,8 @@ public class Event implements Parcelable {
 		  	final boolean featured,
 		  	final String time,
 		  	final boolean onRadar,
-		  	final Pair<String, String> rsvp) {
+		  	final Pair<String, String> rsvp,
+		  	final String cost) {
     this.id = id;
     this.name = name;
     this.description = description;
@@ -62,6 +64,7 @@ public class Event implements Parcelable {
     this.onLineup = onRadar;
     this.location = new GeoPoint(latE6, lonE6);
     this.rsvp = rsvp;
+    this.cost = cost;
   }
 
   public int describeContents() {
@@ -87,6 +90,7 @@ public class Event implements Parcelable {
     dest.writeInt(onLineup ? 1 : 0);
     dest.writeString(rsvp.first);
     dest.writeString(rsvp.second);
+    dest.writeString(cost);
   }
 
   public static final Parcelable.Creator<Event> CREATOR = new Parcelable.Creator<Event>() {
@@ -105,7 +109,8 @@ public class Event implements Parcelable {
                           in.readInt() == 1,
                           in.readString(),
                           in.readInt() == 1,
-                          new Pair<String, String> (in.readString(), in.readString()));
+                          new Pair<String, String> (in.readString(), in.readString()),
+                          in.readString());
       } catch (final MalformedURLException e) {
         e.printStackTrace();
         return null;

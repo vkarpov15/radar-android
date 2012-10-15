@@ -18,12 +18,30 @@
 	            android:layout_gravity="center"
 	            android:src="@drawable/refresh" />
         
-	        <ImageView
-	            android:id="@+id/details_event_img"
-	            android:visibility="gone"
-	            android:scaleType="centerCrop"
+	        <RelativeLayout
 	            android:layout_width="fill_parent"
-	   			android:layout_height="fill_parent" />
+	            android:layout_height="wrap_content"
+	            android:visibility="gone"
+	            android:id="@+id/event_image_wrapper">
+		        <ImageView
+		            android:id="@+id/details_event_img"
+		            android:scaleType="centerCrop"
+		            android:layout_width="fill_parent"
+		   			android:layout_height="fill_parent" />
+		        <TextView 
+	                android:id="@+id/details_event_price"
+	                android:layout_alignRight="@id/details_event_img"
+	                android:layout_marginTop="15dp"
+	                android:layout_marginRight="15dp"
+	                android:text="FREE"
+	                android:layout_width="60dp"
+	                android:textStyle="bold"
+	                android:gravity="center"
+	                android:layout_height="wrap_content"
+	                android:background="@drawable/white_round_bg"
+	                android:textColor="@color/ALASKA_SKY_BLUE"
+                />
+	        </RelativeLayout>
 	        
 	    </FrameLayout>
         

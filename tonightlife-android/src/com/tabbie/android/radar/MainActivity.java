@@ -539,6 +539,10 @@ public class MainActivity extends TrackedActivity
 		        .findViewById(R.id.event_location))
 		        .setText(data.venue);
 		    
+		    if (data.cost.length() > 0) {
+		      ((TextView) v.findViewById(R.id.event_price)).setText(data.cost);
+		    }
+		    
 		    final View viewHolder = v.findViewById(R.id.image_holder);
 		    viewHolder.findViewById(R.id.element_loader).startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.rotate));
 		    mLoader.displayImage(data.imageUrl.toString(),

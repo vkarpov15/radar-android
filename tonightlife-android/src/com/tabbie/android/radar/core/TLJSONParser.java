@@ -2,7 +2,6 @@ package com.tabbie.android.radar.core;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -56,7 +55,8 @@ public class TLJSONParser {
                                 obj.getBoolean("featured"),
                                 obj.getString("start_time"),
                                 serverLineupIds.contains(obj.getString("id")),
-                                rsvp);
+                                rsvp,
+                                obj.getString("cover"));
 	}
 	
 	private static int parseLineupCount(String lineupCountString) {

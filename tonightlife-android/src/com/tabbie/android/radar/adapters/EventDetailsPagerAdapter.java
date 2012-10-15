@@ -88,7 +88,8 @@ public class EventDetailsPagerAdapter
 		final TextView locationView = (TextView) v.findViewById(R.id.details_event_location);
     final TextView addressView = (TextView) v.findViewById(R.id.details_event_address);
     final TextView descriptionView = (TextView) v.findViewById(R.id.details_event_description);
-
+    final TextView coverView = (TextView) v.findViewById(R.id.details_event_price);
+    
 		final ImageView loaderView = (ImageView) v.findViewById(R.id.element_loader);
     final ImageView radarButton = (ImageView) v.findViewById(R.id.add_to_radar_image);
     final ImageView locationLinkView = (ImageView) v.findViewById(R.id.location_image);
@@ -104,6 +105,7 @@ public class EventDetailsPagerAdapter
     locationView.setText(e.venue);
     addressView.setText(e.address);
     descriptionView.setText(e.description);
+    coverView.setText(e.cost);
     
     // Make sure hyper-links are in place
     Linkify.addLinks(descriptionView, Linkify.WEB_URLS);

@@ -19,7 +19,7 @@
             android:layout_gravity="center"
             android:src="@drawable/refresh" />
         
-        <AbsoluteLayout
+        <RelativeLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:visibility="gone"
@@ -29,7 +29,20 @@
 	        	android:id="@+id/event_image"
 	        	android:layout_width="fill_parent"
 	        	android:layout_height="120dp" />
-	    </AbsoluteLayout>
+            <TextView 
+                android:id="@+id/event_price"
+                android:layout_alignRight="@id/event_image"
+                android:layout_marginTop="15dp"
+                android:layout_marginRight="15dp"
+                android:text="FREE"
+                android:layout_width="60dp"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:layout_height="wrap_content"
+                android:background="@drawable/white_round_bg"
+                android:textColor="@color/ALASKA_SKY_BLUE"
+                />
+	    </RelativeLayout>
         
     </FrameLayout>
     
