@@ -59,17 +59,18 @@ public class EventDetailsActivity extends TrackedActivity implements
     
     final Bundle starter = getIntent().getExtras();
     
-    if(starter.containsKey("events")) {
-      final int eventIndex = starter.getInt("eventIndex");
-      events = starter.getParcelableArrayList("events");
-      childEventsList = starter.getParcelableArrayList("childList");
-      token = starter.getString("token");
-      
-      final ViewPager pager = (ViewPager) findViewById(R.id.details_event_pager);
-      pager.setAdapter(new EventDetailsPagerAdapter(this, childEventsList, R.layout.event_details_element, this));
-      pager.setCurrentItem(eventIndex);
-      pager.setOnPageChangeListener(this);
-    }
+    final int eventIndex = starter.getInt("eventIndex");
+    events = starter.getParcelableArrayList("events");
+    childEventsList = starter.getParcelableArrayList("childList");
+    token = starter.getString("token");
+    
+    final ViewPager pager = (ViewPager) findViewById(R.id.details_event_pager);
+    pager.setAdapter(new EventDetailsPagerAdapter(this, childEventsList, R.layout.event_details_element, this));
+		// pager.setAdapter(new EventDetailsPagerAdapter(this, events, R.layout.event_details_element, this));
+		// TODO Switch to indexing by the actual arrayList that should be used by the adapter
+		// pager.setCurrentItem(eventIndex);
+    pager.setCurrentItem(eventIndex);
+    pager.setOnPageChangeListener(this);
   }
 
   @Override
