@@ -66,9 +66,6 @@ public class EventDetailsActivity extends TrackedActivity implements
     
     final ViewPager pager = (ViewPager) findViewById(R.id.details_event_pager);
     pager.setAdapter(new EventDetailsPagerAdapter(this, childEventsList, R.layout.event_details_element, this));
-		// pager.setAdapter(new EventDetailsPagerAdapter(this, events, R.layout.event_details_element, this));
-		// TODO Switch to indexing by the actual arrayList that should be used by the adapter
-		// pager.setCurrentItem(eventIndex);
     pager.setCurrentItem(eventIndex);
     pager.setOnPageChangeListener(this);
   }
