@@ -1,18 +1,15 @@
 package com.tabbie.android.radar;
 
-import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Handler;
-import android.os.Message;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
-public class GCMIntentService extends com.google.android.gcm.GCMBaseIntentService implements Handler.Callback {
+public class GCMIntentService extends com.google.android.gcm.GCMBaseIntentService {
 	public static final String TAG = "GCMIntentService";
 	public static final String ACTION_REGISTER_GCM = "RegisterGCM";
 	
@@ -99,11 +96,5 @@ public class GCMIntentService extends com.google.android.gcm.GCMBaseIntentServic
 	protected void onUnregistered(Context arg0, String arg1) {
 		// TODO Auto-generated method stub
 		Log.d(TAG, "onUnregistered");
-	}
-
-	@Override
-	public boolean handleMessage(Message msg) {
-		// TODO Auto-generated method stub
-		return false;
 	}
 }
