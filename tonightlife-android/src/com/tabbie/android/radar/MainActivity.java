@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Random;
 import java.util.Set;
 
 import org.json.JSONArray;
@@ -131,12 +132,6 @@ public class MainActivity extends TrackedActivity
 	  HandlerThread serverThread = new HandlerThread(TAG + "Thread");
 	  serverThread.start();
 	  upstreamHandler = new ServerThreadHandler(serverThread.getLooper());
-
-									  // TODO This is for testing
-									  final ArrayList<ShareMessage> firstEventList = new ArrayList<ShareMessage>();
-									  firstEventList.add(new ShareMessage("Justin", "Knutson", "Holy shit balls there's messaging now this is so cool blah blah blah", "25"));
-									  firstEventList.add(new ShareMessage("Cesar", "Devers", "Oh baby this event is going to be good. Dr. Dre is going to be there rapping with Tupac and Killa Beez ON DA SWARM", "26"));
-									  messageFeed.put("1159", firstEventList);
   }
   
   @Override
@@ -471,6 +466,25 @@ public class MainActivity extends TrackedActivity
       final Bundle starter = getIntent().getExtras();
       if(starter!=null) {
       	Log.d(TAG, "This is the point where GCM would take control of main");
+      	// TODO Write actual code
+      	
+      	// Get a random event
+      	Random random = new Random(System.currentTimeMillis());
+      	int randomEventIndex = random.nextInt(listManager.get(Lists.ALL.id).size());
+      	Event lineupEvent = listManager.master.get(randomEventIndex);
+      	lineupEvent.onLineup = true;
+      	listManager.refreshList(Lists.LINEUP.id);
+      	
+      	// TODO Make sure Matt always adds a pushed event to the end user's lineup
+
+			  // TODO This is for testing
+			  final ArrayList<ShareMessage> firstEventList = new ArrayList<ShareMessage>();
+			  firstEventList.add(new ShareMessage("Justin", "Knutson", "Holy shit balls there's messaging now this is so cool blah blah blah"));
+			  firstEventList.add(new ShareMessage("Cesar", "Devers", "Oh baby this event is going to be good. Dr. Dre is going to be there rapping with Tupac and Killa Beez ON DA SWARM"));
+			  messageFeed.put(lineupEvent.id, firstEventList);
+			  
+      	((BaseAdapter) listViews[Lists.LINEUP.index].getAdapter()).notifyDataSetChanged();
+			  currentList = Lists.LINEUP;
       }
       
     	displayEmptyViews();
@@ -678,7 +692,7 @@ public class MainActivity extends TrackedActivity
 							public void buildView(Event source, ViewGroup v) {
 								v.removeAllViews();
 								eventInflater.bindView(source, v);
-								ArrayList<ShareMessage> messageList = messageFeed.get("1159");
+								ArrayList<ShareMessage> messageList = messageFeed.get(source.id);
 								if(messageList!=null) {
 									for(ShareMessage m : messageList) {
 										messageInflater.bindView(m, v);

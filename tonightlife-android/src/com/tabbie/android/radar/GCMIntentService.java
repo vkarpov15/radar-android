@@ -59,7 +59,8 @@ public class GCMIntentService extends com.google.android.gcm.GCMBaseIntentServic
         new NotificationCompat.Builder(this)
         .setSmallIcon(R.drawable.ic_launcher)
         .setContentTitle("My notification")
-        .setContentText("Hello World!");
+        .setContentText("Hello World!")
+        .setAutoCancel(true);
 		
 		// The stack builder object will contain an artificial back stack for the
 		// started Activity.

@@ -20,7 +20,7 @@ public class ShareMessage {
 	public final String mUserLastName;
 	
 	public ShareMessage(final String userFirstName, final String userLastName,
-			final String message, final String messageId) {
+			final String message) {
 		this.mUserFirstName = userFirstName;
 		this.mUserLastName = userLastName;
 		this.mMessage = message;

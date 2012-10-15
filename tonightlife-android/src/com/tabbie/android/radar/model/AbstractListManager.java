@@ -53,4 +53,15 @@ public class AbstractListManager<T> {
   public ArrayList<T> get(String listId) {
   	return lists.get(listId).myList;
   }
+  
+  public void refreshList(String listId) {
+  	if(lists.keySet().contains(listId)) {
+  		OrderedSubList ls = lists.get(listId);
+  		for(T t : master) {
+        if (ls.filter.apply(t)) {
+        	ls.myList.add(t);
+        }
+  		}
+  	}
+  }
 }
