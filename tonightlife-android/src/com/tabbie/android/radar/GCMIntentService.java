@@ -38,14 +38,39 @@ public class GCMIntentService extends com.google.android.gcm.GCMBaseIntentServic
 
 	@Override
 	protected void onMessage(Context context, Intent data) {
+		
+		
+
+		
+		// TODO Debug
 		/*
+    Notification notification = new Notification(R.drawable.ic_launcher, "Hey. Hey you. Fuck you", System.currentTimeMillis());
+    PendingIntent contentIntent = PendingIntent.getActivity(context, 0,
+            new Intent(this, EventDetailsActivity.class), 0);
+    notification.setLatestEventInfo(this, "Tabbie Push Notification", "Hey Cesar, Go Fuck Yourself", contentIntent);
+    NotificationManager mNM = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+    mNM.notify(42, notification);*/
+    
+		Log.d(TAG, "Received keys: " + data.getExtras().keySet());
+		for(String key : data.getExtras().keySet()) {
+			Log.v(TAG, "Key " + key + " is: " + data.getExtras().getString(key));
+		}
+		Log.d(TAG, "onMessage");
+	}
+
+	@Override
+	protected void onRegistered(Context context, String regId) {
+		
+
+		
 		NotificationCompat.Builder mBuilder =
         new NotificationCompat.Builder(this)
         .setSmallIcon(R.drawable.ic_launcher)
         .setContentTitle("My notification")
         .setContentText("Hello World!");
 		// Creates an explicit intent for an Activity in your app
-		Intent resultIntent = new Intent(this, MainActivity.class);
+		Intent resultIntent = new Intent(this, EventDetailsActivity.class);
+		// TODO Put Extras
 		
 		// The stack builder object will contain an artificial back stack for the
 		// started Activity.
@@ -66,35 +91,20 @@ public class GCMIntentService extends com.google.android.gcm.GCMBaseIntentServic
 		    (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 		// mId allows you to update the notification later on.
 		mNotificationManager.notify(42, mBuilder.getNotification());
-		*/
 		
-		// TODO Debug
+		
+		
 		/*
-    Notification notification = new Notification(R.drawable.ic_launcher, "Hey. Hey you. Fuck you", System.currentTimeMillis());
-    PendingIntent contentIntent = PendingIntent.getActivity(context, 0,
-            new Intent(this, EventDetailsActivity.class), 0);
-    notification.setLatestEventInfo(this, "Tabbie Push Notification", "Hey Cesar, Go Fuck Yourself", contentIntent);
-    NotificationManager mNM = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-    mNM.notify(42, notification);*/
-    
-		Log.d(TAG, "Received keys: " + data.getExtras().keySet());
-		for(String key : data.getExtras().keySet()) {
-			Log.v(TAG, "Key " + key + " is: " + data.getExtras().getString(key));
-		}
-		Log.d(TAG, "onMessage");
-	}
-
-	@Override
-	protected void onRegistered(Context context, String regId) {
 		Intent register = new Intent(ACTION_REGISTER_GCM);
 		register.putExtra("regId", regId);
 		LocalBroadcastManager.getInstance(context).sendBroadcast(register);
 		Log.d(TAG, "onRegistered");
+		*/
 	}
 
 	@Override
 	protected void onUnregistered(Context arg0, String arg1) {
-		// TODO Auto-generated method stub
+		
 		Log.d(TAG, "onUnregistered");
 	}
 }

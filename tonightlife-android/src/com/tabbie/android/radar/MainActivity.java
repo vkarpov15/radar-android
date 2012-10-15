@@ -376,7 +376,7 @@ public class MainActivity extends TrackedActivity
 	@Override
 	public boolean onItemLongClick(AdapterView<?> parent, View v,
 			int position, long rowId) {
-		
+		/*
 		Event longClickedEvent = (Event) parent.getAdapter().getItem(position);
 		Log.d(TAG, "Long Clicked Event is " + longClickedEvent.name);
 		shareManager.setEventId(longClickedEvent.id);
@@ -394,7 +394,8 @@ public class MainActivity extends TrackedActivity
       upstreamHandler.sendMessage(message);
 		} else {
 			shareManager.getDialog(tabbieFriendsList).show();
-		}
+		}*/
+		GCMRegistrar.unregister(this);
 		return true;
 	}
 

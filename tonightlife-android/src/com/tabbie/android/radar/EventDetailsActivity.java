@@ -39,7 +39,6 @@ public class EventDetailsActivity extends TrackedActivity implements
 	OnPageChangeListener {
 	
   public static final String TAG = "EventDetailsActivity";
-  public static final int REQUEST_RSVP = 666; 
   private final Handler upstreamHandler;
   private ArrayList<Event> events;
   private ArrayList<Event> childEventsList;
