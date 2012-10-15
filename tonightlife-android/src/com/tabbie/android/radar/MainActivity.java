@@ -128,15 +128,15 @@ public class MainActivity extends TrackedActivity
   
   public MainActivity() {
 	  super();
-	  final HandlerThread serverThread = new HandlerThread(TAG + "Thread");
+	  HandlerThread serverThread = new HandlerThread(TAG + "Thread");
 	  serverThread.start();
 	  upstreamHandler = new ServerThreadHandler(serverThread.getLooper());
 
-	  // TODO This is for testing
-	  final ArrayList<ShareMessage> firstEventList = new ArrayList<ShareMessage>();
-	  firstEventList.add(new ShareMessage("Justin", "Knutson", "Holy shit balls there's messaging now this is so cool blah blah blah", "25"));
-	  firstEventList.add(new ShareMessage("Cesar", "Devers", "Oh baby this event is going to be good. Dr. Dre is going to be there rapping with Tupac and Killa Beez ON DA SWARM", "26"));
-	  messageFeed.put("1159", firstEventList);
+									  // TODO This is for testing
+									  final ArrayList<ShareMessage> firstEventList = new ArrayList<ShareMessage>();
+									  firstEventList.add(new ShareMessage("Justin", "Knutson", "Holy shit balls there's messaging now this is so cool blah blah blah", "25"));
+									  firstEventList.add(new ShareMessage("Cesar", "Devers", "Oh baby this event is going to be good. Dr. Dre is going to be there rapping with Tupac and Killa Beez ON DA SWARM", "26"));
+									  messageFeed.put("1159", firstEventList);
   }
   
   @Override
@@ -467,6 +467,12 @@ public class MainActivity extends TrackedActivity
       			adapter.notifyDataSetChanged();
       		}
       }
+
+      final Bundle starter = getIntent().getExtras();
+      if(starter!=null) {
+      	Log.d(TAG, "This is the point where GCM would take control of main");
+      }
+      
     	displayEmptyViews();
     	tabHost.setCurrentTab(currentList.index);
   	  ((ImageView) findViewById(R.id.loading_spin)).clearAnimation();

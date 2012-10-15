@@ -38,18 +38,6 @@ public class GCMIntentService extends com.google.android.gcm.GCMBaseIntentServic
 
 	@Override
 	protected void onMessage(Context context, Intent data) {
-		
-		
-
-		
-		// TODO Debug
-		/*
-    Notification notification = new Notification(R.drawable.ic_launcher, "Hey. Hey you. Fuck you", System.currentTimeMillis());
-    PendingIntent contentIntent = PendingIntent.getActivity(context, 0,
-            new Intent(this, EventDetailsActivity.class), 0);
-    notification.setLatestEventInfo(this, "Tabbie Push Notification", "Hey Cesar, Go Fuck Yourself", contentIntent);
-    NotificationManager mNM = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-    mNM.notify(42, notification);*/
     
 		Log.d(TAG, "Received keys: " + data.getExtras().keySet());
 		for(String key : data.getExtras().keySet()) {
@@ -65,7 +53,7 @@ public class GCMIntentService extends com.google.android.gcm.GCMBaseIntentServic
 		resultIntent.putExtra("event_id", "TEST");
 		resultIntent.putExtra("user_name", "TEST TEST");
 		resultIntent.putExtra("message", "TEST TEST TEST TEST TEST TEST TEST");
-		resultIntent.setClass(this, EventDetailsActivity.class);
+		resultIntent.setClass(this, MainActivity.class);
 		
 		NotificationCompat.Builder mBuilder =
         new NotificationCompat.Builder(this)
