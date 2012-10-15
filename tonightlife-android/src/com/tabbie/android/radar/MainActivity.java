@@ -765,7 +765,7 @@ public class MainActivity extends TrackedActivity
     return null;
   }
 	
-	private final void createTabView(final TabHost host, final ListView view) {
+	private static final void createTabView(final TabHost host, final ListView view) {
 		final String tag = view.getTag().toString();
 		final View tabIndicatorView = LayoutInflater.from(host.getContext())
 				.inflate(R.layout.tabs_bg, null); 
@@ -779,9 +779,6 @@ public class MainActivity extends TrackedActivity
 	        }
 	      });
 	  host.addTab(content);
-	  // Make sure selected tab background is set - doesn't quite work without this
-	  // on Android 4.x
-	  host.getCurrentTabView().setBackgroundDrawable(getResources().getDrawable(R.drawable.tab_bg_selected));
 	}
 
 	@Override

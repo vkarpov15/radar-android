@@ -57,14 +57,14 @@ public class ImageLoader {
         imageViews.put(imageView, url);
         Bitmap bitmap = memoryCache.get(url); // Attempt to retrieve a Bitmap from the cache
         if(bitmap!=null) {
-        	imageView.setVisibility(View.VISIBLE);
-        	((View) imageView.getParent()).findViewById(R.id.element_loader).setVisibility(View.GONE);
+        	((View) imageView.getParent()).setVisibility(View.VISIBLE);
+        	((View) imageView.getParent().getParent()).findViewById(R.id.element_loader).setVisibility(View.GONE);
             imageView.setImageBitmap(bitmap);
         } else {
         	Log.d("ImageLoader", "Now in the Queue");
             queuePhoto(url, imageView); // Start loading the image, we'll display the default for now
-        	imageView.setVisibility(View.GONE);
-        	((View) imageView.getParent()).findViewById(R.id.element_loader).setVisibility(View.VISIBLE);
+        	((View) imageView.getParent()).setVisibility(View.GONE);
+        	((View) imageView.getParent().getParent()).findViewById(R.id.element_loader).setVisibility(View.VISIBLE);
         }
     }
         
@@ -210,12 +210,12 @@ public class ImageLoader {
             if(imageViewReused(photoToLoad))
                 return;
             if(bitmap!=null) {
-            	photoToLoad.imageView.setVisibility(View.VISIBLE);
-            	((View) photoToLoad.imageView.getParent()).findViewById(R.id.element_loader).setVisibility(View.GONE);
+            	((View) photoToLoad.imageView.getParent()).setVisibility(View.VISIBLE);
+            	((View) photoToLoad.imageView.getParent().getParent()).findViewById(R.id.element_loader).setVisibility(View.GONE);
                 photoToLoad.imageView.setImageBitmap(bitmap);
             } else {
-            	photoToLoad.imageView.setVisibility(View.GONE);
-            	((View) photoToLoad.imageView.getParent()).findViewById(R.id.element_loader).setVisibility(View.VISIBLE);
+            	((View) photoToLoad.imageView.getParent()).setVisibility(View.GONE);
+            	((View) photoToLoad.imageView.getParent().getParent()).findViewById(R.id.element_loader).setVisibility(View.VISIBLE);
             }
         }
     }
