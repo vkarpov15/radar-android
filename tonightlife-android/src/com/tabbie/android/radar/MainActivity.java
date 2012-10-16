@@ -98,15 +98,15 @@ public class MainActivity extends TrackedActivity
   private AbstractViewInflater<Event> eventInflater;
   private AbstractViewInflater<ShareMessage> messageInflater;
   
-  // Adapter lists
+  // Managers and feeds
   private final AbstractListManager<Event> listManager = new AbstractListManager<Event>();
-  private ShareDialogManager shareManager;
-  // TODO This is for testing
   private HashMap<String, ArrayList<ShareMessage>> messageFeed = new HashMap<String, ArrayList<ShareMessage>>();
+  private HashMap<String, FBPerson> facebookFriendsMap;
+  private ShareDialogManager shareManager;
 
   // Often-used views
-  private TabHost tabHost;
-  private ListView[] listViews = new ListView[3];
+  private TabHost vTabHost;
+  private ListView[] vListViews = new ListView[3];
 
   // Internal state for views
   private Lists currentList = Lists.ALL;
@@ -116,7 +116,6 @@ public class MainActivity extends TrackedActivity
   private final Facebook facebook = new Facebook("217386331697217");
   private FacebookAuthenticator facebookAuthenticator;
   private FacebookUserRemoteResource facebookUserRemoteResource;
-  private HashMap<String, FBPerson> facebookFriendsMap;
   
   // Tabbie Junk
   private String tabbieAccessToken = null;
@@ -157,19 +156,19 @@ public class MainActivity extends TrackedActivity
     setupTabHost();
     
     // Instantiate list views
-    listViews[Lists.FEATURED.index] = (ListView) findViewById(R.id.featured_event_list);
-    listViews[Lists.ALL.index] = (ListView) findViewById(R.id.all_event_list);
-    listViews[Lists.LINEUP.index] = (ListView) findViewById(R.id.lineup_event_list);
+    vListViews[Lists.FEATURED.index] = (ListView) findViewById(R.id.featured_event_list);
+    vListViews[Lists.ALL.index] = (ListView) findViewById(R.id.all_event_list);
+    vListViews[Lists.LINEUP.index] = (ListView) findViewById(R.id.lineup_event_list);
 
     // Create and bind adapters
     buildAdapters();
     
   	// Set ListView properties
-    for(final ListView v : listViews) {
+    for(final ListView v : vListViews) {
     	v.setFastScrollEnabled(true);
     	v.setOnItemClickListener(this);
     	v.setOnItemLongClickListener(this);
-    	createTabView(tabHost, v); 
+    	createTabView(vTabHost, v); 
     }
     
     // Start our authentication chain. First authenticate against facebook
@@ -190,7 +189,7 @@ public class MainActivity extends TrackedActivity
   		return;
   	}
 	  
-	  final ListView tabView = listViews[currentList.index];
+	  final ListView tabView = vListViews[currentList.index];
 	  ((BaseAdapter) tabView.getAdapter()).notifyDataSetChanged();
     playAnimation(tabView, getBaseContext(), android.R.anim.fade_in, 100);
   }
@@ -210,8 +209,8 @@ public class MainActivity extends TrackedActivity
       final ArrayList<Event> events = parcelables.getParcelableArrayList("events");
       listManager.clear();
       listManager.addAll(events);
-      tabHost.setCurrentTab(currentList.index);
-      for (final ListView v : listViews) {
+      vTabHost.setCurrentTab(currentList.index);
+      for (final ListView v : vListViews) {
         final BaseAdapter adapter = (BaseAdapter) v.getAdapter();
         if (adapter != null) {
           adapter.notifyDataSetChanged();
@@ -220,7 +219,7 @@ public class MainActivity extends TrackedActivity
       if(displayEmptyViews()) {
       	break;
       } else {
-        listViews[currentList.index].setSelection(currentViewPosition);
+        vListViews[currentList.index].setSelection(currentViewPosition);
         break;      
       }
     }
@@ -384,8 +383,6 @@ public class MainActivity extends TrackedActivity
 		} else {
 			shareManager.makeDialog(tabbieFriendsList).show();
 		}
-		
-		GCMRegistrar.unregister(this);
 		return true;
 	}
 
@@ -450,7 +447,7 @@ public class MainActivity extends TrackedActivity
 	      	e.printStackTrace();
 	      	return false;
       }
-		  for(final ListView v : listViews) {
+		  for(final ListView v : vListViews) {
       		final BaseAdapter adapter = (BaseAdapter) v.getAdapter();
       		if(adapter!=null) {
       			adapter.notifyDataSetChanged();
@@ -477,16 +474,16 @@ public class MainActivity extends TrackedActivity
 			  firstEventList.add(new ShareMessage("Cesar", "Devers", "Oh baby this event is going to be good. Dr. Dre is going to be there rapping with Tupac and Killa Beez ON DA SWARM"));
 			  messageFeed.put(lineupEvent.id, firstEventList);
 			  
-      	((BaseAdapter) listViews[Lists.LINEUP.index].getAdapter()).notifyDataSetChanged();
+      	((BaseAdapter) vListViews[Lists.LINEUP.index].getAdapter()).notifyDataSetChanged();
 			  currentList = Lists.LINEUP;
       }
       
     	displayEmptyViews();
-    	tabHost.setCurrentTab(currentList.index);
+    	vTabHost.setCurrentTab(currentList.index);
   	  ((ImageView) findViewById(R.id.loading_spin)).clearAnimation();
   	  findViewById(R.id.loading_screen).setVisibility(View.GONE);
   	  findViewById(R.id.tonightlife_layout).setVisibility(View.VISIBLE);
-  	  tabHost.setVisibility(View.VISIBLE);
+  	  vTabHost.setVisibility(View.VISIBLE);
   	  break;
   	  
 		case LOAD_FRIENDS:
@@ -638,7 +635,7 @@ public class MainActivity extends TrackedActivity
 	}
 	
 	private void setupTabHost() {
-    tabHost = (FlingableTabHost) findViewById(android.R.id.tabhost);
+    vTabHost = (FlingableTabHost) findViewById(android.R.id.tabhost);
     findViewById(R.id.map_button).setOnClickListener(new OnClickListener() {
         public void onClick(View v) {
             Intent intent = new Intent(MainActivity.this, TLMapActivity.class);
@@ -647,13 +644,13 @@ public class MainActivity extends TrackedActivity
             startActivity(intent);
         }
       });
-    tabHost.setup();
-    tabHost.setOnTabChangedListener(this);
-    tabHost.setCurrentTab(currentList.index);
+    vTabHost.setup();
+    vTabHost.setOnTabChangedListener(this);
+    vTabHost.setCurrentTab(currentList.index);
 	}
 	
 	private void buildAdapters() {
-		listViews[Lists.FEATURED.index].setAdapter(
+		vListViews[Lists.FEATURED.index].setAdapter(
 				new AbstractEventListAdapter<Event>(this,
 						listManager.get(Lists.FEATURED.id),
 						new DefaultComparator(),
@@ -664,7 +661,7 @@ public class MainActivity extends TrackedActivity
 							}
 				});
 		
-		listViews[Lists.ALL.index].setAdapter(
+		vListViews[Lists.ALL.index].setAdapter(
 				new AbstractEventListAdapter<Event>(this,
 						listManager.get(Lists.ALL.id),
 						new DefaultComparator(),
@@ -675,7 +672,7 @@ public class MainActivity extends TrackedActivity
 							}
 				});
 		
-		listViews[Lists.LINEUP.index].setAdapter(
+		vListViews[Lists.LINEUP.index].setAdapter(
 				new AbstractEventListAdapter<Event>(this,
 						listManager.get(Lists.LINEUP.id),
 						new ChronologicalComparator(),
@@ -753,14 +750,14 @@ public class MainActivity extends TrackedActivity
 		switch(currentList) {
 		case ALL:
 		case FEATURED:
-			if(listViews[currentList.index].getAdapter().isEmpty()) {
+			if(vListViews[currentList.index].getAdapter().isEmpty()) {
 				findViewById(R.id.radar_list_empty_text).setVisibility(View.VISIBLE);
 				return true;
 			} else {
 				return false;
 			}
 		case LINEUP:
-			if(listViews[currentList.index].getAdapter().isEmpty()) {
+			if(vListViews[currentList.index].getAdapter().isEmpty()) {
 				findViewById(R.id.lineup_list_empty_text).setVisibility(View.VISIBLE);
 				return true;
 			} else {
