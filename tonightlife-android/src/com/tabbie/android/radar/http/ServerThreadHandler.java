@@ -96,4 +96,15 @@ public class ServerThreadHandler extends Handler {
 			return;
 		}
 	}
+	
+	/**
+	 * Listener for handling a critical failure
+	 * while attempting to access the server
+	 * 
+	 * @author Justin Knutson
+	 *
+	 */
+	public interface OnFailListener {
+		public abstract void onFail(ServerRequest request);
+	}
 }
