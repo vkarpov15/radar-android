@@ -38,16 +38,12 @@ public class GCMIntentService extends com.google.android.gcm.GCMBaseIntentServic
 
 	@Override
 	protected void onMessage(Context context, Intent data) {
-    
+		
 		Log.d(TAG, "Received keys: " + data.getExtras().keySet());
 		for(String key : data.getExtras().keySet()) {
 			Log.v(TAG, "Key " + key + " is: " + data.getExtras().getString(key));
 		}
 		Log.d(TAG, "onMessage");
-	}
-
-	@Override
-	protected void onRegistered(Context context, String regId) {
 		
 		Intent resultIntent = new Intent();
 		resultIntent.putExtra("event_id", "TEST");
@@ -81,15 +77,15 @@ public class GCMIntentService extends com.google.android.gcm.GCMBaseIntentServic
 		    (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 		// mId allows you to update the notification later on.
 		mNotificationManager.notify(42, mBuilder.getNotification());
-		
-		
-		
-		/*
+	}
+
+	@Override
+	protected void onRegistered(Context context, String regId) {
 		Intent register = new Intent(ACTION_REGISTER_GCM);
 		register.putExtra("regId", regId);
 		LocalBroadcastManager.getInstance(context).sendBroadcast(register);
 		Log.d(TAG, "onRegistered");
-		*/
+		
 	}
 
 	@Override
