@@ -16,13 +16,10 @@ import org.json.JSONObject;
 import com.tabbie.android.radar.enums.MessageType;
 
 public class ServerResponse {
-	public static final int NO_INTERNET = -2;
-	public final int code;
 	public final String content;
 	public final MessageType responseTo;
 	
-	public ServerResponse(int code, String content, MessageType responseTo) {
-		this.code = code;
+	public ServerResponse(String content, MessageType responseTo) {
 		this.content = content;
 		this.responseTo = responseTo;
 	}
@@ -45,5 +42,4 @@ public class ServerResponse {
       return null;
     }
   }
-	
 }
