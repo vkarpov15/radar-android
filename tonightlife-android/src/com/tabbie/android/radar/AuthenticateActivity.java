@@ -32,8 +32,7 @@ import com.facebook.android.Facebook;
 import com.facebook.android.Facebook.DialogListener;
 import com.facebook.android.FacebookError;
 import com.tabbie.android.radar.enums.MessageType;
-import com.tabbie.android.radar.http.GenericServerGetRequest;
-import com.tabbie.android.radar.http.GenericServerPostRequest;
+import com.tabbie.android.radar.http.ServerRequest;
 import com.tabbie.android.radar.http.ServerResponse;
 import com.tabbie.android.radar.http.ServerThreadHandler;
 
@@ -77,16 +76,14 @@ public class AuthenticateActivity extends Activity implements Handler.Callback {
 
     if (facebook.isSessionValid()) {
       Log.i(TAG, "Session is valid");
-      GenericServerGetRequest req = new GenericServerGetRequest(MessageType.FACEBOOK_LOGIN, facebook.getAccessToken());
-    	req.responseHandler = new Handler(this);
+      ServerRequest req = new ServerRequest(MessageType.FACEBOOK_LOGIN, new Handler(this), facebook.getAccessToken());
       final Message message = Message.obtain();
       message.obj = req;
       upstreamHandler.sendMessage(message);
     } else {
       facebook.authorize(this, new String[] { "email" }, new DialogListener() {
         public void onComplete(final Bundle values) {
-        		GenericServerGetRequest req = new GenericServerGetRequest(MessageType.FACEBOOK_LOGIN, facebook.getAccessToken());
-          	req.responseHandler = new Handler(AuthenticateActivity.this);
+        		ServerRequest req = new ServerRequest(MessageType.FACEBOOK_LOGIN, new Handler(AuthenticateActivity.this), facebook.getAccessToken());
             final Message message = Message.obtain();
             message.obj = req;
             upstreamHandler.sendMessage(message);
@@ -136,9 +133,8 @@ public class AuthenticateActivity extends Activity implements Handler.Callback {
 	          e.printStackTrace();
 	          return false;
 	        }
-	        GenericServerPostRequest req = new GenericServerPostRequest(MessageType.TABBIE_LOGIN);
-      		req.params.put("fb_token", facebook.getAccessToken());
-      		req.responseHandler = new Handler(this);
+	        ServerRequest req = new ServerRequest(MessageType.TABBIE_LOGIN, new Handler(this));
+      		req.mParams.put("fb_token", facebook.getAccessToken());
         	final Message message = Message.obtain();
         	message.obj = req;
         	upstreamHandler.sendMessage(message);

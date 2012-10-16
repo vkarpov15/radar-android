@@ -18,6 +18,12 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import javax.net.ssl.HttpsURLConnection;
+
+import org.apache.http.HttpRequest;
+import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.http.client.params.HttpClientParams;
+
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
@@ -37,20 +43,20 @@ public class ServerThreadHandler extends Handler {
 	@Override
 	public void handleMessage(final Message msg) {
 		super.handleMessage(msg);
-		if(!(msg.obj instanceof GenericServerRequest)) {
+		if(!(msg.obj instanceof ServerRequest)) {
 			Log.e(TAG, "Error: Message is not a ServerRequest");
 			return;
 		}
-		final GenericServerRequest req = (GenericServerRequest) msg.obj;
+		final ServerRequest req = (ServerRequest) msg.obj;
 		try {
 			String TAG = "Generic side of ServerThreadHandler";
 			Log.d(TAG, "Made it into the try statement");
-			Log.d(TAG, "URL: " + req.url);
-			final HttpURLConnection conn = (HttpURLConnection) new URL(req.url).openConnection();
-			conn.setRequestMethod(req.reqMethod);
-			for (final String key : req.params.keySet()) {
+			Log.d(TAG, "URL: " + req.mUrl);
+			final HttpURLConnection conn = (HttpURLConnection) new URL(req.mUrl).openConnection();
+			conn.setRequestMethod(req.mReqMethod);
+			for (final String key : req.mParams.keySet()) {
 				Log.d(TAG, "Putting httpParams");
-			  conn.setRequestProperty(key, req.params.get(key));
+			  conn.setRequestProperty(key, req.mParams.get(key));
 			}
 			Log.d(TAG, conn.toString()); // TODO remove
 			
@@ -77,10 +83,10 @@ public class ServerThreadHandler extends Handler {
 				sb.append(y);
 			}
 			
-			if (req.responseHandler != null) {
+			if (req.mResponseHandler != null) {
 				final Message responseMessage = Message.obtain();
-				responseMessage.obj = new ServerResponse(0, sb.toString(), req.type);
-				req.responseHandler.sendMessage(responseMessage);
+				responseMessage.obj = new ServerResponse(0, sb.toString(), req.mType);
+				req.mResponseHandler.sendMessage(responseMessage);
 			} else {
 				Log.i(TAG, "No response handler available");
 				return;

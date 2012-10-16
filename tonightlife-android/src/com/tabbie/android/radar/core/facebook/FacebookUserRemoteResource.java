@@ -19,7 +19,7 @@ import android.os.Message;
 
 import com.tabbie.android.radar.core.BasicCallback;
 import com.tabbie.android.radar.enums.MessageType;
-import com.tabbie.android.radar.http.GenericServerGetRequest;
+import com.tabbie.android.radar.http.ServerRequest;
 import com.tabbie.android.radar.http.ServerResponse;
 
 public class FacebookUserRemoteResource implements Handler.Callback {
@@ -48,8 +48,7 @@ public class FacebookUserRemoteResource implements Handler.Callback {
     if (System.currentTimeMillis() < expires) {
       fbNameCallback.onDone(facebookName);
     } else {
-    	GenericServerGetRequest req = new GenericServerGetRequest(MessageType.FACEBOOK_LOGIN, fbToken);
-      req.responseHandler = new Handler(this);
+    	ServerRequest req = new ServerRequest(MessageType.FACEBOOK_LOGIN, new Handler(this), fbToken);
       final Message message = Message.obtain();
       message.obj = req;
       handler.sendMessage(message);

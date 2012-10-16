@@ -66,9 +66,7 @@ import com.tabbie.android.radar.core.facebook.FacebookAuthenticator;
 import com.tabbie.android.radar.core.facebook.FacebookUserRemoteResource;
 import com.tabbie.android.radar.enums.Lists;
 import com.tabbie.android.radar.enums.MessageType;
-import com.tabbie.android.radar.http.GenericServerGetRequest;
-import com.tabbie.android.radar.http.GenericServerPostRequest;
-import com.tabbie.android.radar.http.GenericServerPutRequest;
+import com.tabbie.android.radar.http.ServerRequest;
 import com.tabbie.android.radar.http.ServerResponse;
 import com.tabbie.android.radar.http.ServerThreadHandler;
 import com.tabbie.android.radar.maps.TLMapActivity;
@@ -245,9 +243,8 @@ public class MainActivity extends TrackedActivity
 	protected void onRestart() {
 		super.onRestart();
 		
-		// TODO make this a private method call or something
-		GenericServerGetRequest req = new GenericServerGetRequest(MessageType.LOAD_EVENTS, tabbieAccessToken);
-	  req.responseHandler = new Handler(this);
+		ServerRequest req = new ServerRequest(MessageType.LOAD_EVENTS, 
+				new Handler(this), tabbieAccessToken);
 	  final Message message = Message.obtain();
 	  message.obj = req;
 	  upstreamHandler.sendMessage(message);
@@ -265,8 +262,7 @@ public class MainActivity extends TrackedActivity
     switch(item.getItemId()) {
     
       case R.id.refresh_me:
-      	GenericServerGetRequest req = new GenericServerGetRequest(MessageType.LOAD_EVENTS, tabbieAccessToken);
-      	req.responseHandler = new Handler(this);
+      	ServerRequest req = new ServerRequest(MessageType.LOAD_EVENTS, new Handler(this), tabbieAccessToken);
     	  final Message message = Message.obtain();
     	  message.obj = req;
     	  upstreamHandler.sendMessage(message);
@@ -380,16 +376,16 @@ public class MainActivity extends TrackedActivity
 			currentDialog = ProgressDialog.show(MainActivity.this, "",
           "Loading, please wait...");
 			
-			GenericServerPostRequest req = new GenericServerPostRequest(MessageType.LOAD_FRIENDS);
-			req.params.put("auth_token", tabbieAccessToken);
-			req.params.put("fb_token", facebook.getAccessToken());
-			req.responseHandler = new Handler(this);
+			ServerRequest req = new ServerRequest(MessageType.LOAD_FRIENDS, new Handler(this));
+			req.mParams.put("auth_token", tabbieAccessToken);
+			req.mParams.put("fb_token", facebook.getAccessToken());
       final Message message = Message.obtain();
       message.obj = req;
       upstreamHandler.sendMessage(message);
 		} else {
 			shareManager.getDialog(tabbieFriendsList).show();
 		}*/
+		
 		GCMRegistrar.unregister(this);
 		return true;
 	}
@@ -416,8 +412,7 @@ public class MainActivity extends TrackedActivity
           return false;
         } finally {
         	Log.d(TAG, "Dispatching Request for Events");
-        	GenericServerGetRequest req = new GenericServerGetRequest(MessageType.LOAD_EVENTS, tabbieAccessToken);
-          req.responseHandler = new Handler(this);
+        	ServerRequest req = new ServerRequest(MessageType.LOAD_EVENTS, new Handler(this), tabbieAccessToken);
           final Message message = Message.obtain();
           message.obj = req;
           upstreamHandler.sendMessage(message);
@@ -597,11 +592,10 @@ public class MainActivity extends TrackedActivity
       Log.d(TAG, "RegistrationID is: " + regId);
       if(tabbieAccessToken!=null && !(regId.contentEquals(gcmKey))) {
       	Log.d(TAG, "Putting GCM ID with id " + regId + " and Access Token " + tabbieAccessToken);
-	  		GenericServerPutRequest req = new GenericServerPutRequest(MessageType.REGISTER_GCM, regId, tabbieAccessToken);
-	  	  req.responseHandler = new Handler(this);
+      	
+	  		ServerRequest req = new ServerRequest(MessageType.REGISTER_GCM, new Handler(this), regId, tabbieAccessToken);
 	  	  final Message message = Message.obtain();
 	  	  message.obj = req;
-	  	  req.responseHandler = new Handler(this);
 	  	  upstreamHandler.sendMessage(message);
       }
     }
@@ -732,9 +726,8 @@ public class MainActivity extends TrackedActivity
             ((TextView) findViewById(R.id.user_name)).setText(response);
             
             ((TextView) findViewById(R.id.loading_text)).setText("Retrieving events...");
-            GenericServerPostRequest req = new GenericServerPostRequest(MessageType.TABBIE_LOGIN);
-            req.params.put("fb_token", facebook.getAccessToken());
-            req.responseHandler = new Handler(MainActivity.this);
+            ServerRequest req = new ServerRequest(MessageType.TABBIE_LOGIN, new Handler(MainActivity.this));
+            req.mParams.put("fb_token", facebook.getAccessToken());
             final Message message = Message.obtain();
             message.obj = req;
             upstreamHandler.sendMessage(message);
@@ -808,12 +801,11 @@ public class MainActivity extends TrackedActivity
 
 	@Override
 	public void send(Set<String> ids, String shareMessage, String eventId) {
-		GenericServerPostRequest req = new GenericServerPostRequest(MessageType.POST_MESSAGE);
-		req.params.put("auth_token", tabbieAccessToken);
-		req.params.put("ids", ids.toString());
-		req.params.put("message", shareMessage);
-		req.params.put("event_id", eventId);
-		req.responseHandler = new Handler(this);
+		ServerRequest req = new ServerRequest(MessageType.POST_MESSAGE, new Handler(this));
+		req.mParams.put("auth_token", tabbieAccessToken);
+		req.mParams.put("ids", ids.toString());
+		req.mParams.put("message", shareMessage);
+		req.mParams.put("event_id", eventId);
     final Message message = Message.obtain();
     message.obj = req;
     upstreamHandler.sendMessage(message);
