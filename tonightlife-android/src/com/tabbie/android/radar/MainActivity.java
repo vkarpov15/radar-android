@@ -367,9 +367,8 @@ public class MainActivity extends TrackedActivity
 	@Override
 	public boolean onItemLongClick(AdapterView<?> parent, View v,
 			int position, long rowId) {
-		/*
+		
 		Event longClickedEvent = (Event) parent.getAdapter().getItem(position);
-		Log.d(TAG, "Long Clicked Event is " + longClickedEvent.name);
 		shareManager.setEventId(longClickedEvent.id);
 		
 		if(tabbieFriendsList==null) {
@@ -383,8 +382,8 @@ public class MainActivity extends TrackedActivity
       message.obj = req;
       upstreamHandler.sendMessage(message);
 		} else {
-			shareManager.getDialog(tabbieFriendsList).show();
-		}*/
+			shareManager.makeDialog(tabbieFriendsList).show();
+		}
 		
 		GCMRegistrar.unregister(this);
 		return true;
@@ -800,7 +799,7 @@ public class MainActivity extends TrackedActivity
 	}
 
 	@Override
-	public void send(Set<String> ids, String shareMessage, String eventId) {
+	public void sendMessage(Set<String> ids, String shareMessage, String eventId) {
 		ServerRequest req = new ServerRequest(MessageType.POST_MESSAGE, new Handler(this));
 		req.mParams.put("auth_token", tabbieAccessToken);
 		req.mParams.put("ids", ids.toString());

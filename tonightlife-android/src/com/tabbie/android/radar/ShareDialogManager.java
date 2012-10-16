@@ -18,12 +18,10 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
 import android.content.DialogInterface.OnMultiChoiceClickListener;
 import android.content.DialogInterface.OnShowListener;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -47,13 +45,16 @@ public class ShareDialogManager {
 	private final String mSendButton;
 	private final String mNobodySelected;
 	private final String mMessageTitle;
+
+	// Dialogs used by this manager
+	public Dialog friendsDialog;
+	public Dialog messageDialog;
 	
+	// Internal Variables
 	private String mEventId;
-	private TextView notifyTooLong;
-	private EditText messageText;
+	private TextView vTooLong;
+	private EditText vMessageText;
 	private boolean tooLong = false;
-	private Dialog friendsDialog;
-	private Dialog messageDialog;
 	
 	public ShareDialogManager(Context context) {
 		this.mContext = context;
@@ -61,6 +62,7 @@ public class ShareDialogManager {
 		this.mBuilder = new AlertDialog.Builder(context);
 		this.mIds = new LinkedHashSet<String>();
 		
+		// Get resources
 		this.mFriendsListTitle = mContext.getString(R.string.friends_list_title);
 		this.mOkayButton = mContext.getString(R.string.okay_button);
 		this.mNobodySelected = mContext.getString(R.string.no_name_selected);
@@ -76,9 +78,16 @@ public class ShareDialogManager {
 			adapterIds[i] = data.get(i).name;
 		}
 		
-		mBuilder.setTitle(mFriendsListTitle)
+		/*
+		 * Can we build it?
+		 * YES WE CAN!
+		 * 
+		 * This needs to be final so we can
+		 * set our own listener in setOnShowListener
+		 * with a self reference
+		 */
+		final AlertDialog d = mBuilder.setTitle(mFriendsListTitle)
 		.setMultiChoiceItems(adapterIds, new boolean[length], new OnMultiChoiceClickListener() {
-
 			@Override
 			public void onClick(DialogInterface dialog, int which, boolean isChecked) {
 				if(isChecked) {
@@ -89,13 +98,15 @@ public class ShareDialogManager {
 			}
 		})
 		.setCancelable(true)
-		.setPositiveButton(mOkayButton, new DialogInterface.OnClickListener() {
-			
-			@Override
-			public void onClick(DialogInterface dialog, int which) {}
-		});
 		
-		final AlertDialog d = mBuilder.create();
+		/*
+		 * We pass null here because we're going to
+		 * SET OUR OWN FUCKING LISTENER!!!
+		 * (See setOnShowListener later)
+		 */
+		.setPositiveButton(mOkayButton, null)
+		.create();
+		
 		d.setOnShowListener(new DialogInterface.OnShowListener() {
 			
 			@Override
@@ -118,44 +129,39 @@ public class ShareDialogManager {
 		return d;
 	}
 	
+	/**
+	 * Dialog for writing a message,
+	 * displayed once a friend/friends
+	 * has/have been chosen
+	 */
 	private void displayMessageDialog() {
 		View content = LayoutInflater.from(mContext).inflate(R.layout.share_message, null);
 		
-		notifyTooLong = (TextView) content.findViewById(R.id.share_message_notification);
-		messageText = (EditText) content.findViewById(R.id.share_message_editable);
-		messageText.addTextChangedListener(new TextWatcher() {
+		vTooLong = (TextView) content.findViewById(R.id.share_message_notification);
+		vMessageText = (EditText) content.findViewById(R.id.share_message_editable);
+		vMessageText.addTextChangedListener(new TextWatcher() {
 			
 			@Override
-			public void onTextChanged(CharSequence s, int start, int before, int count) {
-				// TODO Auto-generated method stub
-				
-			}
+			public void onTextChanged(CharSequence s, int start, int before, int count) {}
 			
 			@Override
-			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-				// TODO Auto-generated method stub
-				
-			}
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 			
 			@Override
 			public void afterTextChanged(Editable s) {
 				if(s.toString().length() > 140) {
 					tooLong = true;
-					notifyTooLong.setVisibility(View.VISIBLE);
+					vTooLong.setVisibility(View.VISIBLE);
 				} else {
 					tooLong = false;
-					notifyTooLong.setVisibility(View.GONE);
+					vTooLong.setVisibility(View.GONE);
 				}
 			}
 		});
 		
 		final AlertDialog d = new AlertDialog.Builder(mContext)
 		.setTitle(mMessageTitle)
-		.setPositiveButton(mSendButton, new OnClickListener() {
-			
-			@Override
-			public void onClick(DialogInterface dialog, int which) {}
-		})
+		.setPositiveButton(mSendButton, null)
 		.setView(content)
 		.create();
 		
@@ -168,9 +174,8 @@ public class ShareDialogManager {
 					
 					@Override
 					public void onClick(View v) {
-						if(!tooLong && (messageText.getText().length() > 0)) {
-							Log.d("Hooray!", "Event Id is " + mEventId);
-							mSender.send(mIds, messageText.getText().toString(), mEventId);
+						if(!tooLong && (vMessageText.getText().length() > 0)) {
+							mSender.sendMessage(mIds, vMessageText.getText().toString(), mEventId);
 							messageDialog.dismiss();
 							friendsDialog.dismiss();
 						}
@@ -182,12 +187,17 @@ public class ShareDialogManager {
 		d.show();
 	}
 	
+	/**
+	 * Make sure to call this
+	 * before sending a new message
+	 * 
+	 * @param eventId The event the user clicked
+	 */
 	public void setEventId(String eventId) {
 		this.mEventId = eventId;
-		Log.d("Set Event Id", "Event ID is " + mEventId);
 	}
 	
 	public interface ShareMessageSender {
-		abstract void send(Set<String> ids, String message, String eventId);
+		abstract void sendMessage(Set<String> ids, String message, String eventId);
 	}
 }
