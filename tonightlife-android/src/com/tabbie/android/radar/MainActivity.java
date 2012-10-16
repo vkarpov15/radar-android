@@ -526,7 +526,7 @@ public class MainActivity extends TrackedActivity
 			currentDialog.dismiss();
 			currentDialog = null;
 			
-			shareManager.getDialog(tabbieFriendsList).show();
+			shareManager.makeDialog(tabbieFriendsList).show();
 			
 			break;
 		}

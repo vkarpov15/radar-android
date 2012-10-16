@@ -4,7 +4,7 @@ package com.tabbie.android.radar;
  *  ShareDialogManager.java
  *
  *  Created on: October 13, 2012
- *      Author: Justin Knutson
+ *      @Author: Justin Knutson
  *      
  *  Wrapper for a ShareDialogManager that allows
  *  the user to send ShareMessages to the server
@@ -34,23 +34,41 @@ import android.widget.Toast;
 import com.tabbie.android.radar.core.facebook.FBPerson;
 
 public class ShareDialogManager {
+	
+	// Immutable private variables
 	private final Context mContext;
 	private final ShareMessageSender mSender;
 	private final AlertDialog.Builder mBuilder;
-	private final Set<String> ids = new LinkedHashSet<String>();
+	private final Set<String> mIds;
+	
+	// String resources
+	private final String mFriendsListTitle;
+	private final String mOkayButton;
+	private final String mSendButton;
+	private final String mNobodySelected;
+	private final String mMessageTitle;
+	
 	private String mEventId;
 	private TextView notifyTooLong;
 	private EditText messageText;
-	boolean tooLong = false;
-	private Dialog friendsDialog, messageDialog;
+	private boolean tooLong = false;
+	private Dialog friendsDialog;
+	private Dialog messageDialog;
 	
 	public ShareDialogManager(Context context) {
 		this.mContext = context;
 		this.mSender = (ShareMessageSender) context;
 		this.mBuilder = new AlertDialog.Builder(context);
+		this.mIds = new LinkedHashSet<String>();
+		
+		this.mFriendsListTitle = mContext.getString(R.string.friends_list_title);
+		this.mOkayButton = mContext.getString(R.string.okay_button);
+		this.mNobodySelected = mContext.getString(R.string.no_name_selected);
+		this.mSendButton = mContext.getString(R.string.send_button);
+		this.mMessageTitle = mContext.getString(R.string.message_title);
 	}
 	
-	public Dialog getDialog(final ArrayList<FBPerson> data) {
+	public Dialog makeDialog(final ArrayList<FBPerson> data) {
 
 		int length = data.size();
 		CharSequence[] adapterIds = new String[length];
@@ -58,20 +76,20 @@ public class ShareDialogManager {
 			adapterIds[i] = data.get(i).name;
 		}
 		
-		mBuilder.setTitle("Share with...")
+		mBuilder.setTitle(mFriendsListTitle)
 		.setMultiChoiceItems(adapterIds, new boolean[length], new OnMultiChoiceClickListener() {
 
 			@Override
 			public void onClick(DialogInterface dialog, int which, boolean isChecked) {
 				if(isChecked) {
-					ids.add(data.get(which).id);
+					mIds.add(data.get(which).id);
 				} else {
-					ids.remove(data.get(which).id);
+					mIds.remove(data.get(which).id);
 				}
 			}
 		})
 		.setCancelable(true)
-		.setPositiveButton("Okay", new DialogInterface.OnClickListener() {
+		.setPositiveButton(mOkayButton, new DialogInterface.OnClickListener() {
 			
 			@Override
 			public void onClick(DialogInterface dialog, int which) {}
@@ -87,8 +105,8 @@ public class ShareDialogManager {
 					
 					@Override
 					public void onClick(View v) {
-						if(ids.isEmpty()) {
-							Toast.makeText(mContext, "No one selected!", Toast.LENGTH_SHORT).show();
+						if(mIds.isEmpty()) {
+							Toast.makeText(mContext, mNobodySelected, Toast.LENGTH_SHORT).show();
 						} else {
 							displayMessageDialog();
 						}
@@ -105,8 +123,6 @@ public class ShareDialogManager {
 		
 		notifyTooLong = (TextView) content.findViewById(R.id.share_message_notification);
 		messageText = (EditText) content.findViewById(R.id.share_message_editable);
-		messageText.setText("This is a test of the 144 character limiting system that Justin Knutson has put in place to make sure bitches don't overflow this dialogue");
-		
 		messageText.addTextChangedListener(new TextWatcher() {
 			
 			@Override
@@ -134,8 +150,8 @@ public class ShareDialogManager {
 		});
 		
 		final AlertDialog d = new AlertDialog.Builder(mContext)
-		.setTitle("Message")
-		.setPositiveButton("Send", new OnClickListener() {
+		.setTitle(mMessageTitle)
+		.setPositiveButton(mSendButton, new OnClickListener() {
 			
 			@Override
 			public void onClick(DialogInterface dialog, int which) {}
@@ -154,7 +170,7 @@ public class ShareDialogManager {
 					public void onClick(View v) {
 						if(!tooLong && (messageText.getText().length() > 0)) {
 							Log.d("Hooray!", "Event Id is " + mEventId);
-							mSender.send(ids, messageText.getText().toString(), mEventId);
+							mSender.send(mIds, messageText.getText().toString(), mEventId);
 							messageDialog.dismiss();
 							friendsDialog.dismiss();
 						}

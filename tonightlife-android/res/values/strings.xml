@@ -33,6 +33,13 @@
 	<string name="list_all">All Events</string>
 	<string name="list_lineup">My Lineup</string>
 	
+	<!-- Share Dialog Strings -->
+	<string name="friends_list_title">Share with…</string>
+	<string name="okay_button">Okay</string>
+	<string name="send_button">Send</string>
+	<string name="message_title">Message</string>
+	<string name="no_name_selected">No one selected!</string>
+	
 	<!-- Menu Item Arrays -->
 	<string-array name="age_array">
         <item>All</item>
