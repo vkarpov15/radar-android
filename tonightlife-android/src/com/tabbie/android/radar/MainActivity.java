@@ -228,14 +228,14 @@ public class MainActivity extends TrackedActivity
   @Override
   public void onResume() {
     super.onResume();
-    LocalBroadcastManager.getInstance(this).registerReceiver(gcmReceiver, new IntentFilter(GCMIntentService.ACTION_REGISTER_GCM));
+    // LocalBroadcastManager.getInstance(this).registerReceiver(gcmReceiver, new IntentFilter(GCMIntentService.ACTION_REGISTER_GCM));
     facebook.extendAccessTokenIfNeeded(this, null);
   }
   
   @Override
   protected void onPause() {
   	super.onPause();
-  	LocalBroadcastManager.getInstance(this).unregisterReceiver(gcmReceiver);
+  	// LocalBroadcastManager.getInstance(this).unregisterReceiver(gcmReceiver);
   }
   
   @Override
@@ -321,7 +321,7 @@ public class MainActivity extends TrackedActivity
   @Override
   public void onDestroy() {
     super.onDestroy();
-    GCMRegistrar.onDestroy(this);
+    // GCMRegistrar.onDestroy(this);
   }
   
 	@Override
@@ -366,7 +366,7 @@ public class MainActivity extends TrackedActivity
 	@Override
 	public boolean onItemLongClick(AdapterView<?> parent, View v,
 			int position, long rowId) {
-		
+		/*
 		Event longClickedEvent = (Event) parent.getAdapter().getItem(position);
 		shareManager.setEventId(longClickedEvent.id);
 		
@@ -382,7 +382,7 @@ public class MainActivity extends TrackedActivity
       upstreamHandler.sendMessage(message);
 		} else {
 			shareManager.makeDialog(tabbieFriendsList).show();
-		}
+		}*/
 		return true;
 	}
 
@@ -426,7 +426,7 @@ public class MainActivity extends TrackedActivity
 				}
       }
       
-      registerGCMContent();
+      // registerGCMContent();
       break;
     }
     

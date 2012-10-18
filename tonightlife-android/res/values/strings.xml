@@ -2,7 +2,7 @@
 <resources>
     
     <!-- Important things to do before publishing an app:
-    		1. Change tabbie_path to release path
+    		1. Change Tabbie server paths from debug to production
     		2. Change mapsApiKey from debug to production
     		3. Change GA constants from dry run to live run
     		4. Sign with production key -->
@@ -11,15 +11,15 @@
     <string name="app_name">TonightLife</string>
 	<string name="feedback_subject">TonightLife Application Feedback</string>
     <string name="tabbie_server">http://23.21.40.96/</string>
-    <string name="tabbie_path">mobile/v1/</string>
     <string name="facebook_app_id">217386331697217</string>
 	<string name="ga_api_key">UA-34193317-1</string>
+	
 	<string-array name="founders_email">
 	    <item>founders@tonight-life.com</item>
 	</string-array>
     
     <!-- API Keys for Google Maps -->
-	<string name="mapsApiKey">0FOxyEfcQ0KWKXNk-I3ubpC2yVnsVdHjByLdI6Q</string>
+	<string name="mapsApiKey">0H7FbiQifcrFnTuix-KVDP8-54E7nG6h38bR4yw</string>
 			<!-- debugMapsApiKey = 0FOxyEfcQ0KWKXNk-I3ubpC2yVnsVdHjByLdI6Q -->
 			<!-- productionMapsApiKey = 0H7FbiQifcrFnTuix-KVDP8-54E7nG6h38bR4yw -->
 	
