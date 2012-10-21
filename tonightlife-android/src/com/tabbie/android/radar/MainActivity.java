@@ -16,16 +16,14 @@ import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.SharedPreferences.Editor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Message;
 import android.os.Vibrator;
-import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -55,6 +53,7 @@ import com.tabbie.android.radar.ShareDialogManager.ShareMessageSender;
 import com.tabbie.android.radar.adapters.AbstractEventListAdapter;
 import com.tabbie.android.radar.adapters.ChronologicalComparator;
 import com.tabbie.android.radar.adapters.DefaultComparator;
+import com.tabbie.android.radar.auth.TonightLifeAuthenticator;
 import com.tabbie.android.radar.core.AbstractFilter;
 import com.tabbie.android.radar.core.BasicCallback;
 import com.tabbie.android.radar.core.FlingableTabHost;
@@ -118,6 +117,7 @@ public class MainActivity extends TrackedActivity
   private FacebookUserRemoteResource facebookUserRemoteResource;
   
   // Tabbie Junk
+  private TonightLifeAuthenticator tonightlifeAuthenticator;
   private String tabbieAccessToken = null;
   private String gcmKey = null;
   private ArrayList<FBPerson> tabbieFriendsList;
@@ -395,41 +395,6 @@ public class MainActivity extends TrackedActivity
 		}
 		final ServerResponse resp = (ServerResponse) msg.obj;		
 		switch (resp.responseTo) {
-		
-    case TABBIE_LOGIN: {
-      final JSONObject json = resp.parseJsonContent();
-      if (json.has("token")) {
-        try {
-          tabbieAccessToken = json.getString("token");
-          Editor prefs = getPreferences(MODE_PRIVATE).edit();
-          prefs.putString("token", tabbieAccessToken);
-        } catch (final JSONException e) {
-          e.printStackTrace();
-          return false;
-        } finally {
-        	Log.d(TAG, "Dispatching Request for Events");
-        	ServerRequest req = new ServerRequest(MessageType.LOAD_EVENTS, new Handler(this), tabbieAccessToken);
-          final Message message = Message.obtain();
-          message.obj = req;
-          upstreamHandler.sendMessage(message);
-        }
-      } else {
-      	Log.e(TAG, "Tabbie Log-in JSON does not have a token!");
-        throw new RuntimeException();
-      }
-      
-      if(json.has("gcm_key")) {
-      	try {
-					gcmKey = json.getString("gcm_key");
-				} catch (JSONException e) {
-					e.printStackTrace();
-				}
-      }
-      
-      // registerGCMContent();
-      break;
-    }
-    
 		case LOAD_EVENTS:
   		final JSONArray list = resp.parseJsonArray();
   		try {
@@ -447,9 +412,9 @@ public class MainActivity extends TrackedActivity
 	      	e.printStackTrace();
 	      	return false;
       }
-		  for(final ListView v : vListViews) {
+		  for (final ListView v : vListViews) {
       		final BaseAdapter adapter = (BaseAdapter) v.getAdapter();
-      		if(adapter!=null) {
+      		if (adapter!=null) {
       			adapter.notifyDataSetChanged();
       		}
       }
@@ -497,7 +462,7 @@ public class MainActivity extends TrackedActivity
 			Set<String> tabbieFriendIds = TLJSONParser.parseFacebookIds(friendIds);
 			tabbieFriendsList = new ArrayList<FBPerson>(tabbieFriendIds.size());
 			
-			if(facebookFriendsMap==null) {
+			if (facebookFriendsMap==null) {
 				JSONArray friendsArray;
 				try {
 					friendsArray = new JSONObject(facebook.request("me/friends")).getJSONArray("data");
@@ -514,7 +479,7 @@ public class MainActivity extends TrackedActivity
 				}
 			}
 			
-			for(String id : tabbieFriendIds) {
+			for (String id : tabbieFriendIds) {
 				Log.d(TAG, "Adding Tabbie Friend " + facebookFriendsMap.get(id).name);
 				tabbieFriendsList.add(facebookFriendsMap.get(id));
 			}
@@ -696,6 +661,7 @@ public class MainActivity extends TrackedActivity
     ((TextView) findViewById(R.id.loading_text)).setText("Checking Facebook credentials...");
     facebookAuthenticator = new FacebookAuthenticator(facebook, getPreferences(MODE_PRIVATE));
     facebookUserRemoteResource = new FacebookUserRemoteResource(getPreferences(MODE_PRIVATE));
+    tonightlifeAuthenticator = new TonightLifeAuthenticator(getPreferences(MODE_PRIVATE));
     facebookAuthenticator.authenticate(this, new BasicCallback<String>() {
     	
       @Override
@@ -721,12 +687,25 @@ public class MainActivity extends TrackedActivity
           public void onDone(String response) {
             ((TextView) findViewById(R.id.user_name)).setText(response);
             
-            ((TextView) findViewById(R.id.loading_text)).setText("Retrieving events...");
-            ServerRequest req = new ServerRequest(MessageType.TABBIE_LOGIN, new Handler(MainActivity.this));
-            req.mParams.put("fb_token", facebook.getAccessToken());
-            final Message message = Message.obtain();
-            message.obj = req;
-            upstreamHandler.sendMessage(message);
+            tonightlifeAuthenticator.authenticate(upstreamHandler, facebookAuthenticator.getFacebookAccessToken(),
+                new BasicCallback<Pair<String,String>>() {
+                  @Override
+                  public void onDone(Pair<String, String> response) {
+                    Log.d(TAG, "Dispatching Request for Events");
+                    tabbieAccessToken = response.first;
+                    ServerRequest req = new ServerRequest(MessageType.LOAD_EVENTS, new Handler(MainActivity.this), response.first);
+                    final Message message = Message.obtain();
+                    message.obj = req;
+                    upstreamHandler.sendMessage(message);
+                  }
+
+                  @Override
+                  public void onFail(String reason) {
+                    Log.e(this.getClass().getName(), "TonightLifeAuth failed because '" + reason + "'");
+                    ((TextView) findViewById(R.id.loading_text)).setText("TonightLife Auth FAILED!");
+                    throw new RuntimeException(reason);
+                  }
+                });
           }
         });
       }

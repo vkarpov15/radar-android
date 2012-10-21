@@ -37,6 +37,10 @@ public class FacebookAuthenticator {
     this.preferences = preferences;
   }
   
+  public String getFacebookAccessToken() {
+    return fbAccessToken;
+  }
+  
   public void authenticate(final Activity parent, final BasicCallback<String> callback) {
   	Log.d(TAG, "Attempting to retrieve Access Token");
     fbAccessToken = preferences.getString("access_token", null);

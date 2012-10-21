@@ -1,5 +1,16 @@
 package com.tabbie.android.radar.model;
 
+/**
+ *  AbstractListManager.java
+ * 
+ *  Created on: September 16, 2012
+ *      Author: Valeri Karpov
+ * 
+ *  Manages a collection of "ordered sub lists", sub-lists of a master list
+ *  defined by a filter, with their own ordering
+ * 
+ */
+
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
