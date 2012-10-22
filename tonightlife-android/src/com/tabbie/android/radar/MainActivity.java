@@ -53,7 +53,6 @@ import com.tabbie.android.radar.ShareDialogManager.ShareMessageSender;
 import com.tabbie.android.radar.adapters.AbstractEventListAdapter;
 import com.tabbie.android.radar.adapters.ChronologicalComparator;
 import com.tabbie.android.radar.adapters.DefaultComparator;
-import com.tabbie.android.radar.auth.TonightLifeAuthenticator;
 import com.tabbie.android.radar.core.AbstractFilter;
 import com.tabbie.android.radar.core.BasicCallback;
 import com.tabbie.android.radar.core.FlingableTabHost;
@@ -73,6 +72,7 @@ import com.tabbie.android.radar.model.AbstractListManager;
 import com.tabbie.android.radar.model.AbstractViewInflater;
 import com.tabbie.android.radar.model.Event;
 import com.tabbie.android.radar.model.ShareMessage;
+import com.tabbie.android.radar.remote.TonightLifeAuthenticator;
 
 public class MainActivity extends TrackedActivity
 	implements OnTabChangeListener,

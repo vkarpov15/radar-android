@@ -40,7 +40,7 @@
 		  </intent-filter>
 		</receiver>
 		
-        <service android:name="com.tabbie.android.radar.GCMIntentService" />
+        <service android:name=".GCMIntentService" />
         
         <activity
             android:name=".MainActivity"

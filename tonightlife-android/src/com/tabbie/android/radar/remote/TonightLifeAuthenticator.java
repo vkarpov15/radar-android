@@ -1,4 +1,4 @@
-package com.tabbie.android.radar.auth;
+package com.tabbie.android.radar.remote;
 
 import org.json.JSONException;
 import org.json.JSONObject;
