@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.Random;
 import java.util.Set;
 
@@ -38,6 +39,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TabHost;
@@ -160,7 +162,7 @@ public class MainActivity extends TrackedActivity
     buildAdapters();
     
   	// Set ListView properties
-    for(final ListView v : vListViews) {
+    for (final ListView v : vListViews) {
     	v.setFastScrollEnabled(true);
     	v.setOnItemClickListener(this);
     	v.setOnItemLongClickListener(this);
@@ -168,7 +170,41 @@ public class MainActivity extends TrackedActivity
     }
     
     // Start our authentication chain. First authenticate against facebook
-    authenticateFacebook();
+    authenticationState.init(facebook, getSharedPreferences("com.tabbie.android.radar", MODE_PRIVATE));
+    /*if (authenticationState.isAuthenticatedWithoutUserConfirm()) {
+      // If we're authenticated, go through the normal method of setting everything up
+      findViewById(R.id.login_with_fb_button).setVisibility(View.GONE);
+      findViewById(R.id.dont_login_button).setVisibility(View.GONE);
+      findViewById(R.id.loading_spin).setVisibility(View.VISIBLE);
+      findViewById(R.id.loading_text).setVisibility(View.VISIBLE);
+      
+      authenticateFacebook();
+    } else {*/
+      ((Button) findViewById(R.id.login_with_fb_button)).setOnClickListener(new OnClickListener() {
+        @Override
+        public void onClick(View v) {
+          findViewById(R.id.login_with_fb_button).setVisibility(View.GONE);
+          findViewById(R.id.dont_login_button).setVisibility(View.GONE);
+          findViewById(R.id.loading_spin).setVisibility(View.VISIBLE);
+          findViewById(R.id.loading_text).setVisibility(View.VISIBLE);
+          authenticateFacebook();
+        }
+      });
+      ((Button) findViewById(R.id.dont_login_button)).setOnClickListener(new OnClickListener() {
+        @Override
+        public void onClick(View v) {
+          findViewById(R.id.login_with_fb_button).setVisibility(View.GONE);
+          findViewById(R.id.dont_login_button).setVisibility(View.GONE);
+          findViewById(R.id.loading_spin).setVisibility(View.VISIBLE);
+          findViewById(R.id.loading_text).setVisibility(View.VISIBLE);
+          
+          ServerRequest req = new ServerRequest(MessageType.LOAD_EVENTS_PUBLIC, new Handler(MainActivity.this));
+          final Message message = Message.obtain();
+          message.obj = req;
+          upstreamHandler.sendMessage(message);
+        }
+      });
+    //}
   }
   
   public void onTabChanged(final String tabName) {
@@ -345,7 +381,6 @@ public class MainActivity extends TrackedActivity
 	        intent.putExtra("eventIndex", listManager.get(currentList.id).indexOf(e));
 	        intent.putParcelableArrayListExtra("events", listManager.master);
 	        intent.putParcelableArrayListExtra("childList", listManager.get(currentList.id));
-	        intent.putExtra("token", authenticationState.getTonightLifeToken());
 	        return intent;
 	      }
 
@@ -392,10 +427,16 @@ public class MainActivity extends TrackedActivity
 		final ServerResponse resp = (ServerResponse) msg.obj;		
 		switch (resp.responseTo) {
 		case LOAD_EVENTS:
+		case LOAD_EVENTS_PUBLIC:
   		final JSONArray list = resp.parseJsonArray();
   		try {
-  			final Set<String> serverLineupIds = 
-  					TLJSONParser.parseLineupIds(list.getJSONObject(list.length() - 1));
+  		  final Set<String> serverLineupIds;
+  		  if (resp.responseTo == MessageType.LOAD_EVENTS) {
+  		    serverLineupIds = TLJSONParser.parseLineupIds(list.getJSONObject(list.length() - 1));
+  		  } else {
+  		    // Empty list - we don't get lineup ids from loading public events
+  		    serverLineupIds = new LinkedHashSet<String>();
+  		  }
         listManager.clear();
   			for(int i = 0; i < list.length() - 1; ++i) {
   				Event e = TLJSONParser.parseEvent(list.getJSONObject(i), this, serverLineupIds);
@@ -416,7 +457,7 @@ public class MainActivity extends TrackedActivity
       }
 
       final Bundle starter = getIntent().getExtras();
-      if(starter!=null) {
+      if (starter!=null) {
       	Log.d(TAG, "This is the point where GCM would take control of main");
       	// TODO Write actual code
       	
@@ -601,7 +642,7 @@ public class MainActivity extends TrackedActivity
         public void onClick(View v) {
             Intent intent = new Intent(MainActivity.this, TLMapActivity.class);
             intent.putParcelableArrayListExtra("events", listManager.master);
-            intent.putExtra("token", authenticationState.getTonightLifeToken());
+            //intent.putExtra("token", authenticationState.getTonightLifeToken());
             startActivity(intent);
         }
       });
@@ -655,7 +696,6 @@ public class MainActivity extends TrackedActivity
 	
 	private void authenticateFacebook() {
     ((TextView) findViewById(R.id.loading_text)).setText("Contacting Facebook Mothership...");
-    authenticationState.init(facebook, getPreferences(MODE_PRIVATE));
     authenticationState.doFullLoginChain(
         this,
         upstreamHandler,
@@ -678,6 +718,7 @@ public class MainActivity extends TrackedActivity
           @Override
           public void onDone(String response) {
             ((TextView) findViewById(R.id.loading_text)).setText("Contacting TonightLife Mothership...");
+            ((TextView) findViewById(R.id.user_name)).setText(response);
           }
 
           @Override

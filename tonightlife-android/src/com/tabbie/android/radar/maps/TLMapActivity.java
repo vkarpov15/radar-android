@@ -39,7 +39,6 @@ public class TLMapActivity extends MapActivity
   private TLItemizedOverlay mapOverlay;
   private MapView mapView;
   private MyLocationOverlay myLocationOverlay;
-  private String token;
 
   @Override
   public void onCreate(final Bundle savedInstanceState) {
@@ -49,9 +48,8 @@ public class TLMapActivity extends MapActivity
 
     final Bundle starter = getIntent().getExtras();
     
-    // Re-instantiate our events list and token
+    // Re-instantiate our events list
     events = starter.getParcelableArrayList("events");
-    token = starter.getString("token");
 
     // Obtain and set properties for our MapView
     mapView = (MapView) findViewById(R.id.my_map_view);
@@ -70,7 +68,6 @@ public class TLMapActivity extends MapActivity
 				Intent intent = new Intent(TLMapActivity.this, EventDetailsActivity.class);
 		    intent.putExtra("eventIndex", events.indexOf(e));
 		    intent.putParcelableArrayListExtra("events", events);
-		    intent.putExtra("token", token);
 		    startActivity(intent);
 			}
 		});

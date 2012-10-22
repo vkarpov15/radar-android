@@ -18,6 +18,7 @@
 		android:layout_centerHorizontal="true"
 		android:layout_alignParentBottom="true"
 		android:text="Loading..."
+		android:visibility="gone"
 		android:textColor="@color/WHITE"
 		android:textSize="12dp" />
 	 
@@ -27,6 +28,7 @@
 		android:layout_height="20dp"
 		android:layout_centerHorizontal="true"
 		android:layout_above="@id/loading_text"
+		android:visibility="gone"
 		android:src="@drawable/refresh"/>
  
 </RelativeLayout>

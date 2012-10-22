@@ -26,10 +26,10 @@ public class AuthenticationState {
   private FacebookUserRemoteResource facebookUserRemoteResource;
   private TonightLifeAuthenticator tonightLifeAuthenticator;
   
-  private int authCount;
+  private boolean userLoginConfirmed;
   
   public AuthenticationState() {
-    authCount = 0;
+    userLoginConfirmed = false;
   }
   
   public void init(Facebook facebook, SharedPreferences preferences) {
@@ -67,22 +67,19 @@ public class AuthenticationState {
                                 final BasicCallback<String> facebookUserCallback,
                                 final BasicCallback<Pair<String, String> > tonightLifeAuthCallback) {
     
-    authCount = 0;
+    userLoginConfirmed = true;
     facebookAuthenticator.authenticate(parent, new BasicCallback<String>() {
       @Override
       public void onDone(String response) {
-        ++authCount;
         facebookAuthCallback.onDone(response);
         facebookUserRemoteResource.load(serverCallHandler, response, new BasicCallback<String>() {
           @Override
           public void onDone(String response) {
-            ++authCount;
             facebookUserCallback.onDone(response);
             tonightLifeAuthenticator.authenticate(serverCallHandler,
                 facebookAuthenticator.getFacebookAccessToken(), new BasicCallback<Pair<String,String>>() {
               @Override
               public void onDone(Pair<String, String> response) {
-                ++authCount;
                 tonightLifeAuthCallback.onDone(response);
               }
 
@@ -107,8 +104,13 @@ public class AuthenticationState {
     });
   }
   
-  public boolean isAuthenticated() {
+  public boolean isAuthenticatedWithoutUserConfirm() {
     return facebookAuthenticator.isValidSession()
+        && facebookUserRemoteResource.isValid() && tonightLifeAuthenticator.isValidSession();
+  }
+  
+  public boolean isAuthenticated() {
+    return userLoginConfirmed && facebookAuthenticator.isValidSession()
         && facebookUserRemoteResource.isValid() && tonightLifeAuthenticator.isValidSession();
   }
   

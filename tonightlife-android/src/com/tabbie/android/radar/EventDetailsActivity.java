@@ -12,6 +12,8 @@ package com.tabbie.android.radar;
 
 import java.util.ArrayList;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -20,18 +22,22 @@ import android.os.Message;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.Log;
+import android.util.Pair;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
 
+import com.facebook.android.Facebook;
 import com.google.android.apps.analytics.easytracking.EasyTracker;
 import com.google.android.apps.analytics.easytracking.TrackedActivity;
 import com.tabbie.android.radar.adapters.EventDetailsPagerAdapter;
+import com.tabbie.android.radar.core.BasicCallback;
 import com.tabbie.android.radar.enums.MessageType;
 import com.tabbie.android.radar.http.ServerRequest;
 import com.tabbie.android.radar.http.ServerThreadHandler;
 import com.tabbie.android.radar.maps.TLMapActivity;
 import com.tabbie.android.radar.model.Event;
+import com.tabbie.android.radar.remote.AuthenticationState;
 
 public class EventDetailsActivity extends TrackedActivity implements
 	OnClickListener,
@@ -41,8 +47,9 @@ public class EventDetailsActivity extends TrackedActivity implements
   private final Handler upstreamHandler;
   private ArrayList<Event> events;
   private ArrayList<Event> childEventsList;
-	
-  private String token;
+  
+  private final Facebook facebook = new Facebook("217386331697217");
+  private final AuthenticationState authenticationState = new AuthenticationState();
   
   public EventDetailsActivity() {
 	  super();
@@ -61,12 +68,13 @@ public class EventDetailsActivity extends TrackedActivity implements
     final int eventIndex = starter.getInt("eventIndex");
     events = starter.getParcelableArrayList("events");
     childEventsList = starter.getParcelableArrayList("childList");
-    token = starter.getString("token");
     
     final ViewPager pager = (ViewPager) findViewById(R.id.details_event_pager);
     pager.setAdapter(new EventDetailsPagerAdapter(this, childEventsList, R.layout.event_details_element, this));
     pager.setCurrentItem(eventIndex);
     pager.setOnPageChangeListener(this);
+    
+    authenticationState.init(facebook, getSharedPreferences("com.tabbie.android.radar", MODE_PRIVATE));
   }
 
   @Override
@@ -80,12 +88,13 @@ public class EventDetailsActivity extends TrackedActivity implements
   @Override
   public void onClick(View v) {
   	View parent = (View) v.getParent();
-  	Event e = null;
-  	for(Event event : events) {
-  		if(event.id.contentEquals(((Event) parent.getTag()).id)) {
-  			e = event;
+  	Event ee = null;
+  	for (Event event : events) {
+  		if (event.id.contentEquals(((Event) parent.getTag()).id)) {
+  			ee = event;
   		}
   	}
+  	final Event e = ee;
   	Log.d(TAG, "Event clicked is: " + e.name);
   	
   	switch(v.getId()) {
@@ -96,30 +105,92 @@ public class EventDetailsActivity extends TrackedActivity implements
   		final Intent intent = new Intent(this, TLMapActivity.class);
   		intent.putParcelableArrayListExtra("events", events);
   		intent.putExtra("eventIndex", events.indexOf(e));
-  		intent.putExtra("token", token);
   		startActivity(intent);
   		break;
   		
   	case R.id.add_to_radar_image:
   		Log.d(TAG, "Lineup Button Selected");
       final ImageView radarButton = (ImageView) v.findViewById(R.id.add_to_radar_image);
-      if (e.onLineup) {
-      	e.lineupCount--;
-       	e.onLineup = false;
-        radarButton.setSelected(false);
-        ServerRequest req = new ServerRequest(MessageType.REMOVE_FROM_LINEUP, e.id, token);
-        final Message message = Message.obtain();
-        message.obj = req;
-        upstreamHandler.sendMessage(message);
+      
+      if (authenticationState.isAuthenticated()) {
+        if (e.onLineup) {
+          e.lineupCount--;
+          e.onLineup = false;
+          radarButton.setSelected(false);
+          ServerRequest req = new ServerRequest(MessageType.REMOVE_FROM_LINEUP, e.id, authenticationState.getTonightLifeToken());
+          final Message message = Message.obtain();
+          message.obj = req;
+          upstreamHandler.sendMessage(message);
+        } else {
+          e.lineupCount++;
+          e.onLineup = true;
+          radarButton.setSelected(true);
+          ServerRequest req = new ServerRequest(MessageType.ADD_TO_LINEUP, e.id);
+          req.mParams.put("auth_token", authenticationState.getTonightLifeToken());
+          final Message message = Message.obtain();
+          message.obj = req;
+          upstreamHandler.sendMessage(message);
+        }
       } else {
-      	e.lineupCount++;
-       	e.onLineup = true;
-        radarButton.setSelected(true);
-        ServerRequest req = new ServerRequest(MessageType.ADD_TO_LINEUP, e.id);
-        req.mParams.put("auth_token", token);
-        final Message message = Message.obtain();
-        message.obj = req;
-        upstreamHandler.sendMessage(message);
+        DialogInterface.OnClickListener l;
+        new AlertDialog.Builder(this)
+          .setTitle("Login Required")
+          .setMessage("You need to be logged in in order to add events to your lineup.")
+          .setPositiveButton("Login with Facebook", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+              authenticationState.doFullLoginChain(
+                  EventDetailsActivity.this,
+                  upstreamHandler,
+                  new BasicCallback<String>() {
+                    @Override
+                    public void onFail(String reason) {
+                    }
+                    
+                    @Override
+                    public void onDone(String response) {
+                    }
+                  },
+                  new BasicCallback<String>() {
+                    @Override
+                    public void onDone(String response) {
+                    }
+
+                    @Override
+                    public void onFail(String reason) {
+                    }
+                  },
+                  new BasicCallback<Pair<String,String>>() {
+                    @Override
+                    public void onDone(Pair<String, String> response) {
+                      if (e.onLineup) {
+                        e.lineupCount--;
+                        e.onLineup = false;
+                        radarButton.setSelected(false);
+                        ServerRequest req = new ServerRequest(MessageType.REMOVE_FROM_LINEUP, e.id, authenticationState.getTonightLifeToken());
+                        final Message message = Message.obtain();
+                        message.obj = req;
+                        upstreamHandler.sendMessage(message);
+                      } else {
+                        e.lineupCount++;
+                        e.onLineup = true;
+                        radarButton.setSelected(true);
+                        ServerRequest req = new ServerRequest(MessageType.ADD_TO_LINEUP, e.id);
+                        req.mParams.put("auth_token", authenticationState.getTonightLifeToken());
+                        final Message message = Message.obtain();
+                        message.obj = req;
+                        upstreamHandler.sendMessage(message);
+                      }
+                    }
+
+                    @Override
+                    public void onFail(String reason) {
+                    }
+                  });
+            }
+          })
+          .setNegativeButton("Cancel", null)
+          .show();
       }
       break;
   	}
