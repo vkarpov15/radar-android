@@ -39,6 +39,10 @@ public class FacebookUserRemoteResource implements Handler.Callback {
     return facebookName;
   }
   
+  public boolean isValid() {
+    return System.currentTimeMillis() < expires;
+  }
+  
   public void loadStoredState() {
     facebookName = preferences.getString("fb_name", "");
     expires = preferences.getLong("fb_name_expires", 0);
@@ -53,7 +57,7 @@ public class FacebookUserRemoteResource implements Handler.Callback {
     
     loadStoredState();
     
-    if (System.currentTimeMillis() < expires) {
+    if (isValid()) {
       fbNameCallback.onDone(facebookName);
     } else {
     	ServerRequest req = new ServerRequest(MessageType.FACEBOOK_LOGIN, new Handler(this), fbToken);

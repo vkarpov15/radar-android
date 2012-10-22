@@ -108,7 +108,8 @@ public class AuthenticationState {
   }
   
   public boolean isAuthenticated() {
-    return facebookAuthenticator.isValidSession() && tonightLifeAuthenticator.isValidSession();
+    return facebookAuthenticator.isValidSession()
+        && facebookUserRemoteResource.isValid() && tonightLifeAuthenticator.isValidSession();
   }
   
 }
