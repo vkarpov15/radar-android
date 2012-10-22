@@ -60,8 +60,6 @@ import com.tabbie.android.radar.core.MultiSpinner.MultiSpinnerListener;
 import com.tabbie.android.radar.core.TLJSONParser;
 import com.tabbie.android.radar.core.cache.ImageLoader;
 import com.tabbie.android.radar.core.facebook.FBPerson;
-import com.tabbie.android.radar.core.facebook.FacebookAuthenticator;
-import com.tabbie.android.radar.core.facebook.FacebookUserRemoteResource;
 import com.tabbie.android.radar.enums.Lists;
 import com.tabbie.android.radar.enums.MessageType;
 import com.tabbie.android.radar.http.ServerRequest;
@@ -72,7 +70,7 @@ import com.tabbie.android.radar.model.AbstractListManager;
 import com.tabbie.android.radar.model.AbstractViewInflater;
 import com.tabbie.android.radar.model.Event;
 import com.tabbie.android.radar.model.ShareMessage;
-import com.tabbie.android.radar.remote.TonightLifeAuthenticator;
+import com.tabbie.android.radar.remote.AuthenticationState;
 
 public class MainActivity extends TrackedActivity
 	implements OnTabChangeListener,
@@ -113,11 +111,11 @@ public class MainActivity extends TrackedActivity
 
   // FB junk
   private final Facebook facebook = new Facebook("217386331697217");
-  private FacebookAuthenticator facebookAuthenticator;
-  private FacebookUserRemoteResource facebookUserRemoteResource;
+  
+  // Authentication stuff
+  private final AuthenticationState authenticationState = new AuthenticationState();
   
   // Tabbie Junk
-  private TonightLifeAuthenticator tonightLifeAuthenticator;
   private ArrayList<FBPerson> tabbieFriendsList;
   
   private Dialog currentDialog;
@@ -241,7 +239,7 @@ public class MainActivity extends TrackedActivity
 		super.onRestart();
 		
 		ServerRequest req = new ServerRequest(MessageType.LOAD_EVENTS, 
-				new Handler(this), tonightLifeAuthenticator.getTonightLifeToken());
+				new Handler(this), authenticationState.getTonightLifeToken());
 	  final Message message = Message.obtain();
 	  message.obj = req;
 	  upstreamHandler.sendMessage(message);
@@ -259,7 +257,7 @@ public class MainActivity extends TrackedActivity
     switch(item.getItemId()) {
     
       case R.id.refresh_me:
-      	ServerRequest req = new ServerRequest(MessageType.LOAD_EVENTS, new Handler(this), tonightLifeAuthenticator.getTonightLifeToken());
+      	ServerRequest req = new ServerRequest(MessageType.LOAD_EVENTS, new Handler(this), authenticationState.getTonightLifeToken());
     	  final Message message = Message.obtain();
     	  message.obj = req;
     	  upstreamHandler.sendMessage(message);
@@ -347,7 +345,7 @@ public class MainActivity extends TrackedActivity
 	        intent.putExtra("eventIndex", listManager.get(currentList.id).indexOf(e));
 	        intent.putParcelableArrayListExtra("events", listManager.master);
 	        intent.putParcelableArrayListExtra("childList", listManager.get(currentList.id));
-	        intent.putExtra("token", tonightLifeAuthenticator.getTonightLifeToken());
+	        intent.putExtra("token", authenticationState.getTonightLifeToken());
 	        return intent;
 	      }
 
@@ -549,10 +547,10 @@ public class MainActivity extends TrackedActivity
       GCMRegistrar.register(this, "486514846150");
     } else {
       Log.d(TAG, "RegistrationID is: " + regId);
-      if(tonightLifeAuthenticator.getTonightLifeToken() != null && !(regId.contentEquals(tonightLifeAuthenticator.getGCMKey()))) {
-      	Log.d(TAG, "Putting GCM ID with id " + regId + " and Access Token " + tonightLifeAuthenticator.getTonightLifeToken());
+      if(authenticationState.getTonightLifeToken() != null && !(regId.contentEquals(authenticationState.getGCMKey()))) {
+      	Log.d(TAG, "Putting GCM ID with id " + regId + " and Access Token " + authenticationState.getTonightLifeToken());
       	
-	  		ServerRequest req = new ServerRequest(MessageType.REGISTER_GCM, new Handler(this), regId, tonightLifeAuthenticator.getTonightLifeToken());
+	  		ServerRequest req = new ServerRequest(MessageType.REGISTER_GCM, new Handler(this), regId, authenticationState.getTonightLifeToken());
 	  	  final Message message = Message.obtain();
 	  	  message.obj = req;
 	  	  upstreamHandler.sendMessage(message);
@@ -603,7 +601,7 @@ public class MainActivity extends TrackedActivity
         public void onClick(View v) {
             Intent intent = new Intent(MainActivity.this, TLMapActivity.class);
             intent.putParcelableArrayListExtra("events", listManager.master);
-            intent.putExtra("token", tonightLifeAuthenticator.getTonightLifeToken());
+            intent.putExtra("token", authenticationState.getTonightLifeToken());
             startActivity(intent);
         }
       });
@@ -656,57 +654,58 @@ public class MainActivity extends TrackedActivity
 	}
 	
 	private void authenticateFacebook() {
-    ((TextView) findViewById(R.id.loading_text)).setText("Checking Facebook credentials...");
-    facebookAuthenticator = new FacebookAuthenticator(facebook, getPreferences(MODE_PRIVATE));
-    facebookUserRemoteResource = new FacebookUserRemoteResource(getPreferences(MODE_PRIVATE));
-    tonightLifeAuthenticator = new TonightLifeAuthenticator(getPreferences(MODE_PRIVATE));
-    facebookAuthenticator.authenticate(this, new BasicCallback<String>() {
-    	
-      @Override
-      public void onFail(String reason) {
-        Log.e(this.getClass().getName(), "Facebook auth failed because '" + reason + "'");
-        ((TextView) findViewById(R.id.loading_text)).setText("Checking facebook credentials FAILED!");
-        throw new RuntimeException(reason);
-      }
-      
-      @Override
-      public void onDone(String response) {
-        ((TextView) findViewById(R.id.loading_text)).setText("Loading Facebook user information...");
-        
-        facebookUserRemoteResource.load(upstreamHandler, response, new BasicCallback<String>() {
+    ((TextView) findViewById(R.id.loading_text)).setText("Contacting Facebook Mothership...");
+    authenticationState.init(facebook, getPreferences(MODE_PRIVATE));
+    authenticationState.doFullLoginChain(
+        this,
+        upstreamHandler,
+        new BasicCallback<String>() {
+
+          @Override
+          public void onDone(String response) {
+            ((TextView) findViewById(R.id.loading_text)).setText("Loading Facebook user information...");
+          }
+
+          @Override
+          public void onFail(String reason) {
+            Log.e(this.getClass().getName(), "Facebook auth failed because '" + reason + "'");
+            ((TextView) findViewById(R.id.loading_text)).setText("Checking facebook credentials FAILED!");
+            throw new RuntimeException(reason);
+          }
+        },
+        new BasicCallback<String>() {
+
+          @Override
+          public void onDone(String response) {
+            ((TextView) findViewById(R.id.loading_text)).setText("Contacting TonightLife Mothership...");
+          }
+
           @Override
           public void onFail(String reason) {
             Log.e(this.getClass().getName(), "Facebook user info load failed because '" + reason + "'");
             ((TextView) findViewById(R.id.loading_text)).setText("Loading Facebook user information FAILED!");
             throw new RuntimeException(reason);
           }
-          
-          @Override
-          public void onDone(String response) {
-            ((TextView) findViewById(R.id.user_name)).setText(response);
-            
-            tonightLifeAuthenticator.authenticate(upstreamHandler, facebookAuthenticator.getFacebookAccessToken(),
-                new BasicCallback<Pair<String,String>>() {
-                  @Override
-                  public void onDone(Pair<String, String> response) {
-                    Log.d(TAG, "Dispatching Request for Events");
-                    ServerRequest req = new ServerRequest(MessageType.LOAD_EVENTS, new Handler(MainActivity.this), response.first);
-                    final Message message = Message.obtain();
-                    message.obj = req;
-                    upstreamHandler.sendMessage(message);
-                  }
+        },
+        new BasicCallback<Pair<String,String> >() {
 
-                  @Override
-                  public void onFail(String reason) {
-                    Log.e(this.getClass().getName(), "TonightLifeAuth failed because '" + reason + "'");
-                    ((TextView) findViewById(R.id.loading_text)).setText("TonightLife Auth FAILED!");
-                    throw new RuntimeException(reason);
-                  }
-                });
+          @Override
+          public void onDone(Pair<String, String> response) {
+            ((TextView) findViewById(R.id.loading_text)).setText("Beaming events from Mothership...");
+            Log.d(TAG, "Dispatching Request for Events");
+            ServerRequest req = new ServerRequest(MessageType.LOAD_EVENTS, new Handler(MainActivity.this), response.first);
+            final Message message = Message.obtain();
+            message.obj = req;
+            upstreamHandler.sendMessage(message);
+          }
+
+          @Override
+          public void onFail(String reason) {
+            Log.e(this.getClass().getName(), "TonightLifeAuth failed because '" + reason + "'");
+            ((TextView) findViewById(R.id.loading_text)).setText("TonightLife Auth FAILED!");
+            throw new RuntimeException(reason);
           }
         });
-      }
-    });
 	}
 	
 	private class GCMReceiver extends BroadcastReceiver {
@@ -774,7 +773,7 @@ public class MainActivity extends TrackedActivity
 	@Override
 	public void sendMessage(Set<String> ids, String shareMessage, String eventId) {
 		ServerRequest req = new ServerRequest(MessageType.POST_MESSAGE, new Handler(this));
-		req.mParams.put("auth_token", tonightLifeAuthenticator.getTonightLifeToken());
+		req.mParams.put("auth_token", authenticationState.getTonightLifeToken());
 		req.mParams.put("ids", ids.toString());
 		req.mParams.put("message", shareMessage);
 		req.mParams.put("event_id", eventId);

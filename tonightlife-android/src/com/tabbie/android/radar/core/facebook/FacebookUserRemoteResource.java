@@ -35,6 +35,10 @@ public class FacebookUserRemoteResource implements Handler.Callback {
     this.preferences = preferences;
   }
   
+  public String getFacebookName() {
+    return facebookName;
+  }
+  
   public void loadStoredState() {
     facebookName = preferences.getString("fb_name", "");
     expires = preferences.getLong("fb_name_expires", 0);

@@ -36,6 +36,27 @@ public class AuthenticationState {
     this.facebookAuthenticator = new FacebookAuthenticator(facebook, preferences);
     this.facebookUserRemoteResource = new FacebookUserRemoteResource(preferences);
     this.tonightLifeAuthenticator = new TonightLifeAuthenticator(preferences);
+    
+    // Load all stored states so we can tell if we're actually "logged in" or not
+    this.facebookAuthenticator.loadStoredState();
+    this.facebookUserRemoteResource.loadStoredState();
+    this.tonightLifeAuthenticator.loadStoredState();
+  }
+  
+  public String getFacebookAccessToken() {
+    return this.facebookAuthenticator.getFacebookAccessToken();
+  }
+  
+  public String getFacebookShortName() {
+    return this.facebookUserRemoteResource.getFacebookName();
+  }
+  
+  public String getTonightLifeToken() {
+    return this.tonightLifeAuthenticator.getTonightLifeToken();
+  }
+  
+  public String getGCMKey() {
+    return this.tonightLifeAuthenticator.getGCMKey();
   }
   
   /* Daisy chain together all of our authentications, with extra callbacks for the UI
@@ -87,7 +108,7 @@ public class AuthenticationState {
   }
   
   public boolean isAuthenticated() {
-    return authCount == 3;
+    return facebookAuthenticator.isValidSession() && tonightLifeAuthenticator.isValidSession();
   }
   
 }
