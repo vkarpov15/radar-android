@@ -41,21 +41,24 @@ public class FacebookAuthenticator {
     return fbAccessToken;
   }
   
-  public void authenticate(final Activity parent, final BasicCallback<String> callback) {
-  	Log.d(TAG, "Attempting to retrieve Access Token");
+  public void loadStoredState() {
     fbAccessToken = preferences.getString("access_token", null);
-    Log.d(TAG, "Attempting to get expiry");
     expires = preferences.getLong("access_expires", 0);
     
     if (fbAccessToken != null) {
-    	Log.d(TAG, "Access token is non-null");
       facebook.setAccessToken(fbAccessToken);
     }
-
     if (expires != 0) {
-    	Log.d(TAG, "Expiration is non-zero");
       facebook.setAccessExpires(expires);
     }
+  }
+  
+  public boolean isValidSession() {
+    return facebook.isSessionValid();
+  }
+  
+  public void authenticate(final Activity parent, final BasicCallback<String> callback) {
+  	loadStoredState();
     
     if (facebook.isSessionValid()) {
     	Log.d(TAG, "Session Valid");

@@ -55,13 +55,17 @@ public class TonightLifeAuthenticator implements Handler.Callback {
     return gcmKey;
   }
   
+  public void loadStoredState() {
+    tonightlifeToken = preferences.getString(TONIGHTLIFE_TOKEN_PREFERENCES_NAME, "");
+    expires = preferences.getLong(TONIGHTLIFE_TOKEN_EXPIRES_PREFERENCES_NAME, 0);
+    gcmKey = preferences.getString(TONIGHTLIFE_GCM_KEY_NAME, "");
+  }
+  
   public void authenticate(Handler serverCallHandler,
       String fbAccessToken, final BasicCallback<Pair<String, String> > tonightlifeTokenAndGCMCallback) {
     this.tonightlifeTokenAndGCMCallback = tonightlifeTokenAndGCMCallback;
     
-    tonightlifeToken = preferences.getString(TONIGHTLIFE_TOKEN_PREFERENCES_NAME, "");
-    expires = preferences.getLong(TONIGHTLIFE_TOKEN_EXPIRES_PREFERENCES_NAME, 0);
-    gcmKey = preferences.getString(TONIGHTLIFE_GCM_KEY_NAME, "");
+    loadStoredState();
     
     if (isValidSession()) {
       tonightlifeTokenAndGCMCallback.onDone(new Pair<String, String>(tonightlifeToken, gcmKey));
