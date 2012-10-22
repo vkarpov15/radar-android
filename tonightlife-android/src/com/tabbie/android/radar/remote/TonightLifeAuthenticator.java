@@ -47,7 +47,7 @@ public class TonightLifeAuthenticator implements Handler.Callback {
     return System.currentTimeMillis() < expires;
   }
   
-  public String getTonightlifeToken() {
+  public String getTonightLifeToken() {
     return tonightlifeToken;
   }
   

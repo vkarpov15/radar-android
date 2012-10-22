@@ -117,9 +117,7 @@ public class MainActivity extends TrackedActivity
   private FacebookUserRemoteResource facebookUserRemoteResource;
   
   // Tabbie Junk
-  private TonightLifeAuthenticator tonightlifeAuthenticator;
-  private String tabbieAccessToken = null;
-  private String gcmKey = null;
+  private TonightLifeAuthenticator tonightLifeAuthenticator;
   private ArrayList<FBPerson> tabbieFriendsList;
   
   private Dialog currentDialog;
@@ -243,7 +241,7 @@ public class MainActivity extends TrackedActivity
 		super.onRestart();
 		
 		ServerRequest req = new ServerRequest(MessageType.LOAD_EVENTS, 
-				new Handler(this), tabbieAccessToken);
+				new Handler(this), tonightLifeAuthenticator.getTonightLifeToken());
 	  final Message message = Message.obtain();
 	  message.obj = req;
 	  upstreamHandler.sendMessage(message);
@@ -261,7 +259,7 @@ public class MainActivity extends TrackedActivity
     switch(item.getItemId()) {
     
       case R.id.refresh_me:
-      	ServerRequest req = new ServerRequest(MessageType.LOAD_EVENTS, new Handler(this), tabbieAccessToken);
+      	ServerRequest req = new ServerRequest(MessageType.LOAD_EVENTS, new Handler(this), tonightLifeAuthenticator.getTonightLifeToken());
     	  final Message message = Message.obtain();
     	  message.obj = req;
     	  upstreamHandler.sendMessage(message);
@@ -349,7 +347,7 @@ public class MainActivity extends TrackedActivity
 	        intent.putExtra("eventIndex", listManager.get(currentList.id).indexOf(e));
 	        intent.putParcelableArrayListExtra("events", listManager.master);
 	        intent.putParcelableArrayListExtra("childList", listManager.get(currentList.id));
-	        intent.putExtra("token", tabbieAccessToken);
+	        intent.putExtra("token", tonightLifeAuthenticator.getTonightLifeToken());
 	        return intent;
 	      }
 
@@ -375,7 +373,7 @@ public class MainActivity extends TrackedActivity
           "Loading, please wait...");
 			
 			ServerRequest req = new ServerRequest(MessageType.LOAD_FRIENDS, new Handler(this));
-			req.mParams.put("auth_token", tabbieAccessToken);
+			req.mParams.put("auth_token", tonightLifeAuthenticator.getTonightLifeToken());
 			req.mParams.put("fb_token", facebook.getAccessToken());
       final Message message = Message.obtain();
       message.obj = req;
@@ -551,10 +549,10 @@ public class MainActivity extends TrackedActivity
       GCMRegistrar.register(this, "486514846150");
     } else {
       Log.d(TAG, "RegistrationID is: " + regId);
-      if(tabbieAccessToken!=null && !(regId.contentEquals(gcmKey))) {
-      	Log.d(TAG, "Putting GCM ID with id " + regId + " and Access Token " + tabbieAccessToken);
+      if(tonightLifeAuthenticator.getTonightLifeToken() != null && !(regId.contentEquals(tonightLifeAuthenticator.getGCMKey()))) {
+      	Log.d(TAG, "Putting GCM ID with id " + regId + " and Access Token " + tonightLifeAuthenticator.getTonightLifeToken());
       	
-	  		ServerRequest req = new ServerRequest(MessageType.REGISTER_GCM, new Handler(this), regId, tabbieAccessToken);
+	  		ServerRequest req = new ServerRequest(MessageType.REGISTER_GCM, new Handler(this), regId, tonightLifeAuthenticator.getTonightLifeToken());
 	  	  final Message message = Message.obtain();
 	  	  message.obj = req;
 	  	  upstreamHandler.sendMessage(message);
@@ -605,7 +603,7 @@ public class MainActivity extends TrackedActivity
         public void onClick(View v) {
             Intent intent = new Intent(MainActivity.this, TLMapActivity.class);
             intent.putParcelableArrayListExtra("events", listManager.master);
-            intent.putExtra("token", tabbieAccessToken);
+            intent.putExtra("token", tonightLifeAuthenticator.getTonightLifeToken());
             startActivity(intent);
         }
       });
@@ -661,7 +659,7 @@ public class MainActivity extends TrackedActivity
     ((TextView) findViewById(R.id.loading_text)).setText("Checking Facebook credentials...");
     facebookAuthenticator = new FacebookAuthenticator(facebook, getPreferences(MODE_PRIVATE));
     facebookUserRemoteResource = new FacebookUserRemoteResource(getPreferences(MODE_PRIVATE));
-    tonightlifeAuthenticator = new TonightLifeAuthenticator(getPreferences(MODE_PRIVATE));
+    tonightLifeAuthenticator = new TonightLifeAuthenticator(getPreferences(MODE_PRIVATE));
     facebookAuthenticator.authenticate(this, new BasicCallback<String>() {
     	
       @Override
@@ -687,12 +685,11 @@ public class MainActivity extends TrackedActivity
           public void onDone(String response) {
             ((TextView) findViewById(R.id.user_name)).setText(response);
             
-            tonightlifeAuthenticator.authenticate(upstreamHandler, facebookAuthenticator.getFacebookAccessToken(),
+            tonightLifeAuthenticator.authenticate(upstreamHandler, facebookAuthenticator.getFacebookAccessToken(),
                 new BasicCallback<Pair<String,String>>() {
                   @Override
                   public void onDone(Pair<String, String> response) {
                     Log.d(TAG, "Dispatching Request for Events");
-                    tabbieAccessToken = response.first;
                     ServerRequest req = new ServerRequest(MessageType.LOAD_EVENTS, new Handler(MainActivity.this), response.first);
                     final Message message = Message.obtain();
                     message.obj = req;
@@ -777,7 +774,7 @@ public class MainActivity extends TrackedActivity
 	@Override
 	public void sendMessage(Set<String> ids, String shareMessage, String eventId) {
 		ServerRequest req = new ServerRequest(MessageType.POST_MESSAGE, new Handler(this));
-		req.mParams.put("auth_token", tabbieAccessToken);
+		req.mParams.put("auth_token", tonightLifeAuthenticator.getTonightLifeToken());
 		req.mParams.put("ids", ids.toString());
 		req.mParams.put("message", shareMessage);
 		req.mParams.put("event_id", eventId);
